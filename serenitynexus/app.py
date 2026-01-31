@@ -18,7 +18,7 @@ def comprobar_contrasena():
 
     if "password_correct" not in st.session_state:
         try:
-        st.image("logo_serenity.png", width=200)
+           st.image("logo_serenity.png", width=200)
     except:
         st.markdown("### Serenity SAS BIC")
         st.title("Acceso Privado | Serenity SAS BIC")
@@ -97,4 +97,5 @@ if comprobar_contrasena():
         st.session_state["password_correct"] = False
 
         st.rerun()
+
 
