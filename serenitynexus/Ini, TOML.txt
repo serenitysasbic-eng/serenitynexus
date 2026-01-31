@@ -1,0 +1,12 @@
+password_admin = "Tu_Clave_Secreta_Aqui"
+
+
+Para que nadie entre a tu plataforma, 
+debes definir tu contraseña. 
+En Streamlit Cloud, hay una opción que se llama 
+"Secrets". 
+Allí debes escribir lo siguiente:
+
+
+
+password_admin = "Tu_Clave_Secreta_Aqui"

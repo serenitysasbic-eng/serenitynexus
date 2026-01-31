@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Serenity Nexus Global | Plataforma Integral</title>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --verde: #2E7D32; --lima: #9BC63B; --fondo: #050a04; --oro: #D4AF37; }
+        
+        body { 
+            margin: 0; font-family: 'Montserrat', sans-serif; background: var(--fondo); color: white;
+            background-image: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1920&q=80'); 
+            background-size: cover; background-attachment: fixed; background-position: center;
+        }
+
+        /* --- BOTON APAGAR SONIDO --- */
+        .btn-audio-toggle {
+            position: fixed; top: 85px; right: 20px; z-index: 2000;
+            background: var(--verde); border: 1px solid var(--lima);
+            color: white; padding: 10px; border-radius: 50%; cursor: pointer;
+        }
+
+        /* --- NAVEGACION --- */
+        nav { background: rgba(0,0,0,0.95); padding: 20px; position: fixed; width: 100%; top: 0; z-index: 1000; display: flex; justify-content: center; gap: 25px; border-bottom: 2px solid var(--lima); }
+        nav a { color: white; text-decoration: none; font-weight: 600; cursor: pointer; text-transform: uppercase; font-size: 11px; letter-spacing: 1px; }
+        nav a:hover { color: var(--lima); }
+
+        .contenedor { max-width: 1200px; margin: 150px auto 50px; padding: 20px; min-height: 80vh; }
+        .seccion { display: none; animation: fadeIn 0.6s ease; }
+        .seccion.activa { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .header-central { text-align: center; margin-bottom: 50px; }
+        .logo-img { max-width: 250px; height: auto; display: block; margin: 0 auto 20px; border-radius: 10px; }
+
+        .panel-pantalla { background: rgba(0,0,0,0.85); border: 1px solid var(--lima); border-radius: 20px; padding: 40px; }
+        .grid-split { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 30px; }
+        .columna { background: rgba(255,255,255,0.05); padding: 25px; border-radius: 15px; border: 1px solid rgba(155,198,59,0.1); }
+
+        input, select { width: 100%; padding: 12px; margin: 10px 0; border-radius: 5px; border: none; box-sizing: border-box; background: rgba(255,255,255,0.9); color: black; font-weight: bold; }
+        
+        .btn-nexus { background: var(--verde); color: white; padding: 15px 30px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; text-transform: uppercase; transition: 0.3s; width: 100%; margin-top: 10px; }
+        .btn-nexus:hover { background: var(--lima); color: black; box-shadow: 0 0 20px var(--lima); }
+
+        .logos-pago { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .logos-pago img { width: 100%; height: 50px; object-fit: contain; background: white; border-radius: 5px; padding: 5px; cursor: pointer; }
+
+        footer { background: rgba(0,0,0,0.95); padding: 60px 20px; text-align: center; border-top: 2px solid var(--verde); margin-top: 100px; }
+        .footer-social img { width: 30px; margin: 0 15px; filter: invert(1); }
+        .info-vuelos { font-size: 12px; color: #888; margin-top: 30px; line-height: 1.6; }
+    </style>
+</head>
+<body>
+
+<audio id="audioLocal" loop>
+    <source src="sonido_bosque.m4a" type="audio/mp4">
+</audio>
+
+<button class="btn-audio-toggle" onclick="toggleMute()" id="muteBtn">??</button>
+
+<nav>
+    <a onclick="irA('inicio')">Inicio</a>
+    <a onclick="irA('faros-lista')">Puntos Faro</a>
+    <a onclick="irA('hospedaje')">Hospedaje</a>
+    <a onclick="irA('planes-menu')">Planes de Apoyo</a>
+    <a onclick="irA('certificados')">Donaciones</a>
+    <a onclick="irA('ubicacion')">Ubicacion</a>
+</nav>
+
+<div class="contenedor">
+
+    <div id="inicio" class="seccion activa">
+        <div class="header-central">
+            <img src="logo_serenity.png" alt="Logo Serenity Hub" class="logo-img">
+            <h1 style="font-family: 'Merriweather'; font-size: 3.5rem; margin: 0;">Serenity Nexus Global</h1>
+            <p style="letter-spacing: 4px; color: var(--lima); font-weight: 300;">SISTEMA REGENERATIVO BIOMETRICO</p>
+        </div>
+        <div style="text-align: center;">
+            <button class="btn-nexus" style="width: auto;" onclick="iniciarConAudio()">Ingresar al Sistema</button>
+        </div>
+    </div>
+
+    <div id="faros-lista" class="seccion">
+        <h2 style="font-family: 'Merriweather'; text-align: center;">Hacienda Monte Guadua - Puntos Faro</h2>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 40px;">
+            <button class="btn-nexus" onclick="verFaro('Halcon')">?? Faro Halcon</button>
+            <button class="btn-nexus" onclick="verFaro('Colibri')">?? Faro Colibri</button>
+            <button class="btn-nexus" onclick="verFaro('Rana')">?? Faro Rana</button>
+            <button class="btn-nexus" onclick="verFaro('Venado')">?? Faro Venado</button>
+            <button class="btn-nexus" onclick="verFaro('Tigrillo')">?? Faro Tigrillo</button>
+            <button class="btn-nexus" onclick="verFaro('Capibara')">?? Faro Capibara</button>
+        </div>
+    </div>
+
+    <div id="faro-detalle" class="seccion">
+        <div class="panel-pantalla">
+            <h1 id="titulo-faro" style="font-family: 'Merriweather'; color: var(--lima);"></h1>
+            <div style="width:100%; height:400px; background:#000; border:1px solid #333; position:relative; margin-bottom:20px;">
+                <p style="position:absolute; top:20px; left:20px; color:red;">? LIVE STREAMING</p>
+                <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&w=800" style="width:100%; height:100%; object-fit:cover; opacity:0.3;">
+            </div>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+                <div class="columna">
+                    <h3>Alertas Recientes</h3>
+                    <div id="alertas-ia-box" style="height: 100px; overflow-y: auto; font-family: monospace; color: var(--lima);">
+                        [IA] Sincronizando sensores...
+                    </div>
+                </div>
+                <div class="columna">
+                    <h3>Datos del Faro</h3>
+                    <p>Temperatura: 18.5 C</p>
+                    <p>Humedad: 85%</p>
+                </div>
+            </div>
+            <button class="btn-nexus" onclick="irA('faros-lista')">Volver</button>
+        </div>
+    </div>
+
+    <div id="planes-menu" class="seccion">
+        <h2 style="font-family: 'Merriweather'; text-align: center;">Seleccione su Plan de Apoyo</h2>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 40px;">
+            <button class="btn-nexus" onclick="abrirPasarela('Plan Semilla 1 Faro x 1 Mes  (Usd5)')">Plan Semilla (Usd5)</button>
+            <button class="btn-nexus" onclick="abrirPasarela('Plan Guardian 6 Faros x 1 Mes (Usd25)')">Plan Guardian (Usd25)</button>
+            <button class="btn-nexus" style="background:var(--oro); color:black;" onclick="abrirPasarela('Plan Heroe 6 faros x 6 Meses (Usd200)')">Plan Serenity (Usd200)</button>
+        </div>
+    </div>
+
+    <div id="pasarela-pago" class="seccion">
+        <div class="panel-pantalla">
+            <h2 id="plan-seleccionado" style="font-family: 'Merriweather'; text-align: center; color: var(--lima);"></h2>
+            <div class="grid-split">
+                <div class="columna">
+                    <h3>1. Registro de Datos</h3>
+                    <input type="text" placeholder="Nombre Completo">
+                    <input type="email" placeholder="Correo Electronico">
+                    <select><option>Cedula de Ciudadania</option><option>Pasaporte</option></select>
+                </div>
+                <div class="columna">
+                    <h3>2. Metodo de Pago</h3>
+                    <div class="logos-pago">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/Nequi_Logo.png" alt="Nequi">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b7/PayPal_logo_with_name.svg" alt="PayPal">
+                    </div>
+                    <button class="btn-nexus" style="margin-top:20px;">Confirmar y Pagar</button>
+                </div>
+            </div>
+            <button class="btn-nexus" style="background:none; border:1px solid white; margin-top:20px;" onclick="irA('planes-menu')">Cancelar</button>
+        </div>
+    </div>
+
+    <div id="certificados" class="seccion">
+        <div class="panel-pantalla" style="text-align:center;">
+            <h2 style="font-family: 'Merriweather';">Contribuciones al Planeta</h2>
+            <button class="btn-nexus" style="background:var(--oro); color:black; max-width: 300px; margin: 20px auto;" onclick="irA('donar-libre')">Donar al Planeta</button>
+            <div style="background:white; color:black; padding:40px; border:10px double var(--oro); text-align:center; max-width:600px; margin:auto; font-family:'Merriweather'; margin-top: 20px;">
+                <h1 style="color:var(--verde);">CERTIFICADO DE DONACION</h1>
+                <p>Gracias por Regenerar el Planeta.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="donar-libre" class="seccion">
+        <div class="panel-pantalla">
+            <h2 style="text-align: center; color: var(--lima);">Donacion Voluntaria</h2>
+            <div class="grid-split">
+                <div class="columna">
+                    <h3>Monto</h3>
+                    <input type="number" placeholder="Monto USD/COP" style="font-size: 1.5rem; height: 60px;">
+                </div>
+                <div class="columna">
+                    <h3>Pago Seguro</h3>
+                    <div class="logos-pago">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/Nequi_Logo.png" alt="Nequi">
+                    </div>
+                    <button class="btn-nexus" style="margin-top:20px;">Procesar</button>
+                </div>
+            </div>
+            <button class="btn-nexus" style="background:none; border:1px solid white; margin-top:20px;" onclick="irA('certificados')">Volver</button>
+        </div>
+    </div>
+
+    <div id="hospedaje" class="seccion">
+        <h2 style="text-align: center;">Reservas Serenity eco-lodge</h2>
+        <div class="grid-split">
+            <div class="columna" style="text-align: center;"><h3>Villa Michelle</h3><button class="btn-nexus">Reservar</button></div>
+            <div class="columna" style="text-align: center;"><h3>Monte Guadua</h3><button class="btn-nexus">Reservar</button></div>
+        </div>
+    </div>
+
+    <div id="ubicacion" class="seccion">
+        <div class="panel-pantalla" style="text-align: center;">
+            <h2>Ubicacion</h2>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d15930.635876063677!2d-76.621!3d3.444!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e30a6f0d1469e3d%3A0xc0c4069f20e98033!2sSan%20Antonio%2C%20Cali%2C%20Valle%20del%20Cauca!5e0!3m2!1ses!2sco!4v1700000000000" width="100%" height="450" style="border:0; border-radius:15px;" allowfullscreen="" loading="lazy"></iframe>
+        </div>
+    </div>
+
+</div>
+
+<footer>
+    <p>© 2026 Serenity S.A.S. BIC   Colombia Sur America - Cali - Felidia - Dagua - Valle del Cauca</p>
+</footer>
+
+<script>
+    function irA(id) {
+        document.querySelectorAll('.seccion').forEach(s => s.classList.remove('activa'));
+        document.getElementById(id).classList.add('activa');
+        window.scrollTo(0,0);
+    }
+    function verFaro(nombre) {
+        document.getElementById('titulo-faro').innerText = "Monitoreo: Faro " + nombre;
+        irA('faro-detalle');
+    }
+    function abrirPasarela(plan) {
+        document.getElementById('plan-seleccionado').innerText = "Proceso de Apoyo: " + plan;
+        irA('pasarela-pago');
+    }
+    function iniciarConAudio() {
+        const audio = document.getElementById('audioLocal');
+        audio.play().catch(e => console.log("Esperando archivo local"));
+        irA('faros-lista');
+    }
+    function toggleMute() {
+        const audio = document.getElementById('audioLocal');
+        const btn = document.getElementById('muteBtn');
+        if (audio.muted) {
+            audio.muted = false;
+            btn.innerText = "??";
+        } else {
+            audio.muted = true;
+            btn.innerText = "??";
+        }
+    }
+
+    // --- ACTIVAR ALERTAS IA ---
+    const mensajes = ["IA: Tangara Multicolor detectada", "IA: Canto de Barranquero captado", "IA: Movimiento en Guadual", "IA: Pava Caucana en area"];
+    setInterval(() => {
+        const box = document.getElementById('alertas-ia-box');
+        if(box) {
+            const h = new Date().toLocaleTimeString();
+            const log = mensajes[Math.floor(Math.random()*mensajes.length)];
+            box.innerHTML = `<div>[${h}] ${log}</div>` + box.innerHTML;
+            if(box.children.length > 4) box.removeChild(box.lastChild);
+        }
+    }, 5000);
+</script>
+
+</body>
+</html>
