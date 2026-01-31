@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import streamlit as st
 import pandas as pd
 import random
@@ -18,16 +19,16 @@ def comprobar_contrasena():
     if "password_correct" not in st.session_state:
         st.image("logo_serenity.png", width=200)
         st.title("Acceso Privado | Serenity SAS BIC")
-        st.text_input("Contraseña Maestra", type="password", on_change=password_entered, key="password")
+        st.text_input("ContraseÃ±a Maestra", type="password", on_change=password_entered, key="password")
         return False
     elif not st.session_state["password_correct"]:
-        st.error("Contraseña incorrecta. Solo Jorge tiene acceso.")
-        st.text_input("Contraseña Maestra", type="password", on_change=password_entered, key="password")
+        st.error("ContraseÃ±a incorrecta. Solo Jorge tiene acceso.")
+        st.text_input("ContraseÃ±a Maestra", type="password", on_change=password_entered, key="password")
         return False
     else:
         return True
 
-# SI LA CONTRASEÑA ES CORRECTA, SE MUESTRA TODO LO DEMAS
+# SI LA CONTRASEÃ‘A ES CORRECTA, SE MUESTRA TODO LO DEMAS
 if comprobar_contrasena():
     
     # Estilos de color para la marca
@@ -91,4 +92,5 @@ if comprobar_contrasena():
     # Boton para cerrar sesion
     if st.sidebar.button("Cerrar Sesion"):
         st.session_state["password_correct"] = False
+
         st.rerun()
