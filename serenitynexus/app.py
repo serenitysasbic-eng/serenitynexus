@@ -85,13 +85,13 @@ elif menu == "SUSCRIPCIONES":
     st.title("💳 Planes de Apoyo Regenerativo")
     p1, p2, p3 = st.columns(3)
     with p1:
-        st.markdown("<div style='border:1px solid #9BC63B; padding:20px; border-radius:10px;'><h3>Plan Semilla</h3><h2>$5 USD</h2><p>1 Árbol Nativo/mes</p></div>", unsafe_allow_html=True)
+        st.markdown("<div style='border:1px solid #9BC63B; padding:20px; border-radius:10px;'><h3>Plan Semilla</h3><h2>$5 USD</h2><p>1 Punto Faro/mes</p></div>", unsafe_allow_html=True)
         st.button("Suscribirse Semilla")
     with p2:
-        st.markdown("<div style='border:1px solid #9BC63B; padding:20px; border-radius:10px;'><h3>Plan Guardián</h3><h2>$25 USD</h2><p>Monitoreo Biológico/mes</p></div>", unsafe_allow_html=True)
+        st.markdown("<div style='border:1px solid #9BC63B; padding:20px; border-radius:10px;'><h3>Plan Guardián</h3><h2>$25 USD</h2><p>6 Puntos Faro/mes</p></div>", unsafe_allow_html=True)
         st.button("Suscribirse Guardián")
     with p3:
-        st.markdown("<div style='border:1px solid #D4AF37; padding:20px; border-radius:10px;'><h3>Plan Serenity</h3><h2>$200 USD</h2><p>Protección Integral/mes</p></div>", unsafe_allow_html=True)
+        st.markdown("<div style='border:1px solid #D4AF37; padding:20px; border-radius:10px;'><h3>Plan Heroe</h3><h2>$200 USD</h2><p>6 Puntos Faro/6 meses</p></div>", unsafe_allow_html=True)
         st.button("Suscribirse Serenity")
     
     st.markdown("""
@@ -149,6 +149,7 @@ elif menu == "UBICACIÓN":
     st.title("📍 Ubicación Hacienda Serenity")
     st.write("KBA San Antonio, Valle del Cauca, Colombia.")
     st.map(pd.DataFrame({'lat': [3.4833], 'lon': [-76.6167]}))
+
 
 
 
