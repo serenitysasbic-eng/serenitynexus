@@ -76,7 +76,7 @@ if menu == "INICIO":
     st.markdown("<h1 style='text-align:center; font-size:4rem;'>Serenity Nexus Global</h1>", unsafe_allow_html=True)
     st.markdown("<p style='text-align:center; letter-spacing:5px; color:#9BC63B; font-weight:bold;'>SISTEMA REGENERATIVO BIOMÉTRICO KBA</p>", unsafe_allow_html=True)
     st.components.v1.html("""
-        <audio id="audio_nature" src="https://www.soundjay.com/nature/sounds/forest-birds-01.mp3" loop></audio>
+        <audio id="audio_nature" src="sonido_Earth.mp3" loop></audio>
         <div style="text-align:center; margin-top:30px;">
             <button onclick="document.getElementById('audio_nature').play()" style="background:#2E7D32; color:white; border:1px solid #9BC63B; padding:20px; border-radius:10px; cursor:pointer; font-weight:bold; font-size:16px;">🔊 ACTIVAR SONIDO AMBIENTAL KBA</button>
         </div>
@@ -185,6 +185,7 @@ elif menu == "UBICACIÓN":
     st.title("📍 Ubicación Hacienda Serenity")
     st.write("Dagua y Felidia, Valle del Cauca, Colombia.")
     st.map(pd.DataFrame({'lat': [3.4833], 'lon': [-76.6167]}))
+
 
 
 
