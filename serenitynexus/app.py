@@ -7,24 +7,32 @@ from datetime import datetime
 # CONFIGURACIÓN DE IDENTIDAD
 st.set_page_config(page_title="Serenity Nexus Global", page_icon="🌳", layout="wide")
 
-# --- DISEÑO VISUAL UNIFICADO (CSS) ---
+# --- DISEÑO VISUAL UNIFICADO CON FONDO DE BOSQUE (CSS) ---
 st.markdown("""
     <style>
-        .stApp { background-color: #050a04; color: #e8f5e9; font-family: 'Montserrat', sans-serif; }
-        h1, h2, h3 { color: #9BC63B; font-family: 'Merriweather', serif; }
-        .stButton>button { background-color: #2E7D32; color: white; border: 1px solid #9BC63B; border-radius: 8px; width: 100%; }
+        .stApp { 
+            background-image: linear-gradient(rgba(5, 10, 4, 0.7), rgba(5, 10, 4, 0.8)), 
+            url('https://images.unsplash.com/photo-1448375240586-882707db888b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover; 
+            background-position: center;
+            background-attachment: fixed;
+            color: #e8f5e9; 
+            font-family: 'Montserrat', sans-serif; 
+        }
+        h1, h2, h3 { color: #9BC63B; font-family: 'Merriweather', serif; text-shadow: 2px 2px 4px #000000; }
+        .stButton>button { background-color: #2E7D32; color: white; border: 1px solid #9BC63B; border-radius: 8px; width: 100%; font-weight: bold; }
         .stButton>button:hover { background-color: #9BC63B; color: black; box-shadow: 0 0 15px #9BC63B; }
-        .faro-card { border: 1px solid #9BC63B; padding: 15px; border-radius: 10px; background: rgba(0,0,0,0.5); text-align: center; }
+        .faro-card { border: 1px solid #9BC63B; padding: 15px; border-radius: 10px; background: rgba(0,0,0,0.6); text-align: center; backdrop-filter: blur(5px); }
         .cam-grid { background: #000; border: 1px solid #2E7D32; height: 100px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #ff0000; border-radius: 5px; }
         .mic-bar { background: rgba(155, 198, 59, 0.2); border: 1px solid #2E7D32; padding: 5px; border-radius: 5px; text-align: center; font-size: 12px; }
-        .pago-contenedor { background: white; padding: 20px; border-radius: 10px; text-align: center; margin-top: 20px; }
+        .pago-contenedor { background: rgba(255, 255, 255, 0.9); padding: 20px; border-radius: 10px; text-align: center; margin-top: 20px; }
+        .stSidebar { background-color: rgba(10, 20, 8, 0.9) !important; backdrop-filter: blur(10px); }
     </style>
 """, unsafe_allow_html=True)
 
 # --- SEGURIDAD ---
 if "auth" not in st.session_state:
-    st.markdown("<div style='text-align:center;'>", unsafe_allow_html=True)
-    # INSERTAR LOGO EN LOGIN
+    st.markdown("<div style='text-align:center; padding-top: 50px;'>", unsafe_allow_html=True)
     try:
         st.image("logo_serenity.png", width=250)
     except:
@@ -41,7 +49,6 @@ if "auth" not in st.session_state:
     st.stop()
 
 # --- NAVEGACIÓN LATERAL ---
-# INSERTAR LOGO EN BARRA LATERAL
 try:
     st.sidebar.image("logo_serenity.png", use_container_width=True)
 except:
@@ -59,7 +66,7 @@ menu = st.sidebar.radio("CENTRO DE CONTROL", [
 # 1. INICIO
 if menu == "INICIO":
     st.markdown("<h1 style='text-align:center; font-size:4rem;'>Serenity Nexus Global</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align:center; letter-spacing:5px; color:#9BC63B;'>SISTEMA REGENERATIVO BIOMÉTRICO</p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align:center; letter-spacing:5px; color:#9BC63B; font-weight:bold;'>SISTEMA REGENERATIVO BIOMÉTRICO</p>", unsafe_allow_html=True)
     st.components.v1.html("""
         <audio id="audio" src="sonido_bosque.m4a" loop></audio>
         <div style="text-align:center; margin-top:20px;">
@@ -67,7 +74,7 @@ if menu == "INICIO":
         </div>
     """, height=100)
 
-# 2. LOS 6 PUNTOS FARO (VIGILANCIA COMPLETA)
+# 2. LOS 6 PUNTOS FARO
 elif menu == "6 PUNTOS FARO":
     st.title("🛰️ Monitoreo Perimetral - 6 Nodos")
     faros = ["Halcón", "Colibrí", "Rana", "Venado", "Tigrillo", "Capibara"]
@@ -80,33 +87,30 @@ elif menu == "6 PUNTOS FARO":
     if "f_activo" in st.session_state:
         st.divider()
         st.header(f"📡 TRANSMISIÓN ACTIVA: FARO {st.session_state.f_activo.upper()}")
-        
         st.subheader("8 Cámaras de Seguridad (Streaming)")
         cam_cols = st.columns(4)
         for j in range(8):
             with cam_cols[j % 4]:
                 st.markdown(f"<div class='cam-grid'>CAM {j+1}<br>● LIVE</div>", unsafe_allow_html=True)
-        
         st.subheader("4 Micrófonos Bioacústicos")
         mic_cols = st.columns(4)
         for k in range(4):
             with mic_cols[k]:
                 st.markdown(f"<div class='mic-bar'>MIC {k+1}<br><span style='color:#9BC63B;'>|||||||||| {random.randint(30,95)}%</span></div>", unsafe_allow_html=True)
 
-# 3. SUSCRIPCIONES (PLANES Y PAGOS)
+# 3. SUSCRIPCIONES
 elif menu == "SUSCRIPCIONES":
-    st.title("💳 Planes Streaming de Apoyo Regenerativo")
+    st.title("💳 Planes de Apoyo Regenerativo")
     p1, p2, p3 = st.columns(3)
     with p1:
-        st.markdown("<div style='border:1px solid #9BC63B; padding:20px; border-radius:10px;'><h3>Plan Semilla</h3><h2>$5 USD</h2><p>1 Punto Faro/1 mes</p></div>", unsafe_allow_html=True)
+        st.markdown("<div class='faro-card'><h3>Plan Semilla</h3><h2>$5 USD</h2><p>1 Punto Faro/1 mes</p></div>", unsafe_allow_html=True)
         st.button("Suscribirse Semilla")
     with p2:
-        st.markdown("<div style='border:1px solid #9BC63B; padding:20px; border-radius:10px;'><h3>Plan Guardián</h3><h2>$25 USD</h2><p>6 Puntos Faro/1 mes</p></div>", unsafe_allow_html=True)
+        st.markdown("<div class='faro-card'><h3>Plan Guardián</h3><h2>$25 USD</h2><p>6 Puntos Faro/1 mes</p></div>", unsafe_allow_html=True)
         st.button("Suscribirse Guardián")
     with p3:
-        st.markdown("<div style='border:1px solid #D4AF37; padding:20px; border-radius:10px;'><h3>Plan Halcon</h3><h2>$200 USD</h2><p>6 Puntos Faro/6 meses</p></div>", unsafe_allow_html=True)
+        st.markdown("<div class='faro-card' style='border-color:#D4AF37;'><h3>Plan Halcon</h3><h2>$200 USD</h2><p>6 Puntos Faro/6 meses</p></div>", unsafe_allow_html=True)
         st.button("Suscribirse Heroe")
-    
     st.markdown("""
         <div class="pago-contenedor">
             <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" width="100"> &nbsp;&nbsp;&nbsp;
@@ -126,16 +130,15 @@ elif menu == "DONACIONES Y CERTIFICADO":
         if st.button("PROCESAR Y GENERAR CERTIFICADO"):
             st.balloons()
             st.session_state.ver_cert = True
-    
     if "ver_cert" in st.session_state:
         with colB:
             st.markdown(f"""
                 <div style="background:white; color:#050a04; padding:30px; border:8px double #D4AF37; text-align:center; font-family:serif;">
-                    <h1 style="color:#2E7D32;">CERTIFICADO DE DONACION</h1>
+                    <h1 style="color:#2E7D32;">CERTIFICADO DE GUARDIÁN</h1>
                     <p>Serenity SAS BIC certifica que:</p>
                     <h2 style="color:black;">{nombre_d}</h2>
                     <p>Ha contribuido con <b>{monto_d} USD</b></p>
-                    <p>a la regeneración del KBA Bosque San Antonio y sus Comunidades.</p>
+                    <p>a la regeneración del KBA San Antonio.</p>
                     <hr>
                     <small>{datetime.now().strftime('%d/%m/%Y')} - Cali, Colombia</small>
                 </div>
@@ -144,7 +147,6 @@ elif menu == "DONACIONES Y CERTIFICADO":
 # 5. LOGÍSTICA AEROLÍNEAS
 elif menu == "LOGÍSTICA AEROLÍNEAS":
     st.title("✈️ Rutas Globales a Colombia")
-    st.info("Conexiones directas para visitantes internacionales de Serenity.")
     c_a1, c_a2 = st.columns(2)
     with c_a1:
         st.subheader("Europa y Asia")
@@ -159,9 +161,10 @@ elif menu == "LOGÍSTICA AEROLÍNEAS":
 
 # 6. UBICACIÓN
 elif menu == "UBICACIÓN":
-    st.title("📍 Ubicación Serenity Felidia Valle del Cauca")
-    st.write("Felidia y Dagua, Valle del Cauca, Colombia.")
+    st.title("📍 Ubicación Hacienda Serenity")
+    st.write("KBA San Antonio, Valle del Cauca, Colombia.")
     st.map(pd.DataFrame({'lat': [3.4833], 'lon': [-76.6167]}))
+
 
 
 
