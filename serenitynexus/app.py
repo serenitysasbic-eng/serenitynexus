@@ -23,7 +23,14 @@ st.markdown("""
 
 # --- SEGURIDAD ---
 if "auth" not in st.session_state:
-    st.markdown("<h1 style='text-align:center;'>SISTEMA NEXUS | SERENITY</h1>", unsafe_allow_html=True)
+    st.markdown("<div style='text-align:center;'>", unsafe_allow_html=True)
+    # INSERTAR LOGO EN LOGIN
+    try:
+        st.image("logo_serenity.png", width=250)
+    except:
+        st.markdown("<h1>SISTEMA NEXUS | SERENITY</h1>", unsafe_allow_html=True)
+    st.markdown("</div>", unsafe_allow_html=True)
+    
     col1, col2, col3 = st.columns([1,1,1])
     with col2:
         clave = st.text_input("PASSWORD ADMIN", type="password")
@@ -34,6 +41,12 @@ if "auth" not in st.session_state:
     st.stop()
 
 # --- NAVEGACIÓN LATERAL ---
+# INSERTAR LOGO EN BARRA LATERAL
+try:
+    st.sidebar.image("logo_serenity.png", use_container_width=True)
+except:
+    st.sidebar.markdown("### 🌳 Serenity Nexus")
+
 menu = st.sidebar.radio("CENTRO DE CONTROL", [
     "INICIO", 
     "6 PUNTOS FARO", 
@@ -149,6 +162,7 @@ elif menu == "UBICACIÓN":
     st.title("📍 Ubicación Hacienda Serenity")
     st.write("KBA San Antonio, Valle del Cauca, Colombia.")
     st.map(pd.DataFrame({'lat': [3.4833], 'lon': [-76.6167]}))
+
 
 
 
