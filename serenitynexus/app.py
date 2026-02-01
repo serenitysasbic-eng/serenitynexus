@@ -128,7 +128,7 @@ elif menu == "GESTIÓN LEY 2173 (EMPRESAS)":
                 <p>Este registro cumple con los requerimientos de ÁREAS DE VIDA.</p>
             </div>
         """, unsafe_allow_html=True)
-        st.download_button("⬇️ DESCARGAR CERTIFICADO TÉCNICO LEY 2173", data="Reporte Técnico Serenity...", file_name=f"Certificado_Ley2173_{nit}.txt")
+        st.download_button("⬇️ DESCARGAR CERTIFICADO TÉCNICO LEY 2173", data="Reporte Tecnico Serenity se registra el siguiente estado de conservacion y regeneracion a la empres aqui descrita la cual cumple con lo descrito en la Ley 2173 de 2021", file_name=f"Certificado_Ley2173_{nit}.txt")
 
 # 5. SUSCRIPCIONES
 elif menu == "SUSCRIPCIONES":
@@ -162,8 +162,8 @@ elif menu == "DONACIONES Y CERTIFICADO":
                     <p style="font-size:1.2rem;">Otorgado con profunda gratitud a:</p>
                     <h2 style="font-size:2.2rem; border-bottom: 2px solid black; padding-bottom:10px;">{nombre_d}</h2>
                     <p style="font-size:1.1rem; margin-top:20px;">Por su valiosa contribución de <b>${monto_d} USD</b></p>
-                    <p>Destinados a la protección y monitoreo de la biodiversidad en el Bosque San Antonio.</p>
-                    <h3 style="margin-top:30px;">SERENITY HUB S.A.S. BIC</h3>
+                    <p>Destinados a la protección y monitoreo de la biodiversidad en el KBA Bosque San Antonio y a la Comunidad.</p>
+                    <h3 style="margin-top:30px;">SERENITY S.A.S. BIC</h3>
                     <p style="font-size:0.8rem;">Folio: {folio} | Fecha: {datetime.now().strftime('%d/%m/%Y')}</p>
                     <p style="font-size:10px; margin-top:15px; color:#888 !important;">VERIFICADO POR SISTEMA NEXUS IA</p>
                 </div>
@@ -185,6 +185,7 @@ elif menu == "UBICACIÓN":
     st.title("📍 Ubicación Hacienda Serenity")
     st.write("Dagua y Felidia, Valle del Cauca, Colombia.")
     st.map(pd.DataFrame({'lat': [3.4833], 'lon': [-76.6167]}))
+
 
 
 
