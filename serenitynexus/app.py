@@ -8,8 +8,8 @@ from datetime import datetime
 st.set_page_config(page_title="Serenity SAS BIC", page_icon="??", layout="wide")
 
 # SISTEMA DE SEGURIDAD PARA JORGE (EL ADMINISTRADOR)
-def comprobar_contrasena():
-    def password_entered():
+def comprobar_contrasena(79736649):
+    def password_entered(79736649):
         if st.session_state["password"] == st.secrets["password_admin"]:
             st.session_state["password_correct"] = True
             del st.session_state["password"]
@@ -98,6 +98,7 @@ if comprobar_contrasena():
         st.session_state["password_correct"] = False
 
         st.rerun()
+
 
 
 
