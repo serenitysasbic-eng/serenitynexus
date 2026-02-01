@@ -19,14 +19,27 @@ st.markdown("""
             color: #e8f5e9; 
             font-family: 'Montserrat', sans-serif; 
         }
+        
+        /* CAMBIO A COLOR BLANCO EN EL MENÚ LATERAL */
+        [data-testid="stSidebar"] {
+            background-color: rgba(10, 20, 8, 0.9) !important;
+            backdrop-filter: blur(10px);
+        }
+        
+        [data-testid="stSidebar"] .st-expander, [data-testid="stSidebar"] p, [data-testid="stSidebar"] span {
+            color: white !important;
+            font-weight: 500;
+        }
+
         h1, h2, h3 { color: #9BC63B; font-family: 'Merriweather', serif; text-shadow: 2px 2px 4px #000000; }
+        
         .stButton>button { background-color: #2E7D32; color: white; border: 1px solid #9BC63B; border-radius: 8px; width: 100%; font-weight: bold; }
         .stButton>button:hover { background-color: #9BC63B; color: black; box-shadow: 0 0 15px #9BC63B; }
+        
         .faro-card { border: 1px solid #9BC63B; padding: 15px; border-radius: 10px; background: rgba(0,0,0,0.6); text-align: center; backdrop-filter: blur(5px); }
         .cam-grid { background: #000; border: 1px solid #2E7D32; height: 100px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #ff0000; border-radius: 5px; }
         .mic-bar { background: rgba(155, 198, 59, 0.2); border: 1px solid #2E7D32; padding: 5px; border-radius: 5px; text-align: center; font-size: 12px; }
         .pago-contenedor { background: rgba(255, 255, 255, 0.9); padding: 20px; border-radius: 10px; text-align: center; margin-top: 20px; }
-        .stSidebar { background-color: rgba(10, 20, 8, 0.9) !important; backdrop-filter: blur(10px); }
     </style>
 """, unsafe_allow_html=True)
 
@@ -54,6 +67,7 @@ try:
 except:
     st.sidebar.markdown("### 🌳 Serenity Nexus")
 
+# Aquí las opciones ahora se verán en color blanco por el CSS de arriba
 menu = st.sidebar.radio("CENTRO DE CONTROL", [
     "INICIO", 
     "6 PUNTOS FARO", 
@@ -164,6 +178,7 @@ elif menu == "UBICACIÓN":
     st.title("📍 Ubicación Hacienda Serenity")
     st.write("KBA San Antonio, Valle del Cauca, Colombia.")
     st.map(pd.DataFrame({'lat': [3.4833], 'lon': [-76.6167]}))
+
 
 
 
