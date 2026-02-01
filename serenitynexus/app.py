@@ -152,7 +152,7 @@ elif menu == "DONACIONES Y CERTIFICADO":
                     <p>Serenity SAS BIC certifica que:</p>
                     <h2 style="color:black;">{nombre_d}</h2>
                     <p>Ha contribuido con <b>{monto_d} USD</b></p>
-                    <p>a la regeneración del KBA San Antonio.</p>
+                    <p>a la regeneración del KBA Bosque San Antonio y a la Comunidad de Dagua y Felidia.</p>
                     <hr>
                     <small>{datetime.now().strftime('%d/%m/%Y')} - Cali, Colombia</small>
                 </div>
@@ -178,6 +178,7 @@ elif menu == "UBICACIÓN":
     st.title("📍 Ubicación Serenity")
     st.write("Felidia y Dagua, Valle del Cauca, Colombia.")
     st.map(pd.DataFrame({'lat': [3.4833], 'lon': [-76.6167]}))
+
 
 
 
