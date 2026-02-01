@@ -4,113 +4,130 @@ import pandas as pd
 import random
 from datetime import datetime
 
-# CONFIGURACION DE IDENTIDAD - SERENITY SAS BIC
+# CONFIGURACIÓN DE PÁGINA
 st.set_page_config(page_title="Serenity SAS BIC", page_icon="🌳", layout="wide")
 
-# SISTEMA DE SEGURIDAD INTEGRADO
+# --- ESTILOS VISUALES DE TU PC (CSS) ---
+st.markdown("""
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        .stApp {
+            background-image: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover; color: white; font-family: 'Montserrat', sans-serif;
+        }
+        h1, h2, h3 { font-family: 'Merriweather', serif; color: #9BC63B; }
+        .stButton>button {
+            background-color: #2E7D32; color: white; border: 1px solid #9BC63B;
+            border-radius: 5px; font-weight: bold; text-transform: uppercase; width: 100%;
+        }
+        .stButton>button:hover { border: 1px solid white; color: #9BC63B; box-shadow: 0 0 15px #9BC63B; }
+        .card { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px; border: 1px solid rgba(155,198,59,0.2); }
+    </style>
+""", unsafe_allow_html=True)
+
+# --- SISTEMA DE SEGURIDAD ---
 def comprobar_contrasena():
-    def password_entered():
-        # JORGE: AQUÍ PUEDES EDITAR TU CONTRASEÑA DIRECTAMENTE
-        if st.session_state["password"] == "Serenity2026":
-            st.session_state["password_correct"] = True
-            del st.session_state["password"]
-        else:
-            st.session_state["password_correct"] = False
-
     if "password_correct" not in st.session_state:
-        try:
-            st.image("logo_serenity.png", width=200)
-        except:
-            st.markdown("### 🌳 Serenity SAS BIC")
-            
-        st.title("Acceso Privado | Nodo Nexus")
-        st.text_input("Ingrese su clave de Administrador", type="password", on_change=password_entered, key="password")
+        st.markdown("<div style='text-align:center;'>", unsafe_allow_html=True)
+        try: st.image("logo_serenity.png", width=250)
+        except: st.title("Serenity SAS BIC")
+        st.markdown("</div>", unsafe_allow_html=True)
+        
+        pw = st.text_input("Ingrese Clave de Administrador", type="password")
+        if st.button("INGRESAR AL SISTEMA"):
+            if pw == "Serenity2026":
+                st.session_state["password_correct"] = True
+                st.rerun()
+            else: st.error("Clave Incorrecta")
         return False
-    elif not st.session_state["password_correct"]:
-        st.error("Clave incorrecta. Acceso denegado.")
-        st.text_input("Ingrese su clave de Administrador", type="password", on_change=password_entered, key="password")
-        return False
-    else:
-        return True
+    return True
 
-# INICIO DEL SISTEMA TRAS VALIDACIÓN
 if comprobar_contrasena():
-    
-    # Diseño visual Serenity
-    st.markdown("""<style>
-        .stApp { background-color: #050a04; color: #e8f5e9; }
-        .stButton>button { background-color: #2E7D32; color: white; border-radius: 10px; border: 1px solid #9BC63B; }
-        .stSidebar { background-color: #0a1408; }
-    </style>""", unsafe_allow_html=True)
+    # BARRA LATERAL (NAVEGACIÓN COMPLETA)
+    st.sidebar.image("logo_serenity.png", use_container_width=True)
+    menu = st.sidebar.radio("MENÚ PRINCIPAL", 
+        ["Inicio", "Puntos Faro", "Planes de Apoyo", "Donaciones & Certificados", "Hospedaje", "Ubicación"])
 
-    # Menu Lateral
-    try:
-        st.sidebar.image("logo_serenity.png", use_container_width=True)
-    except:
-        st.sidebar.title("Serenity SAS BIC")
+    # 1. INICIO
+    if menu == "Inicio":
+        st.markdown("<h1 style='text-align:center; font-size:3.5rem;'>Serenity Nexus Global</h1>", unsafe_allow_html=True)
+        st.markdown("<p style='text-align:center; letter-spacing:4px;'>SISTEMA REGENERATIVO BIOMÉTRICO</p>", unsafe_allow_html=True)
         
-    st.sidebar.markdown("---")
-    opcion = st.sidebar.radio("CENTRO DE CONTROL", ["Monitoreo de Faros", "Realidad Virtual 360", "Gestion BIC", "Mapa de Ubicacion"])
-
-    # --- PÁGINA: MONITOREO ---
-    if opcion == "Monitoreo de Faros":
-        st.header("Nexus Global | Inteligencia Biológica")
-        
-        # Audio de aves corregido para evitar errores
-        try:
-            st.components.v1.html("""
-                <audio id="bosque" src="sonido_bosque.m4a" loop></audio>
-                <button onclick="document.getElementById('bosque').play()" 
-                style="background:#2E7D32; color:white; padding:12px; border-radius:8px; cursor:pointer; border:1px solid #9BC63B; font-weight:bold;">
-                🔊 ACTIVAR AMBIENTE HACIENDA
-                </button>
-            """, height=80)
-        except:
-            st.warning("El archivo de audio no está disponible.")
-
-        col1, col2 = st.columns([2, 1])
-        with col1:
-            st.image("https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800", caption="Monitoreo Faro Halcón")
-        with col2:
-            st.subheader("Alertas IA de Fauna")
-            if st.button("Escanear Sensores"):
-                aves = ["Tangara Multicolor", "Barranquero", "Pava Caucana", "Colibrí Inca"]
-                st.success(f"Reporte: {random.choice(aves)} detectado.")
-                st.info(f"Hora: {datetime.now().strftime('%H:%M:%S')}")
-
-    # --- PÁGINA: REALIDAD VIRTUAL ---
-    elif opcion == "Realidad Virtual 360":
-        st.header("Inmersión VR | Puntos Faro")
-        st.write("Visualización inmersiva del KBA San Antonio.")
         st.components.v1.html("""
-            <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-            <a-scene embedded style="height: 500px; width: 100%;">
-                <a-sky src="https://pannellum.org/images/alma.jpg" rotation="0 -130 0"></a-sky>
-                <a-text value="Serenity SAS BIC - Faro VR" position="-1.5 2 -3" color="#9BC63B" width="6"></a-text>
-            </a-scene>
-        """, height=520)
+            <audio id="audio" src="sonido_bosque.m4a" loop></audio>
+            <div style="text-align:center;"><button onclick="document.getElementById('audio').play()" 
+            style="background:#2E7D32; color:white; border:1px solid #9BC63B; padding:15px 30px; border-radius:5px; cursor:pointer;">
+            🔊 ACTIVAR SONIDO AMBIENTAL</button></div>
+        """, height=100)
 
-    # --- PÁGINA: GESTIÓN ---
-    elif opcion == "Gestion BIC":
-        st.header("Impacto y Donaciones")
-        with st.form("donar"):
-            nombre = st.text_input("Nombre del Donante")
-            monto = st.number_input("Aporte (USD)", min_value=1)
-            if st.form_submit_button("Registrar en Libro BIC"):
-                st.balloons()
-                st.success(f"Gracias {nombre}. Registro procesado.")
+    # 2. PUNTOS FARO (VR Y MONITOREO)
+    elif menu == "Puntos Faro":
+        st.title("Monitoreo de Puntos Faro")
+        colA, colB, colC = st.columns(3)
+        faros = ["🦅 Halcón", "🌸 Colibrí", "🐸 Rana", "🦌 Venado", "🐾 Tigrillo", "💧 Capibara"]
+        for i, faro in enumerate(faros):
+            target = [colA, colB, colC][i % 3]
+            if target.button(f"Ver {faro}"):
+                st.session_state.faro_actual = faro
 
-    # --- PÁGINA: UBICACIÓN ---
-    elif opcion == "Mapa de Ubicacion":
-        st.header("Localización de la Hacienda")
-        # Coordenadas San Antonio
-        mapa = pd.DataFrame({'lat': [3.4833], 'lon': [-76.6167]})
-        st.map(mapa)
+        if "faro_actual" in st.session_state:
+            st.markdown(f"### Visualización: {st.session_state.faro_actual}")
+            st.components.v1.html("""
+                <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+                <a-scene embedded style="height: 350px;">
+                    <a-sky src="https://pannellum.org/images/alma.jpg" rotation="0 -130 0"></a-sky>
+                </a-scene>
+            """, height=350)
+            st.info(f"IA Alerta: {random.choice(['Sin novedades', 'Movimiento detectado', 'Canto de ave registrado'])}")
 
-    # Boton para cerrar sesion profesional
-    st.sidebar.markdown("---")
+    # 3. PLANES DE APOYO (SUSCRIPCIONES)
+    elif menu == "Planes de Apoyo":
+        st.title("Planes de Apoyo Regenerativo")
+        c1, c2, c3 = st.columns(3)
+        with c1:
+            st.markdown("<div class='card'><h3>Plan Semilla</h3><p>USD 5 / mes</p></div>", unsafe_allow_html=True)
+            if st.button("Suscribirse Semilla"): st.success("Redirigiendo a Pasarela...")
+        with c2:
+            st.markdown("<div class='card'><h3>Plan Guardián</h3><p>USD 25 / mes</p></div>", unsafe_allow_html=True)
+            if st.button("Suscribirse Guardián"): st.success("Redirigiendo a Pasarela...")
+        with c3:
+            st.markdown("<div class='card'><h3>Plan Serenity</h3><p>USD 200 / mes</p></div>", unsafe_allow_html=True)
+            if st.button("Suscribirse Serenity"): st.success("Redirigiendo a Pasarela...")
+
+    # 4. DONACIONES & CERTIFICADOS
+    elif menu == "Donaciones & Certificados":
+        st.title("Donaciones al Planeta")
+        monto = st.number_input("Monto de Donación Voluntaria (USD)", min_value=1)
+        nombre = st.text_input("Nombre para el Certificado")
+        if st.button("Donar y Generar Certificado"):
+            st.balloons()
+            st.markdown(f"""
+                <div style="background:white; color:black; padding:40px; border:10px double #D4AF37; text-align:center; font-family:serif;">
+                    <h1 style="color:#2E7D32;">CERTIFICADO DE DONACIÓN</h1>
+                    <p>Serenity SAS BIC reconoce a: <b>{nombre}</b></p>
+                    <p>Por su valioso aporte de {monto} USD a la regeneración del KBA San Antonio.</p>
+                </div>
+            """, unsafe_allow_html=True)
+
+    # 5. HOSPEDAJE
+    elif menu == "Hospedaje":
+        st.title("Reservas Eco-Lodge")
+        h1, h2 = st.columns(2)
+        with h1:
+            st.markdown("<div class='card'><h3>Villa Michelle</h3><p>Confort y Naturaleza</p></div>", unsafe_allow_html=True)
+            st.button("Reservar en Villa Michelle")
+        with h2:
+            st.markdown("<div class='card'><h3>Monte Guadua</h3><p>Inmersión Total</p></div>", unsafe_allow_html=True)
+            st.button("Reservar en Monte Guadua")
+
+    # 6. UBICACIÓN
+    elif menu == "Ubicación":
+        st.title("Nuestra Ubicación")
+        df_map = pd.DataFrame({'lat': [3.4833], 'lon': [-76.6167]})
+        st.map(df_map)
+
     if st.sidebar.button("Cerrar Sesión"):
-        st.session_state["password_correct"] = False
+        st.session_state.clear()
         st.rerun()
 
 
