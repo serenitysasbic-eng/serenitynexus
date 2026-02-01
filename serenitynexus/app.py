@@ -128,7 +128,7 @@ elif menu == "DONACIONES Y CERTIFICADO":
                 </div>
             """, unsafe_allow_html=True)
 
-# 5. LOGÍSTICA AEROLÍNEAS
+# 5. AEROLÍNEAS A COLOMBIA
 elif menu == "LOGÍSTICA AEROLÍNEAS":
     st.title("✈️ Rutas Globales a Colombia")
     st.info("Conexiones directas para visitantes internacionales de Serenity.")
@@ -149,6 +149,7 @@ elif menu == "UBICACIÓN":
     st.title("📍 Ubicación Serenity")
     st.write("KBA San Antonio, Valle del Cauca, Colombia.")
     st.map(pd.DataFrame({'lat': [3.4833], 'lon': [-76.6167]}))
+
 
 
 
