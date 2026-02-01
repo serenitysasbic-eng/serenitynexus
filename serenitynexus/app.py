@@ -3,6 +3,7 @@ import streamlit as st
 import pandas as pd
 import random
 from datetime import datetime
+from PIL import Image
 
 # CONFIGURACIÓN DE IDENTIDAD
 st.set_page_config(page_title="Serenity Nexus Global", page_icon="🌳", layout="wide")
@@ -17,16 +18,20 @@ st.markdown("""
             color: #e8f5e9; font-family: 'Montserrat', sans-serif; 
         }
         
+        /* TEXTO BLANCO EN SIDEBAR */
         [data-testid="stSidebar"] { background-color: rgba(10, 20, 8, 0.9) !important; backdrop-filter: blur(10px); }
         [data-testid="stSidebar"] p, [data-testid="stSidebar"] span { color: white !important; font-weight: 500; }
 
         h1, h2, h3 { color: #9BC63B; font-family: 'Merriweather', serif; text-shadow: 2px 2px 4px #000; }
         
+        /* BOTONES */
         .stButton>button { background-color: #2E7D32; color: white; border: 1px solid #9BC63B; border-radius: 8px; width: 100%; font-weight: bold; }
         .stButton>button:hover { background-color: #9BC63B; color: black; box-shadow: 0 0 15px #9BC63B; }
         
+        /* TARJETAS DE MÉTRICAS */
         .metric-card { background: rgba(0,0,0,0.7); padding: 20px; border-radius: 10px; border: 1px solid #9BC63B; text-align: center; backdrop-filter: blur(5px); }
         
+        /* TABLA DE AVISTAMIENTOS VISIBLE */
         .avistamiento-row { 
             background: rgba(255, 255, 255, 0.1); 
             border-left: 5px solid #9BC63B; 
@@ -40,8 +45,16 @@ st.markdown("""
         .faro-card { border: 1px solid #9BC63B; padding: 15px; border-radius: 10px; background: rgba(0,0,0,0.6); text-align: center; }
         .cam-grid { background: #000; border: 1px solid #2E7D32; height: 100px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #ff0000; border-radius: 5px; }
         
-        /* ESTILO PARA LEY 2173 */
-        .ley-box { background: rgba(46, 125, 50, 0.3); border: 2px dashed #9BC63B; padding: 20px; border-radius: 15px; margin-top: 10px; }
+        /* ESTILO PARA LEY 2173 CON TEXTO BLANCO */
+        .ley-box { 
+            background: rgba(0, 0, 0, 0.7); 
+            border: 2px dashed #9BC63B; 
+            padding: 25px; 
+            border-radius: 15px; 
+            margin-top: 10px; 
+            color: white !important; 
+        }
+        .ley-box h3, .ley-box b, .ley-box p { color: white !important; }
     </style>
 """, unsafe_allow_html=True)
 
@@ -82,7 +95,7 @@ if menu == "INICIO":
     st.components.v1.html("""
         <audio id="audio_nature" src="https://www.soundjay.com/nature/sounds/forest-birds-01.mp3" loop></audio>
         <div style="text-align:center; margin-top:30px;">
-            <button onclick="document.getElementById('audio_nature').play()" style="background:#2E7D32; color:white; border:1px solid #9BC63B; padding:20px; border-radius:10px; cursor:pointer; font-weight:bold; font-size:16px;">🔊 ACTIVAR SONIDO AMBIENTAL KBA</button>
+            <button onclick="document.getElementById('audio_nature').play()" style="background:#2E7D32; color:white; border:1px solid #9BC63B; padding:15px; border-radius:10px; cursor:pointer; font-weight:bold; font-size:16px;">🔊 ACTIVAR SONIDO AMBIENTAL KBA</button>
         </div>
     """, height=130)
 
@@ -105,7 +118,13 @@ elif menu == "6 PUNTOS FARO":
         st.subheader("Monitoreo Bioacústico")
         mic_cols = st.columns(4)
         for k in range(4):
-            with mic_cols[k]: st.markdown(f"<div style='background:rgba(155,198,59,0.2); border:1px solid #2E7D32; padding:10px; border-radius:5px; text-align:center;'>MIC {k+1}<br><span style='color:#9BC63B;'>|||||||||| {random.randint(30,95)}%</span></div>", unsafe_allow_html=True)
+            with mic_cols[k]: 
+                st.markdown(f"""
+                    <div style='background:rgba(155,198,59,0.2); border:1px solid #2E7D32; padding:15px; border-radius:5px; text-align:center;'>
+                        <b>MIC {k+1}</b><br>
+                        <span style='color:#9BC63B;'>|||||||||| {random.randint(30,95)}%</span>
+                    </div>
+                """, unsafe_allow_html=True)
 
 # 3. DASHBOARD ESTADÍSTICO IA
 elif menu == "DASHBOARD ESTADÍSTICO IA":
@@ -126,25 +145,38 @@ elif menu == "DASHBOARD ESTADÍSTICO IA":
         for a in avistamientos:
             st.markdown(f"<div class='avistamiento-row'><span class='especie-tag'>{a['e']}</span> detectado en <b>Faro {a['f']}</b> | {a['h']}</div>", unsafe_allow_html=True)
 
-# 4. NUEVO: GESTIÓN LEY 2173
+# 4. GESTIÓN LEY 2173 (CON CARGA DE LOGO)
 elif menu == "GESTIÓN LEY 2173 (EMPRESAS)":
     st.title("⚖️ Cumplimiento Ley 2173 de 2021")
-    st.info("Serenity Nexus permite a las empresas colombianas gestionar sus 'Áreas de Vida' con transparencia total.")
+    st.info("Gestión de 'Áreas de Vida' con transparencia total para el sector corporativo.")
     
-    nit = st.text_input("Ingrese NIT de la Empresa para consultar estado de siembra")
+    col_input1, col_input2 = st.columns(2)
+    with col_input1:
+        nit = st.text_input("Ingrese NIT de la Empresa")
+    with col_input2:
+        uploaded_logo = st.file_uploader("Suba el Logo de su Empresa (PNG/JPG)", type=["png", "jpg", "jpeg"])
+
     if nit:
+        st.markdown("<div class='ley-box'>", unsafe_allow_html=True)
+        
+        # Mostrar logo si se subió
+        if uploaded_logo is not None:
+            image = Image.open(uploaded_logo)
+            st.image(image, width=150)
+            
         st.markdown(f"""
-            <div class='ley-box'>
-                <h3>Estado Corporativo: Activo</h3>
+                <h3 style='margin-bottom:20px;'>Estado Corporativo: ACTIVO</h3>
                 <p><b>Empresa Asociada:</b> Registro Vinculado al NIT {nit}</p>
-                <hr>
-                <p>🟢 <b>Árboles Sembrados:</b> 150 (Meta 2026 cumplida)</p>
+                <hr style='border-color: rgba(255,255,255,0.2);'>
+                <p>🌳 <b>Árboles Sembrados:</b> 150 (Meta 2026 cumplida)</p>
                 <p>📡 <b>Monitoreo Biométrico:</b> Activo en Faro Venado</p>
                 <p>📉 <b>Supervivencia Garantizada:</b> 98.5% mediante monitoreo IA</p>
+                <p>🗓️ <b>Próxima Auditoría CVC:</b> Marzo 2026</p>
             </div>
         """, unsafe_allow_html=True)
-        if st.button("GENERAR REPORTE PARA ENTES REGULADORES (CVC)"):
-            st.success("Generando reporte de cumplimiento con trazabilidad de Puntos Faro...")
+        
+        if st.button("GENERAR REPORTE PARA ENTES REGULADORES"):
+            st.success(f"Generando reporte PDF con el logo corporativo y trazabilidad de Puntos Faro para el NIT {nit}...")
 
 # 5. SUSCRIPCIONES
 elif menu == "SUSCRIPCIONES":
@@ -174,13 +206,14 @@ elif menu == "LOGÍSTICA AEROLÍNEAS":
         st.write("- Iberia / Air Europa (Madrid)\n- Lufthansa (Frankfurt)\n- Air France / KLM (París/Ámsterdam)\n- Turkish Airlines (Estambul)")
     with c_a2:
         st.subheader("América")
-        st.write("- American / Delta / United (USA)\n- Avianca / LATAM (Rutas Continentales)\n- Copa Airlines (Vía Panamá)")
+        st.write("- American / Delta / United (USA)\n- Avianca / LATAM (Suramérica)\n- Copa Airlines (Vía Panamá)")
 
 # 8. UBICACIÓN
 elif menu == "UBICACIÓN":
     st.title("📍 Ubicación Hacienda Serenity")
     st.write("Dagua y Felidia, Valle del Cauca, Colombia.")
     st.map(pd.DataFrame({'lat': [3.4833], 'lon': [-76.6167]}))
+
 
 
 
