@@ -44,7 +44,12 @@ def comprobar_contrasena():
 
 if comprobar_contrasena():
     # BARRA LATERAL (NAVEGACIÓN COMPLETA)
-    st.sidebar.image("logo_serenity.png", use_container_width=True)
+# BARRA LATERAL (NAVEGACIÓN COMPLETA - PROTEGIDA)
+    try:
+        st.sidebar.image("logo_serenity.png", use_container_width=True)
+    except:
+        st.sidebar.markdown("### 🌳 Serenity SAS BIC")
+        
     menu = st.sidebar.radio("MENÚ PRINCIPAL", 
         ["Inicio", "Puntos Faro", "Planes de Apoyo", "Donaciones & Certificados", "Hospedaje", "Ubicación"])
 
@@ -129,6 +134,7 @@ if comprobar_contrasena():
     if st.sidebar.button("Cerrar Sesión"):
         st.session_state.clear()
         st.rerun()
+
 
 
 
