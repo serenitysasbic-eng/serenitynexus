@@ -148,7 +148,7 @@ elif menu == "DONACIONES Y CERTIFICADO":
         with colB:
             st.markdown(f"""
                 <div style="background:white; color:#050a04; padding:30px; border:8px double #D4AF37; text-align:center; font-family:serif;">
-                    <h1 style="color:#2E7D32;">CERTIFICADO DE GUARDIÁN</h1>
+                    <h1 style="color:#2E7D32;">CERTIFICADO DE DONACION</h1>
                     <p>Serenity SAS BIC certifica que:</p>
                     <h2 style="color:black;">{nombre_d}</h2>
                     <p>Ha contribuido con <b>{monto_d} USD</b></p>
@@ -175,9 +175,10 @@ elif menu == "LOGÍSTICA AEROLÍNEAS":
 
 # 6. UBICACIÓN
 elif menu == "UBICACIÓN":
-    st.title("📍 Ubicación Hacienda Serenity")
-    st.write("KBA San Antonio, Valle del Cauca, Colombia.")
+    st.title("📍 Ubicación Serenity")
+    st.write("Felidia y Dagua, Valle del Cauca, Colombia.")
     st.map(pd.DataFrame({'lat': [3.4833], 'lon': [-76.6167]}))
+
 
 
 
