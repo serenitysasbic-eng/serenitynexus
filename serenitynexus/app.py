@@ -34,8 +34,8 @@ st.markdown("""
         .avistamiento-row { 
             background: rgba(255, 255, 255, 0.1); 
             border-left: 5px solid #9BC63B; 
-            padding: 10px; 
-            margin-bottom: 5px; 
+            padding: 12px; 
+            margin-bottom: 8px; 
             border-radius: 0 5px 5px 0;
             color: white;
         }
@@ -69,17 +69,19 @@ menu = st.sidebar.radio("CENTRO DE CONTROL", [
     "INICIO", "6 PUNTOS FARO", "DASHBOARD ESTADÍSTICO IA", "SUSCRIPCIONES", "DONACIONES Y CERTIFICADO", "LOGÍSTICA AEROLÍNEAS", "UBICACIÓN"
 ])
 
-# 1. INICIO (SONIDO RESTAURADO)
+# 1. INICIO
 if menu == "INICIO":
     st.markdown("<h1 style='text-align:center; font-size:4rem;'>Serenity Nexus Global</h1>", unsafe_allow_html=True)
     st.markdown("<p style='text-align:center; letter-spacing:5px; color:#9BC63B; font-weight:bold;'>SISTEMA REGENERATIVO BIOMÉTRICO</p>", unsafe_allow_html=True)
-    # Bloque de audio persistente
+    
+    # SONIDO DE NATURALEZA
     st.components.v1.html("""
-        <audio id="audio_bosque" src="sonido_bosque.m4a" loop></audio>
-        <div style="text-align:center; margin-top:20px;">
-            <button onclick="document.getElementById('audio_bosque').play()" style="background:#2E7D32; color:white; border:1px solid #9BC63B; padding:15px; border-radius:5px; cursor:pointer; font-weight:bold; font-size:16px;">🔊 ACTIVAR CANAL AUDITIVO HACIENDA</button>
+        <audio id="audio_nature" src="https://www.soundjay.com/nature/sounds/forest-birds-01.mp3" loop></audio>
+        <div style="text-align:center; margin-top:30px;">
+            <button onclick="document.getElementById('audio_nature').play()" style="background:#2E7D32; color:white; border:1px solid #9BC63B; padding:20px; border-radius:10px; cursor:pointer; font-weight:bold; font-size:16px;">🔊 ACTIVAR SONIDO AMBIENTAL KBA</button>
+            <p style="color:#9BC63B; font-size:14px; margin-top:10px;">Enlace satelital de audio con Bosque San Antonio activo</p>
         </div>
-    """, height=120)
+    """, height=150)
 
 # 2. LOS 6 PUNTOS FARO
 elif menu == "6 PUNTOS FARO":
@@ -100,9 +102,15 @@ elif menu == "6 PUNTOS FARO":
         st.subheader("Monitoreo Bioacústico")
         mic_cols = st.columns(4)
         for k in range(4):
-            with mic_cols[k]: st.markdown(f"<div style='background:rgba(155,198,59,0.2); border:1px solid #2E7D32; padding:5px; border-radius:5px; text-align:center;'>MIC {k+1}<br><span style='color:#9BC63B;'>|||||||||| {random.randint(30,95)}%</span></div>", unsafe_allow_html=True)
+            with mic_cols[k]: 
+                st.markdown(f"""
+                    <div style='background:rgba(155,198,59,0.2); border:1px solid #2E7D32; padding:15px; border-radius:5px; text-align:center;'>
+                        <b>MIC {k+1}</b><br>
+                        <span style='color:#9BC63B;'>|||||||||| {random.randint(30,95)}%</span>
+                    </div>
+                """, unsafe_allow_html=True)
 
-# 3. DASHBOARD ESTADÍSTICO IA (VISIBILIDAD MEJORADA)
+# 3. DASHBOARD ESTADÍSTICO IA
 elif menu == "DASHBOARD ESTADÍSTICO IA":
     st.title("📊 Análisis de Inteligencia Biológica")
     m1, m2, m3, m4 = st.columns(4)
@@ -116,7 +124,6 @@ elif menu == "DASHBOARD ESTADÍSTICO IA":
     with c1:
         st.subheader("Actividad por Nodo (24h)")
         st.bar_chart(pd.DataFrame({'Faro': ["Halcón", "Colibrí", "Rana", "Venado", "Tigrillo", "Capibara"], 'Detecciones': [120, 450, 300, 80, 45, 110]}).set_index('Faro'))
-    
     with c2:
         st.subheader("🛰️ ÚLTIMOS AVISTAMIENTOS IA (ALTA VISIBILIDAD)")
         avistamientos = [
@@ -153,31 +160,23 @@ elif menu == "DONACIONES Y CERTIFICADO":
     if "ver_cert" in st.session_state:
         with colB: st.markdown(f"<div style='background:white; color:#050a04; padding:30px; border:8px double #D4AF37; text-align:center; font-family:serif;'><h1>CERTIFICADO</h1><p>Serenity SAS BIC certifica que <b>{nombre_d}</b> ha contribuido con {monto_d} USD.</p><hr><small>{datetime.now().strftime('%d/%m/%Y')}</small></div>", unsafe_allow_html=True)
 
-# 6. LOGÍSTICA AEROLÍNEAS (LISTA COMPLETA RESTAURADA)
+# 6. LOGÍSTICA AEROLÍNEAS
 elif menu == "LOGÍSTICA AEROLÍNEAS":
     st.title("✈️ Rutas Globales a Colombia")
     c_a1, c_a2 = st.columns(2)
     with c_a1:
         st.subheader("Europa y Asia")
-        st.markdown("""
-        - **Iberia / Air Europa:** Conexiones desde Madrid.
-        - **Lufthansa:** Vuelos directos desde Frankfurt.
-        - **Air France / KLM:** Rutas desde París y Ámsterdam.
-        - **Turkish Airlines:** Conexión global vía Estambul.
-        """)
+        st.markdown("- **Iberia / Air Europa:** Madrid.\n- **Lufthansa:** Frankfurt.\n- **Air France / KLM:** París y Ámsterdam.\n- **Turkish Airlines:** Estambul.")
     with c_a2:
         st.subheader("Norte y Sur América")
-        st.markdown("""
-        - **American / Delta / United:** Desde principales hubs en USA.
-        - **Avianca / LATAM:** Red líder en Cono Sur, Centroamérica y Caribe.
-        - **Copa Airlines:** Conexión vía Hub de las Américas (Panamá).
-        """)
+        st.markdown("- **American / Delta / United:** USA.\n- **Avianca / LATAM:** Suramérica y Caribe.\n- **Copa Airlines:** Vía Panamá.")
 
 # 7. UBICACIÓN
 elif menu == "UBICACIÓN":
-    st.title("📍 Ubicación Serenity")
+    st.title("📍 Ubicación Hacienda Serenity")
     st.write("Dagua y Felidia, Valle del Cauca, Colombia.")
     st.map(pd.DataFrame({'lat': [3.4833], 'lon': [-76.6167]}))
+
 
 
 
