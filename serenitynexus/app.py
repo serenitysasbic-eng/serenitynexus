@@ -74,7 +74,6 @@ if menu == "INICIO":
     st.markdown("<h1 style='text-align:center; font-size:4rem;'>Serenity Nexus Global</h1>", unsafe_allow_html=True)
     st.markdown("<p style='text-align:center; letter-spacing:5px; color:#9BC63B; font-weight:bold;'>SISTEMA REGENERATIVO BIOMÉTRICO</p>", unsafe_allow_html=True)
     
-    # SONIDO DE NATURALEZA
     st.components.v1.html("""
         <audio id="audio_nature" src="https://www.soundjay.com/nature/sounds/forest-birds-01.mp3" loop></audio>
         <div style="text-align:center; margin-top:30px;">
@@ -147,7 +146,7 @@ elif menu == "SUSCRIPCIONES":
     p1, p2, p3 = st.columns(3)
     with p1: st.markdown("<div class='faro-card'><h3>Plan Semilla</h3><h2>$5 USD</h2><p>1 Punto Faro/1 mes</p></div>", unsafe_allow_html=True); st.button("Suscribirse Semilla")
     with p2: st.markdown("<div class='faro-card'><h3>Plan Guardián</h3><h2>$25 USD</h2><p>6 Puntos Faro/1 mes</p></div>", unsafe_allow_html=True); st.button("Suscribirse Guardián")
-    with p3: st.markdown("<div class='faro-card' style='border-color:#D4AF37;'><h3>Plan Halcón</h3><h2>$200 USD</h2><p>6 Puntos Faro/6 meses</p></div>", unsafe_allow_html=True); st.button("Suscribirse Heroe")
+    with p3: st.markdown("<div class='faro-card' style='border-color:#D4AF37;'><h3>Plan Halcón</h3><h2>$200 USD</h2><p>6 Puntos Faro/6 meses</p></div>", unsafe_allow_html=True); st.button("Suscribirse Héroe")
     st.markdown("<div style='background:white; padding:20px; border-radius:10px; text-align:center; margin-top:20px;'><img src='https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg' width='100'> &nbsp;&nbsp; <img src='https://upload.wikimedia.org/wikipedia/commons/b/ba/Stripe_Logo%2C_revised_2016.svg' width='100'> &nbsp;&nbsp; <img src='https://www.payulatam.com/co/wp-content/uploads/sites/2/2017/08/logo-payu.png' width='80'></div>", unsafe_allow_html=True)
 
 # 5. DONACIONES Y CERTIFICADO
@@ -176,6 +175,7 @@ elif menu == "UBICACIÓN":
     st.title("📍 Ubicación Hacienda Serenity")
     st.write("Dagua y Felidia, Valle del Cauca, Colombia.")
     st.map(pd.DataFrame({'lat': [3.4833], 'lon': [-76.6167]}))
+
 
 
 
