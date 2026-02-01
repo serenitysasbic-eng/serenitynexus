@@ -39,7 +39,7 @@ menu = st.sidebar.radio("CENTRO DE CONTROL", [
     "6 PUNTOS FARO", 
     "SUSCRIPCIONES", 
     "DONACIONES Y CERTIFICADO", 
-    "AEROLÍNEAS A COLOMBIA", 
+    "LOGÍSTICA AEROLÍNEAS", 
     "UBICACIÓN"
 ])
 
@@ -85,13 +85,13 @@ elif menu == "SUSCRIPCIONES":
     st.title("💳 Planes de Apoyo Regenerativo")
     p1, p2, p3 = st.columns(3)
     with p1:
-        st.markdown("<div style='border:1px solid #9BC63B; padding:20px; border-radius:10px;'><h3>Plan Semilla</h3><h2>$5 USD</h2><p>1 Punto Faro/mes</p></div>", unsafe_allow_html=True)
+        st.markdown("<div style='border:1px solid #9BC63B; padding:20px; border-radius:10px;'><h3>Plan Semilla</h3><h2>$5 USD</h2><p>1 Punto Faro/1 mes</p></div>", unsafe_allow_html=True)
         st.button("Suscribirse Semilla")
     with p2:
-        st.markdown("<div style='border:1px solid #9BC63B; padding:20px; border-radius:10px;'><h3>Plan Guardián</h3><h2>$25 USD</h2><p>6 Puntos Faro/mes</p></div>", unsafe_allow_html=True)
+        st.markdown("<div style='border:1px solid #9BC63B; padding:20px; border-radius:10px;'><h3>Plan Guardián</h3><h2>$25 USD</h2><p>6 Puntos Faro/1 mes</p></div>", unsafe_allow_html=True)
         st.button("Suscribirse Guardián")
     with p3:
-        st.markdown("<div style='border:1px solid #D4AF37; padding:20px; border-radius:10px;'><h3>Plan Heroe</h3><h2>$200 USD</h2><p>6 Puntos Faro/6 meses</p></div>", unsafe_allow_html=True)
+        st.markdown("<div style='border:1px solid #D4AF37; padding:20px; border-radius:10px;'><h3>Plan Halcon</h3><h2>$200 USD</h2><p>6 Puntos Faro/6 meses</p></div>", unsafe_allow_html=True)
         st.button("Suscribirse Heroe")
     
     st.markdown("""
@@ -118,7 +118,7 @@ elif menu == "DONACIONES Y CERTIFICADO":
         with colB:
             st.markdown(f"""
                 <div style="background:white; color:#050a04; padding:30px; border:8px double #D4AF37; text-align:center; font-family:serif;">
-                    <h1 style="color:#2E7D32;">CERTIFICADO DE DONACION</h1>
+                    <h1 style="color:#2E7D32;">CERTIFICADO DE GUARDIÁN</h1>
                     <p>Serenity SAS BIC certifica que:</p>
                     <h2 style="color:black;">{nombre_d}</h2>
                     <p>Ha contribuido con <b>{monto_d} USD</b></p>
@@ -128,10 +128,10 @@ elif menu == "DONACIONES Y CERTIFICADO":
                 </div>
             """, unsafe_allow_html=True)
 
-# 5. AEROLÍNEAS A COLOMBIA
-    elif menu == "LOGÍSTICA AEROLÍNEAS":
-        st.title("✈️ Rutas Globales a Colombia")
-        st.info("Conexiones directas para visitantes internacionales de Serenity.")
+# 5. LOGÍSTICA AEROLÍNEAS
+elif menu == "LOGÍSTICA AEROLÍNEAS":
+    st.title("✈️ Rutas Globales a Colombia")
+    st.info("Conexiones directas para visitantes internacionales de Serenity.")
     c_a1, c_a2 = st.columns(2)
     with c_a1:
         st.subheader("Europa y Asia")
@@ -146,7 +146,7 @@ elif menu == "DONACIONES Y CERTIFICADO":
 
 # 6. UBICACIÓN
 elif menu == "UBICACIÓN":
-    st.title("📍 Ubicación Serenity")
+    st.title("📍 Ubicación Hacienda Serenity")
     st.write("KBA San Antonio, Valle del Cauca, Colombia.")
     st.map(pd.DataFrame({'lat': [3.4833], 'lon': [-76.6167]}))
 
