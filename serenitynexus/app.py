@@ -39,7 +39,7 @@ menu = st.sidebar.radio("CENTRO DE CONTROL", [
     "6 PUNTOS FARO", 
     "SUSCRIPCIONES", 
     "DONACIONES Y CERTIFICADO", 
-    "LOGÍSTICA AEROLÍNEAS", 
+    "AEROLÍNEAS A COLOMBIA", 
     "UBICACIÓN"
 ])
 
@@ -92,7 +92,7 @@ elif menu == "SUSCRIPCIONES":
         st.button("Suscribirse Guardián")
     with p3:
         st.markdown("<div style='border:1px solid #D4AF37; padding:20px; border-radius:10px;'><h3>Plan Heroe</h3><h2>$200 USD</h2><p>6 Puntos Faro/6 meses</p></div>", unsafe_allow_html=True)
-        st.button("Suscribirse Serenity")
+        st.button("Suscribirse Heroe")
     
     st.markdown("""
         <div class="pago-contenedor">
@@ -118,7 +118,7 @@ elif menu == "DONACIONES Y CERTIFICADO":
         with colB:
             st.markdown(f"""
                 <div style="background:white; color:#050a04; padding:30px; border:8px double #D4AF37; text-align:center; font-family:serif;">
-                    <h1 style="color:#2E7D32;">CERTIFICADO DE GUARDIÁN</h1>
+                    <h1 style="color:#2E7D32;">CERTIFICADO DE DONACION</h1>
                     <p>Serenity SAS BIC certifica que:</p>
                     <h2 style="color:black;">{nombre_d}</h2>
                     <p>Ha contribuido con <b>{monto_d} USD</b></p>
@@ -146,9 +146,10 @@ elif menu == "LOGÍSTICA AEROLÍNEAS":
 
 # 6. UBICACIÓN
 elif menu == "UBICACIÓN":
-    st.title("📍 Ubicación Hacienda Serenity")
+    st.title("📍 Ubicación Serenity")
     st.write("KBA San Antonio, Valle del Cauca, Colombia.")
     st.map(pd.DataFrame({'lat': [3.4833], 'lon': [-76.6167]}))
+
 
 
 
