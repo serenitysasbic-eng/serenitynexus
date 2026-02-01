@@ -17,20 +17,16 @@ st.markdown("""
             color: #e8f5e9; font-family: 'Montserrat', sans-serif; 
         }
         
-        /* TEXTO BLANCO EN SIDEBAR */
         [data-testid="stSidebar"] { background-color: rgba(10, 20, 8, 0.9) !important; backdrop-filter: blur(10px); }
         [data-testid="stSidebar"] p, [data-testid="stSidebar"] span { color: white !important; font-weight: 500; }
 
         h1, h2, h3 { color: #9BC63B; font-family: 'Merriweather', serif; text-shadow: 2px 2px 4px #000; }
         
-        /* BOTONES */
         .stButton>button { background-color: #2E7D32; color: white; border: 1px solid #9BC63B; border-radius: 8px; width: 100%; font-weight: bold; }
         .stButton>button:hover { background-color: #9BC63B; color: black; box-shadow: 0 0 15px #9BC63B; }
         
-        /* TARJETAS DE MÉTRICAS */
         .metric-card { background: rgba(0,0,0,0.7); padding: 20px; border-radius: 10px; border: 1px solid #9BC63B; text-align: center; backdrop-filter: blur(5px); }
         
-        /* TABLA DE AVISTAMIENTOS VISIBLE */
         .avistamiento-row { 
             background: rgba(255, 255, 255, 0.1); 
             border-left: 5px solid #9BC63B; 
@@ -43,6 +39,9 @@ st.markdown("""
         
         .faro-card { border: 1px solid #9BC63B; padding: 15px; border-radius: 10px; background: rgba(0,0,0,0.6); text-align: center; }
         .cam-grid { background: #000; border: 1px solid #2E7D32; height: 100px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #ff0000; border-radius: 5px; }
+        
+        /* ESTILO PARA LEY 2173 */
+        .ley-box { background: rgba(46, 125, 50, 0.3); border: 2px dashed #9BC63B; padding: 20px; border-radius: 15px; margin-top: 10px; }
     </style>
 """, unsafe_allow_html=True)
 
@@ -66,21 +65,26 @@ try: st.sidebar.image("logo_serenity.png", use_container_width=True)
 except: st.sidebar.markdown("### 🌳 Serenity Nexus")
 
 menu = st.sidebar.radio("CENTRO DE CONTROL", [
-    "INICIO", "6 PUNTOS FARO", "DASHBOARD ESTADÍSTICO IA", "SUSCRIPCIONES", "DONACIONES Y CERTIFICADO", "LOGÍSTICA AEROLÍNEAS", "UBICACIÓN"
+    "INICIO", 
+    "6 PUNTOS FARO", 
+    "DASHBOARD ESTADÍSTICO IA", 
+    "GESTIÓN LEY 2173 (EMPRESAS)",
+    "SUSCRIPCIONES", 
+    "DONACIONES Y CERTIFICADO", 
+    "LOGÍSTICA AEROLÍNEAS", 
+    "UBICACIÓN"
 ])
 
 # 1. INICIO
 if menu == "INICIO":
     st.markdown("<h1 style='text-align:center; font-size:4rem;'>Serenity Nexus Global</h1>", unsafe_allow_html=True)
     st.markdown("<p style='text-align:center; letter-spacing:5px; color:#9BC63B; font-weight:bold;'>SISTEMA REGENERATIVO BIOMÉTRICO</p>", unsafe_allow_html=True)
-    
     st.components.v1.html("""
         <audio id="audio_nature" src="https://www.soundjay.com/nature/sounds/forest-birds-01.mp3" loop></audio>
         <div style="text-align:center; margin-top:30px;">
             <button onclick="document.getElementById('audio_nature').play()" style="background:#2E7D32; color:white; border:1px solid #9BC63B; padding:20px; border-radius:10px; cursor:pointer; font-weight:bold; font-size:16px;">🔊 ACTIVAR SONIDO AMBIENTAL KBA</button>
-            <p style="color:#9BC63B; font-size:14px; margin-top:10px;">Enlace satelital de audio con Bosque San Antonio activo</p>
         </div>
-    """, height=150)
+    """, height=130)
 
 # 2. LOS 6 PUNTOS FARO
 elif menu == "6 PUNTOS FARO":
@@ -101,13 +105,7 @@ elif menu == "6 PUNTOS FARO":
         st.subheader("Monitoreo Bioacústico")
         mic_cols = st.columns(4)
         for k in range(4):
-            with mic_cols[k]: 
-                st.markdown(f"""
-                    <div style='background:rgba(155,198,59,0.2); border:1px solid #2E7D32; padding:15px; border-radius:5px; text-align:center;'>
-                        <b>MIC {k+1}</b><br>
-                        <span style='color:#9BC63B;'>|||||||||| {random.randint(30,95)}%</span>
-                    </div>
-                """, unsafe_allow_html=True)
+            with mic_cols[k]: st.markdown(f"<div style='background:rgba(155,198,59,0.2); border:1px solid #2E7D32; padding:10px; border-radius:5px; text-align:center;'>MIC {k+1}<br><span style='color:#9BC63B;'>|||||||||| {random.randint(30,95)}%</span></div>", unsafe_allow_html=True)
 
 # 3. DASHBOARD ESTADÍSTICO IA
 elif menu == "DASHBOARD ESTADÍSTICO IA":
@@ -118,63 +116,72 @@ elif menu == "DASHBOARD ESTADÍSTICO IA":
     with m3: st.markdown("<div class='metric-card'><h3>Alertas de Fauna</h3><h1 style='color:#9BC63B;'>12</h1></div>", unsafe_allow_html=True)
     with m4: st.markdown("<div class='metric-card'><h3>Área Protegida</h3><h1 style='color:#9BC63B;'>86 ha</h1></div>", unsafe_allow_html=True)
     
-    st.divider()
     c1, c2 = st.columns([1, 1.5])
     with c1:
         st.subheader("Actividad por Nodo (24h)")
         st.bar_chart(pd.DataFrame({'Faro': ["Halcón", "Colibrí", "Rana", "Venado", "Tigrillo", "Capibara"], 'Detecciones': [120, 450, 300, 80, 45, 110]}).set_index('Faro'))
     with c2:
-        st.subheader("🛰️ ÚLTIMOS AVISTAMIENTOS IA (ALTA VISIBILIDAD)")
-        avistamientos = [
-            {"h": "11:20 AM", "e": "Tangara Multicolor", "f": "Colibrí", "c": "98%"},
-            {"h": "10:45 AM", "e": "Pava Caucana", "f": "Halcón", "c": "95%"},
-            {"h": "09:12 AM", "e": "Tigrillo (Leopardus)", "f": "Tigrillo", "c": "92%"},
-            {"h": "07:30 AM", "e": "Olinguito", "f": "Rana", "c": "89%"}
-        ]
+        st.subheader("🛰️ ÚLTIMOS AVISTAMIENTOS IA")
+        avistamientos = [{"h": "11:20 AM", "e": "Tangara Multicolor", "f": "Colibrí", "c": "98%"}, {"h": "10:45 AM", "e": "Pava Caucana", "f": "Halcón", "c": "95%"}, {"h": "09:12 AM", "e": "Tigrillo (Leopardus)", "f": "Tigrillo", "c": "92%"}]
         for a in avistamientos:
-            st.markdown(f"""
-                <div class="avistamiento-row">
-                    <span style="color:#aaa;">[{a['h']}]</span> 
-                    <span class="especie-tag">{a['e']}</span> detectado en 
-                    <b>Faro {a['f']}</b> | Confianza IA: <span style="color:#9BC63B;">{a['c']}</span>
-                </div>
-            """, unsafe_allow_html=True)
+            st.markdown(f"<div class='avistamiento-row'><span class='especie-tag'>{a['e']}</span> detectado en <b>Faro {a['f']}</b> | {a['h']}</div>", unsafe_allow_html=True)
 
-# 4. SUSCRIPCIONES
+# 4. NUEVO: GESTIÓN LEY 2173
+elif menu == "GESTIÓN LEY 2173 (EMPRESAS)":
+    st.title("⚖️ Cumplimiento Ley 2173 de 2021")
+    st.info("Serenity Nexus permite a las empresas colombianas gestionar sus 'Áreas de Vida' con transparencia total.")
+    
+    nit = st.text_input("Ingrese NIT de la Empresa para consultar estado de siembra")
+    if nit:
+        st.markdown(f"""
+            <div class='ley-box'>
+                <h3>Estado Corporativo: Activo</h3>
+                <p><b>Empresa Asociada:</b> Registro Vinculado al NIT {nit}</p>
+                <hr>
+                <p>🟢 <b>Árboles Sembrados:</b> 150 (Meta 2026 cumplida)</p>
+                <p>📡 <b>Monitoreo Biométrico:</b> Activo en Faro Venado</p>
+                <p>📉 <b>Supervivencia Garantizada:</b> 98.5% mediante monitoreo IA</p>
+            </div>
+        """, unsafe_allow_html=True)
+        if st.button("GENERAR REPORTE PARA ENTES REGULADORES (CVC)"):
+            st.success("Generando reporte de cumplimiento con trazabilidad de Puntos Faro...")
+
+# 5. SUSCRIPCIONES
 elif menu == "SUSCRIPCIONES":
     st.title("💳 Planes de Apoyo Regenerativo")
     p1, p2, p3 = st.columns(3)
-    with p1: st.markdown("<div class='faro-card'><h3>Plan Semilla</h3><h2>$5 USD</h2><p>1 Punto Faro/1 mes</p></div>", unsafe_allow_html=True); st.button("Suscribirse Semilla")
-    with p2: st.markdown("<div class='faro-card'><h3>Plan Guardián</h3><h2>$25 USD</h2><p>6 Puntos Faro/1 mes</p></div>", unsafe_allow_html=True); st.button("Suscribirse Guardián")
-    with p3: st.markdown("<div class='faro-card' style='border-color:#D4AF37;'><h3>Plan Halcón</h3><h2>$200 USD</h2><p>6 Puntos Faro/6 meses</p></div>", unsafe_allow_html=True); st.button("Suscribirse Héroe")
+    with p1: st.markdown("<div class='faro-card'><h3>Plan Semilla</h3><h2>$5 USD</h2></div>", unsafe_allow_html=True); st.button("Suscribirse Semilla")
+    with p2: st.markdown("<div class='faro-card'><h3>Plan Guardián</h3><h2>$25 USD</h2></div>", unsafe_allow_html=True); st.button("Suscribirse Guardián")
+    with p3: st.markdown("<div class='faro-card' style='border-color:#D4AF37;'><h3>Plan Halcón</h3><h2>$200 USD</h2></div>", unsafe_allow_html=True); st.button("Suscribirse Héroe")
     st.markdown("<div style='background:white; padding:20px; border-radius:10px; text-align:center; margin-top:20px;'><img src='https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg' width='100'> &nbsp;&nbsp; <img src='https://upload.wikimedia.org/wikipedia/commons/b/ba/Stripe_Logo%2C_revised_2016.svg' width='100'> &nbsp;&nbsp; <img src='https://www.payulatam.com/co/wp-content/uploads/sites/2/2017/08/logo-payu.png' width='80'></div>", unsafe_allow_html=True)
 
-# 5. DONACIONES Y CERTIFICADO
+# 6. DONACIONES Y CERTIFICADO
 elif menu == "DONACIONES Y CERTIFICADO":
     st.title("🌳 Generador de Impacto")
     colA, colB = st.columns(2)
     with colA:
         nombre_d = st.text_input("Nombre del Donante"); monto_d = st.number_input("Monto (USD)", min_value=1)
-        if st.button("PROCESAR Y GENERAR CERTIFICADO"): st.balloons(); st.session_state.ver_cert = True
+        if st.button("GENERAR CERTIFICADO"): st.balloons(); st.session_state.ver_cert = True
     if "ver_cert" in st.session_state:
-        with colB: st.markdown(f"<div style='background:white; color:#050a04; padding:30px; border:8px double #D4AF37; text-align:center; font-family:serif;'><h1>CERTIFICADO</h1><p>Serenity SAS BIC certifica que <b>{nombre_d}</b> ha contribuido con {monto_d} USD.</p><hr><small>{datetime.now().strftime('%d/%m/%Y')}</small></div>", unsafe_allow_html=True)
+        with colB: st.markdown(f"<div style='background:white; color:#050a04; padding:30px; border:8px double #D4AF37; text-align:center;'><h1>CERTIFICADO</h1><p><b>{nombre_d}</b> ha contribuido a la regeneración del KBA San Antonio.</p><hr><small>{datetime.now().strftime('%d/%m/%Y')}</small></div>", unsafe_allow_html=True)
 
-# 6. LOGÍSTICA AEROLÍNEAS
+# 7. LOGÍSTICA AEROLÍNEAS
 elif menu == "LOGÍSTICA AEROLÍNEAS":
     st.title("✈️ Rutas Globales a Colombia")
     c_a1, c_a2 = st.columns(2)
     with c_a1:
         st.subheader("Europa y Asia")
-        st.markdown("- **Iberia / Air Europa:** Madrid.\n- **Lufthansa:** Frankfurt.\n- **Air France / KLM:** París y Ámsterdam.\n- **Turkish Airlines:** Estambul.")
+        st.write("- Iberia / Air Europa (Madrid)\n- Lufthansa (Frankfurt)\n- Air France / KLM (París/Ámsterdam)\n- Turkish Airlines (Estambul)")
     with c_a2:
-        st.subheader("Norte y Sur América")
-        st.markdown("- **American / Delta / United:** USA.\n- **Avianca / LATAM:** Suramérica y Caribe.\n- **Copa Airlines:** Vía Panamá.")
+        st.subheader("América")
+        st.write("- American / Delta / United (USA)\n- Avianca / LATAM (Rutas Continentales)\n- Copa Airlines (Vía Panamá)")
 
-# 7. UBICACIÓN
+# 8. UBICACIÓN
 elif menu == "UBICACIÓN":
     st.title("📍 Ubicación Hacienda Serenity")
     st.write("Dagua y Felidia, Valle del Cauca, Colombia.")
     st.map(pd.DataFrame({'lat': [3.4833], 'lon': [-76.6167]}))
+
 
 
 
