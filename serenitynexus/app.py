@@ -71,14 +71,14 @@ menu = st.sidebar.radio("CENTRO DE CONTROL", [
     "SUSCRIPCIONES", "DONACIONES Y CERTIFICADO", "LOGÍSTICA AEROLÍNEAS", "UBICACIÓN"
 ])
 
-# 1. INICIO (CON AUDIO)
+# 1. INICIO (CON ARCHIVO SONIDO_EARTH.MP3)
 if menu == "INICIO":
     st.markdown("<h1 style='text-align:center; font-size:4rem;'>Serenity Nexus Global</h1>", unsafe_allow_html=True)
     st.markdown("<p style='text-align:center; letter-spacing:5px; color:#9BC63B; font-weight:bold;'>SISTEMA REGENERATIVO BIOMÉTRICO KBA</p>", unsafe_allow_html=True)
     st.components.v1.html("""
-        <audio id="audio_nature" src="sonido_Earth.mp3" loop></audio>
+        <audio id="audio_earth" src="sonido_Earth.mp3" loop></audio>
         <div style="text-align:center; margin-top:30px;">
-            <button onclick="document.getElementById('audio_nature').play()" style="background:#2E7D32; color:white; border:1px solid #9BC63B; padding:20px; border-radius:10px; cursor:pointer; font-weight:bold; font-size:16px;">🔊 ACTIVAR SONIDO AMBIENTAL KBA</button>
+            <button onclick="document.getElementById('audio_earth').play()" style="background:#2E7D32; color:white; border:1px solid #9BC63B; padding:20px; border-radius:10px; cursor:pointer; font-weight:bold; font-size:16px;">🔊 ACTIVAR SONIDO GLOBAL EARTH</button>
         </div>
     """, height=150)
 
@@ -113,7 +113,7 @@ elif menu == "DASHBOARD ESTADÍSTICO IA":
     m[3].markdown("<div class='metric-card'><h3>Área Protegida</h3><h1>86 ha</h1></div>", unsafe_allow_html=True)
     st.bar_chart(pd.DataFrame({'Detecciones': [120, 450, 300, 80, 45, 110]}, index=["Halcón", "Colibrí", "Rana", "Venado", "Tigrillo", "Capibara"]))
 
-# 4. GESTIÓN LEY 2173 (CON BOTÓN DE DESCARGA)
+# 4. GESTIÓN LEY 2173
 elif menu == "GESTIÓN LEY 2173 (EMPRESAS)":
     st.title("⚖️ Cumplimiento Ley 2173 de 2021")
     c1, c2 = st.columns(2)
@@ -128,7 +128,7 @@ elif menu == "GESTIÓN LEY 2173 (EMPRESAS)":
                 <p>Este registro cumple con los requerimientos de ÁREAS DE VIDA.</p>
             </div>
         """, unsafe_allow_html=True)
-        st.download_button("⬇️ DESCARGAR CERTIFICADO TÉCNICO LEY 2173", data="Reporte Tecnico Serenity se registra el siguiente estado de conservacion y regeneracion a la empres aqui descrita la cual cumple con lo descrito en la Ley 2173 de 2021", file_name=f"Certificado_Ley2173_{nit}.txt")
+        st.download_button("⬇️ DESCARGAR CERTIFICADO TÉCNICO LEY 2173", data=f"Reporte Tecnico Serenity NIT {nit} cumple Ley 2173", file_name=f"Certificado_Ley2173_{nit}.txt")
 
 # 5. SUSCRIPCIONES
 elif menu == "SUSCRIPCIONES":
@@ -136,15 +136,12 @@ elif menu == "SUSCRIPCIONES":
     p1, p2, p3 = st.columns(3)
     with p1: 
         st.markdown("<div class='faro-card'><h3>Plan Semilla</h3><h2>$5 USD</h2><p>1 Faro / 1 Mes</p></div>", unsafe_allow_html=True)
-        st.button("Suscribirse Semilla")
     with p2: 
         st.markdown("<div class='faro-card'><h3>Plan Guardián</h3><h2>$25 USD</h2><p>6 Faros / 1 Mes</p></div>", unsafe_allow_html=True)
-        st.button("Suscribirse Guardián")
     with p3: 
         st.markdown("<div class='faro-card' style='border-color:#D4AF37;'><h3>Plan Halcón</h3><h2>$200 USD</h2><p>6 Faros / 6 Meses</p></div>", unsafe_allow_html=True)
-        st.button("Suscribirse Halcón")
 
-# 6. DONACIONES Y CERTIFICADO (DIPLOMA BLANCO Y VERDE)
+# 6. DONACIONES Y CERTIFICADO
 elif menu == "DONACIONES Y CERTIFICADO":
     st.title("🌳 Generador de Diploma de Donación")
     colA, colB = st.columns([1, 1.2])
@@ -169,7 +166,7 @@ elif menu == "DONACIONES Y CERTIFICADO":
                 </div>
             """, unsafe_allow_html=True)
 
-# 7. LOGÍSTICA AEROLÍNEAS (NOMBRES + LOGOS)
+# 7. LOGÍSTICA AEROLÍNEAS (CON LOGOS)
 elif menu == "LOGÍSTICA AEROLÍNEAS":
     st.title("✈️ Rutas Globales")
     c_a, c_b = st.columns(2)
