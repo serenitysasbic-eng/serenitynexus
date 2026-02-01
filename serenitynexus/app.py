@@ -129,10 +129,10 @@ elif menu == "DONACIONES Y CERTIFICADO":
             """, unsafe_allow_html=True)
 
 # 5. AEROLÍNEAS A COLOMBIA
-elif menu == "LOGÍSTICA AEROLÍNEAS":
-    st.title("✈️ Rutas Globales a Colombia")
-    st.info("Conexiones directas para visitantes internacionales de Serenity.")
-    c_a1, c_a2 = st.columns(2)
+    elif menu == "LOGÍSTICA AEROLÍNEAS":
+        st.title("✈️ Rutas Globales a Colombia")
+        st.info("Conexiones directas para visitantes internacionales de Serenity.")
+        c_a1, c_a2 = st.columns(2)
     with c_a1:
         st.subheader("Europa y Asia")
         st.write("- **Iberia/Air Europa:** Madrid")
@@ -149,6 +149,7 @@ elif menu == "UBICACIÓN":
     st.title("📍 Ubicación Serenity")
     st.write("KBA San Antonio, Valle del Cauca, Colombia.")
     st.map(pd.DataFrame({'lat': [3.4833], 'lon': [-76.6167]}))
+
 
 
 
