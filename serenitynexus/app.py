@@ -95,7 +95,7 @@ elif menu == "6 PUNTOS FARO":
 
 # 3. SUSCRIPCIONES (PLANES Y PAGOS)
 elif menu == "SUSCRIPCIONES":
-    st.title("💳 Planes de Apoyo Regenerativo")
+    st.title("💳 Planes Streaming de Apoyo Regenerativo")
     p1, p2, p3 = st.columns(3)
     with p1:
         st.markdown("<div style='border:1px solid #9BC63B; padding:20px; border-radius:10px;'><h3>Plan Semilla</h3><h2>$5 USD</h2><p>1 Punto Faro/1 mes</p></div>", unsafe_allow_html=True)
@@ -131,11 +131,11 @@ elif menu == "DONACIONES Y CERTIFICADO":
         with colB:
             st.markdown(f"""
                 <div style="background:white; color:#050a04; padding:30px; border:8px double #D4AF37; text-align:center; font-family:serif;">
-                    <h1 style="color:#2E7D32;">CERTIFICADO DE GUARDIÁN</h1>
+                    <h1 style="color:#2E7D32;">CERTIFICADO DE DONACION</h1>
                     <p>Serenity SAS BIC certifica que:</p>
                     <h2 style="color:black;">{nombre_d}</h2>
                     <p>Ha contribuido con <b>{monto_d} USD</b></p>
-                    <p>a la regeneración del KBA San Antonio.</p>
+                    <p>a la regeneración del KBA Bosque San Antonio y sus Comunidades.</p>
                     <hr>
                     <small>{datetime.now().strftime('%d/%m/%Y')} - Cali, Colombia</small>
                 </div>
@@ -159,9 +159,10 @@ elif menu == "LOGÍSTICA AEROLÍNEAS":
 
 # 6. UBICACIÓN
 elif menu == "UBICACIÓN":
-    st.title("📍 Ubicación Hacienda Serenity")
-    st.write("KBA San Antonio, Valle del Cauca, Colombia.")
+    st.title("📍 Ubicación Serenity Felidia Valle del Cauca")
+    st.write("Felidia y Dagua, Valle del Cauca, Colombia.")
     st.map(pd.DataFrame({'lat': [3.4833], 'lon': [-76.6167]}))
+
 
 
 
