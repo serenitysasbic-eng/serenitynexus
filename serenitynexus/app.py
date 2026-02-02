@@ -305,7 +305,7 @@ elif menu == "LOGÍSTICA AEROLÍNEAS":
 
 # 8. MAPAS
 elif menu == "UBICACIÓN & MAPAS":
-    st.title("📍 Ubicación Hacienda Serenity (Dagua)")
+    st.title("📍 Ubicación Serenity (Dagua y Felidia)")
     
     color_gemini_map = "green" if st.session_state.estado_gemini == "ACTIVO - EMITIENDO" else "orange"
     m = folium.Map(location=[3.455, -76.655], zoom_start=13, tiles="cartodbpositron")
@@ -315,6 +315,7 @@ elif menu == "UBICACIÓN & MAPAS":
     folium.CircleMarker(location=[3.445, -76.645], radius=10, color="blue", fill=True, fill_color="blue", tooltip="Finca Villa Michelle").add_to(m)
     
     st_folium(m, width="100%", height=600)
+
 
 
 
