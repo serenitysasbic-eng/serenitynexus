@@ -26,6 +26,33 @@ if 'estado_gemini' not in st.session_state: st.session_state.estado_gemini = "La
 if 'auth' not in st.session_state: st.session_state.auth = False
 if 'f_activo' not in st.session_state: st.session_state.f_activo = None
 
+# --- DATOS LEGALES (TEXTOS PARA DESCARGAR) ---
+TEXTO_LEY_2173 = """
+RESUMEN EJECUTIVO - LEY 2173 DE 2021 (ÁREAS DE VIDA)
+Objeto: Promover la restauración ecológica a través de la siembra de árboles.
+Obligación: Las medianas y grandes empresas deben sembrar 2 árboles por cada empleado.
+Cumplimiento: Se debe demostrar mediante certificado de 'Área de Vida'.
+Solución Serenity: Ofrecemos el suelo, la siembra, el mantenimiento y el reporte digital.
+"""
+TEXTO_CONPES = """
+RESUMEN EJECUTIVO - CONPES 3934 (POLÍTICA DE CRECIMIENTO VERDE)
+Objeto: Impulsar la productividad y la competitividad económica asegurando el uso sostenible del capital natural.
+Meta 2030: Aumentar la bioeconomía y los negocios verdes.
+Alineación Serenity: Nuestra plataforma integra Big Data e IoT para la gestión del capital natural.
+"""
+TEXTO_DELITOS = """
+RESUMEN EJECUTIVO - LEY 2111 DE 2021 (DELITOS AMBIENTALES)
+Objeto: Sustituir el título de delitos contra los recursos naturales y el medio ambiente.
+Impacto: La deforestación y el daño a recursos naturales ahora tienen penas de prisión.
+Solución Serenity: Nuestro sistema de monitoreo (Faros) actúa como evidencia forense y prevención.
+"""
+TEXTO_TRIBUTARIO = """
+RESUMEN EJECUTIVO - BENEFICIOS TRIBUTARIOS (S.A.S. BIC & CTeI)
+Objeto: Incentivar la inversión en ciencia, tecnología e impacto social.
+Beneficio 1: Descuento en renta por donaciones a entidades ambientales sin ánimo de lucro.
+Beneficio 2: Deducciones por inversión en proyectos de Ciencia, Tecnología e Innovación (Actividades Serenity Nexus).
+"""
+
 # --- FUNCIÓN GENERADORA DE PDF ---
 def generar_pdf_certificado(nombre, monto):
     buffer = io.BytesIO()
@@ -55,11 +82,10 @@ def generar_pdf_certificado(nombre, monto):
     
     c.setFont("Helvetica", 14)
     c.setFillColor(black)
-    c.drawCentredString(4.25*inch, 7.5*inch, "SERENITY S.A.S. BIC")
+    c.drawCentredString(4.25*inch, 7.5*inch, "SERENITY HUB S.A.S. BIC")
     c.drawCentredString(4.25*inch, 7.0*inch, f"Reconoce a: {nombre.upper()}")
     c.drawCentredString(4.25*inch, 6.5*inch, f"Por su valioso aporte de ${monto:,.0f} USD")
     c.drawCentredString(4.25*inch, 6.0*inch, f"Destinado a la Regeneración de Biodiversidad y al Bienestar de la Comunidad Local")
-   
     
     # 4. Firma
     c.setLineWidth(1)
@@ -121,6 +147,9 @@ st.markdown("""
         .airline-grid img { max-width: 90%; max-height: 60px; object-fit: contain; }
         .airline-grid p { color: #333 !important; font-size: 0.75rem; font-weight: 800; margin-top: 8px; letter-spacing: 1px; text-decoration: none; }
         
+        /* ESTILO TARJETAS LEGALES */
+        .legal-card { background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; border-left: 5px solid #D4AF37; margin-bottom: 10px; }
+        
         a { text-decoration: none; } /* Quita subrayado de enlaces */
         
         .logo-container { background: white; padding: 8px; border-radius: 5px; display: inline-block; margin: 3px; vertical-align: middle; }
@@ -151,7 +180,7 @@ if menu == "INICIO":
     st.markdown("<p style='text-align:center; letter-spacing:5px; color:#9BC63B; font-weight:bold;'>SISTEMA REGENERATIVO BIOMÉTRICO KBA</p>", unsafe_allow_html=True)
     
     st.components.v1.html("""
-        <audio id="sonido_Earth.mp3" src="sonido_Earth.mp3" loop></audio>
+        <audio id="audio_earth" src="sonido_Earth.mp3" loop></audio>
         <div style="text-align:center; margin-top:30px;">
             <button onclick="document.getElementById('audio_earth').play()" style="background:#2E7D32; color:white; border:1px solid #9BC63B; padding:20px; border-radius:10px; cursor:pointer; font-weight:bold; font-size:16px;">🔊 ACTIVAR SONIDO GLOBAL EARTH</button>
         </div>
@@ -219,15 +248,39 @@ elif menu == "DASHBOARD ESTADÍSTICO IA":
     m[3].markdown(f"<div class='metric-card'><h3>Salud</h3><h1>98%</h1></div>", unsafe_allow_html=True)
     st.bar_chart(pd.DataFrame({'Detecciones': [120, 450, 300, 80, 45, 110, 950]}, index=["Halcón", "Colibrí", "Rana", "Venado", "Tigrillo", "Capibara", "GEMINI"]))
 
-# 4. LEY 2173
+# 4. LEY 2173 (OPERATIVA + LEGAL)
 elif menu == "GESTIÓN LEY 2173 (EMPRESAS)":
     st.title("⚖️ Cumplimiento Ley 2173")
-    c1, c2 = st.columns(2)
-    with c1: nit = st.text_input("Ingrese NIT de la Empresa")
-    with c2: logo_emp = st.file_uploader("Suba Logo Corporativo", type=["png", "jpg"])
-    if nit:
-        st.markdown(f"<div class='metric-card' style='text-align:left;'><h3>EMPRESA ACTIVA: NIT {nit}</h3><p>🌳 150 Árboles Monitoreados</p></div>", unsafe_allow_html=True)
-        st.download_button("⬇️ DESCARGAR CERTIFICADO LEY 2173", data=f"Reporte NIT {nit}", file_name=f"Certificado_Ley2173.txt")
+    
+    # SECCIÓN 1: OPERATIVA
+    with st.container(border=True):
+        st.subheader("🏢 Gestión Operativa")
+        c1, c2 = st.columns(2)
+        with c1: nit = st.text_input("Ingrese NIT de la Empresa")
+        with c2: logo_emp = st.file_uploader("Suba Logo Corporativo", type=["png", "jpg"])
+        if nit:
+            st.markdown(f"<div class='metric-card' style='text-align:left;'><h3>EMPRESA ACTIVA: NIT {nit}</h3><p>🌳 150 Árboles Monitoreados</p></div>", unsafe_allow_html=True)
+            st.download_button("⬇️ DESCARGAR CERTIFICADO LEY 2173", data=f"Reporte NIT {nit}", file_name=f"Certificado_Ley2173.txt")
+
+    # SECCIÓN 2: BLINDAJE JURÍDICO (NUEVO)
+    st.write("---")
+    st.subheader("📚 Blindaje Jurídico y Normativo")
+    st.write("Descargue los marcos legales que respaldan su inversión en Serenity Nexus Global.")
+    
+    col_law1, col_law2 = st.columns(2)
+    with col_law1:
+        st.markdown("<div class='legal-card'><h4>Ley 2173 de 2021</h4><p>Áreas de Vida y Bosques Urbanos.</p></div>", unsafe_allow_html=True)
+        st.download_button("📜 Descargar Resumen Ley 2173", data=TEXTO_LEY_2173, file_name="Resumen_Ley_2173.txt")
+        
+        st.markdown("<div class='legal-card'><h4>CONPES 3934</h4><p>Política de Crecimiento Verde.</p></div>", unsafe_allow_html=True)
+        st.download_button("📜 Descargar Resumen CONPES 3934", data=TEXTO_CONPES, file_name="Resumen_CONPES_3934.txt")
+        
+    with col_law2:
+        st.markdown("<div class='legal-card'><h4>Ley 2111 de 2021</h4><p>Nuevos Delitos Ambientales.</p></div>", unsafe_allow_html=True)
+        st.download_button("📜 Descargar Resumen Ley 2111", data=TEXTO_DELITOS, file_name="Resumen_Ley_2111.txt")
+        
+        st.markdown("<div class='legal-card'><h4>Beneficios Tributarios</h4><p>Exenciones por CTeI y Donaciones.</p></div>", unsafe_allow_html=True)
+        st.download_button("📜 Descargar Guía Tributaria", data=TEXTO_TRIBUTARIO, file_name="Guia_Tributaria_Serenity.txt")
 
 # 5. SUSCRIPCIONES
 elif menu == "SUSCRIPCIONES":
@@ -272,7 +325,7 @@ elif menu == "DONACIONES Y CERTIFICADO":
             """, unsafe_allow_html=True)
             st.download_button("📥 DESCARGAR DIPLOMA (PDF)", data=st.session_state.pdf_buffer, file_name=f"Diploma_Serenity_{nombre_d}.pdf", mime="application/pdf")
 
-# 7. LOGÍSTICA AEROLÍNEAS (LINKS ACTIVOS A WEBS OFICIALES)
+# 7. LOGÍSTICA AEROLÍNEAS
 elif menu == "LOGÍSTICA AEROLÍNEAS":
     st.title("✈️ Conectividad Global a Colombia")
     st.markdown("Haga clic en una aerolínea para reservar sus tiquetes.")
@@ -315,6 +368,7 @@ elif menu == "UBICACIÓN & MAPAS":
     folium.CircleMarker(location=[3.445, -76.645], radius=10, color="blue", fill=True, fill_color="blue", tooltip="Finca Villa Michelle").add_to(m)
     
     st_folium(m, width="100%", height=600)
+
 
 
 
