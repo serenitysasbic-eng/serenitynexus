@@ -2,6 +2,7 @@
 import streamlit as st
 import pandas as pd
 import random
+import hashlib  # NUEVA LIBRERÍA PARA EL HASH
 from datetime import datetime
 import io
 import os
@@ -13,6 +14,7 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
 from reportlab.lib.colors import HexColor, black
+from reportlab.lib.utils import ImageReader # PARA LEER LOGOS SUBIDOS
 
 # --- CONFIGURACIÓN E IDENTIDAD ---
 st.set_page_config(page_title="Serenity Nexus Global", page_icon="🌳", layout="wide")
@@ -26,6 +28,7 @@ if 'estado_gemini' not in st.session_state: st.session_state.estado_gemini = "La
 if 'auth' not in st.session_state: st.session_state.auth = False
 if 'f_activo' not in st.session_state: st.session_state.f_activo = None
 if 'wallet_connected' not in st.session_state: st.session_state.wallet_connected = False
+if 'pdf_empresa_buffer' not in st.session_state: st.session_state.pdf_empresa_buffer = None
 
 # --- DATOS LEGALES ---
 TEXTO_LEY_2173 = """RESUMEN EJECUTIVO - LEY 2173 DE 2021 (ÁREAS DE VIDA)..."""
@@ -46,54 +49,104 @@ tr = {
     'map_btn': {'ES': '🗺️ ABRIR EN GOOGLE MAPS (GPS)', 'EN': '🗺️ OPEN IN GOOGLE MAPS (GPS)'},
     'wallet_btn': {'ES': '🦊 CONECTAR METAMASK', 'EN': '🦊 CONNECT METAMASK'},
     'wallet_msg': {'ES': '🟢 Billetera Conectada: 0x71C...9A23', 'EN': '🟢 Wallet Connected: 0x71C...9A23'},
-    
-    # NUEVA SECCIÓN: QUIÉNES SOMOS
     'who_title': {'ES': '¿QUIÉNES SOMOS?', 'EN': 'WHO WE ARE'},
-    'who_text': {
-        'ES': 'Serenity Nexus Global es la primera plataforma **Phygital (Física + Digital)** del Valle del Cauca que integra la conservación ambiental del KBA Bosque San Antonio con tecnología Blockchain e Inteligencia Artificial. Somos guardianes de 87 hectáreas de vida, uniendo a la comunidad local con la inversión global.',
-        'EN': 'Serenity Nexus Global is the first **Phygital (Physical + Digital)** platform in Valle del Cauca integrating conservation of the KBA San Antonio Forest with Blockchain and AI technology. We are guardians of 87 hectares of life, bridging the local community with global investment.'
-    },
+    'who_text': {'ES': 'Serenity Nexus Global es la primera plataforma **Phygital**...', 'EN': 'Serenity Nexus Global is the first **Phygital** platform...'},
     'mis_title': {'ES': 'NUESTRA MISIÓN', 'EN': 'OUR MISSION'},
-    'mis_text': {
-        'ES': 'Regenerar el tejido ecológico y social mediante un modelo de negocio sostenible que garantice la protección perpetua del bosque y el bienestar económico de Dagua.',
-        'EN': 'Regenerate the ecological and social fabric through a sustainable business model ensuring perpetual forest protection and economic welfare for Dagua.'
-    },
+    'mis_text': {'ES': 'Regenerar el tejido ecológico...', 'EN': 'Regenerate the ecological...'},
     'vis_title': {'ES': 'NUESTRA VISIÓN', 'EN': 'OUR VISION'},
-    'vis_text': {
-        'ES': 'Para 2030, ser el referente mundial del "Internet de la Naturaleza", tokenizando activos ambientales reales para crear el banco de oxígeno más seguro del planeta.',
-        'EN': 'By 2030, to be the global benchmark for the "Internet of Nature," tokenizing real environmental assets to create the most secure oxygen bank on the planet.'
-    }
+    'vis_text': {'ES': 'Para 2030, ser el referente mundial...', 'EN': 'By 2030, to be the global benchmark...'}
 }
 def t(key): return tr[key][st.session_state.lang]
 
-# --- FUNCIÓN PDF ---
+# --- FUNCIÓN PDF: CERTIFICADO DONANTE (SIMPLE) ---
 def generar_pdf_certificado(nombre, monto, lang):
     buffer = io.BytesIO()
     c = canvas.Canvas(buffer, pagesize=letter)
     txt_titulo = "CERTIFICADO DE DONACIÓN" if lang == 'ES' else "DONATION CERTIFICATE"
-    txt_recon = "Reconoce a:" if lang == 'ES' else "Recognizes:"
-    txt_aporte = "Por su valioso aporte de" if lang == 'ES' else "For the valuable contribution of"
-    txt_destino = "Destinado a la Regeneración de Biodiversidad y al Bienestar de la Comunidad Local" if lang == 'ES' else "Dedicated to Biodiversity Regeneration and Local Community Welfare"
-    txt_admin = "Administrador Serenity S.A.S. BIC" if lang == 'ES' else "Manager Serenity S.A.S. BIC"
     
     c.setStrokeColor(VERDE_SERENITY); c.setLineWidth(5)
     c.rect(0.3*inch, 0.3*inch, 7.9*inch, 10.4*inch)
     try:
         if os.path.exists("logo_serenity.png"): c.drawImage("logo_serenity.png", 3.5*inch, 9.0*inch, width=1.5*inch, height=1.5*inch, mask='auto')
-        else: c.setFillColor(VERDE_SERENITY); c.circle(4.25*inch, 9.7*inch, 40, fill=1); c.setFillColor(black); c.drawCentredString(4.25*inch, 9.65*inch, "LOGO")
+        else: c.setFillColor(VERDE_SERENITY); c.circle(4.25*inch, 9.7*inch, 40, fill=1)
     except: pass 
+    
     c.setFont("Helvetica-Bold", 30); c.setFillColor(VERDE_SERENITY); c.drawCentredString(4.25*inch, 8.5*inch, txt_titulo)
     c.setFont("Helvetica", 14); c.setFillColor(black)
     c.drawCentredString(4.25*inch, 7.5*inch, "SERENITY HUB S.A.S. BIC")
-    c.drawCentredString(4.25*inch, 7.0*inch, f"{txt_recon} {nombre.upper()}")
-    c.drawCentredString(4.25*inch, 6.5*inch, f"{txt_aporte} ${monto:,.0f} USD")
-    c.drawCentredString(4.25*inch, 6.0*inch, txt_destino)
-    c.setLineWidth(1); c.line(2.5*inch, 4.8*inch, 6.0*inch, 4.8*inch); c.drawCentredString(4.25*inch, 4.6*inch, "Jorge Carvajal")
-    c.setFont("Helvetica-Oblique", 10); c.drawCentredString(4.25*inch, 4.4*inch, txt_admin)
-    c.setFont("Helvetica", 8); c.drawCentredString(4.25*inch, 1.0*inch, f"Folio: SH-{random.randint(1000,9999)} | {datetime.now().strftime('%d/%m/%Y')} | Nexus AI")
+    c.drawCentredString(4.25*inch, 7.0*inch, f"Reconoce a / Recognizes: {nombre.upper()}")
+    c.drawCentredString(4.25*inch, 6.5*inch, f"Aporte / Contribution: ${monto:,.0f} USD")
+    c.setLineWidth(1); c.line(2.5*inch, 4.8*inch, 6.0*inch, 4.8*inch); c.drawCentredString(4.25*inch, 4.6*inch, "Jorge Carvajal - Admin")
     c.save(); buffer.seek(0); return buffer
 
-# --- CSS (ESTILOS CON SECCIÓN DE CONFIANZA CLARA) ---
+# --- NUEVA FUNCIÓN PDF: CERTIFICADO EMPRESA (LEY 2173) CON LOGOS Y HASH ---
+def generar_cert_empresa(nit, logo_bytes, lang):
+    buffer = io.BytesIO()
+    c = canvas.Canvas(buffer, pagesize=letter)
+    
+    # Textos
+    titulo = "CERTIFICADO DE CUMPLIMIENTO" if lang == 'ES' else "COMPLIANCE CERTIFICATE"
+    subtitulo = "LEY 2173 DE 2021 (ÁREAS DE VIDA)" if lang == 'ES' else "LAW 2173 OF 2021 (AREAS OF LIFE)"
+    txt_nit = f"NIT / TAX ID: {nit}"
+    cuerpo = "Por medio de la presente, SERENITY NEXUS GLOBAL certifica que la empresa:" if lang == 'ES' else "SERENITY NEXUS GLOBAL hereby certifies that the company:"
+    cuerpo2 = "Ha cumplido con la compensación ambiental mediante la siembra y mantenimiento de árboles." if lang == 'ES' else "Has complied with environmental compensation through tree planting and maintenance."
+    
+    # Generar Hash Único (Simulación Blockchain)
+    hash_input = f"{nit}{datetime.now()}SERENITY".encode()
+    hash_code = hashlib.sha256(hash_input).hexdigest().upper()
+    
+    # 1. Marco
+    c.setStrokeColor(HexColor("#D4AF37")) # Dorado
+    c.setLineWidth(4)
+    c.rect(0.5*inch, 0.5*inch, 7.5*inch, 10.0*inch)
+    
+    # 2. Logo Serenity (Pequeño - Arriba Centro)
+    try:
+        if os.path.exists("logo_serenity.png"):
+            c.drawImage("logo_serenity.png", 3.75*inch, 9.5*inch, width=1.0*inch, height=1.0*inch, mask='auto')
+        else:
+            c.setFillColor(VERDE_SERENITY); c.circle(4.25*inch, 10*inch, 20, fill=1)
+    except: pass
+
+    # 3. Títulos
+    c.setFont("Helvetica-Bold", 24); c.setFillColor(VERDE_SERENITY)
+    c.drawCentredString(4.25*inch, 9.0*inch, titulo)
+    c.setFont("Helvetica-Bold", 14); c.setFillColor(black)
+    c.drawCentredString(4.25*inch, 8.7*inch, subtitulo)
+    
+    # 4. LOGO EMPRESA (El que sube el usuario)
+    if logo_bytes is not None:
+        try:
+            # Usamos ImageReader para leer los bytes de la memoria
+            logo_img = ImageReader(logo_bytes)
+            # Dibujamos el logo de la empresa en el centro
+            c.drawImage(logo_img, 3.25*inch, 6.5*inch, width=2.0*inch, height=2.0*inch, preserveAspectRatio=True, mask='auto')
+        except:
+            c.drawCentredString(4.25*inch, 7.5*inch, "[LOGO EMPRESA]")
+            
+    # 5. Cuerpo del Texto
+    c.setFont("Helvetica", 12)
+    c.drawCentredString(4.25*inch, 6.0*inch, cuerpo)
+    c.setFont("Helvetica-Bold", 18)
+    c.drawCentredString(4.25*inch, 5.5*inch, txt_nit)
+    c.setFont("Helvetica", 12)
+    c.drawCentredString(4.25*inch, 5.0*inch, cuerpo2)
+    
+    # 6. Hash y Validación
+    c.setFont("Courier", 9); c.setFillColor(black)
+    c.drawCentredString(4.25*inch, 3.5*inch, "BLOCKCHAIN VERIFICATION HASH:")
+    c.setFont("Courier-Bold", 10)
+    c.drawCentredString(4.25*inch, 3.3*inch, hash_code)
+    
+    # 7. Firmas
+    c.setLineWidth(1)
+    c.line(1.5*inch, 2.0*inch, 3.5*inch, 2.0*inch); c.line(5.0*inch, 2.0*inch, 7.0*inch, 2.0*inch)
+    c.setFont("Helvetica", 8)
+    c.drawString(1.8*inch, 1.8*inch, "Jorge Carvajal - CEO"); c.drawString(5.3*inch, 1.8*inch, "Sistema Nexus IA")
+    
+    c.save(); buffer.seek(0); return buffer
+
+# --- CSS ---
 st.markdown("""
     <style>
         .stApp { background-image: linear-gradient(rgba(5, 10, 4, 0.8), rgba(5, 10, 4, 0.9)), url('https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1920&q=80'); background-size: cover; background-position: center; background-attachment: fixed; color: #e8f5e9; font-family: 'Montserrat', sans-serif; }
@@ -102,24 +155,16 @@ st.markdown("""
         h1, h2, h3 { color: #9BC63B !important; text-shadow: 2px 2px 4px #000; }
         .stButton>button { background-color: #2E7D32; color: white; border: 1px solid #9BC63B; border-radius: 8px; width: 100%; font-weight: bold; }
         .stButton>button:hover { background-color: #9BC63B; color: black; box-shadow: 0 0 15px #9BC63B; }
-        
-        /* TARJETAS NEGRAS (Interfaz Tech) */
         .faro-card, .metric-card { border: 1px solid #9BC63B; padding: 15px; border-radius: 10px; background: rgba(0,0,0,0.6); text-align: center; }
         .faro-gemini { border: 2px solid #4285F4; padding: 15px; border-radius: 10px; background: rgba(66, 133, 244, 0.2); text-align: center; box-shadow: 0 0 15px #4285F4; }
         .cam-grid { background: #000; border: 1px solid #2E7D32; height: 80px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #ff0000; border-radius: 5px; }
-        
-        /* TARJETAS CLARAS (Confianza y Aerolíneas) */
         .trust-section { background-color: rgba(245, 245, 245, 0.95); color: #1a1a1a !important; padding: 25px; border-radius: 15px; border-left: 6px solid #2E7D32; margin-bottom: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
         .trust-section h3, .trust-section h4 { color: #2E7D32 !important; text-shadow: none !important; margin-bottom: 10px; }
         .trust-section p { color: #333 !important; font-weight: 500; font-size: 1rem; line-height: 1.5; }
-        
         .airline-grid { background: rgba(255, 255, 255, 0.9); padding: 15px; border-radius: 10px; text-align: center; margin-bottom: 10px; height: 110px; display: flex; align-items: center; justify-content: center; flex-direction: column; border: 1px solid #ccc; transition: transform 0.2s; cursor: pointer; }
         .airline-grid:hover { transform: scale(1.05); border: 2px solid #2E7D32; }
         .airline-grid p { color: #333 !important; }
-        
         .legal-card { background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; border-left: 5px solid #D4AF37; margin-bottom: 10px; }
-        
-        /* BILLETERA */
         .wallet-msg-box { background-color: rgba(30, 30, 30, 0.8); border: 1px solid #D4AF37; padding: 15px; border-radius: 10px; color: #D4AF37; font-weight: bold; text-align: center; margin-top: 10px; }
         .nft-card { background: linear-gradient(135deg, #101010, #202020); border: 1px solid #9BC63B; padding: 15px; border-radius: 10px; text-align: center; margin-bottom: 10px; color: white; }
         a { text-decoration: none; }
@@ -145,38 +190,26 @@ with st.sidebar:
     menu_opts = tr['menu_opts'][st.session_state.lang]
     menu_sel = st.radio("MENÚ / MENU", menu_opts)
 
-# 1. INICIO (CON SECCIÓN DE CONFIANZA CLARA)
+# 1. INICIO
 if menu_sel == menu_opts[0]:
     st.markdown("<h1 style='text-align:center; font-size:4rem;'>Serenity Nexus Global</h1>", unsafe_allow_html=True)
     subt = "SISTEMA REGENERATIVO BIOMÉTRICO KBA" if st.session_state.lang == 'ES' else "KBA BIOMETRIC REGENERATIVE SYSTEM"
     st.markdown(f"<p style='text-align:center; letter-spacing:5px; color:#9BC63B; font-weight:bold;'>{subt}</p>", unsafe_allow_html=True)
-    
     btn_audio = "🔊 ACTIVAR SONIDO GLOBAL EARTH" if st.session_state.lang == 'ES' else "🔊 ACTIVATE GLOBAL EARTH SOUND"
     st.components.v1.html(f"""<audio id="audio_earth" src="sonido_Earth.mp3" loop></audio><div style="text-align:center; margin-top:30px;"><button onclick="document.getElementById('audio_earth').play()" style="background:#2E7D32; color:white; border:1px solid #9BC63B; padding:20px; border-radius:10px; cursor:pointer; font-weight:bold; font-size:16px;">{btn_audio}</button></div>""", height=150)
-    
     st.write("")
-    
-    # --- NUEVA SECCIÓN QUIÉNES SOMOS (FONDO CLARO) ---
     st.markdown(f"""
         <div class="trust-section">
             <h3 style="text-align:center;">{t('who_title')}</h3>
             <p style="text-align:center;">{t('who_text')}</p>
             <hr style="border-top: 1px solid #ccc;">
             <div style="display: flex; flex-wrap: wrap; justify-content: space-around;">
-                <div style="flex: 1; min-width: 300px; padding: 10px;">
-                    <h4>🎯 {t('mis_title')}</h4>
-                    <p>{t('mis_text')}</p>
-                </div>
-                <div style="flex: 1; min-width: 300px; padding: 10px;">
-                    <h4>👁️ {t('vis_title')}</h4>
-                    <p>{t('vis_text')}</p>
-                </div>
+                <div style="flex: 1; min-width: 300px; padding: 10px;"><h4>🎯 {t('mis_title')}</h4><p>{t('mis_text')}</p></div>
+                <div style="flex: 1; min-width: 300px; padding: 10px;"><h4>👁️ {t('vis_title')}</h4><p>{t('vis_text')}</p></div>
             </div>
         </div>
     """, unsafe_allow_html=True)
-    
-    info_t = "Finca Villa Michell SPAM (40%) | Hacienda Monte Guadua TAF (60%) | Admin: Jorge Carvajal" if st.session_state.lang == 'ES' else "Villa Michell Farm SPAM (40%) | Monte Guadua Hacienda TAF (60%) | Admin: Jorge Carvajal"
-    st.info(info_t)
+    st.info("Finca Villa Michell SPAM (40%) | Hacienda Monte Guadua TAF (60%) | Admin: Jorge Carvajal")
 
 # 2. RED DE FAROS
 elif menu_sel == menu_opts[1]:
@@ -239,21 +272,32 @@ elif menu_sel == menu_opts[2]:
     m[3].markdown(f"<div class='metric-card'><h3>{l_sal}</h3><h1>98%</h1></div>", unsafe_allow_html=True)
     st.bar_chart(pd.DataFrame({'Data': [120, 450, 300, 80, 45, 110, 950]}, index=["Halcón", "Colibrí", "Rana", "Venado", "Tigrillo", "Capibara", "GEMINI"]))
 
-# 4. LEY 2173
+# 4. LEY 2173 (CON GENERACIÓN PDF MEJORADA)
 elif menu_sel == menu_opts[3]:
     tt = "⚖️ Cumplimiento Ley 2173" if st.session_state.lang == 'ES' else "⚖️ Law 2173 Compliance"
     st.title(tt)
+    
+    # SECCIÓN OPERATIVA MEJORADA
     with st.container(border=True):
         st.subheader("🏢 Gestión Operativa" if st.session_state.lang == 'ES' else "🏢 Operational Management")
         c1, c2 = st.columns(2)
-        with c1: nit = st.text_input("Ingrese NIT" if st.session_state.lang == 'ES' else "Enter Tax ID (NIT)")
-        with c2: logo_emp = st.file_uploader("Logo", type=["png", "jpg"])
-        if nit:
-            msg = f"EMPRESA ACTIVA: NIT {nit}" if st.session_state.lang == 'ES' else f"ACTIVE COMPANY: ID {nit}"
-            trees = "150 Árboles Monitoreados" if st.session_state.lang == 'ES' else "150 Monitored Trees"
-            st.markdown(f"<div class='metric-card' style='text-align:left;'><h3>{msg}</h3><p>🌳 {trees}</p></div>", unsafe_allow_html=True)
-            btn_d = t('download') + (" CERTIFICADO" if st.session_state.lang == 'ES' else " CERTIFICATE")
-            st.download_button(btn_d, data=f"Reporte NIT {nit}", file_name=f"Certificado_Ley2173.txt")
+        with c1: 
+            nit = st.text_input("Ingrese NIT" if st.session_state.lang == 'ES' else "Enter Tax ID (NIT)")
+        with c2: 
+            logo_emp = st.file_uploader("Logo Empresa / Company Logo", type=["png", "jpg", "jpeg"])
+            
+        if nit and logo_emp:
+            st.info("✅ Datos recibidos. Generando certificado encriptado..." if st.session_state.lang == 'ES' else "✅ Data received. Generating encrypted certificate...")
+            
+            # Generar PDF solo si se pulsa el botón (para no recargar)
+            if st.button("GENERAR CERTIFICADO OFICIAL / GENERATE OFFICIAL CERTIFICATE"):
+                st.session_state.pdf_empresa_buffer = generar_cert_empresa(nit, logo_emp, st.session_state.lang)
+                st.success("Certificado generado exitosamente.")
+                
+            if st.session_state.pdf_empresa_buffer:
+                 btn_d = t('download') + (" CERTIFICADO" if st.session_state.lang == 'ES' else " CERTIFICATE")
+                 st.download_button(btn_d, data=st.session_state.pdf_empresa_buffer, file_name=f"Certificado_Ley2173_{nit}.pdf", mime="application/pdf")
+
     st.write("---")
     st.subheader("📚 Blindaje Jurídico" if st.session_state.lang == 'ES' else "📚 Legal Framework")
     col_law1, col_law2 = st.columns(2)
@@ -293,17 +337,12 @@ elif menu_sel == menu_opts[5]:
         st.markdown("<div style='text-align:center;'>", unsafe_allow_html=True)
         if not st.session_state.wallet_connected:
             st.image("https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg", width=100)
-            if st.button(t('wallet_btn')):
-                st.session_state.wallet_connected = True
-                st.rerun()
+            if st.button(t('wallet_btn')): st.session_state.wallet_connected = True; st.rerun()
         else:
             st.markdown(f"<div class='wallet-msg-box'>{t('wallet_msg')}</div>", unsafe_allow_html=True)
-            st.write("")
-            st.metric(label="SERENITY TOKEN ($SNG)", value="1,450.00", delta="+12%")
+            st.write(""); st.metric(label="SERENITY TOKEN ($SNG)", value="1,450.00", delta="+12%")
             st.metric(label="CARBON CREDITS", value="45 Tons", delta="+2")
-            if st.button("DISCONNECT"):
-                st.session_state.wallet_connected = False
-                st.rerun()
+            if st.button("DISCONNECT"): st.session_state.wallet_connected = False; st.rerun()
         st.markdown("</div>", unsafe_allow_html=True)
     with col_w2:
         if st.session_state.wallet_connected:
@@ -312,7 +351,6 @@ elif menu_sel == menu_opts[5]:
             with c_nft1: st.markdown("<div class='nft-card'>🌲<br><b>Tree #1024</b><br>Guayacán<br><i style='color:#4CAF50;'>Healthy</i></div>", unsafe_allow_html=True)
             with c_nft2: st.markdown("<div class='nft-card'>🌳<br><b>Tree #1025</b><br>Saman<br><i style='color:#4CAF50;'>Healthy</i></div>", unsafe_allow_html=True)
             with c_nft3: st.markdown("<div class='nft-card'>🌱<br><b>Land Plot A4</b><br>Monte Guadua<br><i style='color:#FFD700;'>Protected</i></div>", unsafe_allow_html=True)
-            st.subheader("$SNG Token Performance")
             st.line_chart(pd.DataFrame({'Price': [1.2, 1.3, 1.25, 1.4, 1.45, 1.6, 1.8]}, index=["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]))
         else:
             msg_conn = "Conecta tu billetera para ver tus activos." if st.session_state.lang == 'ES' else "Connect wallet to view assets."
@@ -387,6 +425,7 @@ elif menu_sel == menu_opts[8]:
     folium.Polygon(locations=[[lat_guadua - offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua + offset], [lat_guadua - offset, lon_guadua + offset]], color="#9BC63B", fill=True, fill_opacity=0.3, tooltip="Hacienda Monte Guadua: 80 Ha").add_to(m)
     folium.CircleMarker(location=[lat_villa, lon_villa], radius=10, color="blue", fill=True, fill_color="blue", tooltip="Finca Villa Michelle (Sede)").add_to(m)
     st_folium(m, width="100%", height=600)
+
 
 
 
