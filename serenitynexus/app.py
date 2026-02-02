@@ -7,7 +7,7 @@ import io
 import os
 
 # --- LIBRERÍAS EXTENDIDAS ---
-# Si te sale error aquí, recuerda instalar: pip install folium streamlit-folium reportlab
+# Recuerda: pip install folium streamlit-folium reportlab
 import folium
 from streamlit_folium import st_folium
 from reportlab.lib.pagesizes import letter
@@ -19,14 +19,14 @@ from reportlab.lib.colors import HexColor, black
 st.set_page_config(page_title="Serenity Nexus Global", page_icon="🌳", layout="wide")
 VERDE_SERENITY = HexColor("#2E7D32")
 
-# --- GESTIÓN DE ESTADO (MEMORIA TEMPORAL) ---
+# --- GESTIÓN DE ESTADO ---
 if 'total_protegido' not in st.session_state: st.session_state.total_protegido = 87.0
 if 'donaciones_recibidas' not in st.session_state: st.session_state.donaciones_recibidas = 0
 if 'estado_gemini' not in st.session_state: st.session_state.estado_gemini = "Latente"
 if 'auth' not in st.session_state: st.session_state.auth = False
 if 'f_activo' not in st.session_state: st.session_state.f_activo = None
 
-# --- FUNCIÓN GENERADORA DE PDF (CON LOGO) ---
+# --- FUNCIÓN GENERADORA DE PDF ---
 def generar_pdf_certificado(nombre, monto):
     buffer = io.BytesIO()
     c = canvas.Canvas(buffer, pagesize=letter)
@@ -36,13 +36,11 @@ def generar_pdf_certificado(nombre, monto):
     c.setLineWidth(5)
     c.rect(0.3*inch, 0.3*inch, 7.9*inch, 10.4*inch)
     
-    # 2. INTENTO DE CARGAR LOGO
-    # Busca 'logo_serenity.png'. Si no está, dibuja un círculo verde.
+    # 2. LOGO (Intento de carga)
     try:
         if os.path.exists("logo_serenity.png"):
             c.drawImage("logo_serenity.png", 3.5*inch, 9.0*inch, width=1.5*inch, height=1.5*inch, mask='auto')
         else:
-            # Logo Placeholder
             c.setFillColor(VERDE_SERENITY)
             c.circle(4.25*inch, 9.7*inch, 40, fill=1)
             c.setFillColor(black)
@@ -79,7 +77,7 @@ def generar_pdf_certificado(nombre, monto):
     buffer.seek(0)
     return buffer
 
-# --- CSS (ESTILOS VISUALES) ---
+# --- CSS (ESTILOS) ---
 st.markdown("""
     <style>
         .stApp { 
@@ -102,7 +100,7 @@ st.markdown("""
         .cam-grid { background: #000; border: 1px solid #2E7D32; height: 80px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #ff0000; border-radius: 5px; }
         .metric-card { background: rgba(0,0,0,0.7); padding: 20px; border-radius: 10px; border: 1px solid #9BC63B; text-align: center; }
         
-        /* ESTILO AEROLÍNEAS */
+        /* ESTILO AEROLÍNEAS (Mejorado para PNGs) */
         .airline-grid { 
             background: white; 
             padding: 10px; 
@@ -115,14 +113,14 @@ st.markdown("""
             justify-content: center;
             flex-direction: column;
         }
-        .airline-grid img { max-width: 80%; max-height: 60px; object-fit: contain; }
+        .airline-grid img { max-width: 90%; max-height: 70px; object-fit: contain; }
         .airline-grid p { color: black !important; font-size: 0.7rem; font-weight: bold; margin-top: 5px; }
         
         .logo-container { background: white; padding: 8px; border-radius: 5px; display: inline-block; margin: 3px; vertical-align: middle; }
     </style>
 """, unsafe_allow_html=True)
 
-# --- PANTALLA DE ACCESO ---
+# --- LOGIN ---
 if not st.session_state.auth:
     st.markdown("<div style='text-align:center; padding-top: 50px;'><h1>SISTEMA NEXUS | SERENITY</h1></div>", unsafe_allow_html=True)
     col_sec = st.columns([1,1,1])
@@ -152,13 +150,12 @@ if menu == "INICIO":
         </div>
     """, height=150)
     
-    st.info("Finca Villa Michell SPAM (40%) | Hacienda Monte Guadua TAF (60%) | Admin: Jorge Carvajal")
+    st.info("Sandra Patricia Agredo Muñoz (40%) | Tatiana Arcila Ferreira (60%) | Admin: Jorge Carvajal")
 
 # 2. RED DE FAROS
 elif menu == "RED DE FAROS (7 NODOS)":
     st.title("🛰️ Monitoreo Perimetral")
     
-    # FILA 1
     c1, c2, c3 = st.columns(3)
     with c1: 
         st.markdown("<div class='faro-card'><h3>FARO HALCÓN</h3></div>", unsafe_allow_html=True)
@@ -171,7 +168,6 @@ elif menu == "RED DE FAROS (7 NODOS)":
         if st.button("Conectar Rana"): st.session_state.f_activo = "Rana"
     
     st.write("")
-    # FILA 2
     c4, c5, c6 = st.columns(3)
     with c4: 
         st.markdown("<div class='faro-card'><h3>FARO VENADO</h3></div>", unsafe_allow_html=True)
@@ -184,7 +180,6 @@ elif menu == "RED DE FAROS (7 NODOS)":
         if st.button("Conectar Capibara"): st.session_state.f_activo = "Capibara"
 
     st.write("---")
-    # FARO GEMINI
     col_gemini = st.columns([1,2,1])
     with col_gemini[1]:
         st.markdown(f"<div class='faro-gemini'><h3>✨ FARO GEMINI ✨</h3><p>Estado: {st.session_state.estado_gemini}</p></div>", unsafe_allow_html=True)
@@ -192,12 +187,10 @@ elif menu == "RED DE FAROS (7 NODOS)":
             st.session_state.f_activo = "GEMINI"
             st.session_state.estado_gemini = "ACTIVO - EMITIENDO"
 
-    # VISOR DE CÁMARAS (Solo si hay un faro activo)
     if st.session_state.f_activo:
         st.divider()
         color_titulo = "#4285F4" if st.session_state.f_activo == "GEMINI" else "#9BC63B"
         st.markdown(f"<h2 style='color:{color_titulo}; text-align:center;'>📡 TRANSMISIÓN EN VIVO: {st.session_state.f_activo.upper()}</h2>", unsafe_allow_html=True)
-        
         c_cols = st.columns(4)
         for j in range(8):
             label = "IA-ANALYSIS" if st.session_state.f_activo == "GEMINI" else "LIVE"
@@ -272,40 +265,40 @@ elif menu == "DONACIONES Y CERTIFICADO":
             """, unsafe_allow_html=True)
             st.download_button("📥 DESCARGAR DIPLOMA (PDF)", data=st.session_state.pdf_buffer, file_name=f"Diploma_Serenity_{nombre_d}.pdf", mime="application/pdf")
 
-# 7. LOGÍSTICA AEROLÍNEAS (CONECTIVIDAD TOTAL)
+# 7. LOGÍSTICA AEROLÍNEAS (LINKS PNG ESTABLES)
 elif menu == "LOGÍSTICA AEROLÍNEAS":
     st.title("✈️ Conectividad Global a Colombia")
     st.markdown("Principales aerolíneas con conexión directa a Bogotá (BOG), Cali (CLO) o Medellín (MDE).")
     
     st.subheader("🇪🇺 Europa")
     e1, e2, e3, e4 = st.columns(4)
-    with e1: st.markdown("<div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/4/44/Iberia_Logo.svg'><p>IBERIA</p></div>", unsafe_allow_html=True)
-    with e2: st.markdown("<div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/d/df/Lufthansa_Logo_2018.svg'><p>LUFTHANSA</p></div>", unsafe_allow_html=True)
-    with e3: st.markdown("<div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/en/c/c7/Air_France_Logo.svg'><p>AIR FRANCE</p></div>", unsafe_allow_html=True)
-    with e4: st.markdown("<div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/c/c3/Turkish_Airlines_logo_2019.svg'><p>TURKISH</p></div>", unsafe_allow_html=True)
+    with e1: st.markdown("<div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Iberia_Logo.svg/320px-Iberia_Logo.svg.png'><p>IBERIA</p></div>", unsafe_allow_html=True)
+    with e2: st.markdown("<div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Lufthansa_Logo_2018.svg/320px-Lufthansa_Logo_2018.svg.png'><p>LUFTHANSA</p></div>", unsafe_allow_html=True)
+    with e3: st.markdown("<div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Air_France_Logo.svg/320px-Air_France_Logo.svg.png'><p>AIR FRANCE</p></div>", unsafe_allow_html=True)
+    with e4: st.markdown("<div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Turkish_Airlines_logo_2019.svg/320px-Turkish_Airlines_logo_2019.svg.png'><p>TURKISH</p></div>", unsafe_allow_html=True)
     
     e5, e6, e7 = st.columns(3)
-    with e5: st.markdown("<div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/c/c7/KLM_logo.svg'><p>KLM</p></div>", unsafe_allow_html=True)
-    with e6: st.markdown("<div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/2/23/Air_Europa_Logo.svg'><p>AIR EUROPA</p></div>", unsafe_allow_html=True)
-    with e7: st.markdown("<div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/0/00/Edelweiss_Air_Logo.svg'><p>EDELWEISS</p></div>", unsafe_allow_html=True)
+    with e5: st.markdown("<div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/KLM_logo.svg/320px-KLM_logo.svg.png'><p>KLM</p></div>", unsafe_allow_html=True)
+    with e6: st.markdown("<div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Air_Europa_Logo.svg/320px-Air_Europa_Logo.svg.png'><p>AIR EUROPA</p></div>", unsafe_allow_html=True)
+    with e7: st.markdown("<div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Edelweiss_Air_Logo.svg/320px-Edelweiss_Air_Logo.svg.png'><p>EDELWEISS</p></div>", unsafe_allow_html=True)
 
     st.subheader("🇺🇸 Norteamérica")
     n1, n2, n3, n4 = st.columns(4)
-    with n1: st.markdown("<div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/0/00/American_Airlines_logo_2013.svg'><p>AMERICAN</p></div>", unsafe_allow_html=True)
-    with n2: st.markdown("<div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/e/e0/United_Airlines_Logo.svg'><p>UNITED</p></div>", unsafe_allow_html=True)
-    with n3: st.markdown("<div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/d/d1/Delta_logo.svg'><p>DELTA</p></div>", unsafe_allow_html=True)
-    with n4: st.markdown("<div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/2/20/Air_Canada_Logo.svg'><p>AIR CANADA</p></div>", unsafe_allow_html=True)
+    with n1: st.markdown("<div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/American_Airlines_logo_2013.svg/320px-American_Airlines_logo_2013.svg.png'><p>AMERICAN</p></div>", unsafe_allow_html=True)
+    with n2: st.markdown("<div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/United_Airlines_Logo.svg/320px-United_Airlines_Logo.svg.png'><p>UNITED</p></div>", unsafe_allow_html=True)
+    with n3: st.markdown("<div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Delta_logo.svg/320px-Delta_logo.svg.png'><p>DELTA</p></div>", unsafe_allow_html=True)
+    with n4: st.markdown("<div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Air_Canada_Logo.svg/320px-Air_Canada_Logo.svg.png'><p>AIR CANADA</p></div>", unsafe_allow_html=True)
 
     st.subheader("🌎 Latinoamérica (Hubs Regionales)")
     l1, l2, l3, l4 = st.columns(4)
-    with l1: st.markdown("<div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/d/df/Avianca_logo.svg'><p>AVIANCA</p></div>", unsafe_allow_html=True)
-    with l2: st.markdown("<div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/f/fe/Latam-logo_-_v2.svg'><p>LATAM</p></div>", unsafe_allow_html=True)
-    with l3: st.markdown("<div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/c/c2/Copa_Airlines_logo.svg'><p>COPA</p></div>", unsafe_allow_html=True)
-    with l4: st.markdown("<div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/e/e6/Aeromexico_Logo_2024.svg'><p>AEROMEXICO</p></div>", unsafe_allow_html=True)
+    with l1: st.markdown("<div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Avianca_logo_2016.svg/320px-Avianca_logo_2016.svg.png'><p>AVIANCA</p></div>", unsafe_allow_html=True)
+    with l2: st.markdown("<div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Latam-logo_-_v2.svg/320px-Latam-logo_-_v2.svg.png'><p>LATAM</p></div>", unsafe_allow_html=True)
+    with l3: st.markdown("<div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Copa_Airlines_logo.svg/320px-Copa_Airlines_logo.svg.png'><p>COPA</p></div>", unsafe_allow_html=True)
+    with l4: st.markdown("<div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Aeromexico_Logo_2024.svg/320px-Aeromexico_Logo_2024.svg.png'><p>AEROMEXICO</p></div>", unsafe_allow_html=True)
 
 # 8. MAPAS
 elif menu == "UBICACIÓN & MAPAS":
-    st.title("📍 Ubicación Serenity (Dagua y Felidia)")
+    st.title("📍 Ubicación Hacienda Serenity (Dagua)")
     
     color_gemini_map = "green" if st.session_state.estado_gemini == "ACTIVO - EMITIENDO" else "orange"
     m = folium.Map(location=[3.455, -76.655], zoom_start=13, tiles="cartodbpositron")
@@ -315,6 +308,7 @@ elif menu == "UBICACIÓN & MAPAS":
     folium.CircleMarker(location=[3.445, -76.645], radius=10, color="blue", fill=True, fill_color="blue", tooltip="Finca Villa Michelle").add_to(m)
     
     st_folium(m, width="100%", height=600)
+
 
 
 
