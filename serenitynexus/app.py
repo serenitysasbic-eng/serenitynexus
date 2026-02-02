@@ -4,6 +4,7 @@ import pandas as pd
 import random
 from datetime import datetime
 from PIL import Image
+import base64
 
 # CONFIGURACIÓN DE IDENTIDAD
 st.set_page_config(page_title="Serenity Nexus Global", page_icon="🌳", layout="wide")
@@ -27,14 +28,17 @@ st.markdown("""
         
         /* BOTONES */
         .stButton>button { background-color: #2E7D32; color: white; border: 1px solid #9BC63B; border-radius: 8px; width: 100%; font-weight: bold; }
-        .stButton>button:hover { background-color: #9BC63B; color: black; box-shadow: 0 0 15px #9BC63B; }
         
         /* TARJETAS Y CUADROS */
         .metric-card { background: rgba(0,0,0,0.7); padding: 20px; border-radius: 10px; border: 1px solid #9BC63B; text-align: center; }
         .faro-card { border: 1px solid #9BC63B; padding: 15px; border-radius: 10px; background: rgba(0,0,0,0.6); text-align: center; height: 100%; }
+        
+        /* FARO GEMINI ESPECIAL */
+        .faro-gemini { border: 2px solid #4285F4; padding: 15px; border-radius: 10px; background: rgba(66, 133, 244, 0.2); text-align: center; box-shadow: 0 0 15px #4285F4; }
+        
         .cam-grid { background: #000; border: 1px solid #2E7D32; height: 80px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #ff0000; border-radius: 5px; }
         
-        /* DIPLOMA BLANCO */
+        /* DIPLOMA BLANCO (ESTILO DONACIÓN) */
         .diploma-box { 
             background: white !important; 
             color: black !important; 
@@ -45,7 +49,7 @@ st.markdown("""
             margin: auto;
             box-shadow: 0 0 30px rgba(0,0,0,0.5);
         }
-        .diploma-box h1 { color: #2E7D32 !important; text-shadow: none !important; }
+        .diploma-box h1 { color: #2E7D32 !important; text-shadow: none !important; margin-bottom: 5px; }
         .diploma-box p, .diploma-box h2, .diploma-box h3 { color: black !important; text-shadow: none !important; }
 
         /* LOGOS AEROLÍNEAS */
@@ -67,11 +71,11 @@ if "auth" not in st.session_state:
 
 # --- NAVEGACIÓN ---
 menu = st.sidebar.radio("CENTRO DE CONTROL", [
-    "INICIO", "6 PUNTOS FARO", "DASHBOARD ESTADÍSTICO IA", "GESTIÓN LEY 2173 (EMPRESAS)",
+    "INICIO", "RED DE FAROS (7 NODOS)", "DASHBOARD ESTADÍSTICO IA", "GESTIÓN LEY 2173 (EMPRESAS)",
     "SUSCRIPCIONES", "DONACIONES Y CERTIFICADO", "LOGÍSTICA AEROLÍNEAS", "UBICACIÓN"
 ])
 
-# 1. INICIO
+# 1. INICIO (CON AUDIO EARTH)
 if menu == "INICIO":
     st.markdown("<h1 style='text-align:center; font-size:4rem;'>Serenity Nexus Global</h1>", unsafe_allow_html=True)
     st.markdown("<p style='text-align:center; letter-spacing:5px; color:#9BC63B; font-weight:bold;'>SISTEMA REGENERATIVO BIOMÉTRICO KBA</p>", unsafe_allow_html=True)
@@ -82,25 +86,46 @@ if menu == "INICIO":
         </div>
     """, height=150)
 
-# 2. LOS 6 PUNTOS FARO
-elif menu == "6 PUNTOS FARO":
-    st.title("🛰️ Monitoreo Perimetral - 6 Nodos")
-    faros = ["Halcón", "Colibrí", "Rana", "Venado", "Tigrillo", "Capibara"]
-    f_cols = st.columns(3)
-    for i, f in enumerate(faros):
-        with f_cols[i % 3]:
-            st.markdown(f"<div class='faro-card'><h3>FARO {f.upper()}</h3></div>", unsafe_allow_html=True)
-            if st.button(f"CONECTAR A {f.upper()}"): st.session_state.f_activo = f
+# 2. RED DE FAROS (AHORA SON 7 CON GEMINI)
+elif menu == "RED DE FAROS (7 NODOS)":
+    st.title("🛰️ Monitoreo Perimetral - Red Neural")
+    
+    # Fila 1: Faros Físicos
+    c1, c2, c3 = st.columns(3)
+    with c1: st.markdown("<div class='faro-card'><h3>FARO HALCÓN</h3></div>", unsafe_allow_html=True); st.button("Conectar Halcón")
+    with c2: st.markdown("<div class='faro-card'><h3>FARO COLIBRÍ</h3></div>", unsafe_allow_html=True); st.button("Conectar Colibrí")
+    with c3: st.markdown("<div class='faro-card'><h3>FARO RANA</h3></div>", unsafe_allow_html=True); st.button("Conectar Rana")
+    
+    # Fila 2: Faros Físicos
+    st.write("")
+    c4, c5, c6 = st.columns(3)
+    with c4: st.markdown("<div class='faro-card'><h3>FARO VENADO</h3></div>", unsafe_allow_html=True); st.button("Conectar Venado")
+    with c5: st.markdown("<div class='faro-card'><h3>FARO TIGRILLO</h3></div>", unsafe_allow_html=True); st.button("Conectar Tigrillo")
+    with c6: st.markdown("<div class='faro-card'><h3>FARO CAPIBARA</h3></div>", unsafe_allow_html=True); st.button("Conectar Capibara")
+
+    # Fila 3: FARO GEMINI (Central de Inteligencia)
+    st.write("---")
+    st.markdown("<h3 style='text-align:center; color:#4285F4;'>NODO CENTRAL DE INTELIGENCIA</h3>", unsafe_allow_html=True)
+    col_gemini = st.columns([1,2,1])
+    with col_gemini[1]:
+        st.markdown("<div class='faro-gemini'><h3>✨ FARO GEMINI ✨</h3><p>Procesamiento Neural & Protección de Datos</p></div>", unsafe_allow_html=True)
+        if st.button("ACCEDER AL NÚCLEO GEMINI"): st.session_state.f_activo = "GEMINI"
+
     if "f_activo" in st.session_state:
         st.divider()
-        st.header(f"📡 TRANSMISIÓN EN VIVO: {st.session_state.f_activo.upper()}")
+        color_titulo = "#4285F4" if st.session_state.f_activo == "GEMINI" else "#9BC63B"
+        st.markdown(f"<h2 style='color:{color_titulo};'>📡 TRANSMISIÓN EN VIVO: {st.session_state.f_activo}</h2>", unsafe_allow_html=True)
+        
         c_cols = st.columns(4)
         for j in range(8):
-            with c_cols[j % 4]: st.markdown(f"<div class='cam-grid'>CAM {j+1}<br>● LIVE</div>", unsafe_allow_html=True)
+            label = "IA-ANALYSIS" if st.session_state.f_activo == "GEMINI" else "LIVE"
+            with c_cols[j % 4]: st.markdown(f"<div class='cam-grid'>CAM {j+1}<br>● {label}</div>", unsafe_allow_html=True)
+        
         st.subheader("Análisis Bioacústico")
         m_cols = st.columns(4)
         for k in range(4):
-            with m_cols[k]: st.markdown(f"<div style='background:rgba(155,198,59,0.2); border:1px solid #2E7D32; padding:10px; border-radius:5px; text-align:center;'><b>MIC {k+1}</b><br><span style='color:#9BC63B;'>||||| {random.randint(40,90)}%</span></div>", unsafe_allow_html=True)
+            val = random.randint(85,99) if st.session_state.f_activo == "GEMINI" else random.randint(40,90)
+            with m_cols[k]: st.markdown(f"<div style='background:rgba(155,198,59,0.2); border:1px solid #2E7D32; padding:10px; border-radius:5px; text-align:center;'><b>MIC {k+1}</b><br><span style='color:#9BC63B;'>||||| {val}%</span></div>", unsafe_allow_html=True)
 
 # 3. DASHBOARD ESTADÍSTICO IA
 elif menu == "DASHBOARD ESTADÍSTICO IA":
@@ -109,10 +134,10 @@ elif menu == "DASHBOARD ESTADÍSTICO IA":
     m[0].markdown("<div class='metric-card'><h3>Especies</h3><h1>1,248</h1></div>", unsafe_allow_html=True)
     m[1].markdown("<div class='metric-card'><h3>Salud Bosque</h3><h1>94%</h1></div>", unsafe_allow_html=True)
     m[2].markdown("<div class='metric-card'><h3>Alertas IA</h3><h1>12</h1></div>", unsafe_allow_html=True)
-    m[3].markdown("<div class='metric-card'><h3>Área Protegida</h3><h1>86 ha</h1></div>", unsafe_allow_html=True)
+    m[3].markdown("<div class='metric-card'><h3>Área Protegida</h3><h1>87 ha</h1></div>", unsafe_allow_html=True) # Sumé la hectárea Gemini
     st.divider()
     st.subheader("Detecciones por Punto Faro (24h)")
-    st.bar_chart(pd.DataFrame({'Detecciones': [120, 450, 300, 80, 45, 110]}, index=["Halcón", "Colibrí", "Rana", "Venado", "Tigrillo", "Capibara"]))
+    st.bar_chart(pd.DataFrame({'Detecciones': [120, 450, 300, 80, 45, 110, 950]}, index=["Halcón", "Colibrí", "Rana", "Venado", "Tigrillo", "Capibara", "GEMINI (Global)"]))
 
 # 4. GESTIÓN LEY 2173
 elif menu == "GESTIÓN LEY 2173 (EMPRESAS)":
@@ -124,19 +149,19 @@ elif menu == "GESTIÓN LEY 2173 (EMPRESAS)":
         st.markdown(f"<div class='metric-card' style='text-align:left;'><h3>EMPRESA ACTIVA: NIT {nit}</h3><p>🌳 150 Árboles Monitoreados</p></div>", unsafe_allow_html=True)
         st.download_button("⬇️ DESCARGAR CERTIFICADO LEY 2173", data=f"Reporte NIT {nit}", file_name=f"Certificado_Ley2173.txt")
 
-# 5. SUSCRIPCIONES (BOTONES RESTAURADOS)
+# 5. SUSCRIPCIONES
 elif menu == "SUSCRIPCIONES":
     st.title("💳 Planes de Apoyo Regenerativo")
     p1, p2, p3 = st.columns(3)
     with p1: 
         st.markdown("<div class='faro-card'><h3>Plan Semilla</h3><h2>$5 USD</h2><p>1 Faro / 1 Mes</p></div>", unsafe_allow_html=True)
-        if st.button("SUSCRIBIRSE SEMILLA"): st.success("Redirigiendo a Pasarela...")
+        if st.button("SUSCRIBIRSE SEMILLA"): st.success("Redirigiendo...")
     with p2: 
         st.markdown("<div class='faro-card'><h3>Plan Guardián</h3><h2>$25 USD</h2><p>6 Faros / 1 Mes</p></div>", unsafe_allow_html=True)
-        if st.button("SUSCRIBIRSE GUARDIÁN"): st.success("Redirigiendo a Pasarela...")
+        if st.button("SUSCRIBIRSE GUARDIÁN"): st.success("Redirigiendo...")
     with p3: 
         st.markdown("<div class='faro-card' style='border-color:#D4AF37;'><h3>Plan Halcón</h3><h2>$200 USD</h2><p>6 Faros / 6 Meses</p></div>", unsafe_allow_html=True)
-        if st.button("SUSCRIBIRSE HALCÓN"): st.success("Redirigiendo a Pasarela...")
+        if st.button("SUSCRIBIRSE HALCÓN"): st.success("Redirigiendo...")
 
 # 6. DONACIONES Y CERTIFICADO
 elif menu == "DONACIONES Y CERTIFICADO":
@@ -186,6 +211,7 @@ elif menu == "UBICACIÓN":
     st.title("📍 Ubicación Hacienda Serenity")
     st.write("Dagua y Felidia, Valle del Cauca, Colombia.")
     st.map(pd.DataFrame({'lat': [3.4833], 'lon': [-76.6167]}))
+
 
 
 
