@@ -152,7 +152,7 @@ if menu == "INICIO":
         </div>
     """, height=150)
     
-    st.info("Sandra Patricia Agredo Muñoz (40%) | Tatiana Arcila Ferreira (60%) | Admin: Jorge Carvajal")
+    st.info("Finca Villa Michell SPAM (40%) | Hacienda Monte Guadua TAF (60%) | Admin: Jorge Carvajal")
 
 # 2. RED DE FAROS
 elif menu == "RED DE FAROS (7 NODOS)":
@@ -315,6 +315,7 @@ elif menu == "UBICACIÓN & MAPAS":
     folium.CircleMarker(location=[3.445, -76.645], radius=10, color="blue", fill=True, fill_color="blue", tooltip="Finca Villa Michelle").add_to(m)
     
     st_folium(m, width="100%", height=600)
+
 
 
 
