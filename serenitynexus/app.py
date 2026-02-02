@@ -18,60 +18,41 @@ from reportlab.lib.colors import HexColor, black
 st.set_page_config(page_title="Serenity Nexus Global", page_icon="🌳", layout="wide")
 VERDE_SERENITY = HexColor("#2E7D32")
 
-# --- GESTIÓN DE ESTADO E IDIOMA ---
+# --- GESTIÓN DE ESTADO ---
 if 'lang' not in st.session_state: st.session_state.lang = 'ES' 
 if 'total_protegido' not in st.session_state: st.session_state.total_protegido = 87.0
 if 'donaciones_recibidas' not in st.session_state: st.session_state.donaciones_recibidas = 0
 if 'estado_gemini' not in st.session_state: st.session_state.estado_gemini = "Latente"
 if 'auth' not in st.session_state: st.session_state.auth = False
 if 'f_activo' not in st.session_state: st.session_state.f_activo = None
+if 'wallet_connected' not in st.session_state: st.session_state.wallet_connected = False
 
 # --- DATOS LEGALES ---
-TEXTO_LEY_2173 = """
-RESUMEN EJECUTIVO - LEY 2173 DE 2021 (ÁREAS DE VIDA)
-Objeto: Promover la restauración ecológica a través de la siembra de árboles.
-Obligación: Las medianas y grandes empresas deben sembrar 2 árboles por cada empleado.
-Cumplimiento: Se debe demostrar mediante certificado de 'Área de Vida'.
-Solución Serenity: Ofrecemos el suelo, la siembra, el mantenimiento y el reporte digital.
-"""
-TEXTO_CONPES = """
-RESUMEN EJECUTIVO - CONPES 3934 (POLÍTICA DE CRECIMIENTO VERDE)
-Objeto: Impulsar la productividad y la competitividad económica asegurando el uso sostenible del capital natural.
-Meta 2030: Aumentar la bioeconomía y los negocios verdes.
-Alineación Serenity: Nuestra plataforma integra Big Data e IoT para la gestión del capital natural.
-"""
-TEXTO_DELITOS = """
-RESUMEN EJECUTIVO - LEY 2111 DE 2021 (DELITOS AMBIENTALES)
-Objeto: Sustituir el título de delitos contra los recursos naturales y el medio ambiente.
-Impacto: La deforestación y el daño a recursos naturales ahora tienen penas de prisión.
-Solución Serenity: Nuestro sistema de monitoreo (Faros) actúa como evidencia forense y prevención.
-"""
-TEXTO_TRIBUTARIO = """
-RESUMEN EJECUTIVO - BENEFICIOS TRIBUTARIOS (S.A.S. BIC & CTeI)
-Objeto: Incentivar la inversión en ciencia, tecnología e impacto social.
-Beneficio 1: Descuento en renta por donaciones a entidades ambientales sin ánimo de lucro.
-Beneficio 2: Deducciones por inversión en proyectos de Ciencia, Tecnología e Innovación (Actividades Serenity Nexus).
-"""
+TEXTO_LEY_2173 = """RESUMEN EJECUTIVO - LEY 2173 DE 2021 (ÁREAS DE VIDA)... (Contenido Resumido)"""
+TEXTO_CONPES = """RESUMEN EJECUTIVO - CONPES 3934 (CRECIMIENTO VERDE)..."""
+TEXTO_DELITOS = """RESUMEN EJECUTIVO - LEY 2111 (DELITOS AMBIENTALES)..."""
+TEXTO_TRIBUTARIO = """BENEFICIOS TRIBUTARIOS (S.A.S. BIC)..."""
 
 # --- DICCIONARIO DE TRADUCCIÓN ---
 tr = {
     'menu_opts': {
-        'ES': ["INICIO", "RED DE FAROS (7 NODOS)", "DASHBOARD ESTADÍSTICO IA", "GESTIÓN LEY 2173 (EMPRESAS)", "SUSCRIPCIONES", "DONACIONES Y CERTIFICADO", "LOGÍSTICA AEROLÍNEAS", "UBICACIÓN & MAPAS"],
-        'EN': ["HOME", "BEACON NETWORK (7 NODES)", "AI STATS DASHBOARD", "LAW 2173 MANAGEMENT (CORP)", "SUBSCRIPTIONS", "DONATIONS & CERTIFICATE", "AIRLINE LOGISTICS", "LOCATION & MAPS"]
+        'ES': ["INICIO", "RED DE FAROS (7 NODOS)", "DASHBOARD ESTADÍSTICO IA", "GESTIÓN LEY 2173 (EMPRESAS)", "SUSCRIPCIONES", "BILLETERA CRYPTO (WEB3)", "DONACIONES Y CERTIFICADO", "LOGÍSTICA AEROLÍNEAS", "UBICACIÓN & MAPAS"],
+        'EN': ["HOME", "BEACON NETWORK (7 NODES)", "AI STATS DASHBOARD", "LAW 2173 MANAGEMENT (CORP)", "SUBSCRIPTIONS", "CRYPTO WALLET (WEB3)", "DONATIONS & CERTIFICATE", "AIRLINE LOGISTICS", "LOCATION & MAPS"]
     },
     'connect': {'ES': 'Conectar', 'EN': 'Connect'},
     'active': {'ES': 'ACTIVO - EMITIENDO', 'EN': 'ACTIVE - BROADCASTING'},
     'live': {'ES': 'TRANSMISIÓN EN VIVO', 'EN': 'LIVE STREAM'},
     'download': {'ES': '⬇️ DESCARGAR', 'EN': '⬇️ DOWNLOAD'},
-    'map_btn': {'ES': '🗺️ ABRIR EN GOOGLE MAPS (GPS)', 'EN': '🗺️ OPEN IN GOOGLE MAPS (GPS)'}
+    'map_btn': {'ES': '🗺️ ABRIR EN GOOGLE MAPS (GPS)', 'EN': '🗺️ OPEN IN GOOGLE MAPS (GPS)'},
+    'wallet_btn': {'ES': '🦊 CONECTAR METAMASK', 'EN': '🦊 CONNECT METAMASK'},
+    'wallet_msg': {'ES': 'Billetera Conectada: 0x71C...9A23', 'EN': 'Wallet Connected: 0x71C...9A23'}
 }
 def t(key): return tr[key][st.session_state.lang]
 
-# --- FUNCIÓN GENERADORA DE PDF ---
+# --- FUNCIÓN PDF ---
 def generar_pdf_certificado(nombre, monto, lang):
     buffer = io.BytesIO()
     c = canvas.Canvas(buffer, pagesize=letter)
-    
     txt_titulo = "CERTIFICADO DE DONACIÓN" if lang == 'ES' else "DONATION CERTIFICATE"
     txt_recon = "Reconoce a:" if lang == 'ES' else "Recognizes:"
     txt_aporte = "Por su valioso aporte de" if lang == 'ES' else "For the valuable contribution of"
@@ -80,41 +61,25 @@ def generar_pdf_certificado(nombre, monto, lang):
     
     c.setStrokeColor(VERDE_SERENITY); c.setLineWidth(5)
     c.rect(0.3*inch, 0.3*inch, 7.9*inch, 10.4*inch)
-    
     try:
-        if os.path.exists("logo_serenity.png"):
-            c.drawImage("logo_serenity.png", 3.5*inch, 9.0*inch, width=1.5*inch, height=1.5*inch, mask='auto')
-        else:
-            c.setFillColor(VERDE_SERENITY); c.circle(4.25*inch, 9.7*inch, 40, fill=1)
-            c.setFillColor(black); c.drawCentredString(4.25*inch, 9.65*inch, "LOGO")
+        if os.path.exists("logo_serenity.png"): c.drawImage("logo_serenity.png", 3.5*inch, 9.0*inch, width=1.5*inch, height=1.5*inch, mask='auto')
+        else: c.setFillColor(VERDE_SERENITY); c.circle(4.25*inch, 9.7*inch, 40, fill=1); c.setFillColor(black); c.drawCentredString(4.25*inch, 9.65*inch, "LOGO")
     except: pass 
-
-    c.setFont("Helvetica-Bold", 30); c.setFillColor(VERDE_SERENITY)
-    c.drawCentredString(4.25*inch, 8.5*inch, txt_titulo)
+    c.setFont("Helvetica-Bold", 30); c.setFillColor(VERDE_SERENITY); c.drawCentredString(4.25*inch, 8.5*inch, txt_titulo)
     c.setFont("Helvetica", 14); c.setFillColor(black)
     c.drawCentredString(4.25*inch, 7.5*inch, "SERENITY HUB S.A.S. BIC")
     c.drawCentredString(4.25*inch, 7.0*inch, f"{txt_recon} {nombre.upper()}")
     c.drawCentredString(4.25*inch, 6.5*inch, f"{txt_aporte} ${monto:,.0f} USD")
     c.drawCentredString(4.25*inch, 6.0*inch, txt_destino)
-    c.setLineWidth(1); c.line(2.5*inch, 4.8*inch, 6.0*inch, 4.8*inch)
-    c.drawCentredString(4.25*inch, 4.6*inch, "Jorge Carvajal")
-    c.setFont("Helvetica-Oblique", 10)
-    c.drawCentredString(4.25*inch, 4.4*inch, txt_admin)
-    c.setFont("Helvetica", 8); fecha_hoy = datetime.now().strftime("%d/%m/%Y")
-    c.drawCentredString(4.25*inch, 1.0*inch, f"Folio: SH-{random.randint(1000,9999)} | {fecha_hoy} | Nexus AI System")
-    
-    c.save(); buffer.seek(0)
-    return buffer
+    c.setLineWidth(1); c.line(2.5*inch, 4.8*inch, 6.0*inch, 4.8*inch); c.drawCentredString(4.25*inch, 4.6*inch, "Jorge Carvajal")
+    c.setFont("Helvetica-Oblique", 10); c.drawCentredString(4.25*inch, 4.4*inch, txt_admin)
+    c.setFont("Helvetica", 8); c.drawCentredString(4.25*inch, 1.0*inch, f"Folio: SH-{random.randint(1000,9999)} | {datetime.now().strftime('%d/%m/%Y')} | Nexus AI")
+    c.save(); buffer.seek(0); return buffer
 
 # --- CSS ---
 st.markdown("""
     <style>
-        .stApp { 
-            background-image: linear-gradient(rgba(5, 10, 4, 0.8), rgba(5, 10, 4, 0.9)), 
-            url('https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1920&q=80');
-            background-size: cover; background-position: center; background-attachment: fixed;
-            color: #e8f5e9; font-family: 'Montserrat', sans-serif; 
-        }
+        .stApp { background-image: linear-gradient(rgba(5, 10, 4, 0.8), rgba(5, 10, 4, 0.9)), url('https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1920&q=80'); background-size: cover; background-position: center; background-attachment: fixed; color: #e8f5e9; font-family: 'Montserrat', sans-serif; }
         label, .stMarkdown p, [data-testid="stSidebar"] p, [data-testid="stSidebar"] span, .stMetricLabel { color: white !important; font-weight: 500; }
         [data-testid="stSidebar"] { background-color: rgba(10, 20, 8, 0.9) !important; backdrop-filter: blur(10px); }
         h1, h2, h3 { color: #9BC63B !important; text-shadow: 2px 2px 4px #000; }
@@ -129,6 +94,7 @@ st.markdown("""
         .airline-grid img { max-width: 90%; max-height: 60px; object-fit: contain; }
         .airline-grid p { color: #333 !important; font-size: 0.75rem; font-weight: 800; margin-top: 8px; letter-spacing: 1px; text-decoration: none; }
         .legal-card { background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; border-left: 5px solid #D4AF37; margin-bottom: 10px; }
+        .nft-card { background: linear-gradient(135deg, #1e1e1e, #2a2a2a); border: 1px solid #D4AF37; padding: 10px; border-radius: 10px; text-align: center; margin-bottom: 10px; }
         a { text-decoration: none; }
     </style>
 """, unsafe_allow_html=True)
@@ -140,9 +106,7 @@ if not st.session_state.auth:
     with col_sec[1]:
         clave = st.text_input("PASSWORD ADMIN", type="password")
         if st.button("INGRESAR"):
-            if clave == "Serenity2026":
-                st.session_state.auth = True
-                st.rerun()
+            if clave == "Serenity2026": st.session_state.auth = True; st.rerun()
     st.stop()
 
 # --- SIDEBAR ---
@@ -160,12 +124,7 @@ if menu_sel == menu_opts[0]:
     subt = "SISTEMA REGENERATIVO BIOMÉTRICO KBA" if st.session_state.lang == 'ES' else "KBA BIOMETRIC REGENERATIVE SYSTEM"
     st.markdown(f"<p style='text-align:center; letter-spacing:5px; color:#9BC63B; font-weight:bold;'>{subt}</p>", unsafe_allow_html=True)
     btn_audio = "🔊 ACTIVAR SONIDO GLOBAL EARTH" if st.session_state.lang == 'ES' else "🔊 ACTIVATE GLOBAL EARTH SOUND"
-    st.components.v1.html(f"""
-        <audio id="audio_earth" src="sonido_Earth.mp3" loop></audio>
-        <div style="text-align:center; margin-top:30px;">
-            <button onclick="document.getElementById('audio_earth').play()" style="background:#2E7D32; color:white; border:1px solid #9BC63B; padding:20px; border-radius:10px; cursor:pointer; font-weight:bold; font-size:16px;">{btn_audio}</button>
-        </div>
-    """, height=150)
+    st.components.v1.html(f"""<audio id="audio_earth" src="sonido_Earth.mp3" loop></audio><div style="text-align:center; margin-top:30px;"><button onclick="document.getElementById('audio_earth').play()" style="background:#2E7D32; color:white; border:1px solid #9BC63B; padding:20px; border-radius:10px; cursor:pointer; font-weight:bold; font-size:16px;">{btn_audio}</button></div>""", height=150)
     info_t = "Finca Villa Michell SPAM (40%) | Hacienda Monte Guadua TAF (60%) | Admin: Jorge Carvajal" if st.session_state.lang == 'ES' else "Villa Michell Farm SPAM (40%) | Monte Guadua Hacienda TAF (60%) | Admin: Jorge Carvajal"
     st.info(info_t)
 
@@ -201,8 +160,7 @@ elif menu_sel == menu_opts[1]:
         st_st = "Estado" if st.session_state.lang == 'ES' else "Status"
         st.markdown(f"<div class='faro-gemini'><h3>✨ FARO GEMINI ✨</h3><p>{st_st}: {st.session_state.estado_gemini}</p></div>", unsafe_allow_html=True)
         btn_g = "ACTIVAR NÚCLEO GEMINI" if st.session_state.lang == 'ES' else "ACTIVATE GEMINI CORE"
-        if st.button(btn_g): 
-            st.session_state.f_activo = "GEMINI"; st.session_state.estado_gemini = t('active')
+        if st.button(btn_g): st.session_state.f_activo = "GEMINI"; st.session_state.estado_gemini = t('active')
     if st.session_state.f_activo:
         st.divider(); live_t = t('live'); color_titulo = "#4285F4" if st.session_state.f_activo == "GEMINI" else "#9BC63B"
         st.markdown(f"<h2 style='color:{color_titulo}; text-align:center;'>📡 {live_t}: {st.session_state.f_activo.upper()}</h2>", unsafe_allow_html=True)
@@ -247,18 +205,18 @@ elif menu_sel == menu_opts[3]:
             btn_d = t('download') + (" CERTIFICADO" if st.session_state.lang == 'ES' else " CERTIFICATE")
             st.download_button(btn_d, data=f"Reporte NIT {nit}", file_name=f"Certificado_Ley2173.txt")
     st.write("---")
-    st.subheader("📚 Blindaje Jurídico y Normativo" if st.session_state.lang == 'ES' else "📚 Legal Framework & Norms")
+    st.subheader("📚 Blindaje Jurídico" if st.session_state.lang == 'ES' else "📚 Legal Framework")
     col_law1, col_law2 = st.columns(2)
     with col_law1:
-        st.markdown("<div class='legal-card'><h4>Ley 2173 de 2021</h4><p>Áreas de Vida y Bosques Urbanos.</p></div>", unsafe_allow_html=True)
-        st.download_button("📜 Descargar/Download Resumen Ley 2173", data=TEXTO_LEY_2173, file_name="Resumen_Ley_2173.txt")
-        st.markdown("<div class='legal-card'><h4>CONPES 3934</h4><p>Política de Crecimiento Verde.</p></div>", unsafe_allow_html=True)
-        st.download_button("📜 Descargar/Download Resumen CONPES 3934", data=TEXTO_CONPES, file_name="Resumen_CONPES_3934.txt")
+        st.markdown("<div class='legal-card'><h4>Ley 2173 de 2021</h4><p>Áreas de Vida.</p></div>", unsafe_allow_html=True)
+        st.download_button("📜 Descargar Resumen Ley 2173", data=TEXTO_LEY_2173, file_name="Resumen_Ley_2173.txt")
+        st.markdown("<div class='legal-card'><h4>CONPES 3934</h4><p>Crecimiento Verde.</p></div>", unsafe_allow_html=True)
+        st.download_button("📜 Descargar Resumen CONPES 3934", data=TEXTO_CONPES, file_name="Resumen_CONPES_3934.txt")
     with col_law2:
-        st.markdown("<div class='legal-card'><h4>Ley 2111 de 2021</h4><p>Nuevos Delitos Ambientales.</p></div>", unsafe_allow_html=True)
-        st.download_button("📜 Descargar/Download Resumen Ley 2111", data=TEXTO_DELITOS, file_name="Resumen_Ley_2111.txt")
-        st.markdown("<div class='legal-card'><h4>Beneficios Tributarios</h4><p>Exenciones por CTeI y Donaciones.</p></div>", unsafe_allow_html=True)
-        st.download_button("📜 Descargar/Download Guía Tributaria", data=TEXTO_TRIBUTARIO, file_name="Guia_Tributaria_Serenity.txt")
+        st.markdown("<div class='legal-card'><h4>Ley 2111 de 2021</h4><p>Delitos Ambientales.</p></div>", unsafe_allow_html=True)
+        st.download_button("📜 Descargar Resumen Ley 2111", data=TEXTO_DELITOS, file_name="Resumen_Ley_2111.txt")
+        st.markdown("<div class='legal-card'><h4>Beneficios Tributarios</h4><p>S.A.S. BIC.</p></div>", unsafe_allow_html=True)
+        st.download_button("📜 Descargar Guía Tributaria", data=TEXTO_TRIBUTARIO, file_name="Guia_Tributaria_Serenity.txt")
 
 # 5. SUSCRIPCIONES
 elif menu_sel == menu_opts[4]:
@@ -277,8 +235,43 @@ elif menu_sel == menu_opts[4]:
         st.markdown(f"<div class='faro-card' style='border-color:#D4AF37;'><h3>{nm[2]}</h3><h2>$200 USD</h2><p>{per[2]}</p></div>", unsafe_allow_html=True)
         if st.button(f"{btn_s} {nm[2]}"): st.success("OK...")
 
-# 6. DONACIONES
+# --- NUEVO: 6. BILLETERA CRYPTO (WEB3) ---
 elif menu_sel == menu_opts[5]:
+    st.title("🦊 Web3 Green Wallet")
+    
+    col_w1, col_w2 = st.columns([1, 2])
+    with col_w1:
+        st.markdown("<div style='text-align:center;'>", unsafe_allow_html=True)
+        if not st.session_state.wallet_connected:
+            st.image("https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg", width=100)
+            if st.button(t('wallet_btn')):
+                st.session_state.wallet_connected = True
+                st.rerun()
+        else:
+            st.success(t('wallet_msg'))
+            st.metric(label="SERENITY TOKEN ($SNG)", value="1,450.00", delta="+12%")
+            st.metric(label="CARBON CREDITS", value="45 Tons", delta="+2")
+            if st.button("DISCONNECT"):
+                st.session_state.wallet_connected = False
+                st.rerun()
+        st.markdown("</div>", unsafe_allow_html=True)
+    
+    with col_w2:
+        if st.session_state.wallet_connected:
+            st.subheader("Your Green Assets (NFTs)")
+            c_nft1, c_nft2, c_nft3 = st.columns(3)
+            with c_nft1: st.markdown("<div class='nft-card'>🌲<br><b>Tree #1024</b><br>Guayacán<br><i>Healthy</i></div>", unsafe_allow_html=True)
+            with c_nft2: st.markdown("<div class='nft-card'>🌳<br><b>Tree #1025</b><br>Saman<br><i>Healthy</i></div>", unsafe_allow_html=True)
+            with c_nft3: st.markdown("<div class='nft-card'>🌱<br><b>Land Plot A4</b><br>Monte Guadua<br><i>Protected</i></div>", unsafe_allow_html=True)
+            
+            st.subheader("$SNG Token Performance")
+            chart_data = pd.DataFrame({'Price': [1.2, 1.3, 1.25, 1.4, 1.45, 1.6, 1.8]}, index=["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"])
+            st.line_chart(chart_data)
+        else:
+            st.info("Conecta tu billetera para ver tus activos digitales y tokens de carbono. / Connect wallet to view digital assets.")
+
+# 7. DONACIONES
+elif menu_sel == menu_opts[6]:
     tt = "🌳 Generador de Diploma Oficial" if st.session_state.lang == 'ES' else "🌳 Official Diploma Generator"
     st.title(tt)
     colA, colB = st.columns([1, 1])
@@ -294,8 +287,7 @@ elif menu_sel == menu_opts[5]:
                     st.session_state.donaciones_recibidas += 1
                     st.session_state.estado_gemini = t('active')
                     st.session_state.pdf_buffer = generar_pdf_certificado(nombre_d, monto_d, st.session_state.lang)
-                    st.balloons()
-                    st.success("OK!")
+                    st.balloons(); st.success("OK!")
                 else: st.warning("Name required")
     with colB:
         if 'pdf_buffer' in st.session_state:
@@ -304,8 +296,8 @@ elif menu_sel == menu_opts[5]:
             dl = t('download') + " PDF"
             st.download_button(dl, data=st.session_state.pdf_buffer, file_name=f"Diploma_Serenity_{nombre_d}.pdf", mime="application/pdf")
 
-# 7. LOGÍSTICA
-elif menu_sel == menu_opts[6]:
+# 8. LOGÍSTICA
+elif menu_sel == menu_opts[7]:
     tt = "✈️ Conectividad Global a Colombia" if st.session_state.lang == 'ES' else "✈️ Global Connectivity to Colombia"
     subt = "Haga clic en una aerolínea para reservar." if st.session_state.lang == 'ES' else "Click on an airline to book."
     st.title(tt); st.markdown(subt)
@@ -332,52 +324,29 @@ elif menu_sel == menu_opts[6]:
     with l3: st.markdown("<a href='https://www.copaair.com' target='_blank'><div class='airline-grid'><img src='https://logo.clearbit.com/copaair.com'><p>COPA</p></div></a>", unsafe_allow_html=True)
     with l4: st.markdown("<a href='https://www.aeromexico.com' target='_blank'><div class='airline-grid'><img src='https://logo.clearbit.com/aeromexico.com'><p>AEROMEXICO</p></div></a>", unsafe_allow_html=True)
 
-# 8. MAPAS
-elif menu_sel == menu_opts[7]:
+# 9. MAPAS (REALES)
+elif menu_sel == menu_opts[8]:
     tt = "📍 Ubicación Serenity (Dagua)" if st.session_state.lang == 'ES' else "📍 Serenity Location (Dagua)"
     st.title(tt)
     
-    # --- COORDENADAS REALES ---
+    # Coordenadas Reales
     lat_villa = 3.465028
     lon_villa = -76.634778
     lat_guadua = 3.477917
     lon_guadua = -76.657361
     
-    # URL GOOGLE MAPS
     url_gmaps = f"https://www.google.com/maps/search/?api=1&query={lat_villa},{lon_villa}"
     btn_text = t('map_btn')
-    st.markdown(f"""
-        <div style="text-align:center; margin-bottom: 20px;">
-            <a href="{url_gmaps}" target="_blank">
-                <button style="background-color:#4285F4; color:white; border:2px solid white; padding:15px 32px; text-align:center; text-decoration:none; display:inline-block; font-size:18px; margin:4px 2px; cursor:pointer; border-radius:12px; font-weight:bold; box-shadow: 0 0 10px #4285F4;">
-                    {btn_text}
-                </button>
-            </a>
-        </div>
-    """, unsafe_allow_html=True)
+    st.markdown(f"""<div style='text-align:center; margin-bottom: 20px;'><a href="{url_gmaps}" target="_blank"><button style="background-color:#4285F4; color:white; border:2px solid white; padding:15px 32px; text-align:center; text-decoration:none; display:inline-block; font-size:18px; margin:4px 2px; cursor:pointer; border-radius:12px; font-weight:bold; box-shadow: 0 0 10px #4285F4;">{btn_text}</button></a></div>""", unsafe_allow_html=True)
     
-    # --- MAPA SATELITAL REAL ---
     color_gemini_map = "green" if st.session_state.estado_gemini == t('active') else "orange"
-    
-    # Centrar el mapa entre las dos fincas
     m = folium.Map(location=[(lat_villa + lat_guadua)/2, (lon_villa + lon_guadua)/2], zoom_start=14, tiles='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', attr='Esri World Imagery')
-    
-    # Marcador Faro Gemini
     folium.Marker([lat_guadua + 0.001, lon_guadua - 0.001], popup=f"FARO GEMINI", icon=folium.Icon(color=color_gemini_map, icon='bolt', prefix='fa')).add_to(m)
-    
-    # Polígono Monte Guadua (Cuadro de 800m aprox alrededor del punto central)
     offset = 0.004
-    folium.Polygon(locations=[
-        [lat_guadua - offset, lon_guadua - offset],
-        [lat_guadua + offset, lon_guadua - offset],
-        [lat_guadua + offset, lon_guadua + offset],
-        [lat_guadua - offset, lon_guadua + offset]
-    ], color="#9BC63B", fill=True, fill_opacity=0.3, tooltip="Hacienda Monte Guadua: 80 Ha").add_to(m)
-    
-    # Marcador Villa Michelle
+    folium.Polygon(locations=[[lat_guadua - offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua + offset], [lat_guadua - offset, lon_guadua + offset]], color="#9BC63B", fill=True, fill_opacity=0.3, tooltip="Hacienda Monte Guadua: 80 Ha").add_to(m)
     folium.CircleMarker(location=[lat_villa, lon_villa], radius=10, color="blue", fill=True, fill_color="blue", tooltip="Finca Villa Michelle (Sede)").add_to(m)
-    
     st_folium(m, width="100%", height=600)
+
 
 
 
