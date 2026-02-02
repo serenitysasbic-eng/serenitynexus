@@ -28,7 +28,7 @@ if 'f_activo' not in st.session_state: st.session_state.f_activo = None
 if 'wallet_connected' not in st.session_state: st.session_state.wallet_connected = False
 
 # --- DATOS LEGALES ---
-TEXTO_LEY_2173 = """RESUMEN EJECUTIVO - LEY 2173 DE 2021 (ÁREAS DE VIDA)... (Contenido Resumido)"""
+TEXTO_LEY_2173 = """RESUMEN EJECUTIVO - LEY 2173 DE 2021 (ÁREAS DE VIDA)..."""
 TEXTO_CONPES = """RESUMEN EJECUTIVO - CONPES 3934 (CRECIMIENTO VERDE)..."""
 TEXTO_DELITOS = """RESUMEN EJECUTIVO - LEY 2111 (DELITOS AMBIENTALES)..."""
 TEXTO_TRIBUTARIO = """BENEFICIOS TRIBUTARIOS (S.A.S. BIC)..."""
@@ -45,7 +45,24 @@ tr = {
     'download': {'ES': '⬇️ DESCARGAR', 'EN': '⬇️ DOWNLOAD'},
     'map_btn': {'ES': '🗺️ ABRIR EN GOOGLE MAPS (GPS)', 'EN': '🗺️ OPEN IN GOOGLE MAPS (GPS)'},
     'wallet_btn': {'ES': '🦊 CONECTAR METAMASK', 'EN': '🦊 CONNECT METAMASK'},
-    'wallet_msg': {'ES': 'Billetera Conectada: 0x71C...9A23', 'EN': 'Wallet Connected: 0x71C...9A23'}
+    'wallet_msg': {'ES': '🟢 Billetera Conectada: 0x71C...9A23', 'EN': '🟢 Wallet Connected: 0x71C...9A23'},
+    
+    # NUEVA SECCIÓN: QUIÉNES SOMOS
+    'who_title': {'ES': '¿QUIÉNES SOMOS?', 'EN': 'WHO WE ARE'},
+    'who_text': {
+        'ES': 'Serenity Nexus Global es la primera plataforma **Phygital (Física + Digital)** del Valle del Cauca que integra la conservación ambiental del KBA Bosque San Antonio con tecnología Blockchain e Inteligencia Artificial. Somos guardianes de 87 hectáreas de vida, uniendo a la comunidad local con la inversión global.',
+        'EN': 'Serenity Nexus Global is the first **Phygital (Physical + Digital)** platform in Valle del Cauca integrating conservation of the KBA San Antonio Forest with Blockchain and AI technology. We are guardians of 87 hectares of life, bridging the local community with global investment.'
+    },
+    'mis_title': {'ES': 'NUESTRA MISIÓN', 'EN': 'OUR MISSION'},
+    'mis_text': {
+        'ES': 'Regenerar el tejido ecológico y social mediante un modelo de negocio sostenible que garantice la protección perpetua del bosque y el bienestar económico de Dagua.',
+        'EN': 'Regenerate the ecological and social fabric through a sustainable business model ensuring perpetual forest protection and economic welfare for Dagua.'
+    },
+    'vis_title': {'ES': 'NUESTRA VISIÓN', 'EN': 'OUR VISION'},
+    'vis_text': {
+        'ES': 'Para 2030, ser el referente mundial del "Internet de la Naturaleza", tokenizando activos ambientales reales para crear el banco de oxígeno más seguro del planeta.',
+        'EN': 'By 2030, to be the global benchmark for the "Internet of Nature," tokenizing real environmental assets to create the most secure oxygen bank on the planet.'
+    }
 }
 def t(key): return tr[key][st.session_state.lang]
 
@@ -76,7 +93,7 @@ def generar_pdf_certificado(nombre, monto, lang):
     c.setFont("Helvetica", 8); c.drawCentredString(4.25*inch, 1.0*inch, f"Folio: SH-{random.randint(1000,9999)} | {datetime.now().strftime('%d/%m/%Y')} | Nexus AI")
     c.save(); buffer.seek(0); return buffer
 
-# --- CSS ---
+# --- CSS (ESTILOS CON SECCIÓN DE CONFIANZA CLARA) ---
 st.markdown("""
     <style>
         .stApp { background-image: linear-gradient(rgba(5, 10, 4, 0.8), rgba(5, 10, 4, 0.9)), url('https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1920&q=80'); background-size: cover; background-position: center; background-attachment: fixed; color: #e8f5e9; font-family: 'Montserrat', sans-serif; }
@@ -85,16 +102,26 @@ st.markdown("""
         h1, h2, h3 { color: #9BC63B !important; text-shadow: 2px 2px 4px #000; }
         .stButton>button { background-color: #2E7D32; color: white; border: 1px solid #9BC63B; border-radius: 8px; width: 100%; font-weight: bold; }
         .stButton>button:hover { background-color: #9BC63B; color: black; box-shadow: 0 0 15px #9BC63B; }
-        .faro-card { border: 1px solid #9BC63B; padding: 15px; border-radius: 10px; background: rgba(0,0,0,0.6); text-align: center; height: 100%; }
+        
+        /* TARJETAS NEGRAS (Interfaz Tech) */
+        .faro-card, .metric-card { border: 1px solid #9BC63B; padding: 15px; border-radius: 10px; background: rgba(0,0,0,0.6); text-align: center; }
         .faro-gemini { border: 2px solid #4285F4; padding: 15px; border-radius: 10px; background: rgba(66, 133, 244, 0.2); text-align: center; box-shadow: 0 0 15px #4285F4; }
         .cam-grid { background: #000; border: 1px solid #2E7D32; height: 80px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #ff0000; border-radius: 5px; }
-        .metric-card { background: rgba(0,0,0,0.7); padding: 20px; border-radius: 10px; border: 1px solid #9BC63B; text-align: center; }
-        .airline-grid { background: rgba(255, 255, 255, 0.9); padding: 15px; border-radius: 10px; text-align: center; margin-bottom: 10px; height: 110px; display: flex; align-items: center; justify-content: center; flex-direction: column; border: 1px solid #ccc; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; }
-        .airline-grid:hover { transform: scale(1.05); border: 2px solid #2E7D32; box-shadow: 0 0 15px rgba(46, 125, 50, 0.5); }
-        .airline-grid img { max-width: 90%; max-height: 60px; object-fit: contain; }
-        .airline-grid p { color: #333 !important; font-size: 0.75rem; font-weight: 800; margin-top: 8px; letter-spacing: 1px; text-decoration: none; }
+        
+        /* TARJETAS CLARAS (Confianza y Aerolíneas) */
+        .trust-section { background-color: rgba(245, 245, 245, 0.95); color: #1a1a1a !important; padding: 25px; border-radius: 15px; border-left: 6px solid #2E7D32; margin-bottom: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .trust-section h3, .trust-section h4 { color: #2E7D32 !important; text-shadow: none !important; margin-bottom: 10px; }
+        .trust-section p { color: #333 !important; font-weight: 500; font-size: 1rem; line-height: 1.5; }
+        
+        .airline-grid { background: rgba(255, 255, 255, 0.9); padding: 15px; border-radius: 10px; text-align: center; margin-bottom: 10px; height: 110px; display: flex; align-items: center; justify-content: center; flex-direction: column; border: 1px solid #ccc; transition: transform 0.2s; cursor: pointer; }
+        .airline-grid:hover { transform: scale(1.05); border: 2px solid #2E7D32; }
+        .airline-grid p { color: #333 !important; }
+        
         .legal-card { background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; border-left: 5px solid #D4AF37; margin-bottom: 10px; }
-        .nft-card { background: linear-gradient(135deg, #1e1e1e, #2a2a2a); border: 1px solid #D4AF37; padding: 10px; border-radius: 10px; text-align: center; margin-bottom: 10px; }
+        
+        /* BILLETERA */
+        .wallet-msg-box { background-color: rgba(30, 30, 30, 0.8); border: 1px solid #D4AF37; padding: 15px; border-radius: 10px; color: #D4AF37; font-weight: bold; text-align: center; margin-top: 10px; }
+        .nft-card { background: linear-gradient(135deg, #101010, #202020); border: 1px solid #9BC63B; padding: 15px; border-radius: 10px; text-align: center; margin-bottom: 10px; color: white; }
         a { text-decoration: none; }
     </style>
 """, unsafe_allow_html=True)
@@ -118,13 +145,36 @@ with st.sidebar:
     menu_opts = tr['menu_opts'][st.session_state.lang]
     menu_sel = st.radio("MENÚ / MENU", menu_opts)
 
-# 1. INICIO
+# 1. INICIO (CON SECCIÓN DE CONFIANZA CLARA)
 if menu_sel == menu_opts[0]:
     st.markdown("<h1 style='text-align:center; font-size:4rem;'>Serenity Nexus Global</h1>", unsafe_allow_html=True)
     subt = "SISTEMA REGENERATIVO BIOMÉTRICO KBA" if st.session_state.lang == 'ES' else "KBA BIOMETRIC REGENERATIVE SYSTEM"
     st.markdown(f"<p style='text-align:center; letter-spacing:5px; color:#9BC63B; font-weight:bold;'>{subt}</p>", unsafe_allow_html=True)
+    
     btn_audio = "🔊 ACTIVAR SONIDO GLOBAL EARTH" if st.session_state.lang == 'ES' else "🔊 ACTIVATE GLOBAL EARTH SOUND"
     st.components.v1.html(f"""<audio id="audio_earth" src="sonido_Earth.mp3" loop></audio><div style="text-align:center; margin-top:30px;"><button onclick="document.getElementById('audio_earth').play()" style="background:#2E7D32; color:white; border:1px solid #9BC63B; padding:20px; border-radius:10px; cursor:pointer; font-weight:bold; font-size:16px;">{btn_audio}</button></div>""", height=150)
+    
+    st.write("")
+    
+    # --- NUEVA SECCIÓN QUIÉNES SOMOS (FONDO CLARO) ---
+    st.markdown(f"""
+        <div class="trust-section">
+            <h3 style="text-align:center;">{t('who_title')}</h3>
+            <p style="text-align:center;">{t('who_text')}</p>
+            <hr style="border-top: 1px solid #ccc;">
+            <div style="display: flex; flex-wrap: wrap; justify-content: space-around;">
+                <div style="flex: 1; min-width: 300px; padding: 10px;">
+                    <h4>🎯 {t('mis_title')}</h4>
+                    <p>{t('mis_text')}</p>
+                </div>
+                <div style="flex: 1; min-width: 300px; padding: 10px;">
+                    <h4>👁️ {t('vis_title')}</h4>
+                    <p>{t('vis_text')}</p>
+                </div>
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
+    
     info_t = "Finca Villa Michell SPAM (40%) | Hacienda Monte Guadua TAF (60%) | Admin: Jorge Carvajal" if st.session_state.lang == 'ES' else "Villa Michell Farm SPAM (40%) | Monte Guadua Hacienda TAF (60%) | Admin: Jorge Carvajal"
     st.info(info_t)
 
@@ -235,10 +285,9 @@ elif menu_sel == menu_opts[4]:
         st.markdown(f"<div class='faro-card' style='border-color:#D4AF37;'><h3>{nm[2]}</h3><h2>$200 USD</h2><p>{per[2]}</p></div>", unsafe_allow_html=True)
         if st.button(f"{btn_s} {nm[2]}"): st.success("OK...")
 
-# --- NUEVO: 6. BILLETERA CRYPTO (WEB3) ---
+# 6. BILLETERA CRYPTO
 elif menu_sel == menu_opts[5]:
     st.title("🦊 Web3 Green Wallet")
-    
     col_w1, col_w2 = st.columns([1, 2])
     with col_w1:
         st.markdown("<div style='text-align:center;'>", unsafe_allow_html=True)
@@ -248,27 +297,26 @@ elif menu_sel == menu_opts[5]:
                 st.session_state.wallet_connected = True
                 st.rerun()
         else:
-            st.success(t('wallet_msg'))
+            st.markdown(f"<div class='wallet-msg-box'>{t('wallet_msg')}</div>", unsafe_allow_html=True)
+            st.write("")
             st.metric(label="SERENITY TOKEN ($SNG)", value="1,450.00", delta="+12%")
             st.metric(label="CARBON CREDITS", value="45 Tons", delta="+2")
             if st.button("DISCONNECT"):
                 st.session_state.wallet_connected = False
                 st.rerun()
         st.markdown("</div>", unsafe_allow_html=True)
-    
     with col_w2:
         if st.session_state.wallet_connected:
             st.subheader("Your Green Assets (NFTs)")
             c_nft1, c_nft2, c_nft3 = st.columns(3)
-            with c_nft1: st.markdown("<div class='nft-card'>🌲<br><b>Tree #1024</b><br>Guayacán<br><i>Healthy</i></div>", unsafe_allow_html=True)
-            with c_nft2: st.markdown("<div class='nft-card'>🌳<br><b>Tree #1025</b><br>Saman<br><i>Healthy</i></div>", unsafe_allow_html=True)
-            with c_nft3: st.markdown("<div class='nft-card'>🌱<br><b>Land Plot A4</b><br>Monte Guadua<br><i>Protected</i></div>", unsafe_allow_html=True)
-            
+            with c_nft1: st.markdown("<div class='nft-card'>🌲<br><b>Tree #1024</b><br>Guayacán<br><i style='color:#4CAF50;'>Healthy</i></div>", unsafe_allow_html=True)
+            with c_nft2: st.markdown("<div class='nft-card'>🌳<br><b>Tree #1025</b><br>Saman<br><i style='color:#4CAF50;'>Healthy</i></div>", unsafe_allow_html=True)
+            with c_nft3: st.markdown("<div class='nft-card'>🌱<br><b>Land Plot A4</b><br>Monte Guadua<br><i style='color:#FFD700;'>Protected</i></div>", unsafe_allow_html=True)
             st.subheader("$SNG Token Performance")
-            chart_data = pd.DataFrame({'Price': [1.2, 1.3, 1.25, 1.4, 1.45, 1.6, 1.8]}, index=["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"])
-            st.line_chart(chart_data)
+            st.line_chart(pd.DataFrame({'Price': [1.2, 1.3, 1.25, 1.4, 1.45, 1.6, 1.8]}, index=["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]))
         else:
-            st.info("Conecta tu billetera para ver tus activos digitales y tokens de carbono. / Connect wallet to view digital assets.")
+            msg_conn = "Conecta tu billetera para ver tus activos." if st.session_state.lang == 'ES' else "Connect wallet to view assets."
+            st.markdown(f"<div style='background:rgba(255,255,255,0.1); padding:15px; border-radius:10px; text-align:center;'>⚠️ {msg_conn}</div>", unsafe_allow_html=True)
 
 # 7. DONACIONES
 elif menu_sel == menu_opts[6]:
@@ -328,17 +376,10 @@ elif menu_sel == menu_opts[7]:
 elif menu_sel == menu_opts[8]:
     tt = "📍 Ubicación Serenity (Dagua)" if st.session_state.lang == 'ES' else "📍 Serenity Location (Dagua)"
     st.title(tt)
-    
-    # Coordenadas Reales
-    lat_villa = 3.465028
-    lon_villa = -76.634778
-    lat_guadua = 3.477917
-    lon_guadua = -76.657361
-    
+    lat_villa = 3.465028; lon_villa = -76.634778; lat_guadua = 3.477917; lon_guadua = -76.657361
     url_gmaps = f"https://www.google.com/maps/search/?api=1&query={lat_villa},{lon_villa}"
     btn_text = t('map_btn')
     st.markdown(f"""<div style='text-align:center; margin-bottom: 20px;'><a href="{url_gmaps}" target="_blank"><button style="background-color:#4285F4; color:white; border:2px solid white; padding:15px 32px; text-align:center; text-decoration:none; display:inline-block; font-size:18px; margin:4px 2px; cursor:pointer; border-radius:12px; font-weight:bold; box-shadow: 0 0 10px #4285F4;">{btn_text}</button></a></div>""", unsafe_allow_html=True)
-    
     color_gemini_map = "green" if st.session_state.estado_gemini == t('active') else "orange"
     m = folium.Map(location=[(lat_villa + lat_guadua)/2, (lon_villa + lon_guadua)/2], zoom_start=14, tiles='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', attr='Esri World Imagery')
     folium.Marker([lat_guadua + 0.001, lon_guadua - 0.001], popup=f"FARO GEMINI", icon=folium.Icon(color=color_gemini_map, icon='bolt', prefix='fa')).add_to(m)
@@ -346,6 +387,7 @@ elif menu_sel == menu_opts[8]:
     folium.Polygon(locations=[[lat_guadua - offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua + offset], [lat_guadua - offset, lon_guadua + offset]], color="#9BC63B", fill=True, fill_opacity=0.3, tooltip="Hacienda Monte Guadua: 80 Ha").add_to(m)
     folium.CircleMarker(location=[lat_villa, lon_villa], radius=10, color="blue", fill=True, fill_color="blue", tooltip="Finca Villa Michelle (Sede)").add_to(m)
     st_folium(m, width="100%", height=600)
+
 
 
 
