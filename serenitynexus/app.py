@@ -7,6 +7,7 @@ import io
 import os
 
 # --- LIBRERÍAS EXTENDIDAS ---
+# Si te sale error aquí, recuerda instalar: pip install folium streamlit-folium reportlab
 import folium
 from streamlit_folium import st_folium
 from reportlab.lib.pagesizes import letter
@@ -18,12 +19,11 @@ from reportlab.lib.colors import HexColor, black
 st.set_page_config(page_title="Serenity Nexus Global", page_icon="🌳", layout="wide")
 VERDE_SERENITY = HexColor("#2E7D32")
 
-# --- GESTIÓN DE ESTADO ---
+# --- GESTIÓN DE ESTADO (MEMORIA TEMPORAL) ---
 if 'total_protegido' not in st.session_state: st.session_state.total_protegido = 87.0
 if 'donaciones_recibidas' not in st.session_state: st.session_state.donaciones_recibidas = 0
 if 'estado_gemini' not in st.session_state: st.session_state.estado_gemini = "Latente"
 if 'auth' not in st.session_state: st.session_state.auth = False
-# Inicializar f_activo si no existe para evitar errores
 if 'f_activo' not in st.session_state: st.session_state.f_activo = None
 
 # --- FUNCIÓN GENERADORA DE PDF (CON LOGO) ---
@@ -37,18 +37,18 @@ def generar_pdf_certificado(nombre, monto):
     c.rect(0.3*inch, 0.3*inch, 7.9*inch, 10.4*inch)
     
     # 2. INTENTO DE CARGAR LOGO
-    # El código busca 'logo_serenity.png'. Si no está, dibuja un círculo verde.
+    # Busca 'logo_serenity.png'. Si no está, dibuja un círculo verde.
     try:
         if os.path.exists("logo_serenity.png"):
             c.drawImage("logo_serenity.png", 3.5*inch, 9.0*inch, width=1.5*inch, height=1.5*inch, mask='auto')
         else:
-            # Logo Placeholder si no hay archivo
+            # Logo Placeholder
             c.setFillColor(VERDE_SERENITY)
             c.circle(4.25*inch, 9.7*inch, 40, fill=1)
             c.setFillColor(black)
             c.drawCentredString(4.25*inch, 9.65*inch, "LOGO")
     except:
-        pass # Si falla algo con la imagen, sigue adelante
+        pass 
 
     # 3. Textos del Diploma
     c.setFont("Helvetica-Bold", 30)
@@ -79,7 +79,7 @@ def generar_pdf_certificado(nombre, monto):
     buffer.seek(0)
     return buffer
 
-# --- CSS (ESTILOS) ---
+# --- CSS (ESTILOS VISUALES) ---
 st.markdown("""
     <style>
         .stApp { 
@@ -99,212 +99,8 @@ st.markdown("""
         
         .faro-card { border: 1px solid #9BC63B; padding: 15px; border-radius: 10px; background: rgba(0,0,0,0.6); text-align: center; height: 100%; }
         .faro-gemini { border: 2px solid #4285F4; padding: 15px; border-radius: 10px; background: rgba(66, 133, 244, 0.2); text-align: center; box-shadow: 0 0 15px #4285F4; }
-        .cam-grid { background: #000; border: 1px solid #2E7D32; height: 80px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #ff0000; border-radius: 5px; }
-        .metric-card { background: rgba(0,0,0,0.7); padding: 20px; border-radius: 10px; border: 1px solid #9BC63B; text-align: center; }
-        
-        .logo-container { background: white; padding: 8px; border-radius: 5px; display: inline-block; margin: 3px; vertical-align: middle; }
-    </style>
-""", unsafe_allow_html=True)
+        .cam-grid { background: #000; border: 1px solid #2E7D32; height
 
-# --- LOGIN ---
-if not st.session_state.auth:
-    st.markdown("<div style='text-align:center; padding-top: 50px;'><h1>SISTEMA NEXUS | SERENITY</h1></div>", unsafe_allow_html=True)
-    col_sec = st.columns([1,1,1])
-    with col_sec[1]:
-        clave = st.text_input("PASSWORD ADMIN", type="password")
-        if st.button("INGRESAR"):
-            if clave == "Serenity2026":
-                st.session_state.auth = True
-                st.rerun()
-    st.stop()
-
-# --- MENÚ LATERAL ---
-menu = st.sidebar.radio("CENTRO DE CONTROL", [
-    "INICIO", "RED DE FAROS (7 NODOS)", "DASHBOARD ESTADÍSTICO IA", "GESTIÓN LEY 2173 (EMPRESAS)",
-    "SUSCRIPCIONES", "DONACIONES Y CERTIFICADO", "LOGÍSTICA AEROLÍNEAS", "UBICACIÓN & MAPAS"
-])
-
-# 1. INICIO
-if menu == "INICIO":
-    st.markdown("<h1 style='text-align:center; font-size:4rem;'>Serenity Nexus Global</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align:center; letter-spacing:5px; color:#9BC63B; font-weight:bold;'>SISTEMA REGENERATIVO BIOMÉTRICO KBA</p>", unsafe_allow_html=True)
-    
-    st.components.v1.html("""
-        <audio id="audio_earth" src="sonido_Earth.mp3" loop></audio>
-        <div style="text-align:center; margin-top:30px;">
-            <button onclick="document.getElementById('audio_earth').play()" style="background:#2E7D32; color:white; border:1px solid #9BC63B; padding:20px; border-radius:10px; cursor:pointer; font-weight:bold; font-size:16px;">🔊 ACTIVAR SONIDO GLOBAL EARTH</button>
-        </div>
-    """, height=150)
-    
-    st.info("Sandra Patricia Agredo Muñoz (40%) | Tatiana Arcila Ferreira (60%) | Admin: Jorge Carvajal")
-
-# 2. RED DE FAROS (INTERACTIVIDAD RESTAURADA)
-elif menu == "RED DE FAROS (7 NODOS)":
-    st.title("🛰️ Monitoreo Perimetral")
-    
-    # Fila 1
-    c1, c2, c3 = st.columns(3)
-    with c1: 
-        st.markdown("<div class='faro-card'><h3>FARO HALCÓN</h3></div>", unsafe_allow_html=True)
-        if st.button("Conectar Halcón"): st.session_state.f_activo = "Halcón"
-    with c2: 
-        st.markdown("<div class='faro-card'><h3>FARO COLIBRÍ</h3></div>", unsafe_allow_html=True)
-        if st.button("Conectar Colibrí"): st.session_state.f_activo = "Colibrí"
-    with c3: 
-        st.markdown("<div class='faro-card'><h3>FARO RANA</h3></div>", unsafe_allow_html=True)
-        if st.button("Conectar Rana"): st.session_state.f_activo = "Rana"
-    
-    st.write("")
-    
-    # Fila 2
-    c4, c5, c6 = st.columns(3)
-    with c4: 
-        st.markdown("<div class='faro-card'><h3>FARO VENADO</h3></div>", unsafe_allow_html=True)
-        if st.button("Conectar Venado"): st.session_state.f_activo = "Venado"
-    with c5: 
-        st.markdown("<div class='faro-card'><h3>FARO TIGRILLO</h3></div>", unsafe_allow_html=True)
-        if st.button("Conectar Tigrillo"): st.session_state.f_activo = "Tigrillo"
-    with c6: 
-        st.markdown("<div class='faro-card'><h3>FARO CAPIBARA</h3></div>", unsafe_allow_html=True)
-        if st.button("Conectar Capibara"): st.session_state.f_activo = "Capibara"
-
-    st.write("---")
-    
-    # Faro Gemini
-    col_gemini = st.columns([1,2,1])
-    with col_gemini[1]:
-        st.markdown(f"<div class='faro-gemini'><h3>✨ FARO GEMINI ✨</h3><p>Estado: {st.session_state.estado_gemini}</p></div>", unsafe_allow_html=True)
-        if st.button("ACTIVAR NÚCLEO GEMINI"): 
-            st.session_state.f_activo = "GEMINI"
-            st.session_state.estado_gemini = "ACTIVO - EMITIENDO"
-
-    # VISUALIZACIÓN DE CÁMARAS Y MICRÓFONOS (Se activa si hay un faro seleccionado)
-    if st.session_state.f_activo:
-        st.divider()
-        color_titulo = "#4285F4" if st.session_state.f_activo == "GEMINI" else "#9BC63B"
-        st.markdown(f"<h2 style='color:{color_titulo}; text-align:center;'>📡 TRANSMISIÓN EN VIVO: {st.session_state.f_activo.upper()}</h2>", unsafe_allow_html=True)
-        
-        # Grid Cámaras
-        c_cols = st.columns(4)
-        for j in range(8):
-            label = "IA-ANALYSIS" if st.session_state.f_activo == "GEMINI" else "LIVE"
-            with c_cols[j % 4]: st.markdown(f"<div class='cam-grid'>CAM {j+1}<br>● {label}</div>", unsafe_allow_html=True)
-        
-        # Grid Micrófonos
-        st.subheader("Bioacústica")
-        m_cols = st.columns(4)
-        for k in range(4):
-            val = random.randint(85,99) if st.session_state.f_activo == "GEMINI" else random.randint(40,90)
-            with m_cols[k]: st.markdown(f"<div style='background:rgba(155,198,59,0.2); border:1px solid #2E7D32; padding:10px; border-radius:5px; text-align:center;'><b>MIC {k+1}</b><br><span style='color:#9BC63B;'>||||| {val}%</span></div>", unsafe_allow_html=True)
-
-# 3. DASHBOARD
-elif menu == "DASHBOARD ESTADÍSTICO IA":
-    st.title("📊 Análisis de Inteligencia Biológica")
-    m = st.columns(4)
-    m[0].markdown(f"<div class='metric-card'><h3>Especies</h3><h1>1,248</h1></div>", unsafe_allow_html=True)
-    m[1].markdown(f"<div class='metric-card'><h3>Hectáreas</h3><h1>{st.session_state.total_protegido}</h1></div>", unsafe_allow_html=True)
-    m[2].markdown(f"<div class='metric-card'><h3>Inversiones</h3><h1>{st.session_state.donaciones_recibidas}</h1></div>", unsafe_allow_html=True)
-    m[3].markdown(f"<div class='metric-card'><h3>Salud</h3><h1>98%</h1></div>", unsafe_allow_html=True)
-    st.bar_chart(pd.DataFrame({'Detecciones': [120, 450, 300, 80, 45, 110, 950]}, index=["Halcón", "Colibrí", "Rana", "Venado", "Tigrillo", "Capibara", "GEMINI"]))
-
-# 4. LEY 2173
-elif menu == "GESTIÓN LEY 2173 (EMPRESAS)":
-    st.title("⚖️ Cumplimiento Ley 2173")
-    c1, c2 = st.columns(2)
-    with c1: nit = st.text_input("Ingrese NIT de la Empresa")
-    with c2: logo_emp = st.file_uploader("Suba Logo Corporativo", type=["png", "jpg"])
-    if nit:
-        st.markdown(f"<div class='metric-card' style='text-align:left;'><h3>EMPRESA ACTIVA: NIT {nit}</h3><p>🌳 150 Árboles Monitoreados</p></div>", unsafe_allow_html=True)
-        st.download_button("⬇️ DESCARGAR CERTIFICADO LEY 2173", data=f"Reporte NIT {nit}", file_name=f"Certificado_Ley2173.txt")
-
-# 5. SUSCRIPCIONES (BOTONES RESTAURADOS)
-elif menu == "SUSCRIPCIONES":
-    st.title("💳 Planes de Apoyo Regenerativo")
-    p1, p2, p3 = st.columns(3)
-    
-    with p1: 
-        st.markdown("<div class='faro-card'><h3>Plan Semilla</h3><h2>$5 USD</h2><p>1 Faro / 1 Mes</p></div>", unsafe_allow_html=True)
-        if st.button("SUSCRIBIRSE SEMILLA"): st.success("Procesando pago Semilla...")
-            
-    with p2: 
-        st.markdown("<div class='faro-card'><h3>Plan Guardián</h3><h2>$25 USD</h2><p>6 Faros / 1 Mes</p></div>", unsafe_allow_html=True)
-        if st.button("SUSCRIBIRSE GUARDIÁN"): st.success("Procesando pago Guardián...")
-            
-    with p3: 
-        st.markdown("<div class='faro-card' style='border-color:#D4AF37;'><h3>Plan Halcón</h3><h2>$200 USD</h2><p>6 Faros / 6 Meses</p></div>", unsafe_allow_html=True)
-        if st.button("SUSCRIBIRSE HALCÓN"): st.success("Procesando pago Halcón...")
-
-# 6. DONACIONES (PDF CON LOGO)
-elif menu == "DONACIONES Y CERTIFICADO":
-    st.title("🌳 Generador de Diploma Oficial")
-    
-    colA, colB = st.columns([1, 1])
-    with colA:
-        with st.container(border=True):
-            nombre_d = st.text_input("Nombre Completo del Donante")
-            monto_d = st.number_input("Monto Donación (USD)", min_value=1)
-            if st.button("✨ PROCESAR DONACIÓN"): 
-                if nombre_d:
-                    st.session_state.donaciones_recibidas += 1
-                    st.session_state.estado_gemini = "ACTIVO - EMITIENDO"
-                    # Generar PDF
-                    st.session_state.pdf_buffer = generar_pdf_certificado(nombre_d, monto_d)
-                    st.balloons()
-                    st.success("¡Certificado generado y Faro Gemini Activado!")
-                else:
-                    st.warning("Ingrese un nombre.")
-    
-    with colB:
-        if 'pdf_buffer' in st.session_state:
-            st.markdown(f"""
-                <div style="background:white; color:black; padding:20px; text-align:center; border:5px double #2E7D32;">
-                    <h3 style="color:#2E7D32;">VISTA PREVIA</h3>
-                    <h1>{nombre_d.upper()}</h1>
-                    <p>Monto: ${monto_d}</p>
-                </div>
-            """, unsafe_allow_html=True)
-            st.download_button(
-                label="📥 DESCARGAR DIPLOMA (PDF)",
-                data=st.session_state.pdf_buffer,
-                file_name=f"Diploma_Serenity_{nombre_d}.pdf",
-                mime="application/pdf"
-            )
-
-# 7. LOGÍSTICA
-elif menu == "LOGÍSTICA AEROLÍNEAS":
-    st.title("✈️ Rutas Globales")
-    col1, col2 = st.columns(2)
-    with col1:
-        st.subheader("Europa / Asia")
-        st.markdown("<div class='logo-container'><img src='https://upload.wikimedia.org/wikipedia/commons/4/44/Iberia_Logo.svg' width='80'></div> <b>Iberia</b><br><div class='logo-container'><img src='https://upload.wikimedia.org/wikipedia/commons/d/df/Lufthansa_Logo_2018.svg' width='80'></div> <b>Lufthansa</b>", unsafe_allow_html=True)
-    with col2:
-        st.subheader("América")
-        st.markdown("<div class='logo-container'><img src='https://upload.wikimedia.org/wikipedia/commons/d/df/Avianca_logo.svg' width='80'></div> <b>Avianca</b><br><div class='logo-container'><img src='https://upload.wikimedia.org/wikipedia/commons/0/00/American_Airlines_logo_2013.svg' width='80'></div> <b>American Airlines</b>", unsafe_allow_html=True)
-
-# 8. MAPAS
-elif menu == "UBICACIÓN & MAPAS":
-    st.title("📍 Ubicación Hacienda Serenity (Dagua)")
-    
-    color_gemini_map = "green" if st.session_state.estado_gemini == "ACTIVO - EMITIENDO" else "orange"
-    m = folium.Map(location=[3.455, -76.655], zoom_start=13, tiles="cartodbpositron")
-    
-    folium.Marker(
-        [3.460, -76.660], popup=f"FARO GEMINI: {st.session_state.estado_gemini}",
-        icon=folium.Icon(color=color_gemini_map, icon='bolt', prefix='fa')
-    ).add_to(m)
-    
-    folium.Polygon(
-        locations=[[3.45, -76.67], [3.47, -76.67], [3.47, -76.64], [3.45, -76.64]],
-        color="darkgreen", fill=True, fill_opacity=0.4,
-        tooltip="Hacienda Monte Guadua: 80 Ha"
-    ).add_to(m)
-    
-    folium.CircleMarker(
-        location=[3.445, -76.645], radius=10, color="blue", fill=True,
-        tooltip="Finca Villa Michelle"
-    ).add_to(m)
-    
-    st_folium(m, width="100%", height=600)
 
 
 
