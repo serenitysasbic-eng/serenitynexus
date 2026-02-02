@@ -55,10 +55,10 @@ def generar_pdf_certificado(nombre, monto):
     
     c.setFont("Helvetica", 14)
     c.setFillColor(black)
-    c.drawCentredString(4.25*inch, 7.5*inch, "SERENITY HUB S.A.S. BIC")
+    c.drawCentredString(4.25*inch, 7.5*inch, "SERENITY S.A.S. BIC")
     c.drawCentredString(4.25*inch, 7.0*inch, f"Reconoce a: {nombre.upper()}")
     c.drawCentredString(4.25*inch, 6.5*inch, f"Por su valioso aporte de ${monto:,.0f} USD")
-    c.drawCentredString(4.25*inch, 6.0*inch, f"Destinado a la regeneración del KBA Bosque San Antonio")
+    c.drawCentredString(4.25*inch, 6.0*inch, f"Destinado a la regeneración del KBA Bosque San Antonio y al Bienestar de la Comunidad Local")
     
     # 4. Firma
     c.setLineWidth(1)
@@ -314,6 +314,7 @@ elif menu == "UBICACIÓN & MAPAS":
     folium.CircleMarker(location=[3.445, -76.645], radius=10, color="blue", fill=True, fill_color="blue", tooltip="Finca Villa Michelle").add_to(m)
     
     st_folium(m, width="100%", height=600)
+
 
 
 
