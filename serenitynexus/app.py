@@ -150,7 +150,7 @@ if menu == "INICIO":
     st.markdown("<p style='text-align:center; letter-spacing:5px; color:#9BC63B; font-weight:bold;'>SISTEMA REGENERATIVO BIOMÉTRICO KBA</p>", unsafe_allow_html=True)
     
     st.components.v1.html("""
-        <audio id="audio_earth" src="sonido_Earth.mp3" loop></audio>
+        <audio id="audio_Earth" src="sonido_Earth.mp3" loop></audio>
         <div style="text-align:center; margin-top:30px;">
             <button onclick="document.getElementById('audio_earth').play()" style="background:#2E7D32; color:white; border:1px solid #9BC63B; padding:20px; border-radius:10px; cursor:pointer; font-weight:bold; font-size:16px;">🔊 ACTIVAR SONIDO GLOBAL EARTH</button>
         </div>
@@ -314,6 +314,7 @@ elif menu == "UBICACIÓN & MAPAS":
     folium.CircleMarker(location=[3.445, -76.645], radius=10, color="blue", fill=True, fill_color="blue", tooltip="Finca Villa Michelle").add_to(m)
     
     st_folium(m, width="100%", height=600)
+
 
 
 
