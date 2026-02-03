@@ -6,6 +6,7 @@ import hashlib
 from datetime import datetime
 import io
 import os
+import cv2 # LIBRERÍA DE VIDEO (NUEVA)
 
 # --- LIBRERÍAS EXTENDIDAS ---
 import folium
@@ -29,36 +30,36 @@ if 'auth' not in st.session_state: st.session_state.auth = False
 if 'f_activo' not in st.session_state: st.session_state.f_activo = None
 if 'wallet_connected' not in st.session_state: st.session_state.wallet_connected = False
 if 'pdf_empresa_buffer' not in st.session_state: st.session_state.pdf_empresa_buffer = None
+if 'streaming' not in st.session_state: st.session_state.streaming = False
 
-# --- DATOS LEGALES (TEXTOS COMPLETOS RESTAURADOS) ---
+# --- DATOS LEGALES ---
 TEXTO_LEY_2173 = """
 RESUMEN EJECUTIVO - LEY 2173 DE 2021 (ÁREAS DE VIDA)
-Objeto: Promover la restauración ecológica a través de la siembra de árboles y creación de bosques en el territorio nacional.
+Objeto: Promover la restauración ecológica a través de la siembra de árboles.
 Obligación: Las medianas y grandes empresas deben sembrar 2 árboles por cada empleado.
-Cumplimiento: Se debe demostrar mediante certificado de 'Área de Vida' expedido por la autoridad competente o aliado ambiental.
-Solución Serenity: Ofrecemos el suelo, la siembra, el mantenimiento y el reporte digital para cumplimiento corporativo.
+Cumplimiento: Se debe demostrar mediante certificado de 'Área de Vida'.
+Solución Serenity: Ofrecemos el suelo, la siembra, el mantenimiento y el reporte digital.
 """
 TEXTO_CONPES = """
 RESUMEN EJECUTIVO - CONPES 3934 (POLÍTICA DE CRECIMIENTO VERDE)
-Objeto: Impulsar la productividad y la competitividad económica del país, asegurando el uso sostenible del capital natural y la inclusión social.
-Meta 2030: Aumentar la bioeconomía y los negocios verdes como motor de desarrollo.
-Alineación Serenity: Nuestra plataforma integra Big Data e IoT para la gestión eficiente del capital natural del Valle del Cauca.
+Objeto: Impulsar la productividad y la competitividad económica asegurando el uso sostenible del capital natural.
+Meta 2030: Aumentar la bioeconomía y los negocios verdes.
+Alineación Serenity: Nuestra plataforma integra Big Data e IoT para la gestión del capital natural.
 """
 TEXTO_DELITOS = """
 RESUMEN EJECUTIVO - LEY 2111 DE 2021 (DELITOS AMBIENTALES)
-Objeto: Sustituir el título de delitos contra los recursos naturales y el medio ambiente en el Código Penal.
-Impacto: La deforestación, el tráfico de fauna y el daño a recursos naturales ahora tienen penas de prisión y multas severas.
-Solución Serenity: Nuestro sistema de monitoreo (Faros) actúa como evidencia forense y herramienta de prevención y vigilancia.
+Objeto: Sustituir el título de delitos contra los recursos naturales y el medio ambiente.
+Impacto: La deforestación y el daño a recursos naturales ahora tienen penas de prisión.
+Solución Serenity: Nuestro sistema de monitoreo (Faros) actúa como evidencia forense y prevención.
 """
 TEXTO_TRIBUTARIO = """
 RESUMEN EJECUTIVO - BENEFICIOS TRIBUTARIOS (S.A.S. BIC & CTeI)
 Objeto: Incentivar la inversión en ciencia, tecnología e impacto social.
-Beneficio 1: Descuento en renta por donaciones a entidades ambientales sin ánimo de lucro certificadas.
+Beneficio 1: Descuento en renta por donaciones a entidades ambientales sin ánimo de lucro.
 Beneficio 2: Deducciones por inversión en proyectos de Ciencia, Tecnología e Innovación (Actividades Serenity Nexus).
-Beneficio 3: Preferencia en contratación pública y acceso a líneas de crédito especiales.
 """
 
-# --- DICCIONARIO DE TRADUCCIÓN (TEXTOS COMPLETOS RESTAURADOS) ---
+# --- DICCIONARIO DE TRADUCCIÓN ---
 tr = {
     'menu_opts': {
         'ES': ["INICIO", "RED DE FAROS (7 NODOS)", "DASHBOARD ESTADÍSTICO IA", "GESTIÓN LEY 2173 (EMPRESAS)", "SUSCRIPCIONES", "BILLETERA CRYPTO (WEB3)", "DONACIONES Y CERTIFICADO", "LOGÍSTICA AEROLÍNEAS", "UBICACIÓN & MAPAS"],
@@ -71,27 +72,36 @@ tr = {
     'map_btn': {'ES': '🗺️ ABRIR EN GOOGLE MAPS (GPS)', 'EN': '🗺️ OPEN IN GOOGLE MAPS (GPS)'},
     'wallet_btn': {'ES': '🦊 CONECTAR METAMASK', 'EN': '🦊 CONNECT METAMASK'},
     'wallet_msg': {'ES': '🟢 Billetera Conectada: 0x71C...9A23', 'EN': '🟢 Wallet Connected: 0x71C...9A23'},
-    
-    # SECCIÓN IDENTIDAD (RESTAURADA)
     'who_title': {'ES': '¿QUIÉNES SOMOS?', 'EN': 'WHO WE ARE'},
-    'who_text': {
-        'ES': 'Serenity Nexus Global es la primera plataforma **Phygital (Física + Digital)** del Valle del Cauca que integra la conservación ambiental del KBA Bosque San Antonio con tecnología Blockchain e Inteligencia Artificial. Somos guardianes de 87 hectáreas de vida, uniendo a la comunidad local con la inversión global mediante la transparencia tecnológica.',
-        'EN': 'Serenity Nexus Global is the first **Phygital (Physical + Digital)** platform in Valle del Cauca integrating conservation of the KBA San Antonio Forest with Blockchain and AI technology. We are guardians of 87 hectares of life, bridging the local community with global investment through technological transparency.'
-    },
+    'who_text': {'ES': 'Serenity Nexus Global es la primera plataforma **Phygital**...', 'EN': 'Serenity Nexus Global is the first **Phygital** platform...'},
     'mis_title': {'ES': 'NUESTRA MISIÓN', 'EN': 'OUR MISSION'},
-    'mis_text': {
-        'ES': 'Regenerar el tejido ecológico y social mediante un modelo de negocio sostenible que garantice la protección perpetua del bosque y el bienestar económico de Dagua, utilizando la tecnología como puente de confianza.',
-        'EN': 'Regenerate the ecological and social fabric through a sustainable business model ensuring perpetual forest protection and economic welfare for Dagua, using technology as a bridge of trust.'
-    },
+    'mis_text': {'ES': 'Regenerar el tejido ecológico...', 'EN': 'Regenerate the ecological...'},
     'vis_title': {'ES': 'NUESTRA VISIÓN', 'EN': 'OUR VISION'},
-    'vis_text': {
-        'ES': 'Para 2030, ser el referente mundial del "Internet de la Naturaleza", tokenizando activos ambientales reales para crear el banco de oxígeno más seguro y tecnológicamente avanzado del planeta.',
-        'EN': 'By 2030, to be the global benchmark for the "Internet of Nature," tokenizing real environmental assets to create the most secure and technologically advanced oxygen bank on the planet.'
-    }
+    'vis_text': {'ES': 'Para 2030, ser el referente mundial...', 'EN': 'By 2030, to be the global benchmark...'}
 }
 def t(key): return tr[key][st.session_state.lang]
 
-# --- FUNCIÓN PDF: CERTIFICADO DONANTE (SIMPLE) ---
+# --- FUNCIÓN CÁMARA REAL ---
+def mostrar_camara_real(url_rstp):
+    """Conecta con la cámara VTA OVO II"""
+    st.info(f"📡 Estableciendo enlace seguro con Faro Gemini: {url_rstp}")
+    cap = cv2.VideoCapture(url_rstp)
+    frame_placeholder = st.empty()
+    stop_button = st.button("⏹ DETENER TRANSMISIÓN / STOP STREAM")
+    
+    while cap.isOpened() and not stop_button:
+        ret, frame = cap.read()
+        if not ret:
+            st.error("⚠️ No se recibe señal de video. Verifique que la cámara esté encendida y en la misma red Wi-Fi.")
+            break
+        # Convertir color de BGR (OpenCV) a RGB (Streamlit)
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        frame_placeholder.image(frame, channels="RGB", use_column_width=True)
+    
+    cap.release()
+    st.success("Transmisión finalizada.")
+
+# --- FUNCIÓN PDF: CERTIFICADO DONANTE ---
 def generar_pdf_certificado(nombre, monto, lang):
     buffer = io.BytesIO()
     c = canvas.Canvas(buffer, pagesize=letter)
@@ -109,11 +119,10 @@ def generar_pdf_certificado(nombre, monto, lang):
     c.drawCentredString(4.25*inch, 7.5*inch, "SERENITY HUB S.A.S. BIC")
     c.drawCentredString(4.25*inch, 7.0*inch, f"Reconoce a / Recognizes: {nombre.upper()}")
     c.drawCentredString(4.25*inch, 6.5*inch, f"Aporte / Contribution: ${monto:,.0f} USD")
-    c.drawCentredString(4.25*inch, 6.0*inch, "Destinado a la Regeneración del Bosque San Antonio")
     c.setLineWidth(1); c.line(2.5*inch, 4.8*inch, 6.0*inch, 4.8*inch); c.drawCentredString(4.25*inch, 4.6*inch, "Jorge Carvajal - Admin")
     c.save(); buffer.seek(0); return buffer
 
-# --- FUNCIÓN PDF: CERTIFICADO EMPRESA (CON HASH Y LOGO) ---
+# --- FUNCIÓN PDF: CERTIFICADO EMPRESA ---
 def generar_cert_empresa(nit, logo_bytes, lang):
     buffer = io.BytesIO()
     c = canvas.Canvas(buffer, pagesize=letter)
@@ -222,7 +231,7 @@ if menu_sel == menu_opts[0]:
     """, unsafe_allow_html=True)
     st.info("Finca Villa Michell SPAM (40%) | Hacienda Monte Guadua TAF (60%) | Admin: Jorge Carvajal")
 
-# 2. RED DE FAROS
+# 2. RED DE FAROS (CON CÁMARA REAL)
 elif menu_sel == menu_opts[1]:
     tt = "🛰️ Monitoreo Perimetral" if st.session_state.lang == 'ES' else "🛰️ Perimeter Monitoring"
     st.title(tt)
@@ -249,24 +258,29 @@ elif menu_sel == menu_opts[1]:
         st.markdown("<div class='faro-card'><h3>FARO CAPIBARA</h3></div>", unsafe_allow_html=True)
         if st.button(f"{lbl_conn} Capibara"): st.session_state.f_activo = "Capibara"
     st.write("---")
+    
+    # SECCIÓN GEMINI CÁMARA REAL
     col_gemini = st.columns([1,2,1])
     with col_gemini[1]:
         st_st = "Estado" if st.session_state.lang == 'ES' else "Status"
-        st.markdown(f"<div class='faro-gemini'><h3>✨ FARO GEMINI ✨</h3><p>{st_st}: {st.session_state.estado_gemini}</p></div>", unsafe_allow_html=True)
-        btn_g = "ACTIVAR NÚCLEO GEMINI" if st.session_state.lang == 'ES' else "ACTIVATE GEMINI CORE"
-        if st.button(btn_g): st.session_state.f_activo = "GEMINI"; st.session_state.estado_gemini = t('active')
-    if st.session_state.f_activo:
-        st.divider(); live_t = t('live'); color_titulo = "#4285F4" if st.session_state.f_activo == "GEMINI" else "#9BC63B"
+        st.markdown(f"<div class='faro-gemini'><h3>✨ FARO GEMINI (VTA OVO II) ✨</h3><p>{st_st}: {st.session_state.estado_gemini}</p></div>", unsafe_allow_html=True)
+        
+        # PRE-CARGA DEL ENLACE DE TU CÁMARA
+        url_camara = st.text_input("Enlace RTSP (Deja '0' para Webcam):", value="rtsp://admin:admin123@192.168.111.178:554/live/ch0")
+        
+        btn_g = "ACTIVAR CÁMARA REAL" if st.session_state.lang == 'ES' else "ACTIVATE REAL CAMERA"
+        if st.button(btn_g): 
+            st.session_state.f_activo = "GEMINI"
+            st.session_state.estado_gemini = t('active')
+            mostrar_camara_real(url_camara if url_camara != "0" and url_camara != "" else 0)
+
+    if st.session_state.f_activo and st.session_state.f_activo != "GEMINI":
+        st.divider(); live_t = t('live'); color_titulo = "#9BC63B"
         st.markdown(f"<h2 style='color:{color_titulo}; text-align:center;'>📡 {live_t}: {st.session_state.f_activo.upper()}</h2>", unsafe_allow_html=True)
         c_cols = st.columns(4)
         for j in range(8):
-            label = "IA-ANALYSIS" if st.session_state.f_activo == "GEMINI" else "LIVE"
+            label = "LIVE"
             with c_cols[j % 4]: st.markdown(f"<div class='cam-grid'>CAM {j+1}<br>● {label}</div>", unsafe_allow_html=True)
-        st.subheader("Bioacústica" if st.session_state.lang == 'ES' else "Bioacoustics")
-        m_cols = st.columns(4)
-        for k in range(4):
-            val = random.randint(85,99) if st.session_state.f_activo == "GEMINI" else random.randint(40,90)
-            with m_cols[k]: st.markdown(f"<div style='background:rgba(155,198,59,0.2); border:1px solid #2E7D32; padding:10px; border-radius:5px; text-align:center;'><b>MIC {k+1}</b><br><span style='color:#9BC63B;'>||||| {val}%</span></div>", unsafe_allow_html=True)
 
 # 3. DASHBOARD
 elif menu_sel == menu_opts[2]:
@@ -294,7 +308,7 @@ elif menu_sel == menu_opts[3]:
         with c2: logo_emp = st.file_uploader("Logo Empresa / Company Logo", type=["png", "jpg", "jpeg"])
         if nit and logo_emp:
             st.info("✅ Datos recibidos. Generando certificado encriptado..." if st.session_state.lang == 'ES' else "✅ Data received. Generating encrypted certificate...")
-            if st.button("GENERAR CERTIFICADO OFICIAL / GENERATE OFFICIAL CERTIFICATE"):
+            if st.button("GENERAR CERTIFICADO OFICIAL"):
                 st.session_state.pdf_empresa_buffer = generar_cert_empresa(nit, logo_emp, st.session_state.lang)
                 st.success("Certificado generado exitosamente.")
             if st.session_state.pdf_empresa_buffer:
@@ -427,6 +441,7 @@ elif menu_sel == menu_opts[8]:
     folium.Polygon(locations=[[lat_guadua - offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua + offset], [lat_guadua - offset, lon_guadua + offset]], color="#9BC63B", fill=True, fill_opacity=0.3, tooltip="Hacienda Monte Guadua: 80 Ha").add_to(m)
     folium.CircleMarker(location=[lat_villa, lon_villa], radius=10, color="blue", fill=True, fill_color="blue", tooltip="Finca Villa Michelle (Sede)").add_to(m)
     st_folium(m, width="100%", height=600)
+
 
 
 
