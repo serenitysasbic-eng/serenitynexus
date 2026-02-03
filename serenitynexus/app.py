@@ -7,8 +7,8 @@ from datetime import datetime
 import io
 import os
 
-# --- BLOQUE DE SEGURIDAD PARA CÁMARA (ANTICHOQUE) ---
-# Esto evita que la app se rompa si la nube falla al instalar cv2
+# --- BLOQUE DE SEGURIDAD PARA CÁMARA ---
+# Mantenemos esto por si quieres conectar la real en el futuro
 try:
     import cv2
 except ImportError:
@@ -37,7 +37,7 @@ if 'f_activo' not in st.session_state: st.session_state.f_activo = None
 if 'wallet_connected' not in st.session_state: st.session_state.wallet_connected = False
 if 'pdf_empresa_buffer' not in st.session_state: st.session_state.pdf_empresa_buffer = None
 
-# --- DATOS LEGALES (TEXTOS COMPLETOS) ---
+# --- DATOS LEGALES (COMPLETOS) ---
 TEXTO_LEY_2173 = """
 RESUMEN EJECUTIVO - LEY 2173 DE 2021 (ÁREAS DE VIDA)
 Objeto: Promover la restauración ecológica a través de la siembra de árboles y creación de bosques en el territorio nacional.
@@ -98,33 +98,28 @@ tr = {
 }
 def t(key): return tr[key][st.session_state.lang]
 
-# --- FUNCIÓN CÁMARA REAL (CON PROTECCIÓN) ---
+# --- FUNCIÓN CÁMARA REAL ---
 def mostrar_camara_real(url_rstp):
-    """Conecta con la cámara VTA OVO II de forma segura"""
-    # Verificación de seguridad: ¿Existe la librería?
+    """Intenta conectar cámara real, si falla avisa."""
     if cv2 is None:
-        st.error("⚠️ El módulo de video (OpenCV) no está disponible en este servidor. Por favor verifique 'requirements.txt' o contacte al administrador.")
+        st.error("⚠️ Módulo de video no detectado en nube. Use la opción DEMO.")
         return
-
-    st.info(f"📡 Estableciendo enlace seguro con Faro Gemini: {url_rstp}")
     
+    st.info(f"📡 Conectando a IP: {url_rstp}")
     try:
         cap = cv2.VideoCapture(url_rstp)
         frame_placeholder = st.empty()
-        stop_button = st.button("⏹ DETENER TRANSMISIÓN / STOP STREAM")
-        
+        stop_button = st.button("⏹ DETENER / STOP")
         while cap.isOpened() and not stop_button:
             ret, frame = cap.read()
             if not ret:
-                st.warning("⚠️ Esperando señal... Verifique que la cámara esté encendida y en la misma red Wi-Fi.")
+                st.warning("⚠️ Sin señal. Para demostraciones en la nube use el botón 'VER DEMO'.")
                 break
-            # Convertir color de BGR (OpenCV) a RGB (Streamlit)
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             frame_placeholder.image(frame, channels="RGB", use_column_width=True)
-        
         cap.release()
     except Exception as e:
-        st.error(f"Error de conexión: {e}")
+        st.error(f"Error técnico: {e}")
 
 # --- FUNCIÓN PDF: CERTIFICADO DONANTE ---
 def generar_pdf_certificado(nombre, monto, lang):
@@ -257,7 +252,7 @@ if menu_sel == menu_opts[0]:
     """, unsafe_allow_html=True)
     st.info("Finca Villa Michell SPAM (40%) | Hacienda Monte Guadua TAF (60%) | Admin: Jorge Carvajal")
 
-# 2. RED DE FAROS (CON CÁMARA BLINDADA)
+# 2. RED DE FAROS (CON DEMO Y REAL)
 elif menu_sel == menu_opts[1]:
     tt = "🛰️ Monitoreo Perimetral" if st.session_state.lang == 'ES' else "🛰️ Perimeter Monitoring"
     st.title(tt)
@@ -285,22 +280,35 @@ elif menu_sel == menu_opts[1]:
         if st.button(f"{lbl_conn} Capibara"): st.session_state.f_activo = "Capibara"
     st.write("---")
     
-    # SECCIÓN GEMINI CÁMARA REAL
+    # SECCIÓN GEMINI CÁMARA
     col_gemini = st.columns([1,2,1])
     with col_gemini[1]:
         st_st = "Estado" if st.session_state.lang == 'ES' else "Status"
         st.markdown(f"<div class='faro-gemini'><h3>✨ FARO GEMINI (VTA OVO II) ✨</h3><p>{st_st}: {st.session_state.estado_gemini}</p></div>", unsafe_allow_html=True)
         
-        # PRE-CARGA DEL ENLACE DE TU CÁMARA
-        url_camara = st.text_input("Enlace RTSP (Deja '0' para Webcam):", value="rtsp://admin:admin123@192.168.111.178:554/live/ch0")
+        # OPCIONES DE CÁMARA
+        opcion_cam = st.radio("Fuente de Video / Video Source:", ["SIMULACIÓN (DEMO NUBE)", "CÁMARA REAL (IP LOCAL)"])
         
-        btn_g = "ACTIVAR CÁMARA REAL" if st.session_state.lang == 'ES' else "ACTIVATE REAL CAMERA"
-        if st.button(btn_g): 
-            st.session_state.f_activo = "GEMINI"
-            st.session_state.estado_gemini = t('active')
-            mostrar_camara_real(url_camara if url_camara != "0" and url_camara != "" else 0)
+        if opcion_cam == "SIMULACIÓN (DEMO NUBE)":
+            if st.button("▶️ VER DEMOSTRACIÓN (VIDEO)"):
+                st.session_state.f_activo = "GEMINI-DEMO"
+                st.session_state.estado_gemini = t('active')
+        else:
+            url_camara = st.text_input("Enlace RTSP:", value="rtsp://admin:admin123@192.168.111.178:554/live/ch0")
+            if st.button("ACTIVAR CÁMARA REAL"):
+                st.session_state.f_activo = "GEMINI"
+                st.session_state.estado_gemini = t('active')
+                mostrar_camara_real(url_camara)
 
-    if st.session_state.f_activo and st.session_state.f_activo != "GEMINI":
+    # MOSTRAR EL VIDEO DEMO
+    if st.session_state.f_activo == "GEMINI-DEMO":
+        st.divider()
+        st.markdown("<h3 style='text-align:center; color:#4285F4;'>📡 TRANSMISIÓN SIMULADA (ALTA DEFINICIÓN)</h3>", unsafe_allow_html=True)
+        # Video de naturaleza confiable
+        st.video("https://storage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4", start_time=15)
+
+    # MOSTRAR CÁMARAS ESTÁTICAS (SI NO ES VIDEO)
+    if st.session_state.f_activo and st.session_state.f_activo not in ["GEMINI", "GEMINI-DEMO"]:
         st.divider(); live_t = t('live'); color_titulo = "#9BC63B"
         st.markdown(f"<h2 style='color:{color_titulo}; text-align:center;'>📡 {live_t}: {st.session_state.f_activo.upper()}</h2>", unsafe_allow_html=True)
         c_cols = st.columns(4)
@@ -467,6 +475,7 @@ elif menu_sel == menu_opts[8]:
     folium.Polygon(locations=[[lat_guadua - offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua + offset], [lat_guadua - offset, lon_guadua + offset]], color="#9BC63B", fill=True, fill_opacity=0.3, tooltip="Hacienda Monte Guadua: 80 Ha").add_to(m)
     folium.CircleMarker(location=[lat_villa, lon_villa], radius=10, color="blue", fill=True, fill_color="blue", tooltip="Finca Villa Michelle (Sede)").add_to(m)
     st_folium(m, width="100%", height=600)
+
 
 
 
