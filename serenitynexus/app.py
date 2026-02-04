@@ -8,7 +8,6 @@ import io
 import os
 
 # --- BLOQUE DE SEGURIDAD PARA CÁMARA ---
-# Mantenemos esto por si quieres conectar la real en el futuro
 try:
     import cv2
 except ImportError:
@@ -315,6 +314,16 @@ elif menu_sel == menu_opts[1]:
         for j in range(8):
             label = "LIVE"
             with c_cols[j % 4]: st.markdown(f"<div class='cam-grid'>CAM {j+1}<br>● {label}</div>", unsafe_allow_html=True)
+            
+    # --- SECCIÓN BIOACÚSTICA (MICRÓFONOS) RESTAURADA ---
+    if st.session_state.f_activo:
+        st.write("")
+        st.subheader("Bioacústica" if st.session_state.lang == 'ES' else "Bioacoustics")
+        m_cols = st.columns(4)
+        for k in range(4):
+            val = random.randint(85,99) if "GEMINI" in str(st.session_state.f_activo) else random.randint(40,90)
+            with m_cols[k]: 
+                st.markdown(f"<div style='background:rgba(155,198,59,0.2); border:1px solid #2E7D32; padding:10px; border-radius:5px; text-align:center;'><b>MIC {k+1}</b><br><span style='color:#9BC63B;'>||||| {val}%</span></div>", unsafe_allow_html=True)
 
 # 3. DASHBOARD
 elif menu_sel == menu_opts[2]:
@@ -475,6 +484,7 @@ elif menu_sel == menu_opts[8]:
     folium.Polygon(locations=[[lat_guadua - offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua + offset], [lat_guadua - offset, lon_guadua + offset]], color="#9BC63B", fill=True, fill_opacity=0.3, tooltip="Hacienda Monte Guadua: 80 Ha").add_to(m)
     folium.CircleMarker(location=[lat_villa, lon_villa], radius=10, color="blue", fill=True, fill_color="blue", tooltip="Finca Villa Michelle (Sede)").add_to(m)
     st_folium(m, width="100%", height=600)
+
 
 
 
