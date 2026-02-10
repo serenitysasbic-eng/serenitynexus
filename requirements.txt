@@ -5,3 +5,4 @@ folium
 streamlit-folium
 plotly
 psycopg2-binary
+
