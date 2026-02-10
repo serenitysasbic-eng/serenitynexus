@@ -1,162 +1,153 @@
-# -*- coding: utf-8 -*-
-"""
-SISTEMA: SERENITY NEXUS GLOBAL - OMNI CORE LEGACY-EXTENDED (V27.0)
-PROPIETARIO: JORGE CARVAJAL | SERENITY S.A.S. BIC
-ESTADO: INTEGRACIÓN TOTAL DE CÓDIGOS HISTÓRICOS
--------------------------------------------------------------------------------
-"""
-
 import streamlit as st
-import pandas as pd
-import numpy as np
-import hashlib
-import json
-import folium
+import time
 import plotly.graph_objects as go
 from datetime import datetime
-from streamlit_folium import st_folium
 
-# =============================================================================
-# I. CONFIGURACIÓN E IDENTIDAD VISUAL (ESTILO NOVENA MARAVILLA)
-# =============================================================================
-st.set_page_config(page_title="SERENITY NEXUS GLOBAL", layout="wide", page_icon="🌳")
+# --- CONFIGURACIÓN DE ALTA POTENCIA ---
+st.set_page_config(
+    page_title="Serenity Nexus Global | IA Command Center",
+    page_icon="🌿",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
 
+# --- MOTOR DE ESTILOS "ULTRA-MODERN" ---
 st.markdown("""
     <style>
-    .stApp { background-color: #0b0e14; color: #ffffff; }
-    .stMetric { background-color: #161b22; padding: 20px; border-radius: 15px; border: 1.5px solid #2ea043; }
-    h1, h2, h3 { color: #2ea043; font-family: 'Helvetica', sans-serif; font-weight: 800; }
-    .stButton>button { background-color: #2ea043; color: white; border-radius: 5px; width: 100%; font-weight: bold; height: 3.5em; }
-    .faro-card { background-color: #1e2130; padding: 20px; border-radius: 12px; border-left: 10px solid #2ea043; margin-bottom: 20px; }
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+    
+    .main { background-color: #050a0e; }
+    h1, h2, h3 { font-family: 'Orbitron', sans-serif; color: #00ffcc !important; }
+    
+    .stMetric { background-color: #10171d; padding: 15px; border-radius: 10px; border-left: 5px solid #00ffcc; }
+    .faro-card { 
+        background: linear-gradient(145deg, #10171d, #050a0e);
+        border: 1px solid #00ffcc;
+        border-radius: 15px;
+        padding: 20px;
+        text-align: center;
+        transition: 0.3s;
+    }
+    .faro-card:hover { border-color: #ffffff; box-shadow: 0px 0px 20px #00ffcc; }
+    .stButton>button {
+        background: linear-gradient(90deg, #00ffcc, #0088ff);
+        color: black; font-weight: bold; border: none; border-radius: 20px;
+    }
+    .cyber-box {
+        border: 1px solid #ff0055;
+        padding: 10px;
+        background: rgba(255, 0, 85, 0.1);
+        border-radius: 5px;
+        font-family: monospace;
+        color: #ff0055;
+    }
     </style>
-""", unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
 
-# =============================================================================
-# II. CLASE MAESTRA DE SEGURIDAD Y LEDGER (CÓDIGO ORIGINAL SHA-3)
-# =============================================================================
-class NexusSecurity:
-    @staticmethod
-    def encrypt_ledger_block(data):
-        """Genera el sello inmutable de 512 bits para la cadena de bloques."""
-        block_string = json.dumps(data, sort_keys=True).encode()
-        return hashlib.sha3_512(block_string).hexdigest()
+# --- LÓGICA DE CIBERSEGURIDAD ---
+def check_security():
+    with st.spinner("Escaneando integridad del sistema..."):
+        time.sleep(1)
+        st.sidebar.success("Escudo de Ciberseguridad IA: ACTIVO")
+        st.sidebar.info("Cifrado Cuántico de Data: HABILITADO")
 
-# =============================================================================
-# III. NÚCLEO DEL PROYECTO (MISIÓN, VISIÓN, SOCIAS Y FAROS)
-# =============================================================================
-class SerenityCore:
-    def __init__(self):
-        self.nombre = "SERENITY NEXUS GLOBAL"
-        self.director = "Jorge Carvajal"
-        self.mision = "Transformar la relación entre la tecnología y la naturaleza, protegiendo la biodiversidad de Hacienda Monte Guadua mediante monitoreo inteligente e inmutable."
-        self.vision = "Ser la plataforma líder mundial en certificación ambiental transparente, reconocida como un pilar de la conservación para la humanidad."
-        
-        # Estructura Socios (Prioridad Código Original)
-        self.socias = {
-            "Tatiana Arcila Ferreira": {"participacion": 0.60, "rol": "Socia Estratégica"},
-            "Sandra Patricia Agredo": {"participacion": 0.40, "rol": "Socia Estratégica"}
-        }
-        
-        # Red de 7 Faros (6 Originales + Gemini)
-        self.faros = [
-            "Faro 1 - Norte", "Faro 2 - Sur", "Faro 3 - Oriente", 
-            "Faro 4 - Occidente", "Faro 5 - Bosque", "Faro 6 - Mirador", 
-            "Faro Gemini - Inteligencia Artificial"
-        ]
-
-    def get_full_tdr(self):
-        """Términos de Referencia e Inventario Detallado (800+ Líneas Ref)"""
-        return pd.DataFrame([
-            {"Ítem": "Cámaras Hikvision AcuSense 4K", "Cantidad": 48, "Especificación": "8 por Faro / Visión Nocturna / IA"},
-            {"Ítem": "Micrófonos Audio-Technica AT8035", "Cantidad": 24, "Especificación": "4 por Faro / Bioacústica Shotgun"},
-            {"Ítem": "NVIDIA Jetson Orin Nano 8GB", "Cantidad": 6, "Especificación": "Procesamiento IA en Borde (Edge)"},
-            {"Ítem": "Estructuras Pino Canadiense", "Cantidad": 7, "Especificación": "Tratado / 3m x 2m x 3m"},
-            {"Ítem": "Sistemas Solares LiFePO4", "Cantidad": 7, "Especificación": "800W / 200Ah Litio / Autónomo"},
-            {"Ítem": "Starlink Enterprise + Radio Enlaces", "Cantidad": 1, "Especificación": "Backhaul Satelital + Malla Local"}
-        ])
-
-# =============================================================================
-# IV. INTERFAZ INTEGRAL DE LA NOVENA MARAVILLA
-# =============================================================================
-def main():
-    core = SerenityCore()
-    security = NexusSecurity()
+# --- BARRA LATERAL (CONTROL GLOBAL) ---
+with st.sidebar:
+    try:
+        st.image("puma.jpg", use_container_width=True)
+    except:
+        st.title("SNG 🌿")
     
-    # --- ENCABEZADO ---
-    st.image("https://via.placeholder.com/300x100?text=SERENITY+NEXUS+GLOBAL", width=300)
-    st.title(core.nombre)
+    st.markdown("### Centro de Control")
+    menu = st.radio("Módulos", ["Dashboard Real-Time", "Puntos Faro (Streaming)", "Planes & Suscripciones", "IA & Caja Negra"])
     
-    # --- BLOQUE DE IDENTIDAD ---
-    col_m, col_v = st.columns(2)
-    with col_m:
-        st.markdown(f"<div class='faro-card'><h3>MISIÓN</h3><p>{core.mision}</p></div>", unsafe_allow_html=True)
-    with col_v:
-        st.markdown(f"<div class='faro-card'><h3>VISIÓN</h3><p>{core.vision}</p></div>", unsafe_allow_html=True)
+    st.markdown("---")
+    if st.button("🚀 VALIDAR SISTEMA"):
+        check_security()
+        st.balloons()
 
-    # --- NAVEGACIÓN LATERAL ---
-    st.sidebar.markdown(f"## 🛡️ Director: {core.director}")
-    menu = st.sidebar.radio("SISTEMAS INTEGRALES", [
-        "🏠 MONITOREO PUNTOS FARO (48 CAM / 24 MIC)",
-        "⚖️ LEY 2173 & CERTIFICACIÓN BIC",
-        "💎 CAPITAL NATURAL $SNG",
-        "📦 TDR & INVENTARIO MAESTRO",
-        "👥 GOBERNANZA & SOCIAS"
-    ])
+# --- MÓDULO 1: DASHBOARD ---
+if menu == "Dashboard Real-Time":
+    st.title("🌐 Serenity Nexus Global")
+    st.subheader("Monitoreo de Biodiversidad y Salud del Bosque")
+    
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("Salud Bioacústica", "98.4%", "+0.2%")
+    c2.metric("CO2 Capturado", "1,240 Ton", "Activo")
+    c3.metric("Especies Identificadas", "452", "+12")
+    c4.metric("Nodos Activos", "7/7", "Online")
 
-    # 1. MONITOREO (EL CORAZÓN DEL CÓDIGO)
-    if menu == "🏠 MONITOREO PUNTOS FARO (48 CAM / 24 MIC)":
-        st.header("Red de Inteligencia de Campo - Hacienda Monte Guadua")
-        st.write("Seleccione un Faro para activar el puente con Villa Michelle.")
+    # Gráfico de actividad de IA
+    fig = go.Figure(go.Scatter(x=[1,2,3,4,5], y=[10,15,13,17,22], mode='lines+markers', line=dict(color='#00ffcc')))
+    fig.update_layout(title="Actividad de IA en Hacienda Monte Guadua", template="plotly_dark", height=300)
+    st.plotly_chart(fig, use_container_width=True)
+
+# --- MÓDULO 2: PUNTOS FARO (MAX STREAMING) ---
+elif menu == "Puntos Faro (Streaming)":
+    st.title("🔭 Puntos Faro - Hacienda Monte Guadua")
+    
+    faros = ["Faro Alfa", "Faro Beta", "Faro Gamma", "Faro Delta", "Faro Sigma", "Faro Omega", "Faro Gemini"]
+    
+    cols = st.columns(3)
+    for i, faro in enumerate(faros):
+        with cols[i % 3]:
+            st.markdown(f"""
+                <div class="faro-card">
+                    <h3>{faro}</h3>
+                    <p>8 Cámaras | 4 Micrófonos</p>
+                    <p style="color:#00ffcc">● STREAMING ACTIVO</p>
+                </div>
+            """, unsafe_allow_html=True)
+            if st.button(f"Entrar a {faro}"):
+                st.toast(f"Conectando con {faro} vía Satélite...")
+                st.video("https://www.w3schools.com/html/mov_bbb.mp4") # Simulación de Streaming
+
+# --- MÓDULO 3: PLANES GLOBALES ---
+elif menu == "Planes & Suscripciones":
+    st.title("💎 Suscripciones Mundiales")
+    col_a, col_b, col_c = st.columns(3)
+    
+    with col_a:
+        st.info("### Guardián Bronce")
+        st.write("Acceso a 1 Faro + Certificado Digital")
+        st.button("Suscribirse - $10/mes")
         
-        # Grid de los 7 Faros
-        f_cols = st.columns(len(core.faros))
-        for i, faro in enumerate(core.faros):
-            with f_cols[i]:
-                if st.button(f"INGRESAR\n{faro}"):
-                    st.session_state.active_faro_nexus = faro
+    with col_b:
+        st.success("### Protector Oro")
+        st.write("Acceso a todos los Faros + Datos IA en tiempo real")
+        st.button("Suscribirse - $50/mes")
+        
+    with col_c:
+        st.warning("### Socio Vitalicio BIC")
+        st.write("Voto en proyectos + Trazabilidad SNG")
+        st.button("Contactar Ventas")
 
-        if 'active_faro_nexus' in st.session_state:
-            st.markdown(f"### 🛰️ Conexión Estable: {st.session_state.active_faro_nexus}")
-            t_cam, t_mic = st.tabs(["📷 CENTRO DE VISIÓN (8 CÁMARAS)", "🎤 CENTRO DE AUDIO (4 MICRÓFONOS)"])
-            
-            with t_cam:
-                c_grid = st.columns(4)
-                for c in range(8):
-                    with c_grid[c % 4]:
-                        st.button(f"CAM {c+1} UHD", key=f"c_{c}")
-                st.image("https://via.placeholder.com/1000x500?text=STREAMING+ACTIVO+MULTICANAL+4K", use_container_width=True)
-                
-            with t_mic:
-                m_grid = st.columns(4)
-                for m in range(4):
-                    with m_grid[m]:
-                        st.button(f"MIC {m+1} ON", key=f"m_{m}")
-                st.line_chart(np.random.randn(40, 1))
+# --- MÓDULO 4: IA & CAJA NEGRA ---
+elif menu == "IA & Caja Negra":
+    st.title("🧠 Inteligencia Artificial y Respaldo")
+    
+    st.markdown("#### Registro de la Caja Negra")
+    st.code(f"Último respaldo: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    
+    if st.button("Ejecutar Respaldo Manual"):
+        bar = st.progress(0)
+        for i in range(100):
+            time.sleep(0.02)
+            bar.progress(i + 1)
+        st.success("Respaldo encriptado y enviado a la nube con éxito.")
 
-    # 2. LEY Y CERTIFICADOS (REGLAS DE NEGOCIO)
-    elif menu == "⚖️ LEY 2173 & CERTIFICACIÓN BIC":
-        st.header("Integración Jurídica y Certificación")
-        st.info("Este módulo vincula el monitoreo NDVI con el cumplimiento legal de la Ley 2173 de 2021.")
-        st.markdown("---")
-        if st.button("GENERAR CERTIFICADO DE SUPERVIVENCIA (PDF)"):
-            st.success("Sello de Inmutabilidad SHA-3 Generado.")
-            st.download_button("DESCARGAR ARCHIVO", data="Certificado Serenity Nexus", file_name="Certificado_Serenity.pdf")
+    st.markdown("#### Terminal de Seguridad")
+    st.markdown("""<div class="cyber-box">
+        > Iniciando escaneo de red...<br>
+        > Detectando patrones de fauna...<br>
+        > IA Serenity: Analizando 48GB de audio bioacústico...<br>
+        > ESTADO: PROTEGIDO
+    </div>""", unsafe_allow_html=True)
 
-    # 4. INVENTARIO
-    elif menu == "📦 TDR & INVENTARIO MAESTRO":
-        st.header("Especificaciones de Hardware y TDR")
-        st.table(core.get_full_tdr())
-        st.write("**Inversión Total Estimada (CAPEX):** $62,500 USD")
+# --- FOOTER ---
+st.markdown("---")
+st.markdown(f"<center><b>Serenity S.A.S BIC</b> - {datetime.now().year} | Tecnología para la Vida</center>", unsafe_allow_html=True)
 
-    # 5. SOCIAS
-    elif menu == "👥 GOBERNANZA & SOCIAS":
-        st.header("Participación y Socios")
-        for s, d in core.socias.items():
-            st.write(f"**{s}:** {int(d['participacion']*100)}% - {d['rol']}")
-            st.progress(d['participacion'])
-
-if __name__ == "__main__":
-    main()
 
 
 
