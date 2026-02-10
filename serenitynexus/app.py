@@ -228,10 +228,29 @@ with st.sidebar:
     menu_opts = tr['menu_opts'][st.session_state.lang]
     menu_sel = st.radio("MENÚ / MENU", menu_opts)
 
-# 1. INICIO
+# --- CAMBIO 1: LOGO CENTRADO EN EL INICIO ---
 if menu_sel == menu_opts[0]:
+    # Definimos tres columnas para centrar la imagen en la del medio
+    col_l1, col_l2, col_l3 = st.columns([1, 2, 1])
+    with col_l2:
+        # Intenta cargar el logo si el archivo existe en el repositorio
+        if os.path.exists("logo_serenity.png"):
+            st.image("logo_serenity.png", use_container_width=True)
+        else:
+            # Si no está el archivo, pone un banner elegante con el nombre
+            st.markdown("""
+                <div style='text-align:center; border:3px solid #9BC63B; padding:20px; border-radius:20px; background:rgba(46, 125, 50, 0.1);'>
+                    <h1 style='color:#9BC63B; margin:0;'>SERENITY NEXUS GLOBAL</h1>
+                    <p style='color:white; margin:0; font-weight:bold;'>PROYECTO REGENERATIVO</p>
+                </div>
+            """, unsafe_allow_html=True)
+    
+    # Título principal de la plataforma
     st.markdown("<h1 style='text-align:center; font-size:4rem;'>Serenity Nexus Global</h1>", unsafe_allow_html=True)
+    
+    # Subtítulo bilingüe
     subt = "SISTEMA REGENERATIVO BIOMÉTRICO KBA" if st.session_state.lang == 'ES' else "KBA BIOMETRIC REGENERATIVE SYSTEM"
+    st.markdown(f"<p style='text-align:center; letter-spacing:5px; color:#9BC63B; font-weight:bold;'>{subt}</p>", unsafe_allow_html=True)
     st.markdown(f"<p style='text-align:center; letter-spacing:5px; color:#9BC63B; font-weight:bold;'>{subt}</p>", unsafe_allow_html=True)
     btn_audio = "?? ACTIVAR SONIDO GLOBAL EARTH" if st.session_state.lang == 'ES' else "?? ACTIVATE GLOBAL EARTH SOUND"
     st.components.v1.html(f"""<audio id="audio_earth" src="sonido_Earth.mp3" loop></audio><div style="text-align:center; margin-top:30px;"><button onclick="document.getElementById('audio_earth').play()" style="background:#2E7D32; color:white; border:1px solid #9BC63B; padding:20px; border-radius:10px; cursor:pointer; font-weight:bold; font-size:16px;">{btn_audio}</button></div>""", height=150)
@@ -484,6 +503,7 @@ elif menu_sel == menu_opts[8]:
     folium.Polygon(locations=[[lat_guadua - offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua + offset], [lat_guadua - offset, lon_guadua + offset]], color="#9BC63B", fill=True, fill_opacity=0.3, tooltip="Hacienda Monte Guadua: 80 Ha").add_to(m)
     folium.CircleMarker(location=[lat_villa, lon_villa], radius=10, color="blue", fill=True, fill_color="blue", tooltip="Finca Villa Michelle (Sede)").add_to(m)
     st_folium(m, width="100%", height=600)
+
 
 
 
