@@ -79,7 +79,7 @@ tr = {
     'wallet_msg': {'ES': '?? Billetera Conectada: 0x71C...9A23', 'EN': '?? Wallet Connected: 0x71C...9A23'},
     
     # SECCIÓN IDENTIDAD
-    'who_title': {'ES': '¿QUIÉNES SOMOS?', 'EN': 'WHO WE ARE'},
+    'who_title': {'ES': '¿QUIÉNES SOMOS?', 'EN': 'WHO WE ARE'}, 
     'who_text': {
         'ES': 'Serenity Nexus Global es la primera plataforma **Phygital (Física + Digital)** del Valle del Cauca que integra la conservación ambiental del KBA Bosque San Antonio con tecnología Blockchain e Inteligencia Artificial. Somos guardianes de 87 hectáreas de vida, uniendo a la comunidad local con la inversión global mediante la transparencia tecnológica.',
         'EN': 'Serenity Nexus Global is the first **Phygital (Physical + Digital)** platform in Valle del Cauca integrating conservation of the KBA San Antonio Forest with Blockchain and AI technology. We are guardians of 87 hectares of life, bridging the local community with global investment through technological transparency.'
@@ -255,15 +255,21 @@ if menu_sel == menu_opts[0]:
     st.components.v1.html(f"""<audio id="audio_earth" src="sonido_Earth.mp3" loop></audio><div style="text-align:center; margin-top:30px;"><button onclick="document.getElementById('audio_earth').play()" style="background:#2E7D32; color:white; border:1px solid #9BC63B; padding:20px; border-radius:10px; cursor:pointer; font-weight:bold; font-size:16px;">{btn_audio}</button></div>""", height=150)
     st.write("")
     
-    # SECCIÓN IDENTIDAD (COMPLETA)
+# --- CAMBIO 3: LIMPIEZA DE MISION Y VISION (SIN SIGNOS) ---
     st.markdown(f"""
         <div class="trust-section">
             <h3 style="text-align:center;">{t('who_title')}</h3>
             <p style="text-align:center;">{t('who_text')}</p>
             <hr style="border-top: 1px solid #ccc;">
             <div style="display: flex; flex-wrap: wrap; justify-content: space-around;">
-                <div style="flex: 1; min-width: 300px; padding: 10px;"><h4>?? {t('mis_title')}</h4><p>{t('mis_text')}</p></div>
-                <div style="flex: 1; min-width: 300px; padding: 10px;"><h4>??? {t('vis_title')}</h4><p>{t('vis_text')}</p></div>
+                <div style="flex: 1; min-width: 300px; padding: 10px;">
+                    <h4>🌿 {t('mis_title')}</h4>
+                    <p>{t('mis_text')}</p>
+                </div>
+                <div style="flex: 1; min-width: 300px; padding: 10px;">
+                    <h4>🚀 {t('vis_title')}</h4>
+                    <p>{t('vis_text')}</p>
+                </div>
             </div>
         </div>
     """, unsafe_allow_html=True)
@@ -502,6 +508,7 @@ elif menu_sel == menu_opts[8]:
     folium.Polygon(locations=[[lat_guadua - offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua + offset], [lat_guadua - offset, lon_guadua + offset]], color="#9BC63B", fill=True, fill_opacity=0.3, tooltip="Hacienda Monte Guadua: 80 Ha").add_to(m)
     folium.CircleMarker(location=[lat_villa, lon_villa], radius=10, color="blue", fill=True, fill_color="blue", tooltip="Finca Villa Michelle (Sede)").add_to(m)
     st_folium(m, width="100%", height=600)
+
 
 
 
