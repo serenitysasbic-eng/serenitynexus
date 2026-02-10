@@ -275,10 +275,12 @@ if menu_sel == menu_opts[0]:
     """, unsafe_allow_html=True)
     st.info("Finca Villa Michell SPAM (40%) | Hacienda Monte Guadua TAF (60%) | Admin: Jorge Carvajal")
 
-# 2. RED DE FAROS (CON DEMO Y REAL)
+# 2. RED DE FAROS (CAMBIO 4: LIMPIEZA DE TÍTULO)
 elif menu_sel == menu_opts[1]:
-    tt = "??? Monitoreo Perimetral" if st.session_state.lang == 'ES' else "??? Perimeter Monitoring"
-    st.title(tt)
+    # Eliminamos los signos de interrogación del título
+    tt = "Monitoreo Perimetral" if st.session_state.lang == 'ES' else "Perimeter Monitoring"
+    st.title(f"📡 {tt}") # Usamos un emoji de antena estándar que no falla
+    
     lbl_conn = t('connect')
     c1, c2, c3 = st.columns(3)
     with c1: 
@@ -508,6 +510,7 @@ elif menu_sel == menu_opts[8]:
     folium.Polygon(locations=[[lat_guadua - offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua + offset], [lat_guadua - offset, lon_guadua + offset]], color="#9BC63B", fill=True, fill_opacity=0.3, tooltip="Hacienda Monte Guadua: 80 Ha").add_to(m)
     folium.CircleMarker(location=[lat_villa, lon_villa], radius=10, color="blue", fill=True, fill_color="blue", tooltip="Finca Villa Michelle (Sede)").add_to(m)
     st_folium(m, width="100%", height=600)
+
 
 
 
