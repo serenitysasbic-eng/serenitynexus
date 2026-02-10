@@ -108,14 +108,14 @@ def main():
     # Configuración de página de alta gama
     st.set_page_config(page_title="SERENITY NEXUS GLOBAL - OMNI CORE", layout="wide", page_icon="🌳")
     
-    # Inyección de Estilos CSS Personalizados
+# Inyección de Estilos CSS Personalizados (CORREGIDO)
     st.markdown("""
         <style>
         .main { background-color: #0e1117; color: #e0e0e0; }
         .stMetric { background-color: #1e2130; padding: 15px; border-radius: 10px; border: 1px solid #4caf50; }
         h1 { color: #4caf50; font-family: 'Helvetica'; }
         </style>
-    """, unsafe_content_html=True)
+    """, unsafe_allow_html=True) # <-- Cambiamos 'content' por 'allow'
 
     # Inicialización de motores
     ai = SerenityAI()
@@ -203,6 +203,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
