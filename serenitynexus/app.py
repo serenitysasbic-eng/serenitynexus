@@ -1,92 +1,125 @@
 import streamlit as st
-import pandas as pd
+import hashlib
 from datetime import datetime
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
 
-# --- CONFIGURACIÓN DE PÁGINA ---
-st.set_page_config(page_title="Serenity Nexus Global - V27.0", layout="wide", page_icon="🌿")
+# --- 1. CONFIGURACIÓN DE SEGURIDAD (SHA-3 512) ---
+def generar_hash_inmutable(datos):
+    return hashlib.sha3_512(datos.encode('utf-8')).hexdigest()
 
-# --- ESTILOS PERSONALIZADOS ---
-st.markdown("""
-    <style>
-    .main { background-color: #f0f4f8; }
-    .stButton>button { width: 100%; border-radius: 10px; height: 3em; background-color: #2e7d32; color: white; }
-    .faro-card { padding: 20px; border-radius: 15px; background-color: white; border-left: 5px solid #1b5e20; box-shadow: 2px 2px 10px rgba(0,0,0,0.1); }
-    </style>
-    """, unsafe_allow_html=True)
+# --- 2. MOTOR DE CERTIFICADOS (LEY 2173) ---
+def generar_pdf_legal(nombre, tipo, hash_id):
+    filename = f"Certificado_{nombre.replace(' ', '_')}.pdf"
+    c = canvas.Canvas(filename, pagesize=letter)
+    c.setFont("Helvetica-Bold", 16)
+    c.drawString(100, 750, "SERENITY S.A.S BIC - CERTIFICADO AMBIENTAL")
+    c.setFont("Helvetica", 10)
+    c.drawString(100, 730, "En cumplimiento con la Ley 2173 de Colombia")
+    c.line(100, 725, 500, 725)
+    c.drawString(100, 700, f"Titular: {nombre}")
+    c.drawString(100, 680, f"Acción: {tipo}")
+    c.drawString(100, 660, f"Ubicación: Hacienda Monte Guadua, Valle del Cauca")
+    c.setFont("Courier", 7)
+    c.drawString(100, 620, f"Sello Digital de Autenticidad (SHA-3):")
+    c.drawString(100, 610, f"{hash_id}")
+    c.save()
+    return filename
 
-# --- SIDEBAR (LOGOS Y NAVEGACIÓN) ---
-with st.sidebar:
-    st.image("https://via.placeholder.com/150?text=SERENITY+LOGO", width=150) # Aquí va tu logo original
-    st.title("Serenity S.A.S BIC")
-    menu = st.radio("Navegación", ["Inicio", "Puntos Faro", "Certificados", "Seguridad y Ley", "SNG Digital"])
+# --- 3. CONFIGURACIÓN DE LA INTERFAZ ---
+st.set_page_config(page_title="Serenity Nexus Global", layout="wide", page_icon="🌿")
 
-# --- SECCIÓN 1: INICIO (MISIÓN Y VISIÓN) ---
-if menu == "Inicio":
-    st.title("🌿 Serenity Nexus Global")
-    st.subheader("La Novena Maravilla: Ecoturismo y Tecnología")
-    
+# --- 4. CABECERA CON LOGO Y FILOSOFÍA ---
+col_logo, col_tit = st.columns([1, 4])
+with col_logo:
+    # IMPORTANTE: Reemplaza 'logo_serenity.png' con tu archivo real
+    try:
+        st.image("logo_serenity.png", width=150)
+    except:
+        st.info("Logo: Serenity S.A.S BIC")
+
+with col_tit:
+    st.title("SERENITY NEXUS GLOBAL")
+    st.markdown("### *La Novena Maravilla del Mundo*")
+
+st.sidebar.markdown("## Panel de Control")
+menu = st.sidebar.radio("Navegación Principal", 
+    ["Inicio (Misión/Visión)", "Puntos Faro (Monitoreo)", "SNG Digital & Socias", "Certificados Legales"])
+
+# --- 5. LÓGICA DE NAVEGACIÓN ---
+
+if menu == "Inicio (Misión/Visión)":
+    st.header("🌿 Nuestra Identidad")
     col1, col2 = st.columns(2)
     with col1:
-        st.info("### Misión\nTransformar la relación entre el ser humano y la biodiversidad mediante tecnología de vanguardia y conservación activa en la Hacienda Monte Guadua.")
+        st.subheader("Misión")
+        st.write("Fomentar la protección de la biodiversidad en la Hacienda Monte Guadua mediante tecnología disruptiva y ecoturismo de lujo.")
     with col2:
-        st.success("### Visión\nSer el referente mundial en monitoreo ambiental y turismo de lujo sostenible para el año 2030.")
+        st.subheader("Visión")
+        st.write("Ser el modelo global de regeneración ambiental inmutable para 2030.")
+    st.divider()
+    st.markdown(f"**Administrador del Sistema:** Jorge Carvajal")
 
-    st.write("---")
-    st.markdown("### Estado del Proyecto")
-    st.write(f"**Administrador:** Jorge Carvajal")
-    st.write(f"**Ubicación:** Dagua y Felidia, Valle del Cauca, Colombia")
+elif menu == "Puntos Faro (Monitoreo)":
+    st.header("📡 Red de Puntos Faro - Hacienda Monte Guadua")
+    faros = [f"Punto Faro {i}" for i in range(1, 7)] + ["Punto Faro Gemini (Honorario)"]
+    faro_sel = st.selectbox("Seleccione Faro para visualización:", faros)
+    
+    st.success(f"Conexión Establecida con {faro_sel}")
+    
+    # Matriz de 8 Cámaras y 4 Micrófonos
+    st.subheader("🎥 Feed de Cámaras (8)")
+    cols_cam = st.columns(4)
+    for i in range(1, 9):
+        with cols_cam[(i-1)%4]:
+            st.button(f"Cam {faro_sel[-1]}.{i}")
+            st.image(f"https://via.placeholder.com/150?text=CAM+{i}", use_container_width=True)
+    
+    st.subheader("🎙️ Sensores de Audio (4)")
+    cols_mic = st.columns(4)
+    for i in range(1, 5):
+        cols_mic[i-1].audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3")
+        cols_mic[i-1].caption(f"Micrófono {i} - ONLINE")
 
-# --- SECCIÓN 2: PUNTOS FARO (MONITOREO) ---
-elif menu == "Puntos Faro":
-    st.header("📡 Red de Monitoreo - Hacienda Monte Guadua")
+elif menu == "SNG Digital & Socias":
+    st.header("💎 Ecosistema Serenity Nexus Global")
     
-    faros = ["Faro 1", "Faro 2", "Faro 3", "Faro 4", "Faro 5", "Faro 6", "Faro Gemini (Especial)"]
+    # Lógica de Socias
+    st.subheader("Gobernanza de Socias")
+    col_t, col_s = st.columns(2)
+    col_t.metric("Tatiana Arcila Ferreira", "60% Participación")
+    col_s.metric("Sandra Patricia Agredo Muñoz", "40% Participación")
     
-    selected_faro = st.selectbox("Seleccione un Punto Faro para ingresar:", faros)
+    # Token SNG
+    st.divider()
+    st.subheader("Moneda SNG")
+    ha = st.number_input("Hectáreas bajo protección:", 0, 80)
+    tokens = ha * 1000
+    st.info(f"Emisión proyectada de SNG: {tokens} Tokens")
+
+elif menu == "Certificados Legales":
+    st.header("📜 Emisor de Certificados Inmutables")
+    nombre_user = st.text_input("Nombre del Beneficiario:")
+    tipo_accion = st.selectbox("Tipo de Acción Ambiental:", ["Siembra Directa", "Protección de Bosque", "Monitoreo de Especies"])
     
-    st.markdown(f"<div class='faro-card'><h3>Acceso a {selected_faro}</h3></div>", unsafe_allow_html=True)
-    
-    col_cam, col_mic = st.columns([2, 1])
-    
-    with col_cam:
-        st.subheader("🎥 Cámaras de Seguridad y Biodiversidad")
-        c1, c2, c3, c4 = st.columns(4)
-        c5, c6, c7, c8 = st.columns(4)
-        for i, col in enumerate([c1, c2, c3, c4, c5, c6, c7, c8], 1):
-            col.button(f"Cam {i}")
-            col.image(f"https://via.placeholder.com/100?text=Feed+Cam+{i}", use_container_width=True)
+    if st.button("Generar Certificado con Hash SHA-3"):
+        if nombre_user:
+            datos_raw = f"{nombre_user}-{tipo_accion}-{datetime.now()}"
+            hash_digital = generar_hash_inmutable(datos_raw)
+            pdf_path = generar_pdf_legal(nombre_user, tipo_accion, hash_digital)
             
-    with col_mic:
-        st.subheader("🎙️ Sensores de Audio")
-        for j in range(1, 5):
-            st.audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3") # Simulación de audio
-            st.caption(f"Micrófono {j} - Activo")
+            st.success(f"Certificado generado exitosamente.")
+            st.code(f"HASH DE SEGURIDAD: {hash_digital}")
+            with open(pdf_path, "rb") as file:
+                st.download_button("Descargar PDF Oficial", data=file, file_name=pdf_path)
+        else:
+            st.error("Por favor ingrese un nombre.")
 
-# --- SECCIÓN 3: CERTIFICADOS (LEY 2173) ---
-elif menu == "Certificados":
-    st.header("📜 Gestión de Certificados Ambientales")
-    st.write("Descarga de certificados de protección y siembra.")
-    
-    nombre = st.text_input("Nombre del Donante / Empresa")
-    tipo = st.selectbox("Tipo de Certificado", ["Siembra de Árbol", "Protección de Hectárea", "Carbono Neutro"])
-    
-    if st.button("Generar y Descargar Certificado"):
-        st.write(f"Generando certificado para {nombre}...")
-        # Aquí se integra la lógica de ReportLab/SHA-3 que teníamos
-        st.success("✅ Certificado generado exitosamente (Simulación de descarga)")
+# --- 6. FOOTER DE SEGURIDAD ---
+st.sidebar.divider()
+if st.sidebar.button("🚨 PROTOCOLO DE CIERRE (KILL SWITCH)"):
+    st.sidebar.error("SISTEMA DESCONECTADO POR SEGURIDAD")
 
-# --- SECCIÓN 4: SEGURIDAD Y LEY ---
-elif menu == "Seguridad y Ley":
-    st.header("⚖️ Integración con la Ley")
-    st.warning("Conexión directa con autoridades ambientales y policía nacional.")
-    if st.button("🚨 ACTIVAR ALERTA DE INTRUSIÓN"):
-        st.error("Alerta enviada a los cuadrantes de Dagua y Felidia.")
-
-# --- SECCIÓN 5: SNG DIGITAL ---
-elif menu == "SNG Digital":
-    st.header("💰 Serenity Nexus Global (SNG) Token")
-    st.metric(label="Valor SNG", value="$1.00 USD", delta="0.05%")
-    st.write("Gestión de donaciones y recompensas del ecosistema Serenity.")
 
 
 
