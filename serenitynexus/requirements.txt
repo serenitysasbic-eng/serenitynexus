@@ -1,7 +1,7 @@
 streamlit
 pandas
+numpy
 folium
 streamlit-folium
-reportlab
-Pillow
-opencv-python-headless
+plotly
+psycopg2-binary
