@@ -305,12 +305,19 @@ elif menu_sel == menu_opts[1]:
         if st.button(f"{lbl_conn} Capibara"): st.session_state.f_activo = "Capibara"
     st.write("---")
     
-    # SECCIÓN GEMINI CÁMARA
+# --- CAMBIO 5: LIMPIEZA FARO GEMINI ---
     col_gemini = st.columns([1,2,1])
     with col_gemini[1]:
         st_st = "Estado" if st.session_state.lang == 'ES' else "Status"
-        st.markdown(f"<div class='faro-gemini'><h3>? FARO GEMINI (VTA OVO II) ?</h3><p>{st_st}: {st.session_state.estado_gemini}</p></div>", unsafe_allow_html=True)
+        # Quitamos los signos de interrogación y dejamos el diseño azul distintivo
+        st.markdown(f"""
+            <div class='faro-gemini'>
+                <h3 style='color:#4285F4; margin-bottom:5px;'>🤖 FARO GEMINI (VTA OVO II)</h3>
+                <p style='color:white; font-weight:bold;'>{st_st}: {st.session_state.estado_gemini}</p>
+            </div>
+        """, unsafe_allow_html=True)
         
+        st.write("")
         # OPCIONES DE CÁMARA
         opcion_cam = st.radio("Fuente de Video / Video Source:", ["SIMULACIÓN (DEMO NUBE)", "CÁMARA REAL (IP LOCAL)"])
         
@@ -510,6 +517,7 @@ elif menu_sel == menu_opts[8]:
     folium.Polygon(locations=[[lat_guadua - offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua + offset], [lat_guadua - offset, lon_guadua + offset]], color="#9BC63B", fill=True, fill_opacity=0.3, tooltip="Hacienda Monte Guadua: 80 Ha").add_to(m)
     folium.CircleMarker(location=[lat_villa, lon_villa], radius=10, color="blue", fill=True, fill_color="blue", tooltip="Finca Villa Michelle (Sede)").add_to(m)
     st_folium(m, width="100%", height=600)
+
 
 
 
