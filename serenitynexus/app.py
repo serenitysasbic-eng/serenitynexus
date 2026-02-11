@@ -260,14 +260,6 @@ elif menu == "DASHBOARD ESTADÍSTICO IA":
     st.bar_chart(pd.DataFrame({'Detecciones': [120, 450, 300, 80, 45, 110, 950]}, index=["Halcón", "Colibrí", "Rana", "Venado", "Tigrillo", "Capibara", "GEMINI"]))
 
 
-Jorge, tienes toda la razón. Si ese bloque se ve "triste", el inversionista sentirá que la parte legal es un trámite aburrido, cuando en realidad es el motor financiero que obliga a las empresas a invertir.
-
-Vamos a transformar la Gestión de Leyes en un "Legal Hub" de alto impacto. Vamos a usar tarjetas visuales, íconos y un diseño más robusto para que se sienta como una consultoría premium.
-🛠️ Bloque 3: Gestión Legal Corporativa (Diseño "Premium")
-
-Reemplaza todo el bloque de la Ley 2173 por este. He añadido el Botón de Descarga del Vademécum (el resumen de soluciones) y un diseño de "Tarjetas de Poder Legal":
-Python
-
 # =========================================================
 # BLOQUE 3: NEXUS COMPLIANCE & LEGAL HUB (REDESIGN)
 # =========================================================
@@ -668,6 +660,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
