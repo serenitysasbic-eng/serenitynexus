@@ -286,40 +286,93 @@ elif menu == "GESTIÓN LEY 2173 (EMPRESAS)":
                     h_corp = hashlib.sha256(f"{empresa_n}".encode()).hexdigest()[:10].upper()
                     st.session_state.pdf_corp = generar_pdf_certificado(empresa_n, siembra_req, f"CORP-{h_corp}")
                     st.download_button("📥 Descargar Reporte", st.session_state.pdf_corp, "Reporte_Ley2173.pdf")
-
 # =========================================================
-# BLOQUE 4: SUSCRIPCIONES (Impacto y Finanzas)
+# BLOQUE 4: SUSCRIPCIONES (Impacto, Beneficios y Pasarela)
 # =========================================================
 elif menu == "SUSCRIPCIONES":
     st.title("🌱 Membresías de Impacto Serenity")
-    
-    # Tarjetas de suscripción
-    c_s1, c_s2, c_s3 = st.columns(3)
-    with c_s1:
-        st.markdown("<div style='border:2px solid #9BC63B; padding:15px; border-radius:10px; text-align:center;'><h3>SEMILLA</h3><h2>$25</h2><p>5 Árboles</p></div>", unsafe_allow_html=True)
-        if st.button("ELEGIR SEMILLA", key="btn_s1"): st.session_state.p_sel = "SEMILLA"
-        
-    with c_s2:
-        st.markdown("<div style='border:2px solid #9BC63B; padding:15px; border-radius:10px; text-align:center;'><h3>GUARDIÁN</h3><h2>$80</h2><p>15 Árboles</p></div>", unsafe_allow_html=True)
-        if st.button("ELEGIR GUARDIÁN", key="btn_s2"): st.session_state.p_sel = "GUARDIÁN"
-        
-    with c_s3:
-        st.markdown("<div style='border:2px solid #D4AF37; padding:15px; border-radius:10px; text-align:center;'><h3>HALCÓN</h3><h2>$200</h2><p>1 Hectárea</p></div>", unsafe_allow_html=True)
-        if st.button("ELEGIR HALCÓN", key="btn_s3"): st.session_state.p_sel = "HALCÓN"
+    st.markdown("### Transforma tu aporte en regeneración real")
 
-    # Pasarela de pagos
+    # --- TARJETAS DE PLANES CON BENEFICIOS DETALLADOS ---
+    p1, p2, p3 = st.columns(3)
+    
+    with p1:
+        st.markdown("""
+            <div style="background:#1e2630; padding:20px; border-radius:15px; border:2px solid #9BC63B; text-align:center; min-height: 420px;">
+                <h3 style="color:#9BC63B;">PLAN SEMILLA</h3>
+                <h2 style="color:white;">$25 USD <small>/mes</small></h2>
+                <hr style="border-color:#444;">
+                <p style="text-align:left; font-size:0.9rem;">🌲 <b>5 Árboles:</b> Siembra y mantenimiento.</p>
+                <p style="text-align:left; font-size:0.9rem;">📡 <b>1 Faro:</b> Datos biométricos básicos.</p>
+                <p style="text-align:left; font-size:0.9rem;">🪙 <b>50 Tokens:</b> $SNG de respaldo.</p>
+                <p style="text-align:left; font-size:0.9rem;">📑 <b>Certificado:</b> Digital con Hash.</p>
+            </div>
+        """, unsafe_allow_html=True)
+        if st.button("ELEGIR SEMILLA", use_container_width=True, key="p_semilla"):
+            st.session_state.p_sel = "SEMILLA"
+            st.session_state.m_plan = 25
+
+    with p2:
+        st.markdown("""
+            <div style="background:#1e2630; padding:20px; border-radius:15px; border:3px solid #9BC63B; text-align:center; min-height: 420px; transform: scale(1.02);">
+                <h3 style="color:#9BC63B;">PLAN GUARDIÁN</h3>
+                <h2 style="color:white;">$80 USD <small>/mes</small></h2>
+                <hr style="border-color:#444;">
+                <p style="text-align:left; font-size:0.9rem;">🌳 <b>15 Árboles:</b> Restauración activa.</p>
+                <p style="text-align:left; font-size:0.9rem;">🎥 <b>Cámaras 4K:</b> Streaming del bosque.</p>
+                <p style="text-align:left; font-size:0.9rem;">🪙 <b>200 Tokens:</b> Mayor respaldo $SNG.</p>
+                <p style="text-align:left; font-size:0.9rem;">📊 <b>Reporte IA:</b> Inventario de carbono.</p>
+            </div>
+        """, unsafe_allow_html=True)
+        if st.button("ELEGIR GUARDIÁN", use_container_width=True, key="p_guardian"):
+            st.session_state.p_sel = "GUARDIÁN"
+            st.session_state.m_plan = 80
+
+    with p3:
+        st.markdown("""
+            <div style="background:#1e2630; padding:20px; border-radius:15px; border:2px solid #D4AF37; text-align:center; min-height: 420px;">
+                <h3 style="color:#D4AF37;">PLAN HALCÓN</h3>
+                <h2 style="color:white;">$200 USD <small>/mes</small></h2>
+                <hr style="border-color:#444;">
+                <p style="text-align:left; font-size:0.9rem;">🐆 <b>1 Ha Protegida:</b> Soberanía total.</p>
+                <p style="text-align:left; font-size:0.9rem;">🛸 <b>Drones:</b> Vigilancia perimetral.</p>
+                <p style="text-align:left; font-size:0.9rem;">🪙 <b>600 Tokens:</b> Impacto Web3 máximo.</p>
+                <p style="text-align:left; font-size:0.9rem;">👑 <b>Visita VIP:</b> Acceso a Monte Guadua.</p>
+            </div>
+        """, unsafe_allow_html=True)
+        if st.button("ELEGIR HALCÓN", use_container_width=True, key="p_halcon"):
+            st.session_state.p_sel = "HALCÓN"
+            st.session_state.m_plan = 200
+
+    # --- PASARELA DE PAGO CON LOGOS REHABILITADOS ---
     if 'p_sel' in st.session_state:
-        st.divider()
-        st.subheader(f"💳 Pago Seguro: Plan {st.session_state.p_sel}")
-        col_p1, col_p2 = st.columns(2)
-        with col_p2:
+        st.write("---")
+        st.subheader(f"💳 Finalizar Suscripción: {st.session_state.p_sel}")
+        
+        col_pay1, col_pay2 = st.columns(2)
+        with col_pay1:
+            with st.container(border=True):
+                st.markdown("#### Tarjeta de Crédito/Débito")
+                st.text_input("Titular de la cuenta")
+                st.text_input("Número de Tarjeta", placeholder="xxxx xxxx xxxx xxxx")
+                c_exp, c_cvc = st.columns(2)
+                c_exp.text_input("Vencimiento (MM/AA)")
+                c_cvc.text_input("CVC")
+                if st.button("🚀 ACTIVAR SUSCRIPCIÓN", use_container_width=True):
+                    st.balloons()
+                    st.success(f"¡Bienvenido al Plan {st.session_state.p_sel}! Impacto activado.")
+
+        with col_pay2:
+            st.markdown("#### Pagos Locales y Alternativos")
             st.markdown("""
-                <div style="background:white; padding:15px; border-radius:10px; text-align:center;">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/b/bf/Nequi_logo.png" width="80">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Bancolombia_logo.svg/2560px-Bancolombia_logo.svg.png" width="80">
+                <div style="background: #ffffff; padding: 25px; border-radius: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: center; border: 1px solid #ddd;">
+                    <div style="text-align:center;"><img src="https://upload.wikimedia.org/wikipedia/commons/b/bf/Nequi_logo.png" width="90"></div>
+                    <div style="text-align:center;"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Bancolombia_logo.svg/2560px-Bancolombia_logo.svg.png" width="90"></div>
+                    <div style="text-align:center;"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/2560px-Visa_Inc._logo.svg.png" width="70"></div>
+                    <div style="text-align:center;"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1280px-Mastercard-logo.svg.png" width="70"></div>
                 </div>
             """, unsafe_allow_html=True)
-            st.info("💡 También puedes redimir tus **$SNG** acumulados para pagar tu mensualidad.")
+            st.caption("🔒 Transacciones seguras mediante Nexus Gateway (Dagua-Colombia)")
 # =========================================================
 # BLOQUE 5: BILLETERA CRYPTO (WEB3) - ECOSISTEMA $SNG
 # =========================================================
@@ -553,6 +606,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
