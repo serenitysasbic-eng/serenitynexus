@@ -121,10 +121,47 @@ def mostrar_camara_real(url_rstp):
         st.error(f"Error técnico: {e}")
 
 # --- FUNCIÓN PDF: CERTIFICADO DONANTE ---
-def generar_pdf_certificado(nombre, monto, lang):
+def generar_pdf_analisis_ia(lang):
     buffer = io.BytesIO()
     c = canvas.Canvas(buffer, pagesize=letter)
-    txt_titulo = "CERTIFICADO DE DONACIÓN" if lang == 'ES' else "DONATION CERTIFICATE"
+    
+    # Datos para el certificado
+    fecha = datetime.now().strftime("%Y-%m-%d %H:%M")
+    hash_analisis = hashlib.sha256(f"Serenity-IA-{fecha}".encode()).hexdigest()[:16].upper()
+    titulo = "REPORTE DE INTELIGENCIA BIOLÓGICA" if lang == 'ES' else "BIOLOGICAL INTELLIGENCE REPORT"
+    
+    # Estética del PDF
+    c.setStrokeColor(VERDE_SERENITY); c.setLineWidth(3)
+    c.rect(0.5*inch, 0.5*inch, 7.5*inch, 10.0*inch)
+    
+    # Logo o Identidad
+    if os.path.exists("logo_serenity.png"):
+        c.drawImage("logo_serenity.png", 3.5*inch, 9.0*inch, width=1.5*inch, height=1.5*inch, mask='auto')
+    else:
+        c.setFont("Helvetica-Bold", 20); c.setFillColor(VERDE_SERENITY)
+        c.drawCentredString(4.25*inch, 9.5*inch, "SERENITY NEXUS GLOBAL")
+
+    # Contenido
+    c.setFont("Helvetica-Bold", 18); c.setFillColor(black)
+    c.drawCentredString(4.25*inch, 8.5*inch, titulo)
+    
+    c.setFont("Helvetica", 12)
+    c.drawString(1*inch, 7.5*inch, f"Fecha de Emisión: {fecha}")
+    c.drawString(1*inch, 7.2*inch, f"Especies Monitoreadas: 1,248")
+    c.drawString(1*inch, 6.9*inch, f"Salud del Ecosistema: 98%")
+    c.drawString(1*inch, 6.6*inch, f"Hectáreas Protegidas: 87.0 Ha")
+    
+    # Hash de Seguridad
+    c.setFont("Courier", 10)
+    c.drawString(1*inch, 5.5*inch, f"BLOCKCHAIN HASH: {hash_analisis}")
+    
+    # Simulación de QR (Un cuadro con texto)
+    c.setStrokeColor(black); c.setLineWidth(1)
+    c.rect(6*inch, 1*inch, 1.5*inch, 1.5*inch)
+    c.setFont("Helvetica-Bold", 8)
+    c.drawCentredString(6.75*inch, 0.8*inch, "VERIFICACIÓN QR")
+    
+    c.save(); buffer.seek(0); return buffer
     
     c.setStrokeColor(VERDE_SERENITY); c.setLineWidth(5)
     c.rect(0.3*inch, 0.3*inch, 7.9*inch, 10.4*inch)
@@ -558,6 +595,7 @@ elif menu_sel == menu_opts[8]:
     folium.Polygon(locations=[[lat_guadua - offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua + offset], [lat_guadua - offset, lon_guadua + offset]], color="#9BC63B", fill=True, fill_opacity=0.3, tooltip="Hacienda Monte Guadua: 80 Ha").add_to(m)
     folium.CircleMarker(location=[lat_villa, lon_villa], radius=10, color="blue", fill=True, fill_color="blue", tooltip="Finca Villa Michelle (Sede)").add_to(m)
     st_folium(m, width="100%", height=600)
+
 
 
 
