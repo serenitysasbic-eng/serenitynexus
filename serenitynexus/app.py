@@ -114,10 +114,17 @@ if not st.session_state.auth:
                 st.rerun()
     st.stop()
 
-# --- MENÚ DE NAVEGACIÓN ---
+# --- BUSCA ESTA SECCIÓN Y ACTUALIZA LA LISTA ---
 menu = st.sidebar.radio("CENTRO DE CONTROL", [
-    "INICIO", "RED DE FAROS (7 NODOS)", "DASHBOARD ESTADÍSTICO IA", "GESTIÓN LEY 2173 (EMPRESAS)",
-    "SUSCRIPCIONES", "DONACIONES Y CERTIFICADO", "LOGÍSTICA AEROLÍNEAS", "UBICACIÓN & MAPAS"
+    "INICIO", 
+    "RED DE FAROS (7 NODOS)", 
+    "DASHBOARD ESTADÍSTICO IA", 
+    "GESTIÓN LEY 2173 (EMPRESAS)",
+    "SUSCRIPCIONES", 
+    "BILLETERA CRYPTO (WEB3)",  
+    "DONACIONES Y CERTIFICADO", 
+    "LOGÍSTICA AEROLÍNEAS", 
+    "UBICACIÓN & MAPAS"
 ])
 
 # 1. INICIO
@@ -302,6 +309,7 @@ elif menu == "UBICACIÓN & MAPAS":
     folium.Polygon(locations=[[3.45, -76.67], [3.47, -76.67], [3.47, -76.64], [3.45, -76.64]], color="darkgreen", fill=True, fill_opacity=0.4, tooltip="Hacienda Monte Guadua: 80 Ha").add_to(m)
     folium.CircleMarker(location=[3.445, -76.645], radius=10, color="blue", fill=True, fill_color="blue", tooltip="Finca Villa Michelle").add_to(m)
     st_folium(m, width="100%", height=600)
+
 
 
 
