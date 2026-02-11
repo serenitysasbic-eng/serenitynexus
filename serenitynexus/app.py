@@ -282,32 +282,67 @@ elif menu == "SUSCRIPCIONES":
     with p3: 
         st.markdown("<div class='faro-card' style='border-color:#D4AF37;'><h3>Plan Halcón</h3><h2>$200 USD</h2><p>6 Faros / 6 Meses</p></div>", unsafe_allow_html=True)
         if st.button("SUSCRIBIRSE HALCÓN"): st.success("Procesando pago Halcón...")
-# --- PESTAÑA 5: BILLETERA CRYPTO (WEB3) ---
+# =========================================================
+# BLOQUE 5: BILLETERA CRYPTO (WEB3) - ECOSISTEMA $SNG
+# =========================================================
 elif menu == "BILLETERA CRYPTO (WEB3)":
-    st.title("💳 Web3 Green Wallet - Serenity Nexus")
-    st.info("Conecta tu billetera para visualizar tus activos digitales ($SNG).")
+    st.title("💳 Nexus Finance Control")
+    st.markdown("### El Futuro de la Conservación Tokenizada")
 
-    import base64
+    # --- NIVEL 1: EL TOKEN (VISUAL) ---
     try:
         with open("video_sng.mp4", "rb") as f:
             data = f.read()
             bin_str = base64.b64encode(data).decode()
-            
         video_html = f"""
-            <div style="display: flex; justify-content: center;">
-                <video width="80%" height="auto" autoplay loop muted playsinline style="border-radius: 20px; border: 3px solid #9BC63B; box-shadow: 0 0 20px rgba(155, 198, 59, 0.5);">
+            <div style="display: flex; justify-content: center; margin-bottom: 20px;">
+                <video width="60%" autoplay loop muted playsinline style="border-radius: 20px; border: 2px solid #9BC63B; box-shadow: 0 0 30px rgba(155, 198, 59, 0.3);">
                     <source src="data:video/mp4;base64,{bin_str}" type="video/mp4">
                 </video>
             </div>
         """
         st.markdown(video_html, unsafe_allow_html=True)
-    except FileNotFoundError:
-        st.warning("⚠️ El archivo 'video_sng.mp4' no se detecta en el repositorio.")
+    except:
+        st.info("🔄 Visualizador de Token $SNG Activo")
 
-    st.write("")
-    if st.button("🔌 CONECTAR BILLETERA WEB3"):
-        st.success("Billetera Conectada: 0x71C...9A23")
-        st.metric(label="Saldo en $SNG", value="25,000.00")            
+    st.write("---")
+
+    # --- NIVEL 2: ADQUISICIÓN Y CUSTODIA (Tus dos preguntas) ---
+    col_buy, col_vault = st.columns(2)
+
+    with col_buy:
+        st.markdown("#### 🛒 ¿Cómo comprar $SNG?")
+        st.write("El token $SNG representa hectáreas regeneradas y datos biométricos de los Faros.")
+        with st.container(border=True):
+            st.write("**Simulador de Intercambio (Swap)**")
+            moneda_pago = st.selectbox("Pagar con:", ["USD (Tarjeta/Transferencia)", "USDT (Crypto)", "Ethereum"])
+            cantidad_usd = st.number_input("Monto a invertir (USD):", min_value=10, step=50)
+            tasa = 0.50 # Ejemplo: 1 SNG = 0.50 USD
+            st.metric("Recibirás aproximadamente:", f"{cantidad_usd / tasa:,.2f} $SNG")
+            if st.button("🚀 COMPRAR TOKENS $SNG"):
+                st.success("Orden de compra enviada al Nexus Gateway.")
+
+    with col_vault:
+        st.markdown("#### 🔐 ¿Cómo tener una Billetera Nexus?")
+        st.write("Nexus Vault no es solo una App, es tu llave privada al Internet de la Naturaleza.")
+        st.markdown("""
+        * **Paso 1:** Descarga Nexus App o usa una compatible (Metamask/Ledger).
+        * **Paso 2:** Genera tu frase semilla de 24 palabras.
+        * **Paso 3:** Vincula tu ID de Donante Serenity para recibir beneficios.
+        """)
+        st.button("📄 DESCARGAR GUÍA DE CONFIGURACIÓN")
+
+    st.write("---")
+
+    # --- NIVEL 3: CONEXIÓN FINAL ---
+    st.markdown("#### 🔗 Centro de Conexión Web3")
+    cw1, cw2, cw3 = st.columns([1, 2, 1])
+    with cw2:
+        if st.button("🔌 VINCULAR BILLETERA AL SISTEMA NEXUS"):
+            st.balloons()
+            st.success("Billetera 0x71C...9A23 Conectada con éxito.")
+            st.metric(label="Saldo en Bóveda", value="25,000.00 $SNG", delta="500 Hectáreas Respaldadas")
+            st.write("✅ Verificado por Nodo Gemini en Finca Villa Michelle")            
 
 # =========================================================
 # BLOQUE 6: DONACIONES Y CERTIFICADO (Diploma Oficial)
@@ -480,6 +515,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
