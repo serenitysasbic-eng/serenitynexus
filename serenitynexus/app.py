@@ -276,7 +276,7 @@ elif menu == "GESTIÓN LEY 2173 (EMPRESAS)":
     st.title("⚖️ Nexus Legal & Compliance Hub")
     st.markdown("### Soluciones Tecnológicas a la Normativa Ambiental Colombiana")
 
-    # --- TARJETAS LEGALES ---
+    # --- TARJETAS LEGALES (Visualmente atractivas) ---
     st.markdown("#### Marco Jurídico Integrado")
     c_l1, c_l2, c_l3 = st.columns(3)
 
@@ -306,7 +306,7 @@ elif menu == "GESTIÓN LEY 2173 (EMPRESAS)":
 
     st.write("")
     
-    # --- RESUMEN DE SOLUCIONES Y DESCARGA ---
+    # --- RESUMEN DE SOLUCIONES Y VADEMÉCUM ---
     with st.expander("📄 VER RESUMEN DE SOLUCIONES POR LEY", expanded=False):
         st.markdown("""
         | Ley | Desafío para la Empresa | Solución Serenity Nexus |
@@ -317,9 +317,16 @@ elif menu == "GESTIÓN LEY 2173 (EMPRESAS)":
         | **Código Penal**| Riesgo de invasión o daño en predios. | Vigilancia 24/7 con red de Faros inteligentes. |
         """)
         
-        vademecum_text = "RESUMEN LEGAL SERENITY NEXUS\n\n1. LEY 2173: Solución de siembra...\n2. LEY 2169: Solución clima...\n3. LEY 1774: Protección animal..."
+        # El Vademécum descargable que pediste
+        vademecum_text = """RESUMEN EJECUTIVO: SOLUCIONES SERENITY NEXUS GLOBAL
+        
+        1. LEY 2173 DE 2021: Facilitamos el cumplimiento de siembra para medianas y grandes empresas.
+        2. LEY 2169 DE 2021: Proporcionamos datos verificables para la Carbono Neutralidad.
+        3. LEY 2111 DE 2021: Nuestra red de Faros Gemini actúa como mitigación de delitos ambientales.
+        4. LEY 99 DE 1993: Gestión del 1% para la conservación de cuencas en el Valle del Cauca.
+        """
         st.download_button(
-            label="📥 DESCARGAR VADEMÉCUM LEGAL (PDF)",
+            label="📥 DESCARGAR VADEMÉCUM DE SOLUCIONES (PDF)",
             data=vademecum_text,
             file_name="Vademecum_Legal_Serenity.pdf",
             mime="text/plain",
@@ -328,7 +335,7 @@ elif menu == "GESTIÓN LEY 2173 (EMPRESAS)":
 
     st.divider()
 
-    # --- SECCIÓN DE ACCIÓN ---
+    # --- SECCIÓN DE ACCIÓN CORPORATIVA ---
     col_act1, col_act2 = st.columns([1, 1])
 
     with col_act1:
@@ -347,8 +354,10 @@ elif menu == "GESTIÓN LEY 2173 (EMPRESAS)":
             if nombre_corp:
                 h_final = hashlib.sha256(f"{nombre_corp}".encode()).hexdigest()[:12].upper()
                 st.session_state.pdf_final = generar_pdf_certificado(nombre_corp, num_personal * 2, f"LEGAL-{h_final}")
-                st.success(f"Certificado vinculado a Ley 2173 y 2111 generado.")
+                st.success(f"Certificado vinculado a leyes ambientales generado.")
                 st.download_button("📥 Descargar Documento Oficial", st.session_state.pdf_final, f"Cumplimiento_{nombre_corp}.pdf", use_container_width=True)
+
+
 # =========================================================
 # BLOQUE 4: SUSCRIPCIONES (Impacto, Beneficios y Pasarela)
 # =========================================================
@@ -669,6 +678,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
