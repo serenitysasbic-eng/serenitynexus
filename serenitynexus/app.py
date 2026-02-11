@@ -475,7 +475,7 @@ elif menu_sel == menu_opts[1]:
 
 # 3. DASHBOARD
 elif menu_sel == menu_opts[2]:
-    tt = "?? Análisis de Inteligencia Biológica" if st.session_state.lang == 'ES' else "?? Biological Intelligence Analysis"
+    tt = " Análisis de Inteligencia Biológica" if st.session_state.lang == 'ES' else "?? Biological Intelligence Analysis"
     st.title(tt)
     l_esp = "Especies" if st.session_state.lang == 'ES' else "Species"
     l_hec = "Hectáreas" if st.session_state.lang == 'ES' else "Hectares"
@@ -632,6 +632,7 @@ elif menu_sel == menu_opts[8]:
     folium.Polygon(locations=[[lat_guadua - offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua + offset], [lat_guadua - offset, lon_guadua + offset]], color="#9BC63B", fill=True, fill_opacity=0.3, tooltip="Hacienda Monte Guadua: 80 Ha").add_to(m)
     folium.CircleMarker(location=[lat_villa, lon_villa], radius=10, color="blue", fill=True, fill_color="blue", tooltip="Finca Villa Michelle (Sede)").add_to(m)
     st_folium(m, width="100%", height=600)
+
 
 
 
