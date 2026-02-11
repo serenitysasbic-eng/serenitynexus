@@ -72,7 +72,7 @@ tr = {
     },
     'connect': {'ES': 'Conectar', 'EN': 'Connect'},
     'active': {'ES': 'ACTIVO - EMITIENDO', 'EN': 'ACTIVE - BROADCASTING'},
-    'live': {'ES': 'TRANSMISIÓN EN VIVO', 'EN': 'LIVE STREAM'},
+    'live': {'ES': 'TRANSMISION EN VIVO', 'EN': 'LIVE STREAM'},
     'download': {'ES': 'DESCARGAR', 'EN': 'DOWNLOAD'},
     'map_btn': {'ES': 'ABRIR EN GOOGLE MAPS (GPS)', 'EN': 'OPEN IN GOOGLE MAPS (GPS)'},
     'wallet_btn': {'ES': 'CONECTAR METAMASK', 'EN': 'CONNECT METAMASK'},
@@ -93,25 +93,6 @@ tr = {
         'EN': 'To be the global benchmark for the Internet of Nature by 2030.'
     }
 }
-    
-# SECCIÓN IDENTIDAD
-    'who_title': {'ES': '¿QUIÉNES SOMOS?', 'EN': 'WHO WE ARE'}, 
-    'who_text': {
-        'ES': 'Serenity Nexus Global es la primera plataforma **Phygital (Física + Digital)** del Valle del Cauca que integra la conservación ambiental del KBA Bosque San Antonio con tecnología Blockchain e Inteligencia Artificial. Somos guardianes de 87 hectáreas de vida, uniendo a la comunidad local con la inversión global mediante la transparencia tecnológica.',
-        'EN': 'Serenity Nexus Global is the first **Phygital (Physical + Digital)** platform in Valle del Cauca integrating conservation of the KBA San Antonio Forest with Blockchain and AI technology. We are guardians of 87 hectares of life, bridging the local community with global investment through technological transparency.'
-    },
-    'mis_title': {'ES': 'NUESTRA MISIÓN' , 'EN': 'OUR MISSION'},
-    'mis_text': {
-        'ES': 'Regenerar el tejido ecológico y social mediante un modelo de negocio sostenible que garantice la protección perpetua del bosque y el bienestar económico de Dagua, utilizando la tecnología como puente de confianza.',
-        'EN': 'Regenerate the ecological and social fabric through a sustainable business model ensuring perpetual forest protection and economic welfare for Dagua, using technology as a bridge of trust.'
-    },
-    'vis_title': {'ES': ' NUESTRA VISIÓN ', 'EN': 'OUR VISION'},
-    'vis_text': {
-        'ES': 'Para 2030, ser el referente mundial del "Internet de la Naturaleza", tokenizando activos ambientales reales para crear el banco de oxígeno más seguro y tecnológicamente avanzado del planeta.',
-        'EN': 'By 2030, to be the global benchmark for the "Internet of Nature," tokenizing real environmental assets to create the most secure and technologically advanced oxygen bank on the planet.'
-    }
-}
-def t(key): return tr[key][st.session_state.lang]
 
 # --- FUNCIÓN CÁMARA REAL ---
 def mostrar_camara_real(url_rstp):
@@ -660,6 +641,7 @@ elif menu_sel == menu_opts[8]:
     folium.Polygon(locations=[[lat_guadua - offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua + offset], [lat_guadua - offset, lon_guadua + offset]], color="#9BC63B", fill=True, fill_opacity=0.3, tooltip="Hacienda Monte Guadua: 80 Ha").add_to(m)
     folium.CircleMarker(location=[lat_villa, lon_villa], radius=10, color="blue", fill=True, fill_color="blue", tooltip="Finca Villa Michelle (Sede)").add_to(m)
     st_folium(m, width="100%", height=600)
+
 
 
 
