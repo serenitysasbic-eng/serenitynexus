@@ -490,10 +490,10 @@ elif menu_sel == menu_opts[2]:
 
 # 4. LEY 2173
 elif menu_sel == menu_opts[3]:
-    tt = "?? Cumplimiento Ley 2173" if st.session_state.lang == 'ES' else "?? Law 2173 Compliance"
+    tt = " Cumplimiento Ley 2173" if st.session_state.lang == 'ES' else " Law 2173 Compliance"
     st.title(tt)
     with st.container(border=True):
-        st.subheader("?? Gestión Operativa" if st.session_state.lang == 'ES' else "?? Operational Management")
+        st.subheader(" Gestión Operativa" if st.session_state.lang == 'ES' else " Operational Management")
         c1, c2 = st.columns(2)
         with c1: nit = st.text_input("Ingrese NIT" if st.session_state.lang == 'ES' else "Enter Tax ID (NIT)")
         with c2: logo_emp = st.file_uploader("Logo Empresa / Company Logo", type=["png", "jpg", "jpeg"])
@@ -506,7 +506,7 @@ elif menu_sel == menu_opts[3]:
                  btn_d = t('download') + (" CERTIFICADO" if st.session_state.lang == 'ES' else " CERTIFICATE")
                  st.download_button(btn_d, data=st.session_state.pdf_empresa_buffer, file_name=f"Certificado_Ley2173_{nit}.pdf", mime="application/pdf")
     st.write("---")
-    st.subheader("?? Blindaje Jurídico" if st.session_state.lang == 'ES' else "?? Legal Framework")
+    st.subheader(" Blindaje Jurídico" if st.session_state.lang == 'ES' else " Legal Framework")
     col_law1, col_law2 = st.columns(2)
     with col_law1:
         st.markdown("<div class='legal-card'><h4>Ley 2173 de 2021</h4><p>Áreas de Vida.</p></div>", unsafe_allow_html=True)
@@ -632,6 +632,7 @@ elif menu_sel == menu_opts[8]:
     folium.Polygon(locations=[[lat_guadua - offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua + offset], [lat_guadua - offset, lon_guadua + offset]], color="#9BC63B", fill=True, fill_opacity=0.3, tooltip="Hacienda Monte Guadua: 80 Ha").add_to(m)
     folium.CircleMarker(location=[lat_villa, lon_villa], radius=10, color="blue", fill=True, fill_color="blue", tooltip="Finca Villa Michelle (Sede)").add_to(m)
     st_folium(m, width="100%", height=600)
+
 
 
 
