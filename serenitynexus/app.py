@@ -536,32 +536,34 @@ elif menu_sel == menu_opts[4]:
         st.markdown(f"<div class='faro-card' style='border-color:#D4AF37;'><h3>{nm[2]}</h3><h2>$200 USD</h2><p>{per[2]}</p></div>", unsafe_allow_html=True)
         if st.button(f"{btn_s} {nm[2]}"): st.success("OK...")
 
-# 6. BILLETERA CRYPTO
+# --- CAMBIO 17: VIDEO $SNG EN BUCLE INFINITO (AUTOPLAY) ---
 elif menu_sel == menu_opts[5]:
-    st.title(" Web3 Green Wallet")
-    col_w1, col_w2 = st.columns([1, 2])
-    with col_w1:
-        st.markdown("<div style='text-align:center;'>", unsafe_allow_html=True)
-        if not st.session_state.wallet_connected:
-            st.image("https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg", width=100)
-            if st.button(t('wallet_btn')): st.session_state.wallet_connected = True; st.rerun()
-        else:
-            st.markdown(f"<div class='wallet-msg-box'>{t('wallet_msg')}</div>", unsafe_allow_html=True)
-            st.write(""); st.metric(label="SERENITY TOKEN ($SNG)", value="1,450.00", delta="+12%")
-            st.metric(label="CARBON CREDITS", value="45 Tons", delta="+2")
-            if st.button("DISCONNECT"): st.session_state.wallet_connected = False; st.rerun()
-        st.markdown("</div>", unsafe_allow_html=True)
-    with col_w2:
-        if st.session_state.wallet_connected:
-            st.subheader("Your Green Assets (NFTs)")
-            c_nft1, c_nft2, c_nft3 = st.columns(3)
-            with c_nft1: st.markdown("<div class='nft-card'>??<br><b>Tree #1024</b><br>Guayacán<br><i style='color:#4CAF50;'>Healthy</i></div>", unsafe_allow_html=True)
-            with c_nft2: st.markdown("<div class='nft-card'>??<br><b>Tree #1025</b><br>Saman<br><i style='color:#4CAF50;'>Healthy</i></div>", unsafe_allow_html=True)
-            with c_nft3: st.markdown("<div class='nft-card'>??<br><b>Land Plot A4</b><br>Monte Guadua<br><i style='color:#FFD700;'>Protected</i></div>", unsafe_allow_html=True)
-            st.line_chart(pd.DataFrame({'Price': [1.2, 1.3, 1.25, 1.4, 1.45, 1.6, 1.8]}, index=["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]))
-        else:
-            msg_conn = "Conecta tu billetera para ver tus activos." if st.session_state.lang == 'ES' else "Connect wallet to view assets."
-            st.markdown(f"<div style='background:rgba(255,255,255,0.1); padding:15px; border-radius:10px; text-align:center;'>?? {msg_conn}</div>", unsafe_allow_html=True)
+    st.title("💳 Web3 Green Wallet - Serenity Nexus")
+    
+    st.info("Conecta tu billetera para ver tus activos.")
+
+    # Convertimos el video a un formato que el navegador entienda como "fondo" o "bucle"
+    import base64
+    try:
+        with open("video_sng.mp4", "rb") as f:
+            data = f.read()
+            bin_str = base64.b64encode(data).decode()
+            
+        # HTML para video sin fin, con autoplay y silenciado (requisito para autoplay)
+        video_html = f"""
+            <video width="100%" height="auto" autoplay loop muted playsinline style="border-radius: 15px; border: 2px solid #9BC63B;">
+                <source src="data:video/mp4;base64,{bin_str}" type="video/mp4">
+                Tu navegador no soporta el formato de video.
+            </video>
+        """
+        st.markdown(video_html, unsafe_allow_html=True)
+        st.caption("Token Oficial Serenity Nexus Global ($SNG) - Activo Digital de Conservación")
+    except FileNotFoundError:
+        st.warning("⚠️ El archivo 'video_sng.mp4' no se encuentra en el repositorio. Por favor, súbelo para activar el bucle visual.")
+
+    st.write("")
+    if st.button("🔌 CONECTAR BILLETERA"):
+        st.success("Billetera Conectada: 0x71C...9A23 | Saldo: 25,000 $SNG"
 
 # 7. DONACIONES
 elif menu_sel == menu_opts[6]:
@@ -632,6 +634,7 @@ elif menu_sel == menu_opts[8]:
     folium.Polygon(locations=[[lat_guadua - offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua + offset], [lat_guadua - offset, lon_guadua + offset]], color="#9BC63B", fill=True, fill_opacity=0.3, tooltip="Hacienda Monte Guadua: 80 Ha").add_to(m)
     folium.CircleMarker(location=[lat_villa, lon_villa], radius=10, color="blue", fill=True, fill_color="blue", tooltip="Finca Villa Michelle (Sede)").add_to(m)
     st_folium(m, width="100%", height=600)
+
 
 
 
