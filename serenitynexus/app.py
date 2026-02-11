@@ -338,8 +338,8 @@ if st.button("✅ REGISTRAR APORTE Y GENERAR HASH"):
                     st.warning("Por favor, ingrese el nombre del donante.")
 
     with colB:
-        if 'pdf_buffer' in st.session_state:
-            st.markdown(f"""
+                if 'pdf_buffer' in st.session_state:
+                    st.markdown(f"""
                 <div style="background:white; color:black; padding:30px; text-align:center; border:8px double #2E7D32; border-radius:15px;">
                     <h2 style="color:#2E7D32; margin-bottom:10px;">VISTA PREVIA DEL DIPLOMA</h2>
                     <hr style="border:1px solid #2E7D32;">
@@ -471,6 +471,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
