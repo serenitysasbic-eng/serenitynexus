@@ -480,32 +480,35 @@ elif menu_sel == menu_opts[1]:
                         <span style='color:#9BC63B; font-size:12px;'>{val} dB - ACTIVO</span>
                     </div>
                 """, unsafe_allow_html=True)
-
-# --- BLOQUE DASHBOARD VIVO (CORREGIDO) ---
-    elif menu_sel == menu_opts[2]:  # Dashboard Estadístico IA
-        st.title("📊 Analisis de Inteligencia Biologica")
+# --- BLOQUE DE RESCATE: ANÁLISIS DE INTELIGENCIA BIOLÓGICA ---
+    elif menu_sel == menu_opts[2]:
+        st.title("📊 Análisis de Inteligencia Biológica")
         
-        with st.status("🧬 Procesando señales de Faros inteligentes...", expanded=True) as status:
-            st.write("📡 Recibiendo telemetría de Monte Guadua...")
-            time.sleep(1)
-            st.write("🌿 Analizando salud foliar mediante IA...")
-            status.update(label="✅ Datos Actualizados", state="complete", expanded=False)
-
-        col_m1, col_m2, col_m3, col_m4 = st.columns(4)
-        with col_m1:
-            st.metric(label="🐾 Especies", value="1,252", delta="+4")
-        with col_m2:
-            st.metric(label="🌳 Hectáreas", value="14.5", delta="0")
-        with col_m3:
-            st.metric(label="🩺 Salud", value="98.7%", delta="+0.2%")
-        with col_m4:
-            st.metric(label="💰 $SNG", value="0.085", delta="+0.002")
-
+        # 1. Contenido base (esto aparecerá siempre)
+        st.write("Bienvenido al centro de monitoreo de Serenity Nexus Global.")
+        
+        # 2. Las métricas de vida (con diseño limpio)
+        col1, col2, col3, col4 = st.columns(4)
+        col1.metric("🐾 Especies", "1,252", "+4")
+        col2.metric("🌳 Hectáreas", "14.5 Ha", "0")
+        col3.metric("🩺 Salud", "98.7%", "+0.2%")
+        col4.metric("💰 $SNG", "0.085", "+0.002")
+        
         st.divider()
-        st.subheader("📁 Reportes Oficiales")
-        if st.button("📥 GENERAR ANALISIS PDF PROFESIONAL"):
-            st.info("Generando documento con Hash de seguridad...")
-            # Aquí va tu lógica de PDF
+        
+        # 3. Simulación de Actividad
+        with st.expander("🔍 Ver registro de actividad en tiempo real", expanded=True):
+            st.code("📡 Señal estable desde Monte Guadua\n🌿 Fotosíntesis: Nivel Óptimo\n🐾 Bioacústica: 12 llamadas de aves detectadas")
+
+        # 4. Botón de PDF
+        st.subheader("📁 Certificación y Reportes")
+        if st.button("📥 GENERAR CERTIFICADO PDF"):
+            st.success("Preparando documento con Hash de seguridad...")
+            st.info("Función de descarga habilitada.")
+
+    # --- CIERRE DEL BLOQUE Y SIGUIENTE SECCIÓN ---
+    elif menu_sel == menu_opts[3]:
+        st.title("⚖️ Gestión Ley 2173")
 
     # --- AQUÍ EMPIEZA LA LÍNEA 536 ---
     elif menu_sel == menu_opts[3]:  # Gestión Ley 2173
@@ -703,6 +706,7 @@ elif menu_sel == menu_opts[8]:
     folium.Polygon(locations=[[lat_guadua - offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua + offset], [lat_guadua - offset, lon_guadua + offset]], color="#9BC63B", fill=True, fill_opacity=0.3, tooltip="Hacienda Monte Guadua: 80 Ha").add_to(m)
     folium.CircleMarker(location=[lat_villa, lon_villa], radius=10, color="blue", fill=True, fill_color="blue", tooltip="Finca Villa Michelle (Sede)").add_to(m)
     st_folium(m, width="100%", height=600)
+
 
 
 
