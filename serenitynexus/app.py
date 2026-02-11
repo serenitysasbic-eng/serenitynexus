@@ -333,15 +333,72 @@ elif menu == "LOGÍSTICA AEROLÍNEAS":
     with l3: st.markdown("<div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Copa_Airlines_logo.svg/320px-Copa_Airlines_logo.svg.png'><p>COPA</p></div>", unsafe_allow_html=True)
     with l4: st.markdown("<div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Aeromexico_Logo_2024.svg/320px-Aeromexico_Logo_2024.svg.png'><p>AEROMEXICO</p></div>", unsafe_allow_html=True)
 
-# 8. MAPAS
+# =========================================================
+# BLOQUE FINAL: UBICACIÓN & MAPAS (Dagua y Felidia)
+# =========================================================
 elif menu == "UBICACIÓN & MAPAS":
-    st.title("📍 Ubicación Hacienda Serenity (Dagua)")
+    st.title("📍 Ubicación Estratégica Serenity")
+    st.markdown("### Finca Villa Michelle & Hacienda Monte Guadua")
+    
+    # Coordenadas exactas
+    lat_villa = 3.465028; lon_villa = -76.634778
+    lat_guadua = 3.477917; lon_guadua = -76.657361
+    
+    # Botón directo a la interfaz de Google Maps
+    url_gmaps = f"https://www.google.com/maps/search/?api=1&query={lat_villa},{lon_villa}"
+    st.markdown(f"""
+        <div style='text-align:center; margin-bottom: 20px;'>
+            <a href="{url_gmaps}" target="_blank">
+                <button style="background-color:#4285F4; color:white; border:none; padding:15px 30px; border-radius:10px; font-weight:bold; cursor:pointer; box-shadow: 0 4px 15px rgba(66, 133, 244, 0.3);">
+                    🌐 VER EN GOOGLE MAPS (SISTEMA EXTERNO)
+                </button>
+            </a>
+        </div>
+    """, unsafe_allow_html=True)
+
+    # Configuración del mapa interactivo con capa satelital de Google
+    # Nota: Usamos la URL de los tiles de Google Maps directamente
+    google_map_tiles = 'https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}'
+    
+    m = folium.Map(
+        location=[lat_villa, lon_villa], 
+        zoom_start=15, 
+        tiles=google_map_tiles, 
+        attr='Google Maps Satellite'
+    )
+    
+    # --- CAMBIO SOLICITADO: FARO GEMINI EN VILLA MICHELLE ---
     color_gemini_map = "green" if st.session_state.estado_gemini == "ACTIVO - EMITIENDO" else "orange"
-    m = folium.Map(location=[3.455, -76.655], zoom_start=13, tiles="cartodbpositron")
-    folium.Marker([3.460, -76.660], popup=f"FARO GEMINI: {st.session_state.estado_gemini}", icon=folium.Icon(color=color_gemini_map, icon='bolt', prefix='fa')).add_to(m)
-    folium.Polygon(locations=[[3.45, -76.67], [3.47, -76.67], [3.47, -76.64], [3.45, -76.64]], color="darkgreen", fill=True, fill_opacity=0.4, tooltip="Hacienda Monte Guadua: 80 Ha").add_to(m)
-    folium.CircleMarker(location=[3.445, -76.645], radius=10, color="blue", fill=True, fill_color="blue", tooltip="Finca Villa Michelle").add_to(m)
+    
+    folium.Marker(
+        [lat_villa, lon_villa], 
+        popup=f"NÚCLEO CENTRAL: FARO GEMINI - Villa Michelle", 
+        icon=folium.Icon(color=color_gemini_map, icon='bolt', prefix='fa')
+    ).add_to(m)
+    
+    # Marcador de Hacienda Monte Guadua (Reserva)
+    folium.Marker(
+        [lat_guadua, lon_guadua], 
+        popup="Reserva Hacienda Monte Guadua", 
+        icon=folium.Icon(color='darkgreen', icon='leaf', prefix='fa')
+    ).add_to(m)
+    
+    # Delimitación del área de reserva en Monte Guadua
+    folium.Polygon(
+        locations=[
+            [3.475, -76.660], [3.480, -76.660], 
+            [3.480, -76.654], [3.475, -76.654]
+        ], 
+        color="#9BC63B", 
+        fill=True, 
+        fill_opacity=0.3, 
+        tooltip="Área de Conservación Serenity: 80 Ha"
+    ).add_to(m)
+    
     st_folium(m, width="100%", height=600)
+
+# --- FIN DEL ARCHIVO ---
+
 
 
 
