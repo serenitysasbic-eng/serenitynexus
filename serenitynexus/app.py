@@ -127,19 +127,52 @@ menu = st.sidebar.radio("CENTRO DE CONTROL", [
     "UBICACIÓN & MAPAS"
 ])
 
-# 1. INICIO
+# 1. INICIO - RESTAURACIÓN COMPLETA
 if menu == "INICIO":
-    st.markdown("<h1 style='text-align:center; font-size:4rem;'>Serenity Nexus Global</h1>", unsafe_allow_html=True)
+    # --- LOGO CENTRADO ---
+    col_l1, col_l2, col_l3 = st.columns([1, 2, 1])
+    with col_l2:
+        if os.path.exists("logo_serenity.png"):
+            st.image("logo_serenity.png", use_container_width=True)
+        else:
+            st.markdown("<h1 style='text-align:center; color:#9BC63B;'>SERENITY NEXUS GLOBAL</h1>", unsafe_allow_html=True)
+
+    st.markdown("<h1 style='text-align:center; font-size:3.5rem;'>Serenity Nexus Global</h1>", unsafe_allow_html=True)
     st.markdown("<p style='text-align:center; letter-spacing:5px; color:#9BC63B; font-weight:bold;'>SISTEMA REGENERATIVO BIOMÉTRICO KBA</p>", unsafe_allow_html=True)
     
+    # --- AUDIO EARTH ---
     st.components.v1.html("""
         <audio id="audio_earth" src="sonido_Earth.mp3" loop></audio>
-        <div style="text-align:center; margin-top:30px;">
-            <button onclick="document.getElementById('audio_earth').play()" style="background:#2E7D32; color:white; border:1px solid #9BC63B; padding:20px; border-radius:10px; cursor:pointer; font-weight:bold; font-size:16px;">🔊 ACTIVAR SONIDO GLOBAL EARTH</button>
+        <div style="text-align:center; margin-top:20px;">
+            <button onclick="document.getElementById('audio_earth').play()" style="background:#2E7D32; color:white; border:1px solid #9BC63B; padding:10px 20px; border-radius:10px; cursor:pointer; font-weight:bold;">🔊 ACTIVAR SONIDO GLOBAL EARTH</button>
         </div>
-    """, height=150)
-    
+    """, height=100)
+
+    # --- DATOS DE GOBERNANZA ---
     st.info("Sandra Patricia Agredo Muñoz (40%) | Tatiana Arcila Ferreira (60%) | Admin: Jorge Carvajal")
+
+    st.divider()
+
+    # --- QUIÉNES SOMOS, MISIÓN Y VISIÓN ---
+    col_inf1, col_inf2 = st.columns(2)
+    
+    with col_inf1:
+        st.subheader("🌿 QUIÉNES SOMOS / WHO WE ARE")
+        st.write("Serenity Nexus Global es la primera plataforma Phygital (Física + Digital) del Valle del Cauca que integra la conservación ambiental con tecnología Blockchain e Inteligencia Artificial, transformando la protección de la biodiversidad en un activo digital tangible.")
+
+    with col_inf2:
+        st.subheader("🎯 NUESTRA MISIÓN / OUR MISSION")
+        st.write("Regenerar el tejido ecológico y social mediante un modelo de negocio sostenible que permita a empresas y personas compensar su huella ambiental a través de la tecnología y la transparencia.")
+
+    st.write("---")
+    
+    col_inf3, col_inf4 = st.columns([1, 2])
+    with col_inf3:
+        st.subheader("🚀 NUESTRA VISIÓN / OUR VISION")
+    with col_inf4:
+        st.write("Ser el referente mundial del Internet de la Naturaleza para 2030, liderando la valorización de los servicios ecosistémicos mediante nuestra red de Faros inteligentes y el token $SNG.")
+
+    st.info("📍 Ubicación del Proyecto: Dagua y Felidia, Valle del Cauca - Hacienda Monte Guadua & Finca Villa Michelle.")
 
 # 2. RED DE FAROS
 elif menu == "RED DE FAROS (7 NODOS)":
@@ -309,6 +342,7 @@ elif menu == "UBICACIÓN & MAPAS":
     folium.Polygon(locations=[[3.45, -76.67], [3.47, -76.67], [3.47, -76.64], [3.45, -76.64]], color="darkgreen", fill=True, fill_opacity=0.4, tooltip="Hacienda Monte Guadua: 80 Ha").add_to(m)
     folium.CircleMarker(location=[3.445, -76.645], radius=10, color="blue", fill=True, fill_color="blue", tooltip="Finca Villa Michelle").add_to(m)
     st_folium(m, width="100%", height=600)
+
 
 
 
