@@ -27,42 +27,58 @@ if 'estado_gemini' not in st.session_state: st.session_state.estado_gemini = "La
 if 'auth' not in st.session_state: st.session_state.auth = False
 if 'f_activo' not in st.session_state: st.session_state.f_activo = None
 
-# --- FUNCIÓN GENERADORA DE PDF ---
-def generar_pdf_certificado(nombre, monto):
+def generar_pdf_certificado(nombre, monto, hash_id):
     buffer = io.BytesIO()
     c = canvas.Canvas(buffer, pagesize=letter)
+    
+    # Marco y Estética
     c.setStrokeColor(VERDE_SERENITY)
     c.setLineWidth(5)
     c.rect(0.3*inch, 0.3*inch, 7.9*inch, 10.4*inch)
+    
+    # Intento de Carga de Logo
     try:
         if os.path.exists("logo_serenity.png"):
-            c.drawImage("logo_serenity.png", 3.5*inch, 9.0*inch, width=1.5*inch, height=1.5*inch, mask='auto')
-        else:
-            c.setFillColor(VERDE_SERENITY)
-            c.circle(4.25*inch, 9.7*inch, 40, fill=1)
-            c.setFillColor(black)
-            c.drawCentredString(4.25*inch, 9.65*inch, "LOGO")
-    except:
-        pass 
+            c.drawImage("logo_serenity.png", 3.25*inch, 8.8*inch, width=2*inch, height=1*inch, mask='auto')
+    except: pass
 
-    c.setFont("Helvetica-Bold", 30)
+    # Textos del Diploma
+    c.setFont("Helvetica-Bold", 26)
     c.setFillColor(VERDE_SERENITY)
-    c.drawCentredString(4.25*inch, 8.5*inch, "CERTIFICADO DE DONACIÓN")
-    c.setFont("Helvetica", 14)
+    c.drawCentredString(4.25*inch, 8.2*inch, "CERTIFICADO DE DONACIÓN REGENERATIVA")
+    
+    c.setFont("Helvetica", 16)
     c.setFillColor(black)
-    c.drawCentredString(4.25*inch, 7.5*inch, "SERENITY HUB S.A.S. BIC")
-    c.drawCentredString(4.25*inch, 7.0*inch, f"Reconoce a: {nombre.upper()}")
-    c.drawCentredString(4.25*inch, 6.5*inch, f"Por su valioso aporte de ${monto:,.0f} USD")
-    c.drawCentredString(4.25*inch, 6.0*inch, f"Destinado a la regeneración del KBA Bosque San Antonio")
+    c.drawCentredString(4.25*inch, 7.2*inch, "SERENITY HUB S.A.S. BIC")
+    
+    c.setFont("Helvetica-Bold", 18)
+    c.drawCentredString(4.25*inch, 6.5*inch, f"Reconoce a: {nombre.upper()}")
+    
+    c.setFont("Helvetica", 14)
+    c.drawCentredString(4.25*inch, 5.8*inch, f"Por su valioso aporte de ${monto:,.0f} USD")
+    c.drawCentredString(4.25*inch, 5.4*inch, "Destinado a la regeneración del KBA Bosque San Antonio")
+    
+    # Mensaje de Agradecimiento
+    c.setFont("Helvetica-Oblique", 12)
+    c.drawCentredString(4.25*inch, 4.8*inch, "Tu contribución permite que la biodiversidad de Dagua y Felidia")
+    c.drawCentredString(4.25*inch, 4.5*inch, "se transforme en un activo vivo para el planeta. ¡Gracias!")
+
+    # Firma y Hash
     c.setLineWidth(1)
-    c.line(2.5*inch, 4.8*inch, 6.0*inch, 4.8*inch)
-    c.drawCentredString(4.25*inch, 4.6*inch, "Jorge Carvajal")
-    c.setFont("Helvetica-Oblique", 10)
-    c.drawCentredString(4.25*inch, 4.4*inch, "Administrador Serenity S.A.S. BIC")
-    c.setFont("Helvetica", 8)
-    fecha_hoy = datetime.now().strftime("%d/%m/%Y")
-    folio = f"SH-{random.randint(1000,9999)}"
-    c.drawCentredString(4.25*inch, 1.0*inch, f"Folio: {folio} | Fecha: {fecha_hoy} | Verificado por Sistema Nexus IA")
+    c.line(3*inch, 3.2*inch, 5.5*inch, 3.2*inch)
+    c.setFont("Helvetica-Bold", 12)
+    c.drawCentredString(4.25*inch, 3.0*inch, "Jorge Carvajal")
+    c.setFont("Helvetica", 10)
+    c.drawCentredString(4.25*inch, 2.8*inch, "Administrador Serenity S.A.S. BIC")
+    
+    # CÓDIGO HASH DE VERIFICACIÓN (Punto clave)
+    c.setFillColor(HexColor("#666666"))
+    c.setFont("Courier-Bold", 9)
+    c.drawCentredString(4.25*inch, 1.5*inch, f"HASH DE AUTENTICIDAD NEXUS: {hash_id}")
+    
+    fecha_hoy = datetime.now().strftime("%d/%m/%Y %H:%M")
+    c.drawCentredString(4.25*inch, 1.2*inch, f"Validado por Sistema IA Gemini | Fecha: {fecha_hoy}")
+    
     c.save()
     buffer.seek(0)
     return buffer
@@ -452,6 +468,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
