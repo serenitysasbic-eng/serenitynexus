@@ -259,33 +259,106 @@ elif menu == "DASHBOARD ESTADÍSTICO IA":
     m[3].markdown(f"<div class='metric-card'><h3>Salud</h3><h1>98%</h1></div>", unsafe_allow_html=True)
     st.bar_chart(pd.DataFrame({'Detecciones': [120, 450, 300, 80, 45, 110, 950]}, index=["Halcón", "Colibrí", "Rana", "Venado", "Tigrillo", "Capibara", "GEMINI"]))
 
+ Gemini said
+
+Jorge, tienes toda la razón. Si ese bloque se ve "triste", el inversionista sentirá que la parte legal es un trámite aburrido, cuando en realidad es el motor financiero que obliga a las empresas a invertir.
+
+Vamos a transformar la Gestión de Leyes en un "Legal Hub" de alto impacto. Vamos a usar tarjetas visuales, íconos y un diseño más robusto para que se sienta como una consultoría premium.
+🛠️ Bloque 3: Gestión Legal Corporativa (Diseño "Premium")
+
+Reemplaza todo el bloque de la Ley 2173 por este. He añadido el Botón de Descarga del Vademécum (el resumen de soluciones) y un diseño de "Tarjetas de Poder Legal":
+Python
+
 # =========================================================
-# BLOQUE 3: GESTIÓN LEY 2173 (EMPRESAS)
+# BLOQUE 3: GESTIÓN LEGAL Y CUMPLIMIENTO (REDISEÑO)
 # =========================================================
 elif menu == "GESTIÓN LEY 2173 (EMPRESAS)":
-    st.title("🏢 Portal Corporativo - Ley 2173")
-    st.markdown("### Cumplimiento Legal y Vademécum Ambiental")
-    
-    tabs_ley = st.tabs(["Leyes y Normas", "Calculadora y Reporte"])
-    
-    with tabs_ley[0]:
-        st.info("**Ley 2173/2021:** 2 árboles por empleado. **Ley 2111/2021:** Delitos ambientales (Cárcel por deforestación).")
-        st.warning("🛡️ **Vigilancia Serenity:** Nuestra IA actúa como evidencia digital ante la Fiscalía y autoridades.")
+    st.title("⚖️ Nexus Legal & Compliance Hub")
+    st.markdown("### Soluciones Tecnológicas a la Normativa Ambiental Colombiana")
 
-    with tabs_ley[1]:
-        col_leg1, col_leg2 = st.columns(2)
-        with col_leg1:
-            empresa_n = st.text_input("Razón Social")
-            num_emp = st.number_input("Número de Empleados", min_value=1, value=50)
-            siembra_req = num_emp * 2
-            st.success(f"Meta: {siembra_req} árboles.")
+    # --- DISEÑO DE TARJETAS LEGALES (Visualmente atractivas) ---
+    st.markdown("#### Marco Jurídico Integrado")
+    c_l1, c_l2, c_l3 = st.columns(3)
+
+    with c_l1:
+        st.markdown("""
+            <div style="background:#1e2630; padding:15px; border-radius:10px; border-left:5px solid #9BC63B; min-height:180px;">
+                <h4 style="color:#9BC63B; margin-bottom:5px;">LEY 2173 (SIEMBRA)</h4>
+                <p style="font-size:0.8rem; color:#ccc;">Obligación de 2 árboles por empleado. Serenity provee el terreno y la georreferenciación.</p>
+            </div>
+        """, unsafe_allow_html=True)
+
+    with c_l2:
+        st.markdown("""
+            <div style="background:#1e2630; padding:15px; border-radius:10px; border-left:5px solid #3498db; min-height:180px;">
+                <h4 style="color:#3498db; margin-bottom:5px;">LEY 2169 (CLIMA)</h4>
+                <p style="font-size:0.8rem; color:#ccc;">Ruta a la Carbono Neutralidad. Nuestra IA certifica la captura real de CO2.</p>
+            </div>
+        """, unsafe_allow_html=True)
+
+    with c_l3:
+        st.markdown("""
+            <div style="background:#1e2630; padding:15px; border-radius:10px; border-left:5px solid #e74c3c; min-height:180px;">
+                <h4 style="color:#e74c3c; margin-bottom:5px;">LEY 2111 (JUSTICIA)</h4>
+                <p style="font-size:0.8rem; color:#ccc;">Sanciones penales por daño ambiental. Los Faros actúan como evidencia judicial.</p>
+            </div>
+        """, unsafe_allow_html=True)
+
+    st.write("")
+    
+    # --- BOTÓN DE DESCARGA VADEMÉCUM (Resumen de Soluciones) ---
+    with st.expander("📄 VER RESUMEN DE SOLUCIONES POR LEY", expanded=False):
+        st.markdown("""
+        | Ley | Desafío para la Empresa | Solución Serenity Nexus |
+        | :--- | :--- | :--- |
+        | **Ley 2173** | Falta de predios para siembra obligatoria. | Áreas de Vida protegidas en Dagua y Felidia. |
+        | **Ley 2169** | Dificultad para medir captura de CO2. | Telemetría IA y datos biométricos certificados. |
+        | **Ley 99** | Inversión del 1% sin trazabilidad. | Reportes en tiempo real y Blockchain. |
+        | **Código Penal**| Riesgo de invasión o daño en predios. | Vigilancia 24/7 con red de Faros inteligentes. |
+        """)
         
-        with col_leg2:
-            if st.button("📄 GENERAR CERTIFICADO LEGAL"):
-                if empresa_n:
-                    h_corp = hashlib.sha256(f"{empresa_n}".encode()).hexdigest()[:10].upper()
-                    st.session_state.pdf_corp = generar_pdf_certificado(empresa_n, siembra_req, f"CORP-{h_corp}")
-                    st.download_button("📥 Descargar Reporte", st.session_state.pdf_corp, "Reporte_Ley2173.pdf")
+        # Simulación de PDF de Vademécum
+        vademecum_text = "RESUMEN LEGAL SERENITY NEXUS\n\n1. LEY 2173: Solución de siembra...\n2. LEY 2169: Solución clima...\n3. LEY 1774: Protección animal..."
+        st.download_button(
+            label="📥 DESCARGAR VADEMÉCUM LEGAL (PDF)",
+            data=vademecum_text,
+            file_name="Vademecum_Legal_Serenity.pdf",
+            mime="text/plain",
+            use_container_width=True
+        )
+
+    st.divider()
+
+    # --- SECCIÓN DE ACCIÓN ---
+    col_act1, col_act2 = st.columns([1, 1])
+
+    with col_act1:
+        with st.container(border=True):
+            st.markdown("#### 🏢 Registro de Cumplimiento")
+            nombre_corp = st.text_input("Nombre de la Compañía")
+            nit_corp = st.text_input("NIT")
+            num_personal = st.number_input("Número de Colaboradores", min_value=1, value=100)
+            st.markdown(f"**Requerimiento Anual:** :green[{num_personal * 2} Árboles]")
+            
+            logo_c = st.file_uploader("Vincular Logo de la Empresa", type=['png', 'jpg'])
+
+    with col_act2:
+        st.markdown("#### 🛡️ Certificación de Protección")
+        st.write("Al emitir este certificado, la empresa queda vinculada al sistema de protección de fauna y flora Nexus.")
+        if st.button("⚖️ VALIDAR Y GENERAR CERTIFICADO LEGAL", use_container_width=True):
+            if nombre_corp:
+                h_final = hashlib.sha256(f"{nombre_corp}".encode()).hexdigest()[:12].upper()
+                # Usamos la función de PDF que ya definimos arriba
+                st.session_state.pdf_final = generar_pdf_certificado(nombre_corp, num_personal * 2, f"LEGAL-{h_final}")
+                st.success(f"Certificado vinculado a Ley 2173 y 2111 generado.")
+                st.download_button("📥 Descargar Documento Oficial", st.session_state.pdf_final, f"Cumplimiento_{nombre_corp}.pdf", use_container_width=True)
+
+    # --- MAPA DE VIGILANCIA (Para quitar lo 'triste') ---
+    st.write("---")
+    st.markdown("#### 🚨 Estado de Vigilancia de Activos Ambientales")
+    
+    st.image("https://img.freepik.com/premium-photo/digital-map-with-environmental-data-layers-legal-boundaries_933496-15632.jpg", caption="Capa de Vigilancia Legal - Hacienda Monte Guadua")
+
 # =========================================================
 # BLOQUE 4: SUSCRIPCIONES (Impacto, Beneficios y Pasarela)
 # =========================================================
@@ -606,6 +679,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
