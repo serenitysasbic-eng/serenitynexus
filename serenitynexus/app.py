@@ -311,28 +311,56 @@ elif menu == "DONACIONES Y CERTIFICADO":
             """, unsafe_allow_html=True)
             st.download_button("📥 DESCARGAR DIPLOMA (PDF)", data=st.session_state.pdf_buffer, file_name=f"Diploma_Serenity_{nombre_d}.pdf", mime="application/pdf")
 
-# 7. LOGÍSTICA AEROLÍNEAS
+# =========================================================
+# BLOQUE 7: LOGÍSTICA AEROLÍNEAS (Conexiones Globales)
+# =========================================================
 elif menu == "LOGÍSTICA AEROLÍNEAS":
     st.title("✈️ Conectividad Global a Colombia")
+    st.markdown("Principales aerolíneas con conexión directa a Bogotá (BOG), Cali (CLO) o Medellín (MDE).")
+    
+    # --- EUROPA ---
     st.subheader("🇪🇺 Europa")
     e1, e2, e3, e4 = st.columns(4)
-    with e1: st.markdown("<div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Iberia_Logo.svg/320px-Iberia_Logo.svg.png'><p>IBERIA</p></div>", unsafe_allow_html=True)
-    with e2: st.markdown("<div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Lufthansa_Logo_2018.svg/320px-Lufthansa_Logo_2018.svg.png'><p>LUFTHANSA</p></div>", unsafe_allow_html=True)
-    with e3: st.markdown("<div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Air_France_Logo.svg/320px-Air_France_Logo.svg.png'><p>AIR FRANCE</p></div>", unsafe_allow_html=True)
-    with e4: st.markdown("<div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Turkish_Airlines_logo_2019.svg/320px-Turkish_Airlines_logo_2019.svg.png'><p>TURKISH</p></div>", unsafe_allow_html=True)
+    with e1: 
+        st.markdown("<a href='https://www.iberia.com' target='_blank'><div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Iberia_Logo.svg/320px-Iberia_Logo.svg.png'><p>IBERIA</p></div></a>", unsafe_allow_html=True)
+    with e2: 
+        st.markdown("<a href='https://www.lufthansa.com' target='_blank'><div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Lufthansa_Logo_2018.svg/320px-Lufthansa_Logo_2018.svg.png'><p>LUFTHANSA</p></div></a>", unsafe_allow_html=True)
+    with e3: 
+        st.markdown("<a href='https://www.airfrance.com' target='_blank'><div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Air_France_Logo.svg/320px-Air_France_Logo.svg.png'><p>AIR FRANCE</p></div></a>", unsafe_allow_html=True)
+    with e4: 
+        st.markdown("<a href='https://www.turkishairlines.com' target='_blank'><div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Turkish_Airlines_logo_2019.svg/320px-Turkish_Airlines_logo_2019.svg.png'><p>TURKISH</p></div></a>", unsafe_allow_html=True)
+    
+    e5, e6, e7 = st.columns(3)
+    with e5: 
+        st.markdown("<a href='https://www.klm.com' target='_blank'><div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/KLM_logo.svg/320px-KLM_logo.svg.png'><p>KLM</p></div></a>", unsafe_allow_html=True)
+    with e6: 
+        st.markdown("<a href='https://www.aireuropa.com' target='_blank'><div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Air_Europa_Logo.svg/320px-Air_Europa_Logo.svg.png'><p>AIR EUROPA</p></div></a>", unsafe_allow_html=True)
+    with e7: 
+        st.markdown("<a href='https://www.flyedelweiss.com' target='_blank'><div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Edelweiss_Air_Logo.svg/320px-Edelweiss_Air_Logo.svg.png'><p>EDELWEISS</p></div></a>", unsafe_allow_html=True)
+
+    # --- NORTEAMÉRICA ---
     st.subheader("🇺🇸 Norteamérica")
     n1, n2, n3, n4 = st.columns(4)
-    with n1: st.markdown("<div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/American_Airlines_logo_2013.svg/320px-American_Airlines_logo_2013.svg.png'><p>AMERICAN</p></div>", unsafe_allow_html=True)
-    with n2: st.markdown("<div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/United_Airlines_Logo.svg/320px-United_Airlines_Logo.svg.png'><p>UNITED</p></div>", unsafe_allow_html=True)
-    with n3: st.markdown("<div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Delta_logo.svg/320px-Delta_logo.svg.png'><p>DELTA</p></div>", unsafe_allow_html=True)
-    with n4: st.markdown("<div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Air_Canada_Logo.svg/320px-Air_Canada_Logo.svg.png'><p>AIR CANADA</p></div>", unsafe_allow_html=True)
+    with n1: 
+        st.markdown("<a href='https://www.aa.com' target='_blank'><div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/American_Airlines_logo_2013.svg/320px-American_Airlines_logo_2013.svg.png'><p>AMERICAN</p></div></a>", unsafe_allow_html=True)
+    with n2: 
+        st.markdown("<a href='https://www.united.com' target='_blank'><div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/United_Airlines_Logo.svg/320px-United_Airlines_Logo.svg.png'><p>UNITED</p></div></a>", unsafe_allow_html=True)
+    with n3: 
+        st.markdown("<a href='https://www.delta.com' target='_blank'><div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Delta_logo.svg/320px-Delta_logo.svg.png'><p>DELTA</p></div></a>", unsafe_allow_html=True)
+    with n4: 
+        st.markdown("<a href='https://www.aircanada.com' target='_blank'><div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Air_Canada_Logo.svg/320px-Air_Canada_Logo.svg.png'><p>AIR CANADA</p></div></a>", unsafe_allow_html=True)
+
+    # --- LATINOAMÉRICA ---
     st.subheader("🌎 Latinoamérica")
     l1, l2, l3, l4 = st.columns(4)
-    with l1: st.markdown("<div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Avianca_logo_2016.svg/320px-Avianca_logo_2016.svg.png'><p>AVIANCA</p></div>", unsafe_allow_html=True)
-    with l2: st.markdown("<div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Latam-logo_-_v2.svg/320px-Latam-logo_-_v2.svg.png'><p>LATAM</p></div>", unsafe_allow_html=True)
-    with l3: st.markdown("<div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Copa_Airlines_logo.svg/320px-Copa_Airlines_logo.svg.png'><p>COPA</p></div>", unsafe_allow_html=True)
-    with l4: st.markdown("<div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Aeromexico_Logo_2024.svg/320px-Aeromexico_Logo_2024.svg.png'><p>AEROMEXICO</p></div>", unsafe_allow_html=True)
-
+    with l1: 
+        st.markdown("<a href='https://www.avianca.com' target='_blank'><div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Avianca_logo_2016.svg/320px-Avianca_logo_2016.svg.png'><p>AVIANCA</p></div></a>", unsafe_allow_html=True)
+    with l2: 
+        st.markdown("<a href='https://www.latamairlines.com' target='_blank'><div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Latam-logo_-_v2.svg/320px-Latam-logo_-_v2.svg.png'><p>LATAM</p></div></a>", unsafe_allow_html=True)
+    with l3: 
+        st.markdown("<a href='https://www.copaair.com' target='_blank'><div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Copa_Airlines_logo.svg/320px-Copa_Airlines_logo.svg.png'><p>COPA</p></div></a>", unsafe_allow_html=True)
+    with l4: 
+        st.markdown("<a href='https://www.aeromexico.com' target='_blank'><div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Aeromexico_Logo_2024.svg/320px-Aeromexico_Logo_2024.svg.png'><p>AEROMEXICO</p></div></a>", unsafe_allow_html=True)
 # =========================================================
 # BLOQUE FINAL: UBICACIÓN & MAPAS (Dagua y Felidia)
 # =========================================================
@@ -398,6 +426,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
