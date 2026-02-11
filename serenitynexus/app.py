@@ -263,76 +263,59 @@ elif menu == "DASHBOARD ESTADÍSTICO IA":
 # =========================================================
 # BLOQUE 3: NEXUS COMPLIANCE & LEGAL HUB (REDESIGN)
 # =========================================================
+# =========================================================
+# BLOQUE 3: NEXUS LEGAL & COMPLIANCE (INTEGRACIÓN TOTAL)
+# =========================================================
 elif menu == "GESTIÓN LEY 2173 (EMPRESAS)":
     st.title("⚖️ Nexus Legal & Compliance Hub")
     st.markdown("### Soluciones Tecnológicas a la Normativa Ambiental")
 
-    # --- TARJETAS LEGALES VISUALES ---
+    # --- Mantenemos tus tarjetas de colores (Pilar Visual) ---
     c_l1, c_l2, c_l3 = st.columns(3)
     with c_l1:
-        st.markdown('<div style="background:#1e2630; padding:15px; border-radius:10px; border-left:5px solid #9BC63B; min-height:180px;"><h4 style="color:#9BC63B;">LEY 2173 (SIEMBRA)</h4><p style="font-size:0.8rem; color:#ccc;">Obligación de 2 árboles por empleado. Serenity provee el terreno y la georreferenciación oficial.</p></div>', unsafe_allow_html=True)
+        st.markdown('<div style="background:#1e2630; padding:15px; border-radius:10px; border-left:5px solid #9BC63B; min-height:180px;"><h4 style="color:#9BC63B;">LEY 2173</h4><p style="font-size:0.8rem; color:#ccc;">Obligación de 2 árboles por empleado. Serenity provee el terreno y GPS oficial.</p></div>', unsafe_allow_html=True)
     with c_l2:
-        st.markdown('<div style="background:#1e2630; padding:15px; border-radius:10px; border-left:5px solid #3498db; min-height:180px;"><h4 style="color:#3498db;">LEY 2169 (CLIMA)</h4><p style="font-size:0.8rem; color:#ccc;">Ruta a la Carbono Neutralidad. Nuestra IA certifica la captura real de CO2 en el KBA San Antonio.</p></div>', unsafe_allow_html=True)
+        st.markdown('<div style="background:#1e2630; padding:15px; border-radius:10px; border-left:5px solid #3498db; min-height:180px;"><h4 style="color:#3498db;">LEY 2169</h4><p style="font-size:0.8rem; color:#ccc;">Ruta a la Carbono Neutralidad. Nuestra IA certifica la captura real de CO2.</p></div>', unsafe_allow_html=True)
     with c_l3:
-        st.markdown('<div style="background:#1e2630; padding:15px; border-radius:10px; border-left:5px solid #e74c3c; min-height:180px;"><h4 style="color:#e74c3c;">LEY 2111 (JUSTICIA)</h4><p style="font-size:0.8rem; color:#ccc;">Sanciones penales por daño ambiental. Los Faros actúan como evidencia digital ante autoridades.</p></div>', unsafe_allow_html=True)
+        st.markdown('<div style="background:#1e2630; padding:15px; border-radius:10px; border-left:5px solid #e74c3c; min-height:180px;"><h4 style="color:#e74c3c;">LEY 2111</h4><p style="font-size:0.8rem; color:#ccc;">Justicia Ambiental. Faros Gemini como evidencia digital ante fiscalía.</p></div>', unsafe_allow_html=True)
 
     st.write("")
     
-    # --- VADEMÉCUM ESTRUCTURADO EN PDF ---
-    with st.expander("📄 VADEMÉCUM LEGAL DETALLADO", expanded=False):
-        st.markdown("""
-        **Estructura de Soluciones Serenity Nexus:**
-        1. **Ley 2173 de 2021:** Establece la creación de 'Áreas de Vida'. Serenity asigna coordenadas GPS únicas por empresa.
-        2. **Ley 2169 de 2021:** Marco para la Carbono Neutralidad. Monitoreo biométrico de biomasa.
-        3. **Ley 99 de 1993:** Obligación del 1% para proyectos hídricos. Restauración en cuencas del Valle del Cauca.
-        4. **Ley 2111 de 2021:** Tipifica delitos ambientales. Nuestra red de Faros provee vigilancia constante.
-        """)
-        
-        # Contenido estructurado para el PDF del Vademécum
-        contenido_vademecum = "VADEMÉCUM LEGAL SERENITY NEXUS\n\nSOLUCIONES CORPORATIVAS:\n- LEY 2173: Áreas de Vida y Reforestación.\n- LEY 2169: Mitigación de Cambio Climático.\n- LEY 2111: Protección Judicial Ambiental.\n- LEY 99: Gestión de Recursos Hídricos."
-        # Generamos el PDF del Vademécum usando la función base
-        pdf_vademecum = generar_pdf_certificado("Vademecum Legal", 2026, "NEXUS-LAW-INT")
-        
-        st.download_button(
-            label="📥 DESCARGAR VADEMÉCUM COMPLETO (PDF)",
-            data=pdf_vademecum,
-            file_name="Vademecum_Legal_Serenity_Nexus.pdf",
-            mime="application/pdf",
-            use_container_width=True
-        )
+    # --- 1. SECCIÓN VADEMÉCUM (RESUMEN PROFESIONAL) ---
+    with st.container(border=True):
+        st.subheader("📄 Vademécum de Soluciones Corporativas")
+        empresa_v = st.text_input("Nombre de la empresa para el reporte técnico")
+        if st.button("📊 GENERAR VADEMÉCUM TÉCNICO PDF", use_container_width=True):
+            if empresa_v:
+                # Usamos la función corporativa con bandera de vademécum
+                pdf_v = generar_pdf_corporativo(empresa_v, 0, "NEXUS-VAD-2026", es_vademecum=True)
+                st.download_button("📥 DESCARGAR VADEMÉCUM (ESTRUCTURA LEGAL)", pdf_v, f"Vademecum_Serenity_{empresa_v}.pdf", "application/pdf", use_container_width=True)
+            else:
+                st.warning("Ingrese el nombre de la empresa para personalizar el documento.")
 
     st.divider()
 
-    # --- SECCIÓN DE ACCIÓN CON LOGO ---
+    # --- 2. SECCIÓN CERTIFICADO (CO-BRANDING CON LOGO) ---
+    st.subheader("🛡️ Emisión de Certificado con Logo Empresarial")
     col_act1, col_act2 = st.columns([1, 1])
 
     with col_act1:
         with st.container(border=True):
-            st.markdown("#### 🏢 Registro de Cumplimiento")
-            nombre_corp = st.text_input("Nombre de la Compañía")
-            nit_corp = st.text_input("NIT")
-            num_personal = st.number_input("Número de Colaboradores", min_value=1, value=100)
-            archivo_logo = st.file_uploader("Subir Logo Corporativo (para el certificado)", type=['png', 'jpg'])
-            
+            n_corp = st.text_input("Razón Social de la Compañía")
+            n_per = st.number_input("Número de Empleados", min_value=1, value=100)
+            archivo_logo = st.file_uploader("Cargar Logo de la Empresa (PNG/JPG)", type=['png', 'jpg'])
+
     with col_act2:
-        st.markdown("#### 🛡️ Certificación Oficial")
-        st.write("Al generar este documento, se vincula el logo y la data corporativa al sistema de protección Nexus.")
-        if st.button("⚖️ VALIDAR Y EMITIR CERTIFICADO LEGAL", use_container_width=True):
-            if nombre_corp:
-                h_final = hashlib.sha256(f"{nombre_corp}".encode()).hexdigest()[:12].upper()
-                # Aquí la función generar_pdf_certificado debería estar preparada para recibir el archivo_logo 
-                # En esta simulación, el PDF se genera con el nombre y la meta
-                st.session_state.pdf_final = generar_pdf_certificado(nombre_corp, num_personal * 2, f"LEGAL-{h_final}")
-                st.success(f"Certificado para {nombre_corp} generado con éxito.")
-                
-                if 'pdf_final' in st.session_state:
-                    st.download_button(
-                        label="📥 DESCARGAR CERTIFICADO CON LOGO",
-                        data=st.session_state.pdf_final,
-                        file_name=f"Certificado_Legal_{nombre_corp}.pdf",
-                        mime="application/pdf",
-                        use_container_width=True
-                    )
+        st.info("Al subir el logo, el sistema lo enlazará automáticamente en la esquina superior del certificado oficial.")
+        if st.button("⚖️ VALIDAR Y EMITIR CERTIFICADO CON LOGO", use_container_width=True):
+            if n_corp and archivo_logo:
+                h_c = hashlib.sha256(f"{n_corp}".encode()).hexdigest()[:12].upper()
+                # Pasamos el archivo_logo a la función para que lo pegue en el PDF
+                pdf_c = generar_pdf_corporativo(n_corp, n_per*2, h_c, logo_bytes=archivo_logo)
+                st.success(f"Certificado vinculado para {n_corp}")
+                st.download_button("📥 DESCARGAR CERTIFICADO OFICIAL", pdf_c, f"Certificado_Ley2173_{n_corp}.pdf", "application/pdf", use_container_width=True)
+            else:
+                st.error("Se requiere Razón Social y el Logo para la emisión.")
 # =========================================================
 # BLOQUE 4: SUSCRIPCIONES (Impacto, Beneficios y Pasarela)
 # =========================================================
@@ -654,6 +637,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
