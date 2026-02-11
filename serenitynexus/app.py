@@ -241,7 +241,7 @@ elif menu == "BILLETERA CRYPTO (WEB3)":
     st.write("")
     if st.button("🔌 CONECTAR BILLETERA WEB3"):
         st.success("Billetera Conectada: 0x71C...9A23")
-        st.metric(label="Saldo en $SNG", value="25,000.00"            
+        st.metric(label="Saldo en $SNG", value="25,000.00")            
 
 # 6. DONACIONES
 elif menu == "DONACIONES Y CERTIFICADO":
@@ -302,6 +302,7 @@ elif menu == "UBICACIÓN & MAPAS":
     folium.Polygon(locations=[[3.45, -76.67], [3.47, -76.67], [3.47, -76.64], [3.45, -76.64]], color="darkgreen", fill=True, fill_opacity=0.4, tooltip="Hacienda Monte Guadua: 80 Ha").add_to(m)
     folium.CircleMarker(location=[3.445, -76.645], radius=10, color="blue", fill=True, fill_color="blue", tooltip="Finca Villa Michelle").add_to(m)
     st_folium(m, width="100%", height=600)
+
 
 
 
