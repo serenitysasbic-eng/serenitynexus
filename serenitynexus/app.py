@@ -2,9 +2,11 @@
 import streamlit as st
 import pandas as pd
 import random
+import hashlib  # <--- ESTA ES LA LÍNEA QUE FALTA
 from datetime import datetime
 import io
 import os
+import base64
 
 # --- LIBRERÍAS EXTENDIDAS ---
 import folium
@@ -450,6 +452,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
