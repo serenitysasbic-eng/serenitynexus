@@ -260,196 +260,63 @@ elif menu == "DASHBOARD ESTADÍSTICO IA":
     st.bar_chart(pd.DataFrame({'Detecciones': [120, 450, 300, 80, 45, 110, 950]}, index=["Halcón", "Colibrí", "Rana", "Venado", "Tigrillo", "Capibara", "GEMINI"]))
 
 # =========================================================
-# BLOQUE 3: GESTIÓN LEGAL Y CUMPLIMIENTO (VADEMÉCUM)
+# BLOQUE 3: GESTIÓN LEY 2173 (EMPRESAS)
 # =========================================================
 elif menu == "GESTIÓN LEY 2173 (EMPRESAS)":
-    st.title("🏢 Ecosistema Legal Corporativo - Serenity")
+    st.title("🏢 Portal Corporativo - Ley 2173")
+    st.markdown("### Cumplimiento Legal y Vademécum Ambiental")
     
-    # --- RESUMEN DE LEYES (Vademécum) ---
-    st.markdown("### ⚖️ Marco Normativo Ambiental")
-    tabs_ley = st.tabs(["Ley 2173 (Siembra)", "Ley 2169 (Clima)", "Ley 99 (Agua)"])
-    tabs_ley = st.tabs(["Ley 2173 (Siembra)", "Ley 2169 (Clima)", "Ley 99 (Agua)", "🛡️ Protección y Justicia"])
-
-with tabs_ley[3]:
-    st.error("⚠️ **Régimen Sancionatorio y Vigilancia IA**")
-    st.markdown("""
-    **Serenity Nexus** actúa como guardián tecnológico bajo el marco de:
-    * **Ley 1774 de 2016:** Protegemos a los animales como seres sintientes. Nuestra IA identifica especies y alerta sobre presencia de cazadores.
-    * **Ley 2111 de 2021 (Código Penal):** Sanciona con hasta **15 años de cárcel** delitos como la deforestación y el tráfico de fauna. 
-    
-    *Nuestros Faros emiten reportes con validez legal (evidencia digital) para las autoridades ambientales.*
-    """)
-
-# --- SECCIÓN DE MITIGACIÓN EN TIEMPO REAL ---
-st.write("---")
-st.subheader("🚨 Sistema de Mitigación Gemini")
-col_m1, col_m2 = st.columns([2, 1])
-
-with col_m1:
-    st.write("Cuando un Faro detecta una anomalía (fuego, motosierras, disparos), el sistema:")
-    st.markdown("""
-    1. **Identifica** el tipo de amenaza mediante acústica e imagen IA.
-    2. **Georreferencia** el punto exacto en Hacienda Monte Guadua.
-    3. **Notifica** a la red de respuesta y genera un 'Hash de Evidencia' imborrable.
-    """)
-
-with col_m2:
-    if st.button("🔥 SIMULAR ALERTA AMBIENTAL"):
-        st.toast("ALERTA: Detección de actividad no autorizada en Nodo 3")
-        st.error("INCIDENTE REGISTRADO - Reporte generado para autoridades")
+    tabs_ley = st.tabs(["Leyes y Normas", "Calculadora y Reporte"])
     
     with tabs_ley[0]:
-        st.info("**Ley 2173 de 2021:** Obliga a todas las medianas y grandes empresas a establecer áreas de vida y sembrar **2 árboles por cada empleado** anualmente. Serenity facilita el terreno, la siembra y el certificado de cumplimiento.")
-    
+        st.info("**Ley 2173/2021:** 2 árboles por empleado. **Ley 2111/2021:** Delitos ambientales (Cárcel por deforestación).")
+        st.warning("🛡️ **Vigilancia Serenity:** Nuestra IA actúa como evidencia digital ante la Fiscalía y autoridades.")
+
     with tabs_ley[1]:
-        st.info("**Ley 2169 de 2021:** Establece la ruta hacia la **Carbono Neutralidad** para 2050. Las empresas deben reportar y reducir sus emisiones. Serenity aporta los datos biométricos para certificar la captura de CO2 real.")
-    
-    with tabs_ley[2]:
-        st.info("**Ley 99 de 1993 (Art. 111):** Exige que proyectos que tomen agua de fuentes naturales inviertan al menos el **1%** en la recuperación y conservación de la cuenca. Hacienda Monte Guadua es el sitio ideal para esta inversión por su ubicación estratégica.")
+        col_leg1, col_leg2 = st.columns(2)
+        with col_leg1:
+            empresa_n = st.text_input("Razón Social")
+            num_emp = st.number_input("Número de Empleados", min_value=1, value=50)
+            siembra_req = num_emp * 2
+            st.success(f"Meta: {siembra_req} árboles.")
+        
+        with col_leg2:
+            if st.button("📄 GENERAR CERTIFICADO LEGAL"):
+                if empresa_n:
+                    h_corp = hashlib.sha256(f"{empresa_n}".encode()).hexdigest()[:10].upper()
+                    st.session_state.pdf_corp = generar_pdf_certificado(empresa_n, siembra_req, f"CORP-{h_corp}")
+                    st.download_button("📥 Descargar Reporte", st.session_state.pdf_corp, "Reporte_Ley2173.pdf")
 
-    st.divider()
-
-    col_leg1, col_leg2 = st.columns([1, 1])
-
-    with col_leg1:
-        with st.container(border=True):
-            st.markdown("#### 🧮 Calculadora de Impacto Legal")
-            empresa_nombre = st.text_input("Razón Social de la Empresa")
-            nit_empresa = st.text_input("NIT")
-            num_empleados = st.number_input("Cantidad de Colaboradores:", min_value=1, value=100)
-            
-            # Cálculo dinámico
-            siembra_anual = num_empleados * 2
-            st.warning(f"🎯 Meta Anual Ley 2173: {siembra_anual} Árboles")
-            
-            # Carga de Logo para el Co-Branding
-            logo_empresa = st.file_uploader("Cargar Logo Empresarial (PNG/JPG)", type=['png', 'jpg'])
-
-    with col_leg2:
-        with st.container(border=True):
-            st.markdown("#### 🛡️ Certificación Serenity Nexus")
-            st.write("Al vincularse con Serenity, su empresa obtiene:")
-            st.markdown("""
-            * Georreferenciación de cada árbol.
-            * Reporte de trazabilidad con tecnología Blockchain.
-            * Registro ante la autoridad ambiental competente.
-            """)
-            
-            if st.button("📄 GENERAR REPORTE DE CUMPLIMIENTO"):
-                if empresa_nombre and nit_empresa:
-                    # Generamos el Hash de seguridad corporativa
-                    h_corp = hashlib.sha256(f"{empresa_nombre}{datetime.now()}".encode()).hexdigest()[:12].upper()
-                    st.session_state.pdf_corp = generar_pdf_certificado(f"CUMPLIMIENTO: {empresa_nombre}", siembra_anual, f"LEY-2173-{h_corp}")
-                    
-                    st.success("Reporte generado exitosamente.")
-                    st.download_button("📥 Descargar Certificado Oficial", st.session_state.pdf_corp, f"Reporte_Legal_{empresa_nombre}.pdf")
-                else:
-                    st.error("Por favor ingrese el nombre y NIT de la empresa.")
-
-    # --- INDICADORES ESG ---
-    st.write("---")
-    st.subheader("📊 Indicadores ESG para Inversionistas")
-    st.markdown("")
-    c1, c2, c3 = st.columns(3)
-    c1.metric("Mitigación CO2", f"{siembra_anual * 0.18:.2f} Ton/año")
-    c2.metric("Área Protegida", f"{siembra_anual * 5} m²")
-    c3.metric("Puntaje Cumplimiento", "100%", delta="Certificado")
-
-# --- AQUÍ EMPIEZA EL BLOQUE 4 (Línea 361) ---
+# =========================================================
+# BLOQUE 4: SUSCRIPCIONES (Impacto y Finanzas)
+# =========================================================
 elif menu == "SUSCRIPCIONES":
     st.title("🌱 Membresías de Impacto Serenity")
-    st.markdown("### Transforma tu aporte en regeneración real")
-
-    # --- TARJETAS DE PLANES ---
-    p1, p2, p3 = st.columns(3)
     
-    with p1:
-        st.markdown("""
-            <div style="background:#1e2630; padding:20px; border-radius:15px; border:2px solid #9BC63B; text-align:center; height: 350px;">
-                <h3 style="color:#9BC63B;">PLAN SEMILLA</h3>
-                <h2>$25 USD <small>/mes</small></h2>
-                <hr style="border-color:#333;">
-                <p>🌲 5 Árboles Sembrados</p>
-                <p>📡 1 Faro Inteligente</p>
-                <p>🪙 50 Tokens $SNG</p>
-            </div>
-        """, unsafe_allow_html=True)
-        if st.button("ELEGIR SEMILLA", use_container_width=True):
-            st.session_state.plan_seleccionado = "SEMILLA"
-            st.session_state.monto_plan = 25
-
-    with p2:
-        st.markdown("""
-            <div style="background:#1e2630; padding:20px; border-radius:15px; border:3px solid #9BC63B; text-align:center; height: 350px; transform: scale(1.02);">
-                <h3 style="color:#9BC63B;">PLAN GUARDIÁN</h3>
-                <h2>$80 USD <small>/mes</small></h2>
-                <hr style="border-color:#333;">
-                <p>🌳 15 Árboles Sembrados</p>
-                <p>🎥 Acceso Cámaras 4K</p>
-                <p>🪙 200 Tokens $SNG</p>
-            </div>
-        """, unsafe_allow_html=True)
-        if st.button("ELEGIR GUARDIÁN", use_container_width=True):
-            st.session_state.plan_seleccionado = "GUARDIÁN"
-            st.session_state.monto_plan = 80
-
-    with p3:
-        st.markdown("""
-            <div style="background:#1e2630; padding:20px; border-radius:15px; border:2px solid #D4AF37; text-align:center; height: 350px;">
-                <h3 style="color:#D4AF37;">PLAN HALCÓN</h3>
-                <h2>$200 USD <small>/mes</small></h2>
-                <hr style="border-color:#333;">
-                <p>🐆 1 Hectárea Protegida</p>
-                <p>🛸 Vigilancia con Drones</p>
-                <p>🪙 600 Tokens $SNG</p>
-            </div>
-        """, unsafe_allow_html=True)
-        if st.button("ELEGIR HALCÓN", use_container_width=True):
-            st.session_state.plan_seleccionado = "HALCÓN"
-            st.session_state.monto_plan = 200
-
-    st.write("---")
-
-    # --- TABLA DE IMPACTO TANGIBLE ---
-    st.subheader("🌍 ¿Qué logras con tu apoyo?")
-    with st.container(border=True):
-        st.markdown("""
-        | Nivel de Aporte | Acción Regenerativa en el Territorio |
-        | :--- | :--- |
-        | **Aporte $5 USD** | **Rescate Genético:** Germinación de 2 plántulas nativas y mantenimiento de 1m² de bosque. |
-        | **Plan Semilla ($25)** | **Conectividad Bio:** Siembra de 5 árboles y activación de 1 nodo sensorial de fauna. |
-        | **Plan Guardián ($80)** | **Restauración Activa:** Siembra de 15 árboles y procesamiento IA de inventario de carbono. |
-        | **Plan Halcón ($200)** | **Soberanía Ecosistémica:** Protección total de 1 Ha y telemetría avanzada para felinos. |
-        """)
-
-    st.write("---")
-
-    # --- FORMULARIO Y PASARELA DE PAGO ---
-    if 'plan_seleccionado' in st.session_state:
-        st.subheader(f"💳 Finalizar Suscripción: {st.session_state.plan_seleccionado}")
+    # Tarjetas de suscripción
+    c_s1, c_s2, c_s3 = st.columns(3)
+    with c_s1:
+        st.markdown("<div style='border:2px solid #9BC63B; padding:15px; border-radius:10px; text-align:center;'><h3>SEMILLA</h3><h2>$25</h2><p>5 Árboles</p></div>", unsafe_allow_html=True)
+        if st.button("ELEGIR SEMILLA", key="btn_s1"): st.session_state.p_sel = "SEMILLA"
         
-        col_pay1, col_pay2 = st.columns(2)
+    with c_s2:
+        st.markdown("<div style='border:2px solid #9BC63B; padding:15px; border-radius:10px; text-align:center;'><h3>GUARDIÁN</h3><h2>$80</h2><p>15 Árboles</p></div>", unsafe_allow_html=True)
+        if st.button("ELEGIR GUARDIÁN", key="btn_s2"): st.session_state.p_sel = "GUARDIÁN"
         
-        with col_pay1:
-            with st.container(border=True):
-                st.markdown("#### Tarjeta de Crédito/Débito")
-                st.text_input("Titular de la cuenta")
-                st.text_input("Número de Tarjeta", placeholder="xxxx xxxx xxxx xxxx")
-                c_exp, c_cvc = st.columns(2)
-                c_exp.text_input("Vencimiento (MM/AA)")
-                c_cvc.text_input("CVC")
-                if st.button("🚀 ACTIVAR SUSCRIPCIÓN"):
-                    st.balloons()
-                    st.success(f"¡Bienvenido al Plan {st.session_state.plan_seleccionado}! Pago de ${st.session_state.monto_plan} procesado.")
+    with c_s3:
+        st.markdown("<div style='border:2px solid #D4AF37; padding:15px; border-radius:10px; text-align:center;'><h3>HALCÓN</h3><h2>$200</h2><p>1 Hectárea</p></div>", unsafe_allow_html=True)
+        if st.button("ELEGIR HALCÓN", key="btn_s3"): st.session_state.p_sel = "HALCÓN"
 
-        with col_pay2:
-            st.markdown("#### Pagos Locales y Alternativos")
+    # Pasarela de pagos
+    if 'p_sel' in st.session_state:
+        st.divider()
+        st.subheader(f"💳 Pago Seguro: Plan {st.session_state.p_sel}")
+        col_p1, col_p2 = st.columns(2)
+        with col_p2:
             st.markdown("""
-                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; background: #f9f9f9; padding: 20px; border-radius: 15px;">
-                    <div style="text-align:center;"><img src="https://upload.wikimedia.org/wikipedia/commons/b/bf/Nequi_logo.png" width="90"><p style="color:black; font-size:10px;">NEQUI</p></div>
-                    <div style="text-align:center;"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Bancolombia_logo.svg/2560px-Bancolombia_logo.svg.png" width="90"><p style="color:black; font-size:10px;">BANCOLOMBIA / PSE</p></div>
-                    <div style="text-align:center;"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/2560px-Visa_Inc._logo.svg.png" width="80"></div>
-                    <div style="text-align:center;"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1280px-Mastercard-logo.svg.png" width="80"></div>
+                <div style="background:white; padding:15px; border-radius:10px; text-align:center;">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/b/bf/Nequi_logo.png" width="80">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Bancolombia_logo.svg/2560px-Bancolombia_logo.svg.png" width="80">
                 </div>
             """, unsafe_allow_html=True)
             st.info("💡 También puedes redimir tus **$SNG** acumulados para pagar tu mensualidad.")
@@ -686,6 +553,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
