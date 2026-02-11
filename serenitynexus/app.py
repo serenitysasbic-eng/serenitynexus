@@ -359,17 +359,17 @@ elif menu_sel == menu_opts[1]:
         st.divider(); live_t = t('live'); color_titulo = "#9BC63B"
         st.markdown(f"<h2 style='color:{color_titulo}; text-align:center;'>?? {live_t}: {st.session_state.f_activo.upper()}</h2>", unsafe_allow_html=True)
         c_cols = st.columns(4)
-# --- CAMBIO 9 CORREGIDO: MOSAICO DINÁMICO ---
+# --- CAMBIO 9 CORREGIDO: VIDEOS DIRECTOS DE NATURALEZA ---
         c_cols = st.columns(4)
         for j in range(8):
             with c_cols[j % 4]:
                 st.markdown(f"""
                     <div style='border: 2px solid #2E7D32; border-radius: 10px; padding: 5px; background: black;'>
-                        <p style='text-align:center; color:#9BC63B; font-weight:bold; font-size: 12px; margin:0;'>CAM {j+1} - LIVE</p>
+                        <p style='text-align:center; color:#9BC63B; font-weight:bold; font-size: 10px; margin:0;'>CAM {j+1} - MONTE GUADUA</p>
                     </div>
                 """, unsafe_allow_html=True)
-                # Agregamos el paréntesis de cierre ) que faltaba al final
-                st.video("https://www.youtube.com/watch?v=6v2L2UGZJAM", start_time=j*30)
+                # Video directo de naturaleza (Bosque/Niebla) - Sin publicidad y siempre disponible
+                st.video("https://player.vimeo.com/external/434045526.sd.mp4?s=c36303b140cd5d539578051680504e0e560f47e3&profile_id=164&oauth2_token_id=57447761")
             
     # --- SECCIÓN BIOACÚSTICA (MICRÓFONOS) RESTAURADA ---
     if st.session_state.f_activo:
@@ -540,6 +540,7 @@ elif menu_sel == menu_opts[8]:
     folium.Polygon(locations=[[lat_guadua - offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua + offset], [lat_guadua - offset, lon_guadua + offset]], color="#9BC63B", fill=True, fill_opacity=0.3, tooltip="Hacienda Monte Guadua: 80 Ha").add_to(m)
     folium.CircleMarker(location=[lat_villa, lon_villa], radius=10, color="blue", fill=True, fill_color="blue", tooltip="Finca Villa Michelle (Sede)").add_to(m)
     st_folium(m, width="100%", height=600)
+
 
 
 
