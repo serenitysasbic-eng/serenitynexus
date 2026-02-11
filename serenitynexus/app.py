@@ -89,18 +89,18 @@ def t(key):
 def mostrar_camara_real(url_rstp):
     """Intenta conectar cámara real, si falla avisa."""
     if cv2 is None:
-        st.error("?? Módulo de video no detectado en nube. Use la opción DEMO.")
+        st.error(" Módulo de video no detectado en nube. Use la opción DEMO.")
         return
     
     st.info(f"?? Conectando a IP: {url_rstp}")
     try:
         cap = cv2.VideoCapture(url_rstp)
         frame_placeholder = st.empty()
-        stop_button = st.button("? DETENER / STOP")
+        stop_button = st.button(" DETENER / STOP")
         while cap.isOpened() and not stop_button:
             ret, frame = cap.read()
             if not ret:
-                st.warning("?? Sin señal. Para demostraciones en la nube use el botón 'VER DEMO'.")
+                st.warning(" Sin señal. Para demostraciones en la nube use el botón 'VER DEMO'.")
                 break
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             frame_placeholder.image(frame, channels="RGB", use_column_width=True)
@@ -296,7 +296,7 @@ if not st.session_state.auth:
 # --- SIDEBAR ---
 with st.sidebar:
     st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Colombia.svg/320px-Flag_of_Colombia.svg.png", width=30)
-    toggle_lang = st.toggle("???? ENGLISH MODE", value=False)
+    toggle_lang = st.toggle(" ENGLISH MODE", value=False)
     st.session_state.lang = 'EN' if toggle_lang else 'ES'
     st.divider()
     menu_opts = tr['menu_opts'][st.session_state.lang]
@@ -325,7 +325,7 @@ if menu_sel == menu_opts[0]:
     # Subtítulo bilingüe
     subt = "SISTEMA REGENERATIVO BIOMÉTRICO KBA" if st.session_state.lang == 'ES' else "KBA BIOMETRIC REGENERATIVE SYSTEM"
     st.markdown(f"<p style='text-align:center; letter-spacing:5px; color:#9BC63B; font-weight:bold;'>{subt}</p>", unsafe_allow_html=True)
-    btn_audio = "?? ACTIVAR SONIDO GLOBAL EARTH" if st.session_state.lang == 'ES' else "?? ACTIVATE GLOBAL EARTH SOUND"
+    btn_audio = " ACTIVAR SONIDO GLOBAL EARTH" if st.session_state.lang == 'ES' else " ACTIVATE GLOBAL EARTH SOUND"
     st.components.v1.html(f"""<audio id="audio_earth" src="sonido_Earth.mp3" loop></audio><div style="text-align:center; margin-top:30px;"><button onclick="document.getElementById('audio_earth').play()" style="background:#2E7D32; color:white; border:1px solid #9BC63B; padding:20px; border-radius:10px; cursor:pointer; font-weight:bold; font-size:16px;">{btn_audio}</button></div>""", height=150)
     st.write("")
     
@@ -591,7 +591,7 @@ elif menu_sel == menu_opts[6]:
 
 # 8. LOGÍSTICA
 elif menu_sel == menu_opts[7]:
-    tt = " Conectividad Global a Colombia" if st.session_state.lang == 'ES' else "?? Global Connectivity to Colombia"
+    tt = " Conectividad Global a Colombia" if st.session_state.lang == 'ES' else " Global Connectivity to Colombia"
     subt = "Haga clic en una aerolínea para reservar." if st.session_state.lang == 'ES' else "Click on an airline to book."
     st.title(tt); st.markdown(subt)
     st.subheader(" Europa")
@@ -632,6 +632,7 @@ elif menu_sel == menu_opts[8]:
     folium.Polygon(locations=[[lat_guadua - offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua + offset], [lat_guadua - offset, lon_guadua + offset]], color="#9BC63B", fill=True, fill_opacity=0.3, tooltip="Hacienda Monte Guadua: 80 Ha").add_to(m)
     folium.CircleMarker(location=[lat_villa, lon_villa], radius=10, color="blue", fill=True, fill_color="blue", tooltip="Finca Villa Michelle (Sede)").add_to(m)
     st_folium(m, width="100%", height=600)
+
 
 
 
