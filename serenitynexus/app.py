@@ -6,6 +6,7 @@ import hashlib
 from datetime import datetime
 import io
 import os
+import time
 
 # --- BLOQUE DE SEGURIDAD PARA CÁMARA ---
 try:
@@ -23,7 +24,7 @@ from reportlab.lib.colors import HexColor, black
 from reportlab.lib.utils import ImageReader
 
 # --- CONFIGURACIÓN E IDENTIDAD ---
-st.set_page_config(page_title="Serenity Nexus Global", page_icon="??", layout="wide")
+st.set_page_config(page_title="Serenity Nexus Global", page_icon="🌿", layout="wide")
 VERDE_SERENITY = HexColor("#2E7D32")
 
 # --- GESTIÓN DE ESTADO ---
@@ -35,36 +36,9 @@ if 'auth' not in st.session_state: st.session_state.auth = False
 if 'f_activo' not in st.session_state: st.session_state.f_activo = None
 if 'wallet_connected' not in st.session_state: st.session_state.wallet_connected = False
 if 'pdf_empresa_buffer' not in st.session_state: st.session_state.pdf_empresa_buffer = None
+if 'registro_plan' not in st.session_state: st.session_state.registro_plan = None
 
-# --- DATOS LEGALES (COMPLETOS) ---
-TEXTO_LEY_2173 = """
-RESUMEN EJECUTIVO - LEY 2173 DE 2021 (ÁREAS DE VIDA)
-Objeto: Promover la restauración ecológica a través de la siembra de árboles y creación de bosques en el territorio nacional.
-Obligación: Las medianas y grandes empresas deben sembrar 2 árboles por cada empleado.
-Cumplimiento: Se debe demostrar mediante certificado de 'Área de Vida' expedido por la autoridad competente o aliado ambiental.
-Solución Serenity: Ofrecemos el suelo, la siembra, el mantenimiento y el reporte digital para cumplimiento corporativo.
-"""
-TEXTO_CONPES = """
-RESUMEN EJECUTIVO - CONPES 3934 (POLÍTICA DE CRECIMIENTO VERDE)
-Objeto: Impulsar la productividad y la competitividad económica del país, asegurando el uso sostenible del capital natural y la inclusión social.
-Meta 2030: Aumentar la bioeconomía y los negocios verdes como motor de desarrollo.
-Alineación Serenity: Nuestra plataforma integra Big Data e IoT para la gestión eficiente del capital natural del Valle del Cauca.
-"""
-TEXTO_DELITOS = """
-RESUMEN EJECUTIVO - LEY 2111 DE 2021 (DELITOS AMBIENTALES)
-Objeto: Sustituir el título de delitos contra los recursos naturales y el medio ambiente en el Código Penal.
-Impacto: La deforestación, el tráfico de fauna y el daño a recursos naturales ahora tienen penas de prisión y multas severas.
-Solución Serenity: Nuestro sistema de monitoreo (Faros) actúa como evidencia forense y herramienta de prevención y vigilancia.
-"""
-TEXTO_TRIBUTARIO = """
-RESUMEN EJECUTIVO - BENEFICIOS TRIBUTARIOS (S.A.S. BIC & CTeI)
-Objeto: Incentivar la inversión en ciencia, tecnología e impacto social.
-Beneficio 1: Descuento en renta por donaciones a entidades ambientales sin ánimo de lucro certificadas.
-Beneficio 2: Deducciones por inversión en proyectos de Ciencia, Tecnología e Innovación (Actividades Serenity Nexus).
-Beneficio 3: Preferencia en contratación pública y acceso a líneas de crédito especiales.
-"""
-
-# --- BLOQUE DE TRADUCCION MAESTRO CORREGIDO ---
+# --- DICCIONARIO TRADUCCION ---
 tr = {
     'menu_opts': {
         'ES': ["INICIO", "RED DE FAROS (7 NODOS)", "DASHBOARD ESTADISTICO IA", "GESTION LEY 2173 (EMPRESAS)", "SUSCRIPCIONES", "BILLETERA CRYPTO (WEB3)", "DONACIONES Y CERTIFICADO", "LOGISTICA AEROLINEAS", "UBICACION & MAPAS"],
@@ -75,559 +49,190 @@ tr = {
     'live': {'ES': 'TRANSMISION EN VIVO', 'EN': 'LIVE STREAM'},
     'who_title': {'ES': 'QUIENES SOMOS', 'EN': 'WHO WE ARE'},
     'who_text': {
-        'ES': 'Serenity Nexus Global es la primera plataforma Phygital (Fisica + Digital) del Valle del Cauca que integra la conservacion ambiental con tecnologia Blockchain e Inteligencia Artificial, transformando la proteccion de la biodiversidad en un activo digital tangible.',
-        'EN': 'Serenity Nexus Global is the first Phygital platform in Valle del Cauca integrating environmental conservation with Blockchain and AI.'
+        'ES': 'Serenity Nexus Global es la primera plataforma Phygital del Valle del Cauca.',
+        'EN': 'Serenity Nexus Global is the first Phygital platform in Valle del Cauca.'
     },
     'mis_title': {'ES': 'NUESTRA MISION', 'EN': 'OUR MISSION'},
     'mis_text': {
-        'ES': 'Regenerar el tejido ecologico y social mediante un modelo de negocio sostenible que permita a empresas y personas compensar su huella ambiental a traves de la tecnologia y la transparencia.',
-        'EN': 'Regenerate the ecological and social fabric through a sustainable business model.'
+        'ES': 'Regenerar el tejido ecologico y social mediante tecnologia.',
+        'EN': 'Regenerate the ecological and social fabric through technology.'
     },
     'vis_title': {'ES': 'NUESTRA VISION', 'EN': 'OUR VISION'},
     'vis_text': {
-        'ES': 'Ser el referente mundial del Internet de la Naturaleza para 2030, liderando la valorizacion de los servicios ecosistemicos mediante nuestra red de Faros inteligentes y el token $SNG.',
+        'ES': 'Ser el referente mundial del Internet de la Naturaleza para 2030.',
         'EN': 'To be the global benchmark for the Internet of Nature by 2030.'
-    }
+    },
+    'map_btn': {'ES': 'ABRIR EN GOOGLE MAPS', 'EN': 'OPEN IN GOOGLE MAPS'},
+    'download': {'ES': 'DESCARGAR', 'EN': 'DOWNLOAD'}
 }
 
 def t(key):
     lang = st.session_state.get('lang', 'ES')
     return tr.get(key, {}).get(lang, key)
-# --- FUNCIÓN CÁMARA REAL ---
-def mostrar_camara_real(url_rstp):
-    """Intenta conectar cámara real, si falla avisa."""
-    if cv2 is None:
-        st.error(" Módulo de video no detectado en nube. Use la opción DEMO.")
-        return
-    
-    st.info(f"?? Conectando a IP: {url_rstp}")
-    try:
-        cap = cv2.VideoCapture(url_rstp)
-        frame_placeholder = st.empty()
-        stop_button = st.button(" DETENER / STOP")
-        while cap.isOpened() and not stop_button:
-            ret, frame = cap.read()
-            if not ret:
-                st.warning(" Sin señal. Para demostraciones en la nube use el botón 'VER DEMO'.")
-                break
-            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            frame_placeholder.image(frame, channels="RGB", use_column_width=True)
-        cap.release()
-    except Exception as e:
-        st.error(f"Error técnico: {e}")
 
-# --- FUNCIÓN PDF: CERTIFICADO DONANTE ---
-def generar_pdf_analisis_ia(lang):
-    buffer = io.BytesIO()
-    c = canvas.Canvas(buffer, pagesize=letter)
-    
-    # Datos para el certificado
-    fecha = datetime.now().strftime("%Y-%m-%d %H:%M")
-    hash_analisis = hashlib.sha256(f"Serenity-IA-{fecha}".encode()).hexdigest()[:16].upper()
-    titulo = "REPORTE DE INTELIGENCIA BIOLÓGICA" if lang == 'ES' else "BIOLOGICAL INTELLIGENCE REPORT"
-    
-    # Estética del PDF
-    c.setStrokeColor(VERDE_SERENITY); c.setLineWidth(3)
-    c.rect(0.5*inch, 0.5*inch, 7.5*inch, 10.0*inch)
-    
-    # Logo o Identidad
-    if os.path.exists("logo_serenity.png"):
-        c.drawImage("logo_serenity.png", 3.5*inch, 9.0*inch, width=1.5*inch, height=1.5*inch, mask='auto')
-    else:
-        c.setFont("Helvetica-Bold", 20); c.setFillColor(VERDE_SERENITY)
-        c.drawCentredString(4.25*inch, 9.5*inch, "SERENITY NEXUS GLOBAL")
-
-    # Contenido
-    c.setFont("Helvetica-Bold", 18); c.setFillColor(black)
-    c.drawCentredString(4.25*inch, 8.5*inch, titulo)
-    
-    c.setFont("Helvetica", 12)
-    c.drawString(1*inch, 7.5*inch, f"Fecha de Emisión: {fecha}")
-    c.drawString(1*inch, 7.2*inch, f"Especies Monitoreadas: 1,248")
-    c.drawString(1*inch, 6.9*inch, f"Salud del Ecosistema: 98%")
-    c.drawString(1*inch, 6.6*inch, f"Hectáreas Protegidas: 87.0 Ha")
-    
-    # Hash de Seguridad
-    c.setFont("Courier", 10)
-    c.drawString(1*inch, 5.5*inch, f"BLOCKCHAIN HASH: {hash_analisis}")
-    
-    # Simulación de QR (Un cuadro con texto)
-    c.setStrokeColor(black); c.setLineWidth(1)
-    c.rect(6*inch, 1*inch, 1.5*inch, 1.5*inch)
-    c.setFont("Helvetica-Bold", 8)
-    c.drawCentredString(6.75*inch, 0.8*inch, "VERIFICACIÓN QR")
-    
-    c.save(); buffer.seek(0); return buffer
+# --- FUNCIONES PDF ---
 def generar_pdf_analisis_ia(lang):
     buffer = io.BytesIO()
     c = canvas.Canvas(buffer, pagesize=letter)
     fecha = datetime.now().strftime("%Y-%m-%d %H:%M")
-    hash_analisis = hashlib.sha256(f"Serenity-IA-{fecha}".encode()).hexdigest()[:16].upper()
-    titulo = "REPORTE DE INTELIGENCIA BIOLÓGICA" if lang == 'ES' else "BIOLOGICAL INTELLIGENCE REPORT"
-    
-    # Dibujo del marco
+    hash_id = hashlib.sha256(f"Serenity-{fecha}".encode()).hexdigest()[:12].upper()
     c.setStrokeColor(VERDE_SERENITY); c.setLineWidth(3); c.rect(0.5*inch, 0.5*inch, 7.5*inch, 10.0*inch)
-    
-    # Identidad Serenity
-    if os.path.exists("logo_serenity.png"):
-        c.drawImage("logo_serenity.png", 3.5*inch, 9.0*inch, width=1.5*inch, height=1.5*inch, mask='auto')
-    else:
-        c.setFont("Helvetica-Bold", 20); c.setFillColor(VERDE_SERENITY)
-        c.drawCentredString(4.25*inch, 9.5*inch, "SERENITY NEXUS GLOBAL")
-    
-    # Textos del Reporte
-    c.setFont("Helvetica-Bold", 18); c.setFillColor(black); c.drawCentredString(4.25*inch, 8.5*inch, titulo)
-    c.setFont("Helvetica", 12); c.drawString(1*inch, 7.5*inch, f"Fecha de Emisión: {fecha}")
-    c.drawString(1*inch, 7.2*inch, f"Especies Monitoreadas: 1,248")
-    c.drawString(1*inch, 6.9*inch, f"Salud del Ecosistema: 98%")
-    c.drawString(1*inch, 6.6*inch, f"Hectáreas Protegidas: 87.0 Ha")
-    
-    # Seguridad Hash
-    c.setFont("Courier", 10); c.drawString(1*inch, 5.5*inch, f"BLOCKCHAIN HASH: {hash_analisis}")
-    
-    # Espacio para QR
-    c.setStrokeColor(black); c.setLineWidth(1); c.rect(6*inch, 1*inch, 1.5*inch, 1.5*inch)
-    c.setFont("Helvetica-Bold", 8); c.drawCentredString(6.75*inch, 0.8*inch, "VERIFICACIÓN QR")
-    
-    c.save()
-    buffer.seek(0)
-    return buffer
-    
-    c.setStrokeColor(VERDE_SERENITY); c.setLineWidth(5)
-    c.rect(0.3*inch, 0.3*inch, 7.9*inch, 10.4*inch)
-    try:
-        if os.path.exists("logo_serenity.png"): c.drawImage("logo_serenity.png", 3.5*inch, 9.0*inch, width=1.5*inch, height=1.5*inch, mask='auto')
-        else: c.setFillColor(VERDE_SERENITY); c.circle(4.25*inch, 9.7*inch, 40, fill=1)
-    except: pass 
-    
-    c.setFont("Helvetica-Bold", 30); c.setFillColor(VERDE_SERENITY); c.drawCentredString(4.25*inch, 8.5*inch, txt_titulo)
-    c.setFont("Helvetica", 14); c.setFillColor(black)
-    c.drawCentredString(4.25*inch, 7.5*inch, "SERENITY HUB S.A.S. BIC")
-    c.drawCentredString(4.25*inch, 7.0*inch, f"Reconoce a / Recognizes: {nombre.upper()}")
-    c.drawCentredString(4.25*inch, 6.5*inch, f"Aporte / Contribution: ${monto:,.0f} USD")
-    c.drawCentredString(4.25*inch, 6.0*inch, "Destinado a la Regeneración del Bosque San Antonio")
-    c.setLineWidth(1); c.line(2.5*inch, 4.8*inch, 6.0*inch, 4.8*inch); c.drawCentredString(4.25*inch, 4.6*inch, "Jorge Carvajal - Admin")
+    c.setFont("Helvetica-Bold", 20); c.drawCentredString(4.25*inch, 9.0*inch, "REPORTE IA SERENITY")
+    c.setFont("Helvetica", 12); c.drawString(1*inch, 8*inch, f"Fecha: {fecha}"); c.drawString(1*inch, 7.7*inch, f"HASH: {hash_id}")
     c.save(); buffer.seek(0); return buffer
-    # --- CAMBIO 13: BOTÓN DE DESCARGA PDF IA ---
-    st.divider()
-    col_pdf1, col_pdf2 = st.columns([2, 1])
-    with col_pdf1:
-        st.info("Este reporte incluye un Hash de seguridad único generado por la IA de Serenity para garantizar la inalterabilidad de los datos biológicos." if st.session_state.lang == 'ES' else "This report includes a unique security Hash generated by Serenity IA to ensure the inalterability of biological data.")
-    
-    with col_pdf2:
-        if st.button("📄 GENERAR REPORTE PDF"):
-            pdf_ia = generar_pdf_analisis_ia(st.session_state.lang)
-            st.download_button(
-                label="📥 DESCARGAR REPORTE",
-                data=pdf_ia,
-                file_name=f"Analisis_IA_Serenity_{datetime.now().strftime('%Y%m%d')}.pdf",
-                mime="application/pdf"
-            )
 
-# --- FUNCIÓN PDF: CERTIFICADO EMPRESA ---
 def generar_cert_empresa(nit, logo_bytes, lang):
     buffer = io.BytesIO()
     c = canvas.Canvas(buffer, pagesize=letter)
-    
-    titulo = "CERTIFICADO DE CUMPLIMIENTO" if lang == 'ES' else "COMPLIANCE CERTIFICATE"
-    subtitulo = "LEY 2173 DE 2021 (ÁREAS DE VIDA)" if lang == 'ES' else "LAW 2173 OF 2021 (AREAS OF LIFE)"
-    txt_nit = f"NIT / TAX ID: {nit}"
-    cuerpo = "Por medio de la presente, SERENITY NEXUS GLOBAL certifica que la empresa:" if lang == 'ES' else "SERENITY NEXUS GLOBAL hereby certifies that the company:"
-    cuerpo2 = "Ha cumplido con la compensación ambiental mediante la siembra y mantenimiento." if lang == 'ES' else "Has complied with environmental compensation through tree planting and maintenance."
-    
-    hash_input = f"{nit}{datetime.now()}SERENITY".encode()
-    hash_code = hashlib.sha256(hash_input).hexdigest().upper()
-    
-    c.setStrokeColor(HexColor("#D4AF37")); c.setLineWidth(4)
-    c.rect(0.5*inch, 0.5*inch, 7.5*inch, 10.0*inch)
-    
-    try:
-        if os.path.exists("logo_serenity.png"): c.drawImage("logo_serenity.png", 3.75*inch, 9.5*inch, width=1.0*inch, height=1.0*inch, mask='auto')
-        else: c.setFillColor(VERDE_SERENITY); c.circle(4.25*inch, 10*inch, 20, fill=1)
-    except: pass
-
-    c.setFont("Helvetica-Bold", 24); c.setFillColor(VERDE_SERENITY); c.drawCentredString(4.25*inch, 9.0*inch, titulo)
-    c.setFont("Helvetica-Bold", 14); c.setFillColor(black); c.drawCentredString(4.25*inch, 8.7*inch, subtitulo)
-    
-    if logo_bytes is not None:
-        try:
-            logo_img = ImageReader(logo_bytes)
-            c.drawImage(logo_img, 3.25*inch, 6.5*inch, width=2.0*inch, height=2.0*inch, preserveAspectRatio=True, mask='auto')
-        except: c.drawCentredString(4.25*inch, 7.5*inch, "[LOGO EMPRESA]")
-            
-    c.setFont("Helvetica", 12); c.drawCentredString(4.25*inch, 6.0*inch, cuerpo)
-    c.setFont("Helvetica-Bold", 18); c.drawCentredString(4.25*inch, 5.5*inch, txt_nit)
-    c.setFont("Helvetica", 12); c.drawCentredString(4.25*inch, 5.0*inch, cuerpo2)
-    
-    c.setFont("Courier", 9); c.setFillColor(black); c.drawCentredString(4.25*inch, 3.5*inch, "BLOCKCHAIN VERIFICATION HASH:")
-    c.setFont("Courier-Bold", 10); c.drawCentredString(4.25*inch, 3.3*inch, hash_code)
-    
-    c.setLineWidth(1); c.line(1.5*inch, 2.0*inch, 3.5*inch, 2.0*inch); c.line(5.0*inch, 2.0*inch, 7.0*inch, 2.0*inch)
-    c.setFont("Helvetica", 8); c.drawString(1.8*inch, 1.8*inch, "Jorge Carvajal - CEO"); c.drawString(5.3*inch, 1.8*inch, "Sistema Nexus IA")
+    c.setStrokeColor(VERDE_SERENITY); c.setLineWidth(5); c.rect(0.5*inch, 0.5*inch, 7.5*inch, 10.0*inch)
+    c.setFont("Helvetica-Bold", 22); c.drawCentredString(4.25*inch, 9*inch, "CERTIFICADO LEY 2173")
+    c.setFont("Helvetica", 14); c.drawCentredString(4.25*inch, 8*inch, f"NIT: {nit}")
     c.save(); buffer.seek(0); return buffer
 
-# --- CSS ---
-st.markdown("""
-    <style>
-        .stApp { background-image: linear-gradient(rgba(5, 10, 4, 0.8), rgba(5, 10, 4, 0.9)), url('https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1920&q=80'); background-size: cover; background-position: center; background-attachment: fixed; color: #e8f5e9; font-family: 'Montserrat', sans-serif; }
-        label, .stMarkdown p, [data-testid="stSidebar"] p, [data-testid="stSidebar"] span, .stMetricLabel { color: white !important; font-weight: 500; }
-        [data-testid="stSidebar"] { background-color: rgba(10, 20, 8, 0.9) !important; backdrop-filter: blur(10px); }
-        h1, h2, h3 { color: #9BC63B !important; text-shadow: 2px 2px 4px #000; }
-        .stButton>button { background-color: #2E7D32; color: white; border: 1px solid #9BC63B; border-radius: 8px; width: 100%; font-weight: bold; }
-        .stButton>button:hover { background-color: #9BC63B; color: black; box-shadow: 0 0 15px #9BC63B; }
-        .faro-card, .metric-card { border: 1px solid #9BC63B; padding: 15px; border-radius: 10px; background: rgba(0,0,0,0.6); text-align: center; }
-        .faro-gemini { border: 2px solid #4285F4; padding: 15px; border-radius: 10px; background: rgba(66, 133, 244, 0.2); text-align: center; box-shadow: 0 0 15px #4285F4; }
-        .cam-grid { background: #000; border: 1px solid #2E7D32; height: 80px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #ff0000; border-radius: 5px; }
-        .trust-section { background-color: rgba(245, 245, 245, 0.95); color: #1a1a1a !important; padding: 25px; border-radius: 15px; border-left: 6px solid #2E7D32; margin-bottom: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
-        .trust-section h3, .trust-section h4 { color: #2E7D32 !important; text-shadow: none !important; margin-bottom: 10px; }
-        .trust-section p { color: #333 !important; font-weight: 500; font-size: 1rem; line-height: 1.5; }
-        .airline-grid { background: rgba(255, 255, 255, 0.9); padding: 15px; border-radius: 10px; text-align: center; margin-bottom: 10px; height: 110px; display: flex; align-items: center; justify-content: center; flex-direction: column; border: 1px solid #ccc; transition: transform 0.2s; cursor: pointer; }
-        .airline-grid:hover { transform: scale(1.05); border: 2px solid #2E7D32; }
-        .airline-grid p { color: #333 !important; }
-        .legal-card { background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; border-left: 5px solid #D4AF37; margin-bottom: 10px; }
-        .wallet-msg-box { background-color: rgba(30, 30, 30, 0.8); border: 1px solid #D4AF37; padding: 15px; border-radius: 10px; color: #D4AF37; font-weight: bold; text-align: center; margin-top: 10px; }
-        .nft-card { background: linear-gradient(135deg, #101010, #202020); border: 1px solid #9BC63B; padding: 15px; border-radius: 10px; text-align: center; margin-bottom: 10px; color: white; }
-        a { text-decoration: none; }
-    </style>
-""", unsafe_allow_html=True)
+def generar_pdf_certificado(nombre, monto, lang):
+    buffer = io.BytesIO()
+    c = canvas.Canvas(buffer, pagesize=letter)
+    c.setStrokeColor(VERDE_SERENITY); c.rect(0.5*inch, 0.5*inch, 7.5*inch, 10.0*inch)
+    c.drawCentredString(4.25*inch, 8*inch, f"GRACIAS {nombre.upper()} POR TU APORTE DE ${monto}")
+    c.save(); buffer.seek(0); return buffer
+
+# --- ESTILOS CSS ---
+st.markdown("<style>.stApp { background-color: #050a04; color: white; }</style>", unsafe_allow_html=True)
 
 # --- LOGIN ---
 if not st.session_state.auth:
-    st.markdown("<div style='text-align:center; padding-top: 50px;'><h1>SISTEMA NEXUS | SERENITY</h1></div>", unsafe_allow_html=True)
-    col_sec = st.columns([1,1,1])
-    with col_sec[1]:
-        clave = st.text_input("PASSWORD ADMIN", type="password")
-        if st.button("INGRESAR"):
-            if clave == "Serenity2026": st.session_state.auth = True; st.rerun()
+    st.markdown("<h1 style='text-align:center;'>SISTEMA NEXUS | SERENITY</h1>", unsafe_allow_html=True)
+    clave = st.text_input("PASSWORD ADMIN", type="password")
+    if st.button("INGRESAR"):
+        if clave == "Serenity2026": st.session_state.auth = True; st.rerun()
     st.stop()
 
-# --- SIDEBAR ---
+# --- SIDEBAR Y NAVEGACIÓN ---
 with st.sidebar:
     st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Colombia.svg/320px-Flag_of_Colombia.svg.png", width=30)
     toggle_lang = st.toggle(" ENGLISH MODE", value=False)
     st.session_state.lang = 'EN' if toggle_lang else 'ES'
-    st.divider()
-    menu_opts = tr['menu_opts'][st.session_state.lang]
-    menu_sel = st.radio("MENÚ / MENU", menu_opts)
-
-# --- CAMBIO 1: LOGO CENTRADO EN EL INICIO ---
-if menu_sel == menu_opts[0]:
-    # Definimos tres columnas para centrar la imagen en la del medio
-    col_l1, col_l2, col_l3 = st.columns([1, 2, 1])
-    with col_l2:
-        # Intenta cargar el logo si el archivo existe en el repositorio
-        if os.path.exists("logo_serenity.png"):
-            st.image("logo_serenity.png", use_container_width=True)
-        else:
-            # Si no está el archivo, pone un banner elegante con el nombre
-            st.markdown("""
-                <div style='text-align:center; border:3px solid #9BC63B; padding:20px; border-radius:20px; background:rgba(46, 125, 50, 0.1);'>
-                    <h1 style='color:#9BC63B; margin:0;'>SERENITY NEXUS GLOBAL</h1>
-                    <p style='color:white; margin:0; font-weight:bold;'>PROYECTO REGENERATIVO</p>
-                </div>
-            """, unsafe_allow_html=True)
-    
-    # Título principal de la plataforma
-    st.markdown("<h1 style='text-align:center; font-size:4rem;'>Serenity Nexus Global</h1>", unsafe_allow_html=True)
-    
-    # Subtítulo bilingüe
-    subt = "SISTEMA REGENERATIVO BIOMÉTRICO KBA" if st.session_state.lang == 'ES' else "KBA BIOMETRIC REGENERATIVE SYSTEM"
-    st.markdown(f"<p style='text-align:center; letter-spacing:5px; color:#9BC63B; font-weight:bold;'>{subt}</p>", unsafe_allow_html=True)
-    btn_audio = " ACTIVAR SONIDO GLOBAL EARTH" if st.session_state.lang == 'ES' else " ACTIVATE GLOBAL EARTH SOUND"
-    st.components.v1.html(f"""<audio id="audio_earth" src="sonido_Earth.mp3" loop></audio><div style="text-align:center; margin-top:30px;"><button onclick="document.getElementById('audio_earth').play()" style="background:#2E7D32; color:white; border:1px solid #9BC63B; padding:20px; border-radius:10px; cursor:pointer; font-weight:bold; font-size:16px;">{btn_audio}</button></div>""", height=150)
-    st.write("")
-    
-# --- CAMBIO 3: LIMPIEZA DE MISION Y VISION (SIN SIGNOS) ---
-    st.markdown(f"""
-        <div class="trust-section">
-            <h3 style="text-align:center;">{t('who_title')}</h3>
-            <p style="text-align:center;">{t('who_text')}</p>
-            <hr style="border-top: 1px solid #ccc;">
-            <div style="display: flex; flex-wrap: wrap; justify-content: space-around;">
-                <div style="flex: 1; min-width: 300px; padding: 10px;">
-                    <h4>🌿 {t('mis_title')}</h4>
-                    <p>{t('mis_text')}</p>
-                </div>
-                <div style="flex: 1; min-width: 300px; padding: 10px;">
-                    <h4>🚀 {t('vis_title')}</h4>
-                    <p>{t('vis_text')}</p>
-                </div>
-            </div>
-        </div>
-    """, unsafe_allow_html=True)
-    st.info("Finca Villa Michell SPAM (40%) | Hacienda Monte Guadua TAF (60%) | Admin: Jorge Carvajal")
-
-# 2. RED DE FAROS (CAMBIO 4: LIMPIEZA DE TÍTULO)
-elif menu_sel == menu_opts[1]:
-    # Eliminamos los signos de interrogación del título
-    tt = "Monitoreo Perimetral" if st.session_state.lang == 'ES' else "Perimeter Monitoring"
-    st.title(f"📡 {tt}") # Usamos un emoji de antena estándar que no falla
-    
-    lbl_conn = t('connect')
-    c1, c2, c3 = st.columns(3)
-    with c1: 
-        st.markdown("<div class='faro-card'><h3>FARO HALCÓN</h3></div>", unsafe_allow_html=True)
-        if st.button(f"{lbl_conn} Halcón"): st.session_state.f_activo = "Halcón"
-    with c2: 
-        st.markdown("<div class='faro-card'><h3>FARO COLIBRÍ</h3></div>", unsafe_allow_html=True)
-        if st.button(f"{lbl_conn} Colibrí"): st.session_state.f_activo = "Colibrí"
-    with c3: 
-        st.markdown("<div class='faro-card'><h3>FARO RANA</h3></div>", unsafe_allow_html=True)
-        if st.button(f"{lbl_conn} Rana"): st.session_state.f_activo = "Rana"
-    st.write("")
-    c4, c5, c6 = st.columns(3)
-    with c4: 
-        st.markdown("<div class='faro-card'><h3>FARO VENADO</h3></div>", unsafe_allow_html=True)
-        if st.button(f"{lbl_conn} Venado"): st.session_state.f_activo = "Venado"
-    with c5: 
-        st.markdown("<div class='faro-card'><h3>FARO TIGRILLO</h3></div>", unsafe_allow_html=True)
-        if st.button(f"{lbl_conn} Tigrillo"): st.session_state.f_activo = "Tigrillo"
-    with c6: 
-        st.markdown("<div class='faro-card'><h3>FARO CAPIBARA</h3></div>", unsafe_allow_html=True)
-        if st.button(f"{lbl_conn} Capibara"): st.session_state.f_activo = "Capibara"
-    st.write("---")
-    
-# --- CAMBIO 5: LIMPIEZA FARO GEMINI ---
-    col_gemini = st.columns([1,2,1])
-    with col_gemini[1]:
-        st_st = "Estado" if st.session_state.lang == 'ES' else "Status"
-        # Quitamos los signos de interrogación y dejamos el diseño azul distintivo
-        st.markdown(f"""
-            <div class='faro-gemini'>
-                <h3 style='color:#4285F4; margin-bottom:5px;'>🤖 FARO GEMINI (VTA OVO II)</h3>
-                <p style='color:white; font-weight:bold;'>{st_st}: {st.session_state.estado_gemini}</p>
-            </div>
-        """, unsafe_allow_html=True)
-        
-        st.write("")
-# --- CAMBIO 7 (CORREGIDO): FUERZA COLOR BLANCO EN RADIO BUTTONS ---
-        st.markdown("""
-            <style>
-                /* Esto cambia el color de las opciones del radio button */
-                div[data-testid="stWidgetLabel"] p { color: white !important; }
-                div[data-testid="stMarkdownContainer"] p { color: white !important; }
-                .st-eb { color: white !important; } /* Clase específica para el texto del radio */
-                div[role="radiogroup"] label { color: white !important; }
-            </style>
-        """, unsafe_allow_html=True)
-        
-        opcion_cam = st.radio(
-            "Fuente de Video / Video Source:", 
-            ["SIMULACIÓN (DEMO NUBE)", "CÁMARA REAL (IP LOCAL)"]
-        )
-        
-# --- CAMBIO 6: LIMPIEZA BOTÓN DEMO ---
-        if opcion_cam == "SIMULACIÓN (DEMO NUBE)":
-            if st.button("📽️ VER DEMOSTRACIÓN (VIDEO)"):
-                st.session_state.f_activo = "GEMINI-DEMO"
-                st.session_state.estado_gemini = t('active')
-        else:
-            url_camara = st.text_input("Enlace RTSP:", value="rtsp://admin:admin123@192.168.111.178:554/live/ch0")
-            if st.button("ACTIVAR CÁMARA REAL"):
-                st.session_state.f_activo = "GEMINI"
-                st.session_state.estado_gemini = t('active')
-                mostrar_camara_real(url_camara)
-
-# --- CAMBIO 8: VIDEO DE VIDA SILVESTRE 4K ---
-    if st.session_state.get('f_activo') == "GEMINI-DEMO":
-        st.divider()
-        st.markdown("<h3 style='text-align:center; color:#4285F4;'>🌿 CONEXIÓN VIRTUAL: NATURALEZA GLOBAL</h3>", unsafe_allow_html=True)
-        st.video("https://www.youtube.com/watch?v=bUs9qYKF6mY")
-
-    # --- CAMBIO 10: TRANSMISIÓN EN VIVO ---
-    if st.session_state.get('f_activo') and st.session_state.f_activo not in ["GEMINI", "GEMINI-DEMO"]:
-        live_t = "TRANSMISIÓN EN VIVO" if st.session_state.lang == 'ES' else "LIVE STREAM"
-        st.markdown(f"<h2 style='color:#9BC63B; text-align:center; text-shadow: 2px 2px 4px #000;'>📡 {live_t}: {st.session_state.f_activo.upper()}</h2>", unsafe_allow_html=True)
-        
-        c_cols = st.columns(4)
-        for j in range(8):
-            with c_cols[j % 4]:
-                st.markdown(f"<div style='border: 2px solid #2E7D32; border-radius: 10px; padding: 5px; background: black;'><p style='text-align:center; color:#9BC63B; font-weight:bold; font-size: 10px; margin:0;'>CAM {j+1} - MONTE GUADUA</p></div>", unsafe_allow_html=True)
-                st.video("https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", start_time=j*5)
+    opciones_menu = tr['menu_opts'][st.session_state.lang]
+    menu_sel = st.radio("MENÚ / MENU", opciones_menu)
 
 # =========================================================
-    # CONTROLADOR DE CONTENIDO CENTRAL - SERENITY NEXUS
-    # =========================================================
+# LÓGICA DE CONTENIDO CENTRAL
+# =========================================================
 
-    # --- PESTAÑA 0: INICIO ---
-    if menu_sel == opciones_menu[0]:
-        st.title("🏡 Bienvenido a Serenity Nexus Global")
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            st.markdown(f"### 🏢 {t('who_title')}")
-            st.write(t('who_text'))
-        with col2:
-            st.markdown(f"### 🎯 {t('mis_title')}")
-            st.write(t('mis_text'))
-        with col3:
-            st.markdown(f"### 👁️ {t('vis_title')}")
-            st.write(t('vis_text'))
+# --- 0. INICIO ---
+if menu_sel == opciones_menu[0]:
+    st.markdown("<h1 style='text-align:center;'>Serenity Nexus Global</h1>", unsafe_allow_html=True)
+    col1, col2, col3 = st.columns(3)
+    with col1: st.subheader(t('who_title')); st.write(t('who_text'))
+    with col2: st.subheader(t('mis_title')); st.write(t('mis_text'))
+    with col3: st.subheader(t('vis_title')); st.write(t('vis_text'))
+    st.info("Finca Villa Michell (40%) | Hacienda Monte Guadua (60%) | Admin: Jorge Carvajal")
 
-    # --- PESTAÑA 2: ANÁLISIS DE INTELIGENCIA BIOLÓGICA ---
-    elif menu_sel == opciones_menu[2]:
-        st.title("📊 Análisis de Inteligencia Biológica")
-        st.info("Monitoreo en tiempo real de la Red de Faros Serenity.")
-        
-        m1, m2, m3, m4 = st.columns(4)
-        m1.metric("🐾 Especies", "1,252", "+4")
-        m2.metric("🌳 Hectáreas", "14.5", "0")
-        m3.metric("🩺 Salud", "98.7%", "+0.2%")
-        m4.metric("💰 $SNG", "0.085", "+0.002")
-        
-        st.divider()
-        if st.button("📥 GENERAR CERTIFICADO PDF PROFESIONAL"):
-            st.success("Preparando reporte con Hash SHA-256...")
-            st.balloons()
+# --- 1. RED DE FAROS ---
+elif menu_sel == opciones_menu[1]:
+    st.title("📡 Monitoreo de Faros")
+    c1, c2, c3 = st.columns(3)
+    with c1: 
+        if st.button("🔌 Conectar Halcón"): st.session_state.f_activo = "Halcón"
+    with c2: 
+        if st.button("🔌 Conectar Colibrí"): st.session_state.f_activo = "Colibrí"
+    with c3: 
+        if st.button("📽️ VER DEMO GEMINI"): st.session_state.f_activo = "GEMINI-DEMO"
 
-    # --- PESTAÑA 3: GESTIÓN LEY 2173 ---
-    elif menu_sel == opciones_menu[3]:
-        st.title("⚖️ Gestión Ley 2173 de 2021")
-        with st.container(border=True):
-            st.subheader("🏢 Registro de Cumplimiento Empresarial")
-            nit_input = st.text_input("Ingrese NIT de la Empresa")
-            if nit_input:
-                st.success(f"Sistema listo para procesar NIT: {nit_input}")
+    if st.session_state.f_activo == "GEMINI-DEMO":
+        st.video("https://www.youtube.com/watch?v=bUs9qYKF6mY")
+    elif st.session_state.f_activo:
+        st.success(f"Transmitiendo desde: {st.session_state.f_activo}")
+        st.video("https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")
 
-    # --- PESTAÑA 4: SUSCRIPCIONES (LÍNEA 506 CORREGIDA) ---
-    elif menu_sel == opciones_menu[4]:
-        st.title("🌱 Planes de Membresía Serenity")
-        st.write("Seleccione el nivel de impacto que desea generar.")
-        col_p1, col_p2, col_p3 = st.columns(3)
-        with col_p1: st.info("Plan Semilla")
-        with col_p2: st.info("Plan Guardián")
-        with col_p3: st.info("Plan Halcón")
-    # Si ya eligió un plan, mostramos el formulario
-    else:
-        st.info(f"📋 Formulario de Registro - Plan {st.session_state.registro_plan}")
-        
-        with st.form("form_registro"):
-            col_f1, col_f2 = st.columns(2)
-            
-            with col_f1:
-                tipo_persona = st.selectbox("Tipo de Persona", ["Natural", "Juridica (Empresa)"])
-                nombre_completo = st.text_input("Nombre Completo o Razon Social")
-                pais_origen = st.text_input("Pais de Origen")
-                email_contacto = st.text_input("Correo Electronico")
-            
-            with col_f2:
-                interes = st.multiselect("Fines de Interes", [
-                    "Compensacion de Carbono (Ley 2173)",
-                    "Inversion en Token $SNG",
-                    "Ecoturismo Cientifico",
-                    "Adopcion de Hectareas",
-                    "Monitoreo de Biodiversidad (IA)"
-                ])
-                # --- NUEVAS IDEAS PARA EL FORMULARIO ---
-                medio_pago = st.selectbox("Preferencia de Pago", ["Cripto ($SNG / USDT)", "Transferencia Bancaria", "Tarjeta de Credito"])
-                referido = st.text_input("¿Como te enteraste de Serenity?")
-                comentarios = st.text_area("Cuentanos mas sobre tus objetivos ambientales")
-
-            submit = st.form_submit_button("CONFIRMAR SUSCRIPCION")
-            
-            if submit:
-                st.success(f"¡Gracias {nombre_completo}! Tu solicitud para el plan {st.session_state.registro_plan} ha sido enviada. Un consultor de Serenity Nexus Global te contactara.")
-                if st.button("Volver a Planes"):
-                    del st.session_state.registro_plan
-                    st.rerun()
-
-# --- CAMBIO 17: VIDEO $SNG EN BUCLE INFINITO (AUTOPLAY) ---
-elif menu_sel == menu_opts[5]:
-    st.title("💳 Web3 Green Wallet - Serenity Nexus")
+# --- 2. DASHBOARD IA (EL DASHBOARD VIVO) ---
+elif menu_sel == opciones_menu[2]:
+    st.title("📊 Análisis de Inteligencia Biológica")
+    with st.status("🧬 Procesando señales en tiempo real...", expanded=True) as status:
+        st.write("📡 Recibiendo telemetría de Dagua...")
+        time.sleep(1)
+        status.update(label="✅ Datos Sincronizados", state="complete")
     
-    st.info("Conecta tu billetera para ver tus activos.")
+    m1, m2, m3, m4 = st.columns(4)
+    m1.metric("🐾 Especies", "1,252", "+4")
+    m2.metric("🌳 Hectáreas", "14.5 Ha", "0")
+    m3.metric("🩺 Salud", "98.7%", "+0.2%")
+    m4.metric("💰 $SNG", "0.085", "+0.002")
 
-    # Convertimos el video a un formato que el navegador entienda como "fondo" o "bucle"
+    if st.button("📥 DESCARGAR REPORTE PDF IA"):
+        pdf = generar_pdf_analisis_ia(st.session_state.lang)
+        st.download_button("Guardar Reporte", data=pdf, file_name="Analisis_Serenity.pdf")
+
+# --- 3. GESTIÓN LEY 2173 ---
+elif menu_sel == opciones_menu[3]:
+    st.title("⚖️ Gestión Ley 2173")
+    with st.container(border=True):
+        nit = st.text_input("Ingrese NIT de Empresa")
+        logo = st.file_uploader("Subir Logo", type=["png", "jpg"])
+        if st.button("GENERAR CERTIFICADO LEY"):
+            st.session_state.pdf_empresa_buffer = generar_cert_empresa(nit, logo, st.session_state.lang)
+            st.success("Certificado Listo")
+        if st.session_state.pdf_empresa_buffer:
+            st.download_button("📥 DESCARGAR CERTIFICADO", data=st.session_state.pdf_empresa_buffer, file_name="Certificado_Ley2173.pdf")
+
+# --- 4. SUSCRIPCIONES ---
+elif menu_sel == opciones_menu[4]:
+    st.title("🌱 Planes de Membresía")
+    if not st.session_state.registro_plan:
+        c1, c2, c3 = st.columns(3)
+        with c1: 
+            if st.button("ELEGIR SEMILLA"): st.session_state.registro_plan = "Semilla"; st.rerun()
+        with c2: 
+            if st.button("ELEGIR GUARDIAN"): st.session_state.registro_plan = "Guardian"; st.rerun()
+        with c3: 
+            if st.button("ELEGIR HALCON"): st.session_state.registro_plan = "Halcon"; st.rerun()
+    else:
+        with st.form("registro"):
+            st.subheader(f"Registro: Plan {st.session_state.registro_plan}")
+            tipo = st.selectbox("Tipo", ["Natural", "Juridica"])
+            nom = st.text_input("Nombre / Empresa")
+            pais = st.text_input("Pais")
+            if st.form_submit_button("CONFIRMAR"):
+                st.success("¡Bienvenido a Serenity!")
+                if st.button("Volver"): st.session_state.registro_plan = None; st.rerun()
+
+# --- 5. BILLETERA WEB3 ---
+elif menu_sel == opciones_menu[5]:
+    st.title("💳 Web3 Green Wallet")
     import base64
     try:
         with open("video_sng.mp4", "rb") as f:
-            data = f.read()
-            bin_str = base64.b64encode(data).decode()
-            
-        # HTML para video sin fin, con autoplay y silenciado (requisito para autoplay)
-        video_html = f"""
-            <video width="100%" height="auto" autoplay loop muted playsinline style="border-radius: 15px; border: 2px solid #9BC63B;">
-                <source src="data:video/mp4;base64,{bin_str}" type="video/mp4">
-                Tu navegador no soporta el formato de video.
-            </video>
-        """
-        st.markdown(video_html, unsafe_allow_html=True)
-        st.caption("Token Oficial Serenity Nexus Global ($SNG) - Activo Digital de Conservación")
-    except FileNotFoundError:
-        st.warning("⚠️ El archivo 'video_sng.mp4' no se encuentra en el repositorio. Por favor, súbelo para activar el bucle visual.")
+            bin_str = base64.b64encode(f.read()).decode()
+            st.markdown(f'<video width="100%" autoplay loop muted playsinline><source src="data:video/mp4;base64,{bin_str}" type="video/mp4"></video>', unsafe_allow_html=True)
+    except: st.warning("Suba 'video_sng.mp4' a GitHub para ver el video sin fin.")
+    if st.button("🔌 CONECTAR BILLETERA"): st.success("Conectado: 25,000 $SNG")
 
-    st.write("")
-    if st.button("🔌 CONECTAR BILLETERA"):
-        st.success("Billetera Conectada: 0x71C...9A23 | Saldo: 25,000 $SNG")
+# --- 6. DONACIONES ---
+elif menu_sel == opciones_menu[6]:
+    st.title("🎁 Donaciones y Certificados")
+    nom_d = st.text_input("Nombre Donante")
+    mon_d = st.number_input("Monto (USD)", min_value=1)
+    if st.button("PROCESAR"):
+        st.session_state.pdf_buffer = generar_pdf_certificado(nom_d, mon_d, st.session_state.lang)
+        st.success("Diploma Generado")
+        st.download_button("📥 DESCARGAR DIPLOMA", data=st.session_state.pdf_buffer, file_name="Diploma_Serenity.pdf")
 
-# 7. DONACIONES
-elif menu_sel == menu_opts[6]:
-    tt = " Generador de Diploma Oficial" if st.session_state.lang == 'ES' else " Official Diploma Generator"
-    st.title(tt)
-    colA, colB = st.columns([1, 1])
-    with colA:
-        with st.container(border=True):
-            l_n = "Nombre Completo" if st.session_state.lang == 'ES' else "Full Name"
-            l_m = "Monto Donación (USD)" if st.session_state.lang == 'ES' else "Donation Amount (USD)"
-            l_b = " PROCESAR DONACIÓN" if st.session_state.lang == 'ES' else " PROCESS DONATION"
-            nombre_d = st.text_input(l_n)
-            monto_d = st.number_input(l_m, min_value=1)
-            if st.button(l_b): 
-                if nombre_d:
-                    st.session_state.donaciones_recibidas += 1
-                    st.session_state.estado_gemini = t('active')
-                    st.session_state.pdf_buffer = generar_pdf_certificado(nombre_d, monto_d, st.session_state.lang)
-                    st.balloons(); st.success("OK!")
-                else: st.warning("Name required")
-    with colB:
-        if 'pdf_buffer' in st.session_state:
-            prev = "VISTA PREVIA" if st.session_state.lang == 'ES' else "PREVIEW"
-            st.markdown(f"""<div style="background:white; color:black; padding:20px; text-align:center; border:5px double #2E7D32;"><h3 style="color:#2E7D32;">{prev}</h3><h1>{nombre_d.upper()}</h1><p>${monto_d}</p></div>""", unsafe_allow_html=True)
-            dl = t('download') + " PDF"
-            st.download_button(dl, data=st.session_state.pdf_buffer, file_name=f"Diploma_Serenity_{nombre_d}.pdf", mime="application/pdf")
+# --- 7. LOGISTICA AEROLINEAS ---
+elif menu_sel == opciones_menu[7]:
+    st.title("✈️ Conectividad Logística")
+    st.subheader("Aerolíneas Recomendadas")
+    col_a1, col_a2 = st.columns(2)
+    with col_a1: st.write("- Iberia (Europa)\n- Avianca (Latam)\n- Lufthansa (Global)")
+    with col_a2: st.write("- American Airlines (USA)\n- KLM (Holanda)\n- Copa (Panamá)")
 
-# 8. LOGÍSTICA
-elif menu_sel == menu_opts[7]:
-    tt = " Conectividad Global a Colombia" if st.session_state.lang == 'ES' else " Global Connectivity to Colombia"
-    subt = "Haga clic en una aerolínea para reservar." if st.session_state.lang == 'ES' else "Click on an airline to book."
-    st.title(tt); st.markdown(subt)
-    st.subheader(" Europa")
-    e1, e2, e3, e4 = st.columns(4)
-    with e1: st.markdown("<a href='https://www.iberia.com' target='_blank'><div class='airline-grid'><img src='https://logo.clearbit.com/iberia.com'><p>IBERIA</p></div></a>", unsafe_allow_html=True)
-    with e2: st.markdown("<a href='https://www.lufthansa.com' target='_blank'><div class='airline-grid'><img src='https://logo.clearbit.com/lufthansa.com'><p>LUFTHANSA</p></div></a>", unsafe_allow_html=True)
-    with e3: st.markdown("<a href='https://www.airfrance.com' target='_blank'><div class='airline-grid'><img src='https://logo.clearbit.com/airfrance.com'><p>AIR FRANCE</p></div></a>", unsafe_allow_html=True)
-    with e4: st.markdown("<a href='https://www.turkishairlines.com' target='_blank'><div class='airline-grid'><img src='https://logo.clearbit.com/turkishairlines.com'><p>TURKISH</p></div></a>", unsafe_allow_html=True)
-    e5, e6, e7 = st.columns(3)
-    with e5: st.markdown("<a href='https://www.klm.com' target='_blank'><div class='airline-grid'><img src='https://logo.clearbit.com/klm.com'><p>KLM</p></div></a>", unsafe_allow_html=True)
-    with e6: st.markdown("<a href='https://www.aireuropa.com' target='_blank'><div class='airline-grid'><img src='https://logo.clearbit.com/aireuropa.com'><p>AIR EUROPA</p></div></a>", unsafe_allow_html=True)
-    with e7: st.markdown("<a href='https://www.flyedelweiss.com' target='_blank'><div class='airline-grid'><img src='https://logo.clearbit.com/flyedelweiss.com'><p>EDELWEISS</p></div></a>", unsafe_allow_html=True)
-    st.subheader(" Norteamérica")
-    n1, n2, n3, n4 = st.columns(4)
-    with n1: st.markdown("<a href='https://www.aa.com' target='_blank'><div class='airline-grid'><img src='https://logo.clearbit.com/aa.com'><p>AMERICAN</p></div></a>", unsafe_allow_html=True)
-    with n2: st.markdown("<a href='https://www.united.com' target='_blank'><div class='airline-grid'><img src='https://logo.clearbit.com/united.com'><p>UNITED</p></div></a>", unsafe_allow_html=True)
-    with n3: st.markdown("<a href='https://www.delta.com' target='_blank'><div class='airline-grid'><img src='https://logo.clearbit.com/delta.com'><p>DELTA</p></div></a>", unsafe_allow_html=True)
-    with n4: st.markdown("<a href='https://www.aircanada.com' target='_blank'><div class='airline-grid'><img src='https://logo.clearbit.com/aircanada.com'><p>AIR CANADA</p></div></a>", unsafe_allow_html=True)
-    st.subheader(" Latinoamérica")
-    l1, l2, l3, l4 = st.columns(4)
-    with l1: st.markdown("<a href='https://www.avianca.com' target='_blank'><div class='airline-grid'><img src='https://logo.clearbit.com/avianca.com'><p>AVIANCA</p></div></a>", unsafe_allow_html=True)
-    with l2: st.markdown("<a href='https://www.latamairlines.com' target='_blank'><div class='airline-grid'><img src='https://logo.clearbit.com/latamairlines.com'><p>LATAM</p></div></a>", unsafe_allow_html=True)
-    with l3: st.markdown("<a href='https://www.copaair.com' target='_blank'><div class='airline-grid'><img src='https://logo.clearbit.com/copaair.com'><p>COPA</p></div></a>", unsafe_allow_html=True)
-    with l4: st.markdown("<a href='https://www.aeromexico.com' target='_blank'><div class='airline-grid'><img src='https://logo.clearbit.com/aeromexico.com'><p>AEROMEXICO</p></div></a>", unsafe_allow_html=True)
+# --- 8. UBICACION Y MAPAS ---
+elif menu_sel == opciones_menu[8]:
+    st.title("📍 Ubicación Serenity (Dagua)")
+    lat, lon = 3.465, -76.634
+    m = folium.Map(location=[lat, lon], zoom_start=14)
+    folium.Marker([lat, lon], popup="Sede Serenity").add_to(m)
+    st_folium(m, width="100%", height=500)
 
-# 9. MAPAS (REALES)
-elif menu_sel == menu_opts[8]:
-    tt = " Ubicación Serenity (Dagua)" if st.session_state.lang == 'ES' else " Serenity Location (Dagua)"
-    st.title(tt)
-    lat_villa = 3.465028; lon_villa = -76.634778; lat_guadua = 3.477917; lon_guadua = -76.657361
-    url_gmaps = f"https://www.google.com/maps/search/?api=1&query={lat_villa},{lon_villa}"
-    btn_text = t('map_btn')
-    st.markdown(f"""<div style='text-align:center; margin-bottom: 20px;'><a href="{url_gmaps}" target="_blank"><button style="background-color:#4285F4; color:white; border:2px solid white; padding:15px 32px; text-align:center; text-decoration:none; display:inline-block; font-size:18px; margin:4px 2px; cursor:pointer; border-radius:12px; font-weight:bold; box-shadow: 0 0 10px #4285F4;">{btn_text}</button></a></div>""", unsafe_allow_html=True)
-    color_gemini_map = "green" if st.session_state.estado_gemini == t('active') else "orange"
-    m = folium.Map(location=[(lat_villa + lat_guadua)/2, (lon_villa + lon_guadua)/2], zoom_start=14, tiles='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', attr='Esri World Imagery')
-    folium.Marker([lat_guadua + 0.001, lon_guadua - 0.001], popup=f"FARO GEMINI", icon=folium.Icon(color=color_gemini_map, icon='bolt', prefix='fa')).add_to(m)
-    offset = 0.004
-    folium.Polygon(locations=[[lat_guadua - offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua + offset], [lat_guadua - offset, lon_guadua + offset]], color="#9BC63B", fill=True, fill_opacity=0.3, tooltip="Hacienda Monte Guadua: 80 Ha").add_to(m)
-    folium.CircleMarker(location=[lat_villa, lon_villa], radius=10, color="blue", fill=True, fill_color="blue", tooltip="Finca Villa Michelle (Sede)").add_to(m)
-    st_folium(m, width="100%", height=600)
 
 
 
