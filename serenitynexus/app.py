@@ -527,22 +527,68 @@ elif menu_sel == menu_opts[3]:
         st.markdown("<div class='legal-card'><h4>Beneficios Tributarios</h4><p>S.A.S. BIC.</p></div>", unsafe_allow_html=True)
         st.download_button(" Descargar Guía Tributaria", data=TEXTO_TRIBUTARIO, file_name="Guia_Tributaria_Serenity.txt")
 
-# 5. SUSCRIPCIONES
+# --- CAMBIO 20: FORMULARIO DE SUSCRIPCIÓN DINÁMICO ---
 elif menu_sel == menu_opts[4]:
-    st.title(" Planes" if st.session_state.lang == 'ES' else " Plans")
-    p1, p2, p3 = st.columns(3)
-    nm = ["Plan Semilla", "Plan Guardián", "Plan Halcón"] if st.session_state.lang == 'ES' else ["Seed Plan", "Guardian Plan", "Hawk Plan"]
-    per = ["1 Faro / 1 Mes", "6 Faros / 1 Mes", "6 Faros / 6 Meses"] if st.session_state.lang == 'ES' else ["1 Beacon / 1 Month", "6 Beacons / 1 Month", "6 Beacons / 6 Months"]
-    btn_s = "SUSCRIBIRSE" if st.session_state.lang == 'ES' else "SUBSCRIBE"
-    with p1: 
-        st.markdown(f"<div class='faro-card'><h3>{nm[0]}</h3><h2>$5 USD</h2><p>{per[0]}</p></div>", unsafe_allow_html=True)
-        if st.button(f"{btn_s} {nm[0]}"): st.success("OK...")
-    with p2: 
-        st.markdown(f"<div class='faro-card'><h3>{nm[1]}</h3><h2>$25 USD</h2><p>{per[1]}</p></div>", unsafe_allow_html=True)
-        if st.button(f"{btn_s} {nm[1]}"): st.success("OK...")
-    with p3: 
-        st.markdown(f"<div class='faro-card' style='border-color:#D4AF37;'><h3>{nm[2]}</h3><h2>$200 USD</h2><p>{per[2]}</p></div>", unsafe_allow_html=True)
-        if st.button(f"{btn_s} {nm[2]}"): st.success("OK...")
+    st.title("🌱 Planes de Membresia Serenity")
+    
+    # Si el usuario no ha iniciado el registro, mostramos los planes
+    if 'registro_plan' not in st.session_state:
+        col_p1, col_p2, col_p3 = st.columns(3)
+        
+        with col_p1:
+            st.subheader("Semilla")
+            st.write("Ideal para personas naturales.")
+            if st.button("SUSCRIBIRSE A SEMILLA"):
+                st.session_state.registro_plan = "Semilla"
+                st.rerun()
+
+        with col_p2:
+            st.subheader("Guardian")
+            st.write("Ideal para proyectos medianos.")
+            if st.button("SUSCRIBIRSE A GUARDIAN"):
+                st.session_state.registro_plan = "Guardian"
+                st.rerun()
+
+        with col_p3:
+            st.subheader("Halcon")
+            st.write("Para empresas (Ley 2173).")
+            if st.button("SUSCRIBIRSE A HALCON"):
+                st.session_state.registro_plan = "Halcon"
+                st.rerun()
+
+    # Si ya eligió un plan, mostramos el formulario
+    else:
+        st.info(f"📋 Formulario de Registro - Plan {st.session_state.registro_plan}")
+        
+        with st.form("form_registro"):
+            col_f1, col_f2 = st.columns(2)
+            
+            with col_f1:
+                tipo_persona = st.selectbox("Tipo de Persona", ["Natural", "Juridica (Empresa)"])
+                nombre_completo = st.text_input("Nombre Completo o Razon Social")
+                pais_origen = st.text_input("Pais de Origen")
+                email_contacto = st.text_input("Correo Electronico")
+            
+            with col_f2:
+                interes = st.multiselect("Fines de Interes", [
+                    "Compensacion de Carbono (Ley 2173)",
+                    "Inversion en Token $SNG",
+                    "Ecoturismo Cientifico",
+                    "Adopcion de Hectareas",
+                    "Monitoreo de Biodiversidad (IA)"
+                ])
+                # --- NUEVAS IDEAS PARA EL FORMULARIO ---
+                medio_pago = st.selectbox("Preferencia de Pago", ["Cripto ($SNG / USDT)", "Transferencia Bancaria", "Tarjeta de Credito"])
+                referido = st.text_input("¿Como te enteraste de Serenity?")
+                comentarios = st.text_area("Cuentanos mas sobre tus objetivos ambientales")
+
+            submit = st.form_submit_button("CONFIRMAR SUSCRIPCION")
+            
+            if submit:
+                st.success(f"¡Gracias {nombre_completo}! Tu solicitud para el plan {st.session_state.registro_plan} ha sido enviada. Un consultor de Serenity Nexus Global te contactara.")
+                if st.button("Volver a Planes"):
+                    del st.session_state.registro_plan
+                    st.rerun()
 
 # --- CAMBIO 17: VIDEO $SNG EN BUCLE INFINITO (AUTOPLAY) ---
 elif menu_sel == menu_opts[5]:
@@ -642,6 +688,7 @@ elif menu_sel == menu_opts[8]:
     folium.Polygon(locations=[[lat_guadua - offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua + offset], [lat_guadua - offset, lon_guadua + offset]], color="#9BC63B", fill=True, fill_opacity=0.3, tooltip="Hacienda Monte Guadua: 80 Ha").add_to(m)
     folium.CircleMarker(location=[lat_villa, lon_villa], radius=10, color="blue", fill=True, fill_color="blue", tooltip="Finca Villa Michelle (Sede)").add_to(m)
     st_folium(m, width="100%", height=600)
+
 
 
 
