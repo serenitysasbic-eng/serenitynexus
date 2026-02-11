@@ -318,31 +318,24 @@ elif menu == "DONACIONES Y CERTIFICADO":
             st.write("---")
             
 if st.button("✅ REGISTRAR APORTE Y GENERAR HASH"): 
-    if nombre_d:
-        # 1. Primero generamos el Hash
-        datos_hash = f"{nombre_d}{monto_d}{datetime.now()}"
-        hash_certificado = hashlib.sha256(datos_hash.encode()).hexdigest()[:16].upper()
-        
-        # 2. Guardamos en el estado para la vista previa
-        st.session_state.current_hash = hash_certificado
-        st.session_state.nombre_prev = nombre_d
-        st.session_state.monto_prev = monto_d
-        
-        # 3. AQUÍ ESTÁ EL ARREGLO: Pasamos los 3 datos a la función
-        st.session_state.pdf_buffer = generar_pdf_certificado(nombre_d, monto_d, hash_certificado)
-        
-        st.session_state.donaciones_recibidas += 1
-        st.balloons()
-        st.success("¡Certificado con Hash generado!")
-                    # Guardamos el buffer del PDF en el estado de la sesión
-                    st.session_state.pdf_buffer = generar_pdf_certificado(nombre_d, monto_d)
-                    st.session_state.current_hash = hash_certificado
+                if nombre_d:
+                    # 1. Generar Hash
+                    datos_hash = f"{nombre_d}{monto_d}{datetime.now()}"
+                    hash_certificado = hashlib.sha256(datos_hash.encode()).hexdigest()[:16].upper()
                     
+                    # 2. Guardar datos en la sesión
+                    st.session_state.current_hash = hash_certificado
+                    st.session_state.nombre_prev = nombre_d
+                    st.session_state.monto_prev = monto_d
+                    
+                    # 3. Generar el PDF (Asegúrate de que esta línea esté alineada con las de arriba)
+                    st.session_state.pdf_buffer = generar_pdf_certificado(nombre_d, monto_d, hash_certificado)
+                    
+                    st.session_state.donaciones_recibidas += 1
                     st.balloons()
-                    st.success(f"Aporte registrado con éxito.")
-                    st.code(f"HASH DE VERIFICACIÓN NEXUS: {hash_certificado}", language="text")
+                    st.success("¡Certificado con Hash generado!")
                 else:
-                    st.warning("Por favor, ingrese el nombre del donante para continuar.")
+                    st.warning("Por favor, ingrese el nombre del donante.")
 
     with colB:
         if 'pdf_buffer' in st.session_state:
@@ -478,6 +471,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
