@@ -149,7 +149,7 @@ if menu == "INICIO":
     """, height=100)
 
     # --- DATOS DE GOBERNANZA ---
-    st.info("Sandra Patricia Agredo Muñoz (40%) | Tatiana Arcila Ferreira (60%) | Admin: Jorge Carvajal")
+    st.info("SPAM (40%) | TAF (60%) | JWCJ $SNG")
 
     st.divider()
 
@@ -342,6 +342,7 @@ elif menu == "UBICACIÓN & MAPAS":
     folium.Polygon(locations=[[3.45, -76.67], [3.47, -76.67], [3.47, -76.64], [3.45, -76.64]], color="darkgreen", fill=True, fill_opacity=0.4, tooltip="Hacienda Monte Guadua: 80 Ha").add_to(m)
     folium.CircleMarker(location=[3.445, -76.645], radius=10, color="blue", fill=True, fill_color="blue", tooltip="Finca Villa Michelle").add_to(m)
     st_folium(m, width="100%", height=600)
+
 
 
 
