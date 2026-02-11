@@ -475,7 +475,7 @@ elif menu_sel == menu_opts[1]:
 
 # 3. DASHBOARD
 elif menu_sel == menu_opts[2]:
-    tt = " Análisis de Inteligencia Biológica" if st.session_state.lang == 'ES' else "?? Biological Intelligence Analysis"
+    tt = " Análisis de Inteligencia Biológica" if st.session_state.lang == 'ES' else " Biological Intelligence Analysis"
     st.title(tt)
     l_esp = "Especies" if st.session_state.lang == 'ES' else "Species"
     l_hec = "Hectáreas" if st.session_state.lang == 'ES' else "Hectares"
@@ -510,18 +510,18 @@ elif menu_sel == menu_opts[3]:
     col_law1, col_law2 = st.columns(2)
     with col_law1:
         st.markdown("<div class='legal-card'><h4>Ley 2173 de 2021</h4><p>Áreas de Vida.</p></div>", unsafe_allow_html=True)
-        st.download_button("?? Descargar Resumen Ley 2173", data=TEXTO_LEY_2173, file_name="Resumen_Ley_2173.txt")
+        st.download_button(" Descargar Resumen Ley 2173", data=TEXTO_LEY_2173, file_name="Resumen_Ley_2173.txt")
         st.markdown("<div class='legal-card'><h4>CONPES 3934</h4><p>Crecimiento Verde.</p></div>", unsafe_allow_html=True)
-        st.download_button("?? Descargar Resumen CONPES 3934", data=TEXTO_CONPES, file_name="Resumen_CONPES_3934.txt")
+        st.download_button(" Descargar Resumen CONPES 3934", data=TEXTO_CONPES, file_name="Resumen_CONPES_3934.txt")
     with col_law2:
         st.markdown("<div class='legal-card'><h4>Ley 2111 de 2021</h4><p>Delitos Ambientales.</p></div>", unsafe_allow_html=True)
-        st.download_button("?? Descargar Resumen Ley 2111", data=TEXTO_DELITOS, file_name="Resumen_Ley_2111.txt")
+        st.download_button(" Descargar Resumen Ley 2111", data=TEXTO_DELITOS, file_name="Resumen_Ley_2111.txt")
         st.markdown("<div class='legal-card'><h4>Beneficios Tributarios</h4><p>S.A.S. BIC.</p></div>", unsafe_allow_html=True)
-        st.download_button("?? Descargar Guía Tributaria", data=TEXTO_TRIBUTARIO, file_name="Guia_Tributaria_Serenity.txt")
+        st.download_button(" Descargar Guía Tributaria", data=TEXTO_TRIBUTARIO, file_name="Guia_Tributaria_Serenity.txt")
 
 # 5. SUSCRIPCIONES
 elif menu_sel == menu_opts[4]:
-    st.title("?? Planes" if st.session_state.lang == 'ES' else "?? Plans")
+    st.title(" Planes" if st.session_state.lang == 'ES' else " Plans")
     p1, p2, p3 = st.columns(3)
     nm = ["Plan Semilla", "Plan Guardián", "Plan Halcón"] if st.session_state.lang == 'ES' else ["Seed Plan", "Guardian Plan", "Hawk Plan"]
     per = ["1 Faro / 1 Mes", "6 Faros / 1 Mes", "6 Faros / 6 Meses"] if st.session_state.lang == 'ES' else ["1 Beacon / 1 Month", "6 Beacons / 1 Month", "6 Beacons / 6 Months"]
@@ -538,7 +538,7 @@ elif menu_sel == menu_opts[4]:
 
 # 6. BILLETERA CRYPTO
 elif menu_sel == menu_opts[5]:
-    st.title("?? Web3 Green Wallet")
+    st.title(" Web3 Green Wallet")
     col_w1, col_w2 = st.columns([1, 2])
     with col_w1:
         st.markdown("<div style='text-align:center;'>", unsafe_allow_html=True)
@@ -565,14 +565,14 @@ elif menu_sel == menu_opts[5]:
 
 # 7. DONACIONES
 elif menu_sel == menu_opts[6]:
-    tt = "?? Generador de Diploma Oficial" if st.session_state.lang == 'ES' else "?? Official Diploma Generator"
+    tt = " Generador de Diploma Oficial" if st.session_state.lang == 'ES' else " Official Diploma Generator"
     st.title(tt)
     colA, colB = st.columns([1, 1])
     with colA:
         with st.container(border=True):
             l_n = "Nombre Completo" if st.session_state.lang == 'ES' else "Full Name"
             l_m = "Monto Donación (USD)" if st.session_state.lang == 'ES' else "Donation Amount (USD)"
-            l_b = "? PROCESAR DONACIÓN" if st.session_state.lang == 'ES' else "? PROCESS DONATION"
+            l_b = " PROCESAR DONACIÓN" if st.session_state.lang == 'ES' else " PROCESS DONATION"
             nombre_d = st.text_input(l_n)
             monto_d = st.number_input(l_m, min_value=1)
             if st.button(l_b): 
@@ -591,10 +591,10 @@ elif menu_sel == menu_opts[6]:
 
 # 8. LOGÍSTICA
 elif menu_sel == menu_opts[7]:
-    tt = "?? Conectividad Global a Colombia" if st.session_state.lang == 'ES' else "?? Global Connectivity to Colombia"
+    tt = " Conectividad Global a Colombia" if st.session_state.lang == 'ES' else "?? Global Connectivity to Colombia"
     subt = "Haga clic en una aerolínea para reservar." if st.session_state.lang == 'ES' else "Click on an airline to book."
     st.title(tt); st.markdown(subt)
-    st.subheader("???? Europa")
+    st.subheader(" Europa")
     e1, e2, e3, e4 = st.columns(4)
     with e1: st.markdown("<a href='https://www.iberia.com' target='_blank'><div class='airline-grid'><img src='https://logo.clearbit.com/iberia.com'><p>IBERIA</p></div></a>", unsafe_allow_html=True)
     with e2: st.markdown("<a href='https://www.lufthansa.com' target='_blank'><div class='airline-grid'><img src='https://logo.clearbit.com/lufthansa.com'><p>LUFTHANSA</p></div></a>", unsafe_allow_html=True)
@@ -604,13 +604,13 @@ elif menu_sel == menu_opts[7]:
     with e5: st.markdown("<a href='https://www.klm.com' target='_blank'><div class='airline-grid'><img src='https://logo.clearbit.com/klm.com'><p>KLM</p></div></a>", unsafe_allow_html=True)
     with e6: st.markdown("<a href='https://www.aireuropa.com' target='_blank'><div class='airline-grid'><img src='https://logo.clearbit.com/aireuropa.com'><p>AIR EUROPA</p></div></a>", unsafe_allow_html=True)
     with e7: st.markdown("<a href='https://www.flyedelweiss.com' target='_blank'><div class='airline-grid'><img src='https://logo.clearbit.com/flyedelweiss.com'><p>EDELWEISS</p></div></a>", unsafe_allow_html=True)
-    st.subheader("???? Norteamérica")
+    st.subheader(" Norteamérica")
     n1, n2, n3, n4 = st.columns(4)
     with n1: st.markdown("<a href='https://www.aa.com' target='_blank'><div class='airline-grid'><img src='https://logo.clearbit.com/aa.com'><p>AMERICAN</p></div></a>", unsafe_allow_html=True)
     with n2: st.markdown("<a href='https://www.united.com' target='_blank'><div class='airline-grid'><img src='https://logo.clearbit.com/united.com'><p>UNITED</p></div></a>", unsafe_allow_html=True)
     with n3: st.markdown("<a href='https://www.delta.com' target='_blank'><div class='airline-grid'><img src='https://logo.clearbit.com/delta.com'><p>DELTA</p></div></a>", unsafe_allow_html=True)
     with n4: st.markdown("<a href='https://www.aircanada.com' target='_blank'><div class='airline-grid'><img src='https://logo.clearbit.com/aircanada.com'><p>AIR CANADA</p></div></a>", unsafe_allow_html=True)
-    st.subheader("?? Latinoamérica")
+    st.subheader(" Latinoamérica")
     l1, l2, l3, l4 = st.columns(4)
     with l1: st.markdown("<a href='https://www.avianca.com' target='_blank'><div class='airline-grid'><img src='https://logo.clearbit.com/avianca.com'><p>AVIANCA</p></div></a>", unsafe_allow_html=True)
     with l2: st.markdown("<a href='https://www.latamairlines.com' target='_blank'><div class='airline-grid'><img src='https://logo.clearbit.com/latamairlines.com'><p>LATAM</p></div></a>", unsafe_allow_html=True)
@@ -619,7 +619,7 @@ elif menu_sel == menu_opts[7]:
 
 # 9. MAPAS (REALES)
 elif menu_sel == menu_opts[8]:
-    tt = "?? Ubicación Serenity (Dagua)" if st.session_state.lang == 'ES' else "?? Serenity Location (Dagua)"
+    tt = " Ubicación Serenity (Dagua)" if st.session_state.lang == 'ES' else " Serenity Location (Dagua)"
     st.title(tt)
     lat_villa = 3.465028; lon_villa = -76.634778; lat_guadua = 3.477917; lon_guadua = -76.657361
     url_gmaps = f"https://www.google.com/maps/search/?api=1&query={lat_villa},{lon_villa}"
@@ -632,6 +632,7 @@ elif menu_sel == menu_opts[8]:
     folium.Polygon(locations=[[lat_guadua - offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua + offset], [lat_guadua - offset, lon_guadua + offset]], color="#9BC63B", fill=True, fill_opacity=0.3, tooltip="Hacienda Monte Guadua: 80 Ha").add_to(m)
     folium.CircleMarker(location=[lat_villa, lon_villa], radius=10, color="blue", fill=True, fill_color="blue", tooltip="Finca Villa Michelle (Sede)").add_to(m)
     st_folium(m, width="100%", height=600)
+
 
 
 
