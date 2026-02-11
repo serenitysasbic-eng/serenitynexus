@@ -31,53 +31,61 @@ def generar_pdf_certificado(nombre, monto, hash_id):
     buffer = io.BytesIO()
     c = canvas.Canvas(buffer, pagesize=letter)
     
-    # Marco y Estética
+    # 1. Marco de Seguridad (Borde Verde Serenity)
     c.setStrokeColor(VERDE_SERENITY)
     c.setLineWidth(5)
     c.rect(0.3*inch, 0.3*inch, 7.9*inch, 10.4*inch)
     
-    # Intento de Carga de Logo
+    # 2. LOGO (Arreglado para no salir achatado)
     try:
         if os.path.exists("logo_serenity.png"):
-            c.drawImage("logo_serenity.png", 3.25*inch, 8.8*inch, width=2*inch, height=1*inch, mask='auto')
-    except: pass
+            # Usamos preserveAspectRatio para que mantenga su forma original
+            c.drawImage("logo_serenity.png", 3.25*inch, 8.8*inch, width=2*inch, height=1.2*inch, mask='auto', preserveAspectRatio=True)
+    except:
+        pass
 
-    # Textos del Diploma
-    c.setFont("Helvetica-Bold", 26)
+    # 3. TEXTO DE CABECERA (Dividido y Centrado como pediste)
     c.setFillColor(VERDE_SERENITY)
-    c.drawCentredString(4.25*inch, 8.2*inch, "CERTIFICADO DE DONACIÓN REGENERATIVA")
     
+    c.setFont("Helvetica-Bold", 24)
+    c.drawCentredString(4.25*inch, 8.3*inch, "CERTIFICADO DE:")
+    
+    c.setFont("Helvetica-Bold", 28)
+    c.drawCentredString(4.25*inch, 7.8*inch, "DONACIÓN REGENERATIVA")
+    
+    # 4. CUERPO DEL DIPLOMA
     c.setFont("Helvetica", 16)
     c.setFillColor(black)
-    c.drawCentredString(4.25*inch, 7.2*inch, "SERENITY HUB S.A.S. BIC")
+    c.drawCentredString(4.25*inch, 7.0*inch, "SERENITY HUB S.A.S. BIC")
     
-    c.setFont("Helvetica-Bold", 18)
-    c.drawCentredString(4.25*inch, 6.5*inch, f"Reconoce a: {nombre.upper()}")
+    c.setFont("Helvetica-Bold", 20)
+    c.drawCentredString(4.25*inch, 6.2*inch, f"{nombre.upper()}")
     
     c.setFont("Helvetica", 14)
-    c.drawCentredString(4.25*inch, 5.8*inch, f"Por su valioso aporte de ${monto:,.0f} USD")
-    c.drawCentredString(4.25*inch, 5.4*inch, "Destinado a la regeneración del KBA Bosque San Antonio")
+    c.drawCentredString(4.25*inch, 5.5*inch, f"Por su valioso aporte de ${monto:,.0f} USD")
+    c.drawCentredString(4.25*inch, 5.1*inch, "Destinado a la regeneración del KBA Bosque San Antonio")
     
-    # Mensaje de Agradecimiento
-    c.setFont("Helvetica-Oblique", 12)
-    c.drawCentredString(4.25*inch, 4.8*inch, "Tu contribución permite que la biodiversidad de Dagua y Felidia")
-    c.drawCentredString(4.25*inch, 4.5*inch, "se transforme en un activo vivo para el planeta. ¡Gracias!")
+    # Mensaje de impacto
+    c.setFont("Helvetica-Oblique", 11)
+    c.drawCentredString(4.25*inch, 4.4*inch, "Tu contribución permite que la biodiversidad de Dagua y Felidia")
+    c.drawCentredString(4.25*inch, 4.2*inch, "se transforme en un activo vivo para el planeta. ¡Gracias!")
 
-    # Firma y Hash
+    # 5. FIRMA
     c.setLineWidth(1)
-    c.line(3*inch, 3.2*inch, 5.5*inch, 3.2*inch)
+    c.line(3*inch, 3.0*inch, 5.5*inch, 3.0*inch)
     c.setFont("Helvetica-Bold", 12)
-    c.drawCentredString(4.25*inch, 3.0*inch, "Jorge Carvajal")
+    c.drawCentredString(4.25*inch, 2.8*inch, "Jorge Carvajal")
     c.setFont("Helvetica", 10)
-    c.drawCentredString(4.25*inch, 2.8*inch, "Administrador Serenity S.A.S. BIC")
+    c.drawCentredString(4.25*inch, 2.6*inch, "Administrador Serenity S.A.S. BIC")
     
-    # CÓDIGO HASH DE VERIFICACIÓN (Punto clave)
-    c.setFillColor(HexColor("#666666"))
-    c.setFont("Courier-Bold", 9)
-    c.drawCentredString(4.25*inch, 1.5*inch, f"HASH DE AUTENTICIDAD NEXUS: {hash_id}")
+    # 6. HASH DE SEGURIDAD (Nexus Verification)
+    c.setFillColor(HexColor("#444444"))
+    c.setFont("Courier-Bold", 10)
+    c.drawCentredString(4.25*inch, 1.5*inch, f"HASH DE VERIFICACIÓN: {hash_id}")
     
     fecha_hoy = datetime.now().strftime("%d/%m/%Y %H:%M")
-    c.drawCentredString(4.25*inch, 1.2*inch, f"Validado por Sistema IA Gemini | Fecha: {fecha_hoy}")
+    c.setFont("Helvetica", 8)
+    c.drawCentredString(4.25*inch, 1.2*inch, f"Emitido por Sistema Nexus IA | Fecha de registro: {fecha_hoy}")
     
     c.save()
     buffer.seek(0)
@@ -472,6 +480,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
