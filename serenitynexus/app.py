@@ -378,15 +378,26 @@ elif menu_sel == menu_opts[1]:
                 # Este video es un estándar de Google que carga en cualquier servidor
                 st.video("https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", start_time=j*5)
             
-    # --- SECCIÓN BIOACÚSTICA (MICRÓFONOS) RESTAURADA ---
+# --- CAMBIO 11: BIOACÚSTICA DINÁMICA (EFECTO ECOALIZADOR) ---
     if st.session_state.f_activo:
         st.write("")
-        st.subheader("Bioacústica" if st.session_state.lang == 'ES' else "Bioacoustics")
+        st.subheader("🔊 Monitoreo Bioacústico (Tiempo Real)" if st.session_state.lang == 'ES' else "🔊 Bioacoustic Monitoring (Real Time)")
+        
         m_cols = st.columns(4)
         for k in range(4):
-            val = random.randint(85,99) if "GEMINI" in str(st.session_state.f_activo) else random.randint(40,90)
+            # Generamos un valor aleatorio que simula el pulso de la selva
+            val = random.randint(65, 95)
+            # Creamos una barra visual que sube y baja
+            barras = "█" * (val // 10) + "░" * (10 - (val // 10))
+            
             with m_cols[k]: 
-                st.markdown(f"<div style='background:rgba(155,198,59,0.2); border:1px solid #2E7D32; padding:10px; border-radius:5px; text-align:center;'><b>MIC {k+1}</b><br><span style='color:#9BC63B;'>||||| {val}%</span></div>", unsafe_allow_html=True)
+                st.markdown(f"""
+                    <div style='background:rgba(0,0,0,0.8); border:1px solid #9BC63B; padding:15px; border-radius:10px; text-align:center;'>
+                        <b style='color:white;'>MIC {k+1} - SENSOR</b><br>
+                        <span style='color:#9BC63B; font-family:monospace; font-size:20px;'>{barras}</span><br>
+                        <span style='color:#9BC63B; font-size:12px;'>{val} dB - ACTIVO</span>
+                    </div>
+                """, unsafe_allow_html=True)
 
 # 3. DASHBOARD
 elif menu_sel == menu_opts[2]:
@@ -547,6 +558,7 @@ elif menu_sel == menu_opts[8]:
     folium.Polygon(locations=[[lat_guadua - offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua + offset], [lat_guadua - offset, lon_guadua + offset]], color="#9BC63B", fill=True, fill_opacity=0.3, tooltip="Hacienda Monte Guadua: 80 Ha").add_to(m)
     folium.CircleMarker(location=[lat_villa, lon_villa], radius=10, color="blue", fill=True, fill_color="blue", tooltip="Finca Villa Michelle (Sede)").add_to(m)
     st_folium(m, width="100%", height=600)
+
 
 
 
