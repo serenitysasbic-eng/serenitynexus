@@ -260,79 +260,100 @@ elif menu == "DASHBOARD ESTADÍSTICO IA":
     st.bar_chart(pd.DataFrame({'Detecciones': [120, 450, 300, 80, 45, 110, 950]}, index=["Halcón", "Colibrí", "Rana", "Venado", "Tigrillo", "Capibara", "GEMINI"]))
 
 # =========================================================
-# BLOQUE 3: GESTIÓN LEY 2173 - CUMPLIMIENTO CORPORATIVO
+# BLOQUE 3: GESTIÓN LEGAL Y CUMPLIMIENTO (VADEMÉCUM)
 # =========================================================
 elif menu == "GESTIÓN LEY 2173 (EMPRESAS)":
-    st.title("🏢 Portal Corporativo - Ley 2173 de 2021")
-    st.markdown("### Cumplimiento Legal y Reporte de Sostenibilidad")
+    st.title("🏢 Ecosistema Legal Corporativo - Serenity")
+    
+    # --- RESUMEN DE LEYES (Vademécum) ---
+    st.markdown("### ⚖️ Marco Normativo Ambiental")
+    tabs_ley = st.tabs(["Ley 2173 (Siembra)", "Ley 2169 (Clima)", "Ley 99 (Agua)"])
+    tabs_ley = st.tabs(["Ley 2173 (Siembra)", "Ley 2169 (Clima)", "Ley 99 (Agua)", "🛡️ Protección y Justicia"])
+
+with tabs_ley[3]:
+    st.error("⚠️ **Régimen Sancionatorio y Vigilancia IA**")
+    st.markdown("""
+    **Serenity Nexus** actúa como guardián tecnológico bajo el marco de:
+    * **Ley 1774 de 2016:** Protegemos a los animales como seres sintientes. Nuestra IA identifica especies y alerta sobre presencia de cazadores.
+    * **Ley 2111 de 2021 (Código Penal):** Sanciona con hasta **15 años de cárcel** delitos como la deforestación y el tráfico de fauna. 
+    
+    *Nuestros Faros emiten reportes con validez legal (evidencia digital) para las autoridades ambientales.*
+    """)
+
+# --- SECCIÓN DE MITIGACIÓN EN TIEMPO REAL ---
+st.write("---")
+st.subheader("🚨 Sistema de Mitigación Gemini")
+col_m1, col_m2 = st.columns([2, 1])
+
+with col_m1:
+    st.write("Cuando un Faro detecta una anomalía (fuego, motosierras, disparos), el sistema:")
+    st.markdown("""
+    1. **Identifica** el tipo de amenaza mediante acústica e imagen IA.
+    2. **Georreferencia** el punto exacto en Hacienda Monte Guadua.
+    3. **Notifica** a la red de respuesta y genera un 'Hash de Evidencia' imborrable.
+    """)
+
+with col_m2:
+    if st.button("🔥 SIMULAR ALERTA AMBIENTAL"):
+        st.toast("ALERTA: Detección de actividad no autorizada en Nodo 3")
+        st.error("INCIDENTE REGISTRADO - Reporte generado para autoridades")
+    
+    with tabs_ley[0]:
+        st.info("**Ley 2173 de 2021:** Obliga a todas las medianas y grandes empresas a establecer áreas de vida y sembrar **2 árboles por cada empleado** anualmente. Serenity facilita el terreno, la siembra y el certificado de cumplimiento.")
+    
+    with tabs_ley[1]:
+        st.info("**Ley 2169 de 2021:** Establece la ruta hacia la **Carbono Neutralidad** para 2050. Las empresas deben reportar y reducir sus emisiones. Serenity aporta los datos biométricos para certificar la captura de CO2 real.")
+    
+    with tabs_ley[2]:
+        st.info("**Ley 99 de 1993 (Art. 111):** Exige que proyectos que tomen agua de fuentes naturales inviertan al menos el **1%** en la recuperación y conservación de la cuenca. Hacienda Monte Guadua es el sitio ideal para esta inversión por su ubicación estratégica.")
+
+    st.divider()
 
     col_leg1, col_leg2 = st.columns([1, 1])
 
     with col_leg1:
         with st.container(border=True):
-            st.markdown("#### 🧮 Calculadora de Obligación")
-            num_empleados = st.number_input("Número total de empleados:", min_value=1, value=50)
-            arboles_obligatorios = num_empleados * 2
-            st.info(f"Según la Ley 2173, su empresa debe sembrar: **{arboles_obligatorios} árboles anuales**.")
+            st.markdown("#### 🧮 Calculadora de Impacto Legal")
+            empresa_nombre = st.text_input("Razón Social de la Empresa")
+            nit_empresa = st.text_input("NIT")
+            num_empleados = st.number_input("Cantidad de Colaboradores:", min_value=1, value=100)
             
-            st.write("---")
-            st.markdown("#### 📝 Datos del Reporte")
-            empresa_nombre = st.text_input("Nombre de la Empresa / Razón Social")
-            nit_empresa = st.text_input("NIT de la Empresa")
+            # Cálculo dinámico
+            siembra_anual = num_empleados * 2
+            st.warning(f"🎯 Meta Anual Ley 2173: {siembra_anual} Árboles")
             
-            # --- CARGA DE LOGO DE LA EMPRESA ---
-            logo_empresa = st.file_uploader("Suba el Logo de su Empresa (PNG/JPG)", type=['png', 'jpg', 'jpeg'])
-            
-            if logo_empresa:
-                st.image(logo_empresa, width=150, caption="Logo empresarial cargado")
+            # Carga de Logo para el Co-Branding
+            logo_empresa = st.file_uploader("Cargar Logo Empresarial (PNG/JPG)", type=['png', 'jpg'])
 
     with col_leg2:
         with st.container(border=True):
-            st.markdown("#### 🌳 Selección de Especies (Dagua/Felidia)")
-            especies = st.multiselect("Seleccione las especies para su bosque empresarial:", 
-                                     ["Guayacán Lila", "Gualanday", "Nacedero", "Balso", "Cedro Negro"],
-                                     default=["Guayacán Lila", "Cedro Negro"])
+            st.markdown("#### 🛡️ Certificación Serenity Nexus")
+            st.write("Al vincularse con Serenity, su empresa obtiene:")
+            st.markdown("""
+            * Georreferenciación de cada árbol.
+            * Reporte de trazabilidad con tecnología Blockchain.
+            * Registro ante la autoridad ambiental competente.
+            """)
             
-            st.markdown("#### 📑 Generación de Certificado Legal")
-            st.write("El certificado incluye coordenadas GPS de los árboles y Hash de verificación.")
-            
-            if st.button("📄 GENERAR CERTIFICADO DE CUMPLIMIENTO"):
+            if st.button("📄 GENERAR REPORTE DE CUMPLIMIENTO"):
                 if empresa_nombre and nit_empresa:
-                    # Generar Hash de Transacción Corporativa
-                    datos_c = f"{empresa_nombre}{nit_empresa}{datetime.now()}"
-                    hash_corp = hashlib.sha256(datos_c.encode()).hexdigest()[:12].upper()
+                    # Generamos el Hash de seguridad corporativa
+                    h_corp = hashlib.sha256(f"{empresa_nombre}{datetime.now()}".encode()).hexdigest()[:12].upper()
+                    st.session_state.pdf_corp = generar_pdf_certificado(f"CUMPLIMIENTO: {empresa_nombre}", siembra_anual, f"LEY-2173-{h_corp}")
                     
-                    # Guardamos en sesión para el PDF
-                    st.session_state.hash_corp = hash_corp
-                    st.session_state.empresa_n = empresa_nombre
-                    st.session_state.arboles_n = arboles_obligatorios
-                    
-                    # Simulamos la creación del PDF con Co-Branding
-                    # (Usamos la misma función de diseño que definimos arriba adaptada)
-                    st.session_state.pdf_corp = generar_pdf_certificado(
-                        f"EMPRESA: {empresa_nombre}", 
-                        arboles_obligatorios, 
-                        f"LEY2173-{hash_corp}"
-                    )
-                    
-                    st.balloons()
-                    st.success(f"Certificado Ley 2173 generado para {empresa_nombre}")
-                    
-                    st.download_button(
-                        label="📥 DESCARGAR CERTIFICADO LEGAL (PDF)",
-                        data=st.session_state.pdf_corp,
-                        file_name=f"Cumplimiento_Ley2173_{empresa_nombre}.pdf",
-                        mime="application/pdf"
-                    )
+                    st.success("Reporte generado exitosamente.")
+                    st.download_button("📥 Descargar Certificado Oficial", st.session_state.pdf_corp, f"Reporte_Legal_{empresa_nombre}.pdf")
                 else:
-                    st.warning("Complete los datos de la empresa para generar el documento.")
+                    st.error("Por favor ingrese el nombre y NIT de la empresa.")
 
+    # --- INDICADORES ESG ---
     st.write("---")
-    st.markdown("#### 📊 Impacto Proyectado para su Empresa")
-    c_i1, c_i2, c_i3 = st.columns(3)
-    c_i1.metric("CO2 Capturado", f"{arboles_obligatorios * 0.2:.1f} Ton/año")
-    c_i2.metric("Agua Protegida", f"{arboles_obligatorios * 10:,.0f} L/año")
-    c_i3.metric("Biodiversidad", "Alta", delta="KBA San Antonio")
+    st.subheader("📊 Indicadores ESG para Inversionistas")
+    st.markdown("")
+    c1, c2, c3 = st.columns(3)
+    c1.metric("Mitigación CO2", f"{siembra_anual * 0.18:.2f} Ton/año")
+    c2.metric("Área Protegida", f"{siembra_anual * 5} m²")
+    c3.metric("Puntaje Cumplimiento", "100%", delta="Certificado")
 
 # =========================================================
 # BLOQUE 4: SUSCRIPCIONES (Impacto y Finanzas)
@@ -667,6 +688,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
