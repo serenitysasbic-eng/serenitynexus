@@ -75,11 +75,19 @@ tr = {
     'live': {'ES': 'TRANSMISION EN VIVO', 'EN': 'LIVE STREAM'},
     'who_title': {'ES': 'QUIENES SOMOS', 'EN': 'WHO WE ARE'},
     'who_text': {
-        'ES': 'Serenity Nexus Global es la primera plataforma Phygital del Valle del Cauca.',
-        'EN': 'Serenity Nexus Global is the first Phygital platform in Valle del Cauca.'
+        'ES': 'Serenity Nexus Global es la primera plataforma Phygital (Fisica + Digital) del Valle del Cauca que integra la conservacion ambiental con tecnologia Blockchain e Inteligencia Artificial, transformando la proteccion de la biodiversidad en un activo digital tangible.',
+        'EN': 'Serenity Nexus Global is the first Phygital platform in Valle del Cauca integrating environmental conservation with Blockchain and AI.'
     },
     'mis_title': {'ES': 'NUESTRA MISION', 'EN': 'OUR MISSION'},
-    'vis_title': {'ES': 'NUESTRA VISION', 'EN': 'OUR VISION'}
+    'mis_text': {
+        'ES': 'Regenerar el tejido ecologico y social mediante un modelo de negocio sostenible que permita a empresas y personas compensar su huella ambiental a traves de la tecnologia y la transparencia.',
+        'EN': 'Regenerate the ecological and social fabric through a sustainable business model.'
+    },
+    'vis_title': {'ES': 'NUESTRA VISION', 'EN': 'OUR VISION'},
+    'vis_text': {
+        'ES': 'Ser el referente mundial del Internet de la Naturaleza para 2030, liderando la valorizacion de los servicios ecosistemicos mediante nuestra red de Faros inteligentes y el token $SNG.',
+        'EN': 'To be the global benchmark for the Internet of Nature by 2030.'
+    }
 }
 
 def t(key):
@@ -634,6 +642,7 @@ elif menu_sel == menu_opts[8]:
     folium.Polygon(locations=[[lat_guadua - offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua + offset], [lat_guadua - offset, lon_guadua + offset]], color="#9BC63B", fill=True, fill_opacity=0.3, tooltip="Hacienda Monte Guadua: 80 Ha").add_to(m)
     folium.CircleMarker(location=[lat_villa, lon_villa], radius=10, color="blue", fill=True, fill_color="blue", tooltip="Finca Villa Michelle (Sede)").add_to(m)
     st_folium(m, width="100%", height=600)
+
 
 
 
