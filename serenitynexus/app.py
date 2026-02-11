@@ -315,45 +315,46 @@ elif menu == "DONACIONES Y CERTIFICADO":
             st.markdown("#### Datos del Donante")
             nombre_d = st.text_input("Nombre Completo o Razón Social")
             monto_d = st.number_input("Monto del Aporte (USD)", min_value=1, step=10)
-            st.write("---")
             
-if st.button("✅ REGISTRAR APORTE Y GENERAR HASH"): 
+            if st.button("✅ REGISTRAR APORTE Y GENERAR HASH"): 
                 if nombre_d:
                     # 1. Generar Hash
                     datos_hash = f"{nombre_d}{monto_d}{datetime.now()}"
                     hash_certificado = hashlib.sha256(datos_hash.encode()).hexdigest()[:16].upper()
                     
-                    # 2. Guardar datos en la sesión
+                    # 2. Guardar en session_state
                     st.session_state.current_hash = hash_certificado
                     st.session_state.nombre_prev = nombre_d
                     st.session_state.monto_prev = monto_d
                     
-                    # 3. Generar el PDF (Asegúrate de que esta línea esté alineada con las de arriba)
+                    # 3. Generar PDF
                     st.session_state.pdf_buffer = generar_pdf_certificado(nombre_d, monto_d, hash_certificado)
                     
                     st.session_state.donaciones_recibidas += 1
                     st.balloons()
-                    st.success("¡Certificado con Hash generado!")
+                    st.success(f"¡Certificado generado con éxito!")
                 else:
-                    st.warning("Por favor, ingrese el nombre del donante.")
+                    st.warning("Ingrese el nombre del donante.")
 
     with colB:
-                if 'pdf_buffer' in st.session_state:
-                    st.markdown(f"""
+        if 'pdf_buffer' in st.session_state:
+            st.markdown(f"""
                 <div style="background:white; color:black; padding:30px; text-align:center; border:8px double #2E7D32; border-radius:15px;">
-                    <h2 style="color:#2E7D32; margin-bottom:10px;">VISTA PREVIA DEL DIPLOMA</h2>
+                    <h2 style="color:#2E7D32; margin-bottom:10px;">VISTA PREVIA</h2>
                     <hr style="border:1px solid #2E7D32;">
-                    <p style="font-size:1.2rem; margin-top:20px;">Gracias por tu aporte, <b>{nombre_d.upper()}</b></p>
-                    <p>Has contribuido con <b>${monto_d} USD</b> a la conservación de Serenity.</p>
-                    <p style="font-size:0.8rem; color:gray; margin-top:30px;">ID VERIFICACIÓN: {st.session_state.current_hash}</p>
+                    <p style="font-size:1.2rem; margin-top:20px;">Gracias por tu aporte, <b>{st.session_state.nombre_prev.upper()}</b></p>
+                    <p>Has contribuido con <b>${st.session_state.monto_prev} USD</b></p>
+                    <div style="background:#f0f2f6; padding:10px; border-radius:5px; margin-top:20px;">
+                        <code style="font-size:0.8rem; color: #2E7D32;">HASH: {st.session_state.current_hash}</code>
+                    </div>
                 </div>
             """, unsafe_allow_html=True)
             
             st.write("")
             st.download_button(
-                label="📥 DESCARGAR DIPLOMA OFICIAL (PDF)",
+                label="📥 DESCARGAR DIPLOMA CON HASH (PDF)",
                 data=st.session_state.pdf_buffer,
-                file_name=f"Certificado_Serenity_{nombre_d.replace(' ', '_')}.pdf",
+                file_name=f"Certificado_Nexus_{st.session_state.current_hash}.pdf",
                 mime="application/pdf"
             )
 # =========================================================
@@ -471,6 +472,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
