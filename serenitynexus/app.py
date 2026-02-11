@@ -356,8 +356,15 @@ elif menu_sel == menu_opts[1]:
 
     # MOSTRAR CÁMARAS ESTÁTICAS (SI NO ES VIDEO)
     if st.session_state.f_activo and st.session_state.f_activo not in ["GEMINI", "GEMINI-DEMO"]:
-        st.divider(); live_t = t('live'); color_titulo = "#9BC63B"
-        st.markdown(f"<h2 style='color:{color_titulo}; text-align:center;'>?? {live_t}: {st.session_state.f_activo.upper()}</h2>", unsafe_allow_html=True)
+# --- CAMBIO 10: LIMPIEZA TOTAL TRANSMISIÓN EN VIVO ---
+        live_t = "TRANSMISIÓN EN VIVO" if st.session_state.lang == 'ES' else "LIVE STREAM"
+        
+        # Título limpio con emoji de antena
+        st.markdown(f"""
+            <h2 style='color:#9BC63B; text-align:center; text-shadow: 2px 2px 4px #000;'>
+                📡 {live_t}: {st.session_state.f_activo.upper()}
+            </h2>
+        """, unsafe_allow_html=True)
         c_cols = st.columns(4)
 # --- CAMBIO 9: SOLUCIÓN DEFINITIVA DE VIDEO ---
         c_cols = st.columns(4)
@@ -540,6 +547,7 @@ elif menu_sel == menu_opts[8]:
     folium.Polygon(locations=[[lat_guadua - offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua + offset], [lat_guadua - offset, lon_guadua + offset]], color="#9BC63B", fill=True, fill_opacity=0.3, tooltip="Hacienda Monte Guadua: 80 Ha").add_to(m)
     folium.CircleMarker(location=[lat_villa, lon_villa], radius=10, color="blue", fill=True, fill_color="blue", tooltip="Finca Villa Michelle (Sede)").add_to(m)
     st_folium(m, width="100%", height=600)
+
 
 
 
