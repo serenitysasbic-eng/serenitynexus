@@ -446,69 +446,63 @@ elif menu_sel == menu_opts[1]:
                 st.video("https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", start_time=j*5)
 
    # =========================================================
-    # SECCIÓN: CÁMARAS Y MONITOREO (Solo si hay Faro activo)
-    # =========================================================
-    if st.session_state.get('f_activo'):
-        if st.session_state.f_activo == "GEMINI-DEMO":
-            st.divider()
-            st.markdown("<h3 style='text-align:center; color:#4285F4;'>🌿 CONEXIÓN VIRTUAL: NATURALEZA GLOBAL</h3>", unsafe_allow_html=True)
-            st.video("https://www.youtube.com/watch?v=bUs9qYKF6mY")
-        
-        elif st.session_state.f_activo not in ["GEMINI"]:
-            live_t = "TRANSMISIÓN EN VIVO" if st.session_state.lang == 'ES' else "LIVE STREAM"
-            st.markdown(f"<h2 style='color:#9BC63B; text-align:center;'>📡 {live_t}: {st.session_state.f_activo.upper()}</h2>", unsafe_allow_html=True)
+# CONTROLADOR DE CONTENIDO (CONECTIVIDAD TOTAL)
+# =========================================================
+
+# 1. DETERMINAR QUÉ PESTAÑA ESTÁ ACTIVA
+# Usamos el índice para que no importe si hay tildes o signos raros
+opciones_menu = tr['menu_opts']['ES']
+
+# --- SECCIÓN 0: INICIO ---
+if menu_sel == opciones_menu[0]:
+    st.title("🏡 Bienvenido a Serenity Nexus Global")
+    # Aquí va tu código de Quiénes Somos, Misión y Visión
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.subheader(t('who_title'))
+        st.write(t('who_text'))
+    with col2:
+        st.subheader(t('mis_title'))
+        st.write(t('mis_text'))
+    with col3:
+        st.subheader(t('vis_title'))
+        st.write(t('vis_text'))
+
+# --- SECCIÓN 2: ANÁLISIS DE INTELIGENCIA BIOLÓGICA ---
+elif menu_sel == opciones_menu[2]:
+    st.title("📊 Análisis de Inteligencia Biológica")
+    st.info("Monitoreo en tiempo real de la Red de Faros.")
+    
+    # Métricas principales
+    m1, m2, m3, m4 = st.columns(4)
+    m1.metric("🐾 Especies", "1,252", "+4")
+    m2.metric("🌳 Hectáreas", "14.5", "0")
+    m3.metric("🩺 Salud", "98.7%", "+0.2%")
+    m4.metric("💰 $SNG", "0.085", "+0.002")
+    
+    st.divider()
+    if st.button("📥 GENERAR CERTIFICADO PDF"):
+        st.balloons()
+        st.success("Preparando reporte con Hash de seguridad...")
+
+# --- SECCIÓN 3: GESTIÓN LEY 2173 ---
+elif menu_sel == opciones_menu[3]:
+    st.title("⚖️ Gestión Ley 2173 de 2021")
+    
+    with st.container(border=True):
+        st.subheader("🏢 Registro Empresarial")
+        nit = st.text_input("Ingrese el NIT de su empresa")
+        if nit:
+            st.success(f"Sistema listo para procesar NIT: {nit}")
             
-            c_cols = st.columns(4)
-            for j in range(4): # Simplificado a 4 cámaras para estabilidad
-                with c_cols[j % 4]:
-                    st.markdown(f"<div style='border: 2px solid #2E7D32; border-radius: 10px; padding: 5px; background: black; text-align:center;'><p style='color:#9BC63B; font-weight:bold; font-size: 10px; margin:0;'>CAM {j+1} - MONTE GUADUA</p></div>", unsafe_allow_html=True)
-                    st.video("https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", start_time=j*5)
+    st.divider()
+    st.subheader("🛡️ Marco Legal Serenity")
+    st.write("Dando cumplimiento a la normativa de Áreas de Vida.")
 
-    # =========================================================
-    # LÓGICA DEL MENÚ PRINCIPAL (Pestañas laterales)
-    # =========================================================
-
-    # --- PESTAÑA 2: ANÁLISIS DE INTELIGENCIA BIOLÓGICA ---
-    if menu_sel == menu_opts[2]:
-        st.title("📊 Análisis de Inteligencia Biológica")
-        st.info("Visualización de datos en tiempo real de la Red de Faros Serenity.")
-        
-        m_col1, m_col2, m_col3, m_col4 = st.columns(4)
-        m_col1.metric("🐾 Especies", "1,252", "+4")
-        m_col2.metric("🌳 Hectáreas", "14.5 Ha", "0")
-        m_col3.metric("🩺 Salud", "98.7%", "+0.2%")
-        m_col4.metric("💰 $SNG", "0.085", "+0.002")
-        
-        st.divider()
-        with st.expander("🔍 Registro de Bioacústica y Fotosíntesis", expanded=True):
-            st.code("📡 Señal estable desde Dagua y Felidia\n🌿 Fotosíntesis: Nivel Óptimo\n🐾 Bioacústica: 12 llamadas de aves detectadas")
-
-        if st.button("📥 GENERAR CERTIFICADO PDF PROFESIONAL"):
-            st.success("Preparando documento con Hash SHA-256...")
-            st.balloons()
-
-    # --- PESTAÑA 3: GESTIÓN LEY 2173 ---
-    elif menu_sel == menu_opts[3]:
-        st.title("⚖️ Gestión Ley 2173 de 2021")
-        
-        with st.container(border=True):
-            st.subheader("🏢 Registro de Cumplimiento Empresarial")
-            c1, c2 = st.columns(2)
-            with c1: nit = st.text_input("Ingrese NIT de la Empresa")
-            with c2: logo_emp = st.file_uploader("Subir Logo Corporativo", type=["png", "jpg"])
-            
-            if nit and logo_emp:
-                if st.button("🚀 VALIDAR Y GENERAR CERTIFICADO"):
-                    st.success(f"Certificado para NIT {nit} generado con éxito.")
-
-        st.divider()
-        st.subheader("🛡️ Blindaje Jurídico Serenity")
-        cl1, cl2 = st.columns(2)
-        with cl1:
-            st.markdown("<div style='background:rgba(46,125,50,0.2); padding:15px; border-radius:10px;'><h4>Ley 2173</h4><p>Obligatoriedad de siembra para empresas.</p></div>", unsafe_allow_html=True)
-        with cl2:
-            st.markdown("<div style='background:rgba(46,125,50,0.2); padding:15px; border-radius:10px;'><h4>Ley 2111</h4><p>Protección contra delitos ambientales.</p></div>", unsafe_allow_html=True)
-# --- CAMBIO 20: FORMULARIO DE SUSCRIPCIÓN DINÁMICO ---
+# --- SECCIÓN DEFAULT (SI NADA CARGA) ---
+else:
+    st.warning("⚠️ Selecciona una opción del menú lateral para cargar el módulo.")
+    st.write(f"Opción seleccionada actualmente: {menu_sel}")
 elif menu_sel == menu_opts[4]:
     st.title("🌱 Planes de Membresia Serenity")
     
@@ -669,6 +663,7 @@ elif menu_sel == menu_opts[8]:
     folium.Polygon(locations=[[lat_guadua - offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua + offset], [lat_guadua - offset, lon_guadua + offset]], color="#9BC63B", fill=True, fill_opacity=0.3, tooltip="Hacienda Monte Guadua: 80 Ha").add_to(m)
     folium.CircleMarker(location=[lat_villa, lon_villa], radius=10, color="blue", fill=True, fill_color="blue", tooltip="Finca Villa Michelle (Sede)").add_to(m)
     st_folium(m, width="100%", height=600)
+
 
 
 
