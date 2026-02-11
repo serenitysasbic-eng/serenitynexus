@@ -259,15 +259,80 @@ elif menu == "DASHBOARD ESTADÍSTICO IA":
     m[3].markdown(f"<div class='metric-card'><h3>Salud</h3><h1>98%</h1></div>", unsafe_allow_html=True)
     st.bar_chart(pd.DataFrame({'Detecciones': [120, 450, 300, 80, 45, 110, 950]}, index=["Halcón", "Colibrí", "Rana", "Venado", "Tigrillo", "Capibara", "GEMINI"]))
 
-# 4. LEY 2173
+# =========================================================
+# BLOQUE 3: GESTIÓN LEY 2173 - CUMPLIMIENTO CORPORATIVO
+# =========================================================
 elif menu == "GESTIÓN LEY 2173 (EMPRESAS)":
-    st.title("⚖️ Cumplimiento Ley 2173")
-    c1, c2 = st.columns(2)
-    with c1: nit = st.text_input("Ingrese NIT de la Empresa")
-    with c2: logo_emp = st.file_uploader("Suba Logo Corporativo", type=["png", "jpg"])
-    if nit:
-        st.markdown(f"<div class='metric-card' style='text-align:left;'><h3>EMPRESA ACTIVA: NIT {nit}</h3><p>🌳 150 Árboles Monitoreados</p></div>", unsafe_allow_html=True)
-        st.download_button("📄 DESCARGAR CERTIFICADO LEY 2173", data=f"Reporte NIT {nit}", file_name=f"Certificado_Ley2173.txt")
+    st.title("🏢 Portal Corporativo - Ley 2173 de 2021")
+    st.markdown("### Cumplimiento Legal y Reporte de Sostenibilidad")
+
+    col_leg1, col_leg2 = st.columns([1, 1])
+
+    with col_leg1:
+        with st.container(border=True):
+            st.markdown("#### 🧮 Calculadora de Obligación")
+            num_empleados = st.number_input("Número total de empleados:", min_value=1, value=50)
+            arboles_obligatorios = num_empleados * 2
+            st.info(f"Según la Ley 2173, su empresa debe sembrar: **{arboles_obligatorios} árboles anuales**.")
+            
+            st.write("---")
+            st.markdown("#### 📝 Datos del Reporte")
+            empresa_nombre = st.text_input("Nombre de la Empresa / Razón Social")
+            nit_empresa = st.text_input("NIT de la Empresa")
+            
+            # --- CARGA DE LOGO DE LA EMPRESA ---
+            logo_empresa = st.file_uploader("Suba el Logo de su Empresa (PNG/JPG)", type=['png', 'jpg', 'jpeg'])
+            
+            if logo_empresa:
+                st.image(logo_empresa, width=150, caption="Logo empresarial cargado")
+
+    with col_leg2:
+        with st.container(border=True):
+            st.markdown("#### 🌳 Selección de Especies (Dagua/Felidia)")
+            especies = st.multiselect("Seleccione las especies para su bosque empresarial:", 
+                                     ["Guayacán Lila", "Gualanday", "Nacedero", "Balso", "Cedro Negro"],
+                                     default=["Guayacán Lila", "Cedro Negro"])
+            
+            st.markdown("#### 📑 Generación de Certificado Legal")
+            st.write("El certificado incluye coordenadas GPS de los árboles y Hash de verificación.")
+            
+            if st.button("📄 GENERAR CERTIFICADO DE CUMPLIMIENTO"):
+                if empresa_nombre and nit_empresa:
+                    # Generar Hash de Transacción Corporativa
+                    datos_c = f"{empresa_nombre}{nit_empresa}{datetime.now()}"
+                    hash_corp = hashlib.sha256(datos_c.encode()).hexdigest()[:12].upper()
+                    
+                    # Guardamos en sesión para el PDF
+                    st.session_state.hash_corp = hash_corp
+                    st.session_state.empresa_n = empresa_nombre
+                    st.session_state.arboles_n = arboles_obligatorios
+                    
+                    # Simulamos la creación del PDF con Co-Branding
+                    # (Usamos la misma función de diseño que definimos arriba adaptada)
+                    st.session_state.pdf_corp = generar_pdf_certificado(
+                        f"EMPRESA: {empresa_nombre}", 
+                        arboles_obligatorios, 
+                        f"LEY2173-{hash_corp}"
+                    )
+                    
+                    st.balloons()
+                    st.success(f"Certificado Ley 2173 generado para {empresa_nombre}")
+                    
+                    st.download_button(
+                        label="📥 DESCARGAR CERTIFICADO LEGAL (PDF)",
+                        data=st.session_state.pdf_corp,
+                        file_name=f"Cumplimiento_Ley2173_{empresa_nombre}.pdf",
+                        mime="application/pdf"
+                    )
+                else:
+                    st.warning("Complete los datos de la empresa para generar el documento.")
+
+    st.write("---")
+    st.markdown("#### 📊 Impacto Proyectado para su Empresa")
+    c_i1, c_i2, c_i3 = st.columns(3)
+    c_i1.metric("CO2 Capturado", f"{arboles_obligatorios * 0.2:.1f} Ton/año")
+    c_i2.metric("Agua Protegida", f"{arboles_obligatorios * 10:,.0f} L/año")
+    c_i3.metric("Biodiversidad", "Alta", delta="KBA San Antonio")
 
 # =========================================================
 # BLOQUE 4: SUSCRIPCIONES (Impacto y Finanzas)
@@ -602,6 +667,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
