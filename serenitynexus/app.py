@@ -428,66 +428,43 @@ elif menu_sel == menu_opts[1]:
                 st.session_state.estado_gemini = t('active')
                 mostrar_camara_real(url_camara)
 
-# --- CAMBIO 8 (CORREGIDO): VIDEO DE VIDA SILVESTRE 4K ---
-    if st.session_state.f_activo == "GEMINI-DEMO":
+# --- CAMBIO 8: VIDEO DE VIDA SILVESTRE 4K ---
+    if st.session_state.get('f_activo') == "GEMINI-DEMO":
         st.divider()
         st.markdown("<h3 style='text-align:center; color:#4285F4;'>🌿 CONEXIÓN VIRTUAL: NATURALEZA GLOBAL</h3>", unsafe_allow_html=True)
-        
-        # Nuevo video de vida silvestre (Jaguares, aves y bosque)
         st.video("https://www.youtube.com/watch?v=bUs9qYKF6mY")
 
-    # MOSTRAR CÁMARAS ESTÁTICAS (SI NO ES VIDEO)
-    if st.session_state.f_activo and st.session_state.f_activo not in ["GEMINI", "GEMINI-DEMO"]:
-# --- CAMBIO 10: LIMPIEZA TOTAL TRANSMISIÓN EN VIVO ---
+    # --- CAMBIO 10: TRANSMISIÓN EN VIVO ---
+    if st.session_state.get('f_activo') and st.session_state.f_activo not in ["GEMINI", "GEMINI-DEMO"]:
         live_t = "TRANSMISIÓN EN VIVO" if st.session_state.lang == 'ES' else "LIVE STREAM"
+        st.markdown(f"<h2 style='color:#9BC63B; text-align:center; text-shadow: 2px 2px 4px #000;'>📡 {live_t}: {st.session_state.f_activo.upper()}</h2>", unsafe_allow_html=True)
         
-        # Título limpio con emoji de antena
-        st.markdown(f"""
-            <h2 style='color:#9BC63B; text-align:center; text-shadow: 2px 2px 4px #000;'>
-                📡 {live_t}: {st.session_state.f_activo.upper()}
-            </h2>
-        """, unsafe_allow_html=True)
-        c_cols = st.columns(4)
-# --- CAMBIO 9: SOLUCIÓN DEFINITIVA DE VIDEO ---
         c_cols = st.columns(4)
         for j in range(8):
             with c_cols[j % 4]:
-                st.markdown(f"""
-                    <div style='border: 2px solid #2E7D32; border-radius: 10px; padding: 5px; background: black;'>
-                        <p style='text-align:center; color:#9BC63B; font-weight:bold; font-size: 10px; margin:0;'>CAM {j+1} - MONTE GUADUA</p>
-                    </div>
-                """, unsafe_allow_html=True)
-                # Este video es un estándar de Google que carga en cualquier servidor
+                st.markdown(f"<div style='border: 2px solid #2E7D32; border-radius: 10px; padding: 5px; background: black;'><p style='text-align:center; color:#9BC63B; font-weight:bold; font-size: 10px; margin:0;'>CAM {j+1} - MONTE GUADUA</p></div>", unsafe_allow_html=True)
                 st.video("https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", start_time=j*5)
-            
-# --- CAMBIO 11: BIOACÚSTICA DINÁMICA (EFECTO ECOALIZADOR) ---
-    if st.session_state.f_activo:
+
+    # --- CAMBIO 11: BIOACÚSTICA DINÁMICA ---
+    if st.session_state.get('f_activo'):
         st.write("")
         st.subheader("🔊 Monitoreo Bioacústico (Tiempo Real)" if st.session_state.lang == 'ES' else "🔊 Bioacoustic Monitoring (Real Time)")
-        
         m_cols = st.columns(4)
         for k in range(4):
-            # Generamos un valor aleatorio que simula el pulso de la selva
             val = random.randint(65, 95)
-            # Creamos una barra visual que sube y baja
             barras = "█" * (val // 10) + "░" * (10 - (val // 10))
-            
             with m_cols[k]: 
-                st.markdown(f"""
-                    <div style='background:rgba(0,0,0,0.8); border:1px solid #9BC63B; padding:15px; border-radius:10px; text-align:center;'>
-                        <b style='color:white;'>MIC {k+1} - SENSOR</b><br>
-                        <span style='color:#9BC63B; font-family:monospace; font-size:20px;'>{barras}</span><br>
-                        <span style='color:#9BC63B; font-size:12px;'>{val} dB - ACTIVO</span>
-                    </div>
-                """, unsafe_allow_html=True)
-# --- BLOQUE DE RESCATE: ANÁLISIS DE INTELIGENCIA BIOLÓGICA ---
+                st.markdown(f"<div style='background:rgba(0,0,0,0.8); border:1px solid #9BC63B; padding:15px; border-radius:10px; text-align:center;'><b style='color:white;'>MIC {k+1} - SENSOR</b><br><span style='color:#9BC63B; font-family:monospace; font-size:20px;'>{barras}</span><br><span style='color:#9BC63B; font-size:12px;'>{val} dB - ACTIVO</span></div>", unsafe_allow_html=True)
+
+    # =========================================================
+    # SECCIONES DEL MENÚ PRINCIPAL (ESTRUCTURA UNIFICADA)
+    # =========================================================
+
+    # --- 2. ANÁLISIS DE INTELIGENCIA BIOLÓGICA ---
     elif menu_sel == menu_opts[2]:
         st.title("📊 Análisis de Inteligencia Biológica")
-        
-        # 1. Contenido base (esto aparecerá siempre)
         st.write("Bienvenido al centro de monitoreo de Serenity Nexus Global.")
         
-        # 2. Las métricas de vida (con diseño limpio)
         col1, col2, col3, col4 = st.columns(4)
         col1.metric("🐾 Especies", "1,252", "+4")
         col2.metric("🌳 Hectáreas", "14.5 Ha", "0")
@@ -495,56 +472,41 @@ elif menu_sel == menu_opts[1]:
         col4.metric("💰 $SNG", "0.085", "+0.002")
         
         st.divider()
-        
-        # 3. Simulación de Actividad
         with st.expander("🔍 Ver registro de actividad en tiempo real", expanded=True):
             st.code("📡 Señal estable desde Monte Guadua\n🌿 Fotosíntesis: Nivel Óptimo\n🐾 Bioacústica: 12 llamadas de aves detectadas")
 
-        # 4. Botón de PDF
         st.subheader("📁 Certificación y Reportes")
         if st.button("📥 GENERAR CERTIFICADO PDF"):
             st.success("Preparando documento con Hash de seguridad...")
+            # Aquí llamamos a tu función de PDF
             st.info("Función de descarga habilitada.")
 
-    # --- CIERRE DEL BLOQUE Y SIGUIENTE SECCIÓN ---
+    # --- 3. LEY 2173 (GESTIÓN Y CUMPLIMIENTO) ---
     elif menu_sel == menu_opts[3]:
-        st.title("⚖️ Gestión Ley 2173")
+        tt = "⚖️ Cumplimiento Ley 2173" if st.session_state.lang == 'ES' else "⚖️ Law 2173 Compliance"
+        st.title(tt)
+        
+        with st.container(border=True):
+            st.subheader("🏢 Gestión Operativa")
+            c1, c2 = st.columns(2)
+            with c1: nit = st.text_input("Ingrese NIT" if st.session_state.lang == 'ES' else "Enter Tax ID (NIT)")
+            with c2: logo_emp = st.file_uploader("Logo Empresa", type=["png", "jpg", "jpeg"])
+            
+            if nit and logo_emp:
+                if st.button("GENERAR CERTIFICADO OFICIAL"):
+                    # Asegúrate de tener esta función definida en tu código
+                    st.session_state.pdf_empresa_buffer = generar_cert_empresa(nit, logo_emp, st.session_state.lang)
+                    st.success("Certificado generado exitosamente.")
+                
+                if st.session_state.get('pdf_empresa_buffer'):
+                    st.download_button("📥 DESCARGAR CERTIFICADO", data=st.session_state.pdf_empresa_buffer, file_name=f"Certificado_Ley2173_{nit}.pdf")
 
-    # --- AQUÍ EMPIEZA LA LÍNEA 536 ---
-    elif menu_sel == menu_opts[3]:  # Gestión Ley 2173
-        st.title("⚖️ Gestion Ley 2173 de 2021")
-        # ... resto de tu código de Ley 2173
-# 4. LEY 2173
-elif menu_sel == menu_opts[3]:
-    tt = " Cumplimiento Ley 2173" if st.session_state.lang == 'ES' else " Law 2173 Compliance"
-    st.title(tt)
-    with st.container(border=True):
-        st.subheader(" Gestión Operativa" if st.session_state.lang == 'ES' else " Operational Management")
-        c1, c2 = st.columns(2)
-        with c1: nit = st.text_input("Ingrese NIT" if st.session_state.lang == 'ES' else "Enter Tax ID (NIT)")
-        with c2: logo_emp = st.file_uploader("Logo Empresa / Company Logo", type=["png", "jpg", "jpeg"])
-        if nit and logo_emp:
-            st.info("? Datos recibidos. Generando certificado encriptado..." if st.session_state.lang == 'ES' else "? Data received. Generating encrypted certificate...")
-            if st.button("GENERAR CERTIFICADO OFICIAL"):
-                st.session_state.pdf_empresa_buffer = generar_cert_empresa(nit, logo_emp, st.session_state.lang)
-                st.success("Certificado generado exitosamente.")
-            if st.session_state.pdf_empresa_buffer:
-                 btn_d = t('download') + (" CERTIFICADO" if st.session_state.lang == 'ES' else " CERTIFICATE")
-                 st.download_button(btn_d, data=st.session_state.pdf_empresa_buffer, file_name=f"Certificado_Ley2173_{nit}.pdf", mime="application/pdf")
-    st.write("---")
-    st.subheader(" Blindaje Jurídico" if st.session_state.lang == 'ES' else " Legal Framework")
-    col_law1, col_law2 = st.columns(2)
-    with col_law1:
-        st.markdown("<div class='legal-card'><h4>Ley 2173 de 2021</h4><p>Áreas de Vida.</p></div>", unsafe_allow_html=True)
-        st.download_button(" Descargar Resumen Ley 2173", data=TEXTO_LEY_2173, file_name="Resumen_Ley_2173.txt")
-        st.markdown("<div class='legal-card'><h4>CONPES 3934</h4><p>Crecimiento Verde.</p></div>", unsafe_allow_html=True)
-        st.download_button(" Descargar Resumen CONPES 3934", data=TEXTO_CONPES, file_name="Resumen_CONPES_3934.txt")
-    with col_law2:
-        st.markdown("<div class='legal-card'><h4>Ley 2111 de 2021</h4><p>Delitos Ambientales.</p></div>", unsafe_allow_html=True)
-        st.download_button(" Descargar Resumen Ley 2111", data=TEXTO_DELITOS, file_name="Resumen_Ley_2111.txt")
-        st.markdown("<div class='legal-card'><h4>Beneficios Tributarios</h4><p>S.A.S. BIC.</p></div>", unsafe_allow_html=True)
-        st.download_button(" Descargar Guía Tributaria", data=TEXTO_TRIBUTARIO, file_name="Guia_Tributaria_Serenity.txt")
-
+        st.write("---")
+        st.subheader("🛡️ Blindaje Jurídico")
+        cl1, cl2 = st.columns(2)
+        with cl1:
+            st.markdown("<div style='background:#1e1e1e; padding:10px; border-radius:5px;'><h4>Ley 2173 de 2021</h4><p>Áreas de Vida.</p></div>", unsafe_allow_html=True)
+            # st.download_button("Descargar Resumen", data=TEXTO_LEY_2173...)
 # --- CAMBIO 20: FORMULARIO DE SUSCRIPCIÓN DINÁMICO ---
 elif menu_sel == menu_opts[4]:
     st.title("🌱 Planes de Membresia Serenity")
@@ -706,6 +668,7 @@ elif menu_sel == menu_opts[8]:
     folium.Polygon(locations=[[lat_guadua - offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua + offset], [lat_guadua - offset, lon_guadua + offset]], color="#9BC63B", fill=True, fill_opacity=0.3, tooltip="Hacienda Monte Guadua: 80 Ha").add_to(m)
     folium.CircleMarker(location=[lat_villa, lon_villa], radius=10, color="blue", fill=True, fill_color="blue", tooltip="Finca Villa Michelle (Sede)").add_to(m)
     st_folium(m, width="100%", height=600)
+
 
 
 
