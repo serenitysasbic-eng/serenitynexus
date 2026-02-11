@@ -346,12 +346,13 @@ elif menu_sel == menu_opts[1]:
                 st.session_state.estado_gemini = t('active')
                 mostrar_camara_real(url_camara)
 
-    # MOSTRAR EL VIDEO DEMO
+# --- CAMBIO 8: VIDEO DE NATURALEZA Y LIMPIEZA DE TÍTULO ---
     if st.session_state.f_activo == "GEMINI-DEMO":
         st.divider()
-        st.markdown("<h3 style='text-align:center; color:#4285F4;'>📡 TRANSMISIÓN SIMULADA (ALTA DEFINICIÓN)</h3>", unsafe_allow_html=True)
-        # Video de naturaleza confiable
-        st.video("https://storage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4", start_time=15)
+        st.markdown("<h3 style='text-align:center; color:#4285F4;'>🌿 CONEXIÓN VIRTUAL: NATURALEZA GLOBAL</h3>", unsafe_allow_html=True)
+        
+        # Video enfocado en naturaleza (Bosques y Vida Silvestre)
+        st.video("https://www.youtube.com/watch?v=6v2L2UGZJAM")
 
     # MOSTRAR CÁMARAS ESTÁTICAS (SI NO ES VIDEO)
     if st.session_state.f_activo and st.session_state.f_activo not in ["GEMINI", "GEMINI-DEMO"]:
@@ -531,6 +532,7 @@ elif menu_sel == menu_opts[8]:
     folium.Polygon(locations=[[lat_guadua - offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua + offset], [lat_guadua - offset, lon_guadua + offset]], color="#9BC63B", fill=True, fill_opacity=0.3, tooltip="Hacienda Monte Guadua: 80 Ha").add_to(m)
     folium.CircleMarker(location=[lat_villa, lon_villa], radius=10, color="blue", fill=True, fill_color="blue", tooltip="Finca Villa Michelle (Sede)").add_to(m)
     st_folium(m, width="100%", height=600)
+
 
 
 
