@@ -276,7 +276,7 @@ elif menu == "GESTIÓN LEY 2173 (EMPRESAS)":
     st.title("⚖️ Nexus Legal & Compliance Hub")
     st.markdown("### Soluciones Tecnológicas a la Normativa Ambiental Colombiana")
 
-    # --- TARJETAS LEGALES (Visualmente atractivas) ---
+    # --- TARJETAS LEGALES VISUALES ---
     st.markdown("#### Marco Jurídico Integrado")
     c_l1, c_l2, c_l3 = st.columns(3)
 
@@ -284,7 +284,7 @@ elif menu == "GESTIÓN LEY 2173 (EMPRESAS)":
         st.markdown("""
             <div style="background:#1e2630; padding:15px; border-radius:10px; border-left:5px solid #9BC63B; min-height:180px;">
                 <h4 style="color:#9BC63B; margin-bottom:5px;">LEY 2173 (SIEMBRA)</h4>
-                <p style="font-size:0.8rem; color:#ccc;">Obligación de 2 árboles por empleado. Serenity provee el terreno y la georreferenciación.</p>
+                <p style="font-size:0.8rem; color:#ccc;">Obligación de 2 árboles por empleado. Serenity provee el terreno y la georreferenciación oficial.</p>
             </div>
         """, unsafe_allow_html=True)
 
@@ -292,7 +292,7 @@ elif menu == "GESTIÓN LEY 2173 (EMPRESAS)":
         st.markdown("""
             <div style="background:#1e2630; padding:15px; border-radius:10px; border-left:5px solid #3498db; min-height:180px;">
                 <h4 style="color:#3498db; margin-bottom:5px;">LEY 2169 (CLIMA)</h4>
-                <p style="font-size:0.8rem; color:#ccc;">Ruta a la Carbono Neutralidad. Nuestra IA certifica la captura real de CO2.</p>
+                <p style="font-size:0.8rem; color:#ccc;">Ruta a la Carbono Neutralidad. Nuestra IA certifica la captura real de CO2 en el KBA San Antonio.</p>
             </div>
         """, unsafe_allow_html=True)
 
@@ -300,7 +300,7 @@ elif menu == "GESTIÓN LEY 2173 (EMPRESAS)":
         st.markdown("""
             <div style="background:#1e2630; padding:15px; border-radius:10px; border-left:5px solid #e74c3c; min-height:180px;">
                 <h4 style="color:#e74c3c; margin-bottom:5px;">LEY 2111 (JUSTICIA)</h4>
-                <p style="font-size:0.8rem; color:#ccc;">Sanciones penales por daño ambiental. Los Faros actúan como evidencia judicial.</p>
+                <p style="font-size:0.8rem; color:#ccc;">Sanciones penales por daño ambiental. Los Faros actúan como evidencia digital ante autoridades.</p>
             </div>
         """, unsafe_allow_html=True)
 
@@ -314,10 +314,9 @@ elif menu == "GESTIÓN LEY 2173 (EMPRESAS)":
         | **Ley 2173** | Falta de predios para siembra obligatoria. | Áreas de Vida protegidas en Dagua y Felidia. |
         | **Ley 2169** | Dificultad para medir captura de CO2. | Telemetría IA y datos biométricos certificados. |
         | **Ley 99** | Inversión del 1% sin trazabilidad. | Reportes en tiempo real y Blockchain. |
-        | **Código Penal**| Riesgo de invasión o daño en predios. | Vigilancia 24/7 con red de Faros inteligentes. |
+        | **Ley 2111** | Riesgo de invasión o daño en predios. | Vigilancia 24/7 con red de Faros inteligentes. |
         """)
         
-        # El Vademécum descargable que pediste
         vademecum_text = """RESUMEN EJECUTIVO: SOLUCIONES SERENITY NEXUS GLOBAL
         
         1. LEY 2173 DE 2021: Facilitamos el cumplimiento de siembra para medianas y grandes empresas.
@@ -356,7 +355,6 @@ elif menu == "GESTIÓN LEY 2173 (EMPRESAS)":
                 st.session_state.pdf_final = generar_pdf_certificado(nombre_corp, num_personal * 2, f"LEGAL-{h_final}")
                 st.success(f"Certificado vinculado a leyes ambientales generado.")
                 st.download_button("📥 Descargar Documento Oficial", st.session_state.pdf_final, f"Cumplimiento_{nombre_corp}.pdf", use_container_width=True)
-
 
 # =========================================================
 # BLOQUE 4: SUSCRIPCIONES (Impacto, Beneficios y Pasarela)
@@ -445,6 +443,7 @@ elif menu == "SUSCRIPCIONES":
                 </div>
             """, unsafe_allow_html=True)
             st.caption("🔒 Transacciones seguras mediante Nexus Gateway (Dagua-Colombia)")
+            
 # =========================================================
 # BLOQUE 5: BILLETERA CRYPTO (WEB3) - ECOSISTEMA $SNG
 # =========================================================
@@ -678,6 +677,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
