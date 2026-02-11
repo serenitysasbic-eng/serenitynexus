@@ -64,7 +64,7 @@ Beneficio 2: Deducciones por inversión en proyectos de Ciencia, Tecnología e I
 Beneficio 3: Preferencia en contratación pública y acceso a líneas de crédito especiales.
 """
 
-# --- CAMBIO 14 (ALINEACIÓN CORRECTA) ---
+# --- DICCIONARIO LIMPIO Y ALINEADO ---
 tr = {
     'menu_opts': {
         'ES': ["INICIO", "RED DE FAROS (7 NODOS)", "DASHBOARD ESTADÍSTICO IA", "GESTIÓN LEY 2173 (EMPRESAS)", "SUSCRIPCIONES", "BILLETERA CRYPTO (WEB3)", "DONACIONES Y CERTIFICADO", "LOGÍSTICA AEROLÍNEAS", "UBICACIÓN & MAPAS"],
@@ -92,7 +92,7 @@ tr = {
         'ES': 'Ser el referente mundial del Internet de la Naturaleza para 2030.',
         'EN': 'To be the global benchmark for the Internet of Nature by 2030.'
     }
-},
+}
     
     # SECCIÓN IDENTIDAD
     'who_title': {'ES': '¿QUIÉNES SOMOS?', 'EN': 'WHO WE ARE'}, 
@@ -660,6 +660,7 @@ elif menu_sel == menu_opts[8]:
     folium.Polygon(locations=[[lat_guadua - offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua + offset], [lat_guadua - offset, lon_guadua + offset]], color="#9BC63B", fill=True, fill_opacity=0.3, tooltip="Hacienda Monte Guadua: 80 Ha").add_to(m)
     folium.CircleMarker(location=[lat_villa, lon_villa], radius=10, color="blue", fill=True, fill_color="blue", tooltip="Finca Villa Michelle (Sede)").add_to(m)
     st_folium(m, width="100%", height=600)
+
 
 
 
