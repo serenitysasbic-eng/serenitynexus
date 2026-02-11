@@ -359,13 +359,7 @@ elif menu_sel == menu_opts[1]:
         st.divider(); live_t = t('live'); color_titulo = "#9BC63B"
         st.markdown(f"<h2 style='color:{color_titulo}; text-align:center;'>?? {live_t}: {st.session_state.f_activo.upper()}</h2>", unsafe_allow_html=True)
         c_cols = st.columns(4)
-# --- CAMBIO 9: MOSAICO DINÁMICO DE 8 CÁMARAS (OPCIÓN A) ---
-    if st.session_state.f_activo and st.session_state.f_activo not in ["GEMINI", "GEMINI-DEMO"]:
-        st.divider()
-        live_t = t('live')
-        st.markdown(f"<h2 style='color:#9BC63B; text-align:center;'>📡 {live_t}: {st.session_state.f_activo.upper()}</h2>", unsafe_allow_html=True)
-        
-        # Grid de 4 columnas para distribuir las 8 cámaras
+# --- CAMBIO 9 CORREGIDO: MOSAICO DINÁMICO ---
         c_cols = st.columns(4)
         for j in range(8):
             with c_cols[j % 4]:
@@ -374,9 +368,8 @@ elif menu_sel == menu_opts[1]:
                         <p style='text-align:center; color:#9BC63B; font-weight:bold; font-size: 12px; margin:0;'>CAM {j+1} - LIVE</p>
                     </div>
                 """, unsafe_allow_html=True)
-                # Usamos un video de bosque real. El start_time j*30 hace que cada cámara 
-                # muestre una parte distinta del metraje.
-                st.video("https://www.youtube.com/watch?v=6v2L2UGZJAM", start_time=j*30
+                # Agregamos el paréntesis de cierre ) que faltaba al final
+                st.video("https://www.youtube.com/watch?v=6v2L2UGZJAM", start_time=j*30)
             
     # --- SECCIÓN BIOACÚSTICA (MICRÓFONOS) RESTAURADA ---
     if st.session_state.f_activo:
@@ -547,6 +540,7 @@ elif menu_sel == menu_opts[8]:
     folium.Polygon(locations=[[lat_guadua - offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua + offset], [lat_guadua - offset, lon_guadua + offset]], color="#9BC63B", fill=True, fill_opacity=0.3, tooltip="Hacienda Monte Guadua: 80 Ha").add_to(m)
     folium.CircleMarker(location=[lat_villa, lon_villa], radius=10, color="blue", fill=True, fill_color="blue", tooltip="Finca Villa Michelle (Sede)").add_to(m)
     st_folium(m, width="100%", height=600)
+
 
 
 
