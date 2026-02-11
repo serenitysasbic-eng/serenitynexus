@@ -318,8 +318,13 @@ elif menu_sel == menu_opts[1]:
         """, unsafe_allow_html=True)
         
         st.write("")
-        # OPCIONES DE CÁMARA
-        opcion_cam = st.radio("Fuente de Video / Video Source:", ["SIMULACIÓN (DEMO NUBE)", "CÁMARA REAL (IP LOCAL)"])
+# --- CAMBIO 7: LETRA BLANCA EN OPCIONES DE CÁMARA ---
+        st.markdown("<style>div[data-testid='stWidgetLabel'] p {color: white !important;}</style>", unsafe_allow_html=True)
+        
+        opcion_cam = st.radio(
+            "Fuente de Video / Video Source:", 
+            ["SIMULACIÓN (DEMO NUBE)", "CÁMARA REAL (IP LOCAL)"]
+        )
         
 # --- CAMBIO 6: LIMPIEZA BOTÓN DEMO ---
         if opcion_cam == "SIMULACIÓN (DEMO NUBE)":
@@ -518,6 +523,7 @@ elif menu_sel == menu_opts[8]:
     folium.Polygon(locations=[[lat_guadua - offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua + offset], [lat_guadua - offset, lon_guadua + offset]], color="#9BC63B", fill=True, fill_opacity=0.3, tooltip="Hacienda Monte Guadua: 80 Ha").add_to(m)
     folium.CircleMarker(location=[lat_villa, lon_villa], radius=10, color="blue", fill=True, fill_color="blue", tooltip="Finca Villa Michelle (Sede)").add_to(m)
     st_folium(m, width="100%", height=600)
+
 
 
 
