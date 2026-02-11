@@ -272,72 +272,81 @@ Python
 # BLOQUE 3: NEXUS COMPLIANCE & LEGAL HUB (REDESIGN)
 # =========================================================
 elif menu == "GESTIÓN LEY 2173 (EMPRESAS)":
-    st.header("⚖️ Nexus Legal Compliance")
-    st.info("Plataforma de gestión para el cumplimiento de normatividad ambiental vigente en Colombia.")
+    st.title("⚖️ Nexus Legal & Compliance Hub")
+    st.markdown("### Soluciones Tecnológicas a la Normativa Ambiental")
 
-    # --- 1. VADEMÉCUM DE SOLUCIONES (EL RESUMEN QUE PEDISTE) ---
-    with st.container(border=True):
-        st.subheader("📄 Vademécum: Soluciones Serenity Nexus")
-        col_v1, col_v2 = st.columns([2, 1])
-        with col_v1:
-            st.markdown("""
-            Nuestra tecnología integra las 4 normativas críticas para el sector corporativo:
-            * **Ley 2173 (2021):** Solución inmediata a la obligación de siembra de árboles.
-            * **Ley 2169 (2021):** Certificación de métricas para la meta de Carbono Neutralidad.
-            * **Ley 99 (1993):** Ejecución del 1% para la conservación de cuencas (Dagua).
-            * **Ley 2111 (2021):** Protección activa contra delitos ambientales (Deforestación/Caza).
-            """)
-        with col_v2:
-            st.write(" ")
-            st.download_button(
-                label="📥 DESCARGAR VADEMÉCUM PDF",
-                data="RESUMEN LEGAL SERENITY: Soluciones a Leyes 2173, 2169, 99 y 2111.",
-                file_name="Vademecum_Legal_Serenity.pdf",
-                use_container_width=True
-            )
+    # --- TARJETAS LEGALES VISUALES ---
+    c_l1, c_l2, c_l3 = st.columns(3)
 
-    st.write("---")
-
-    # --- 2. CALCULADORA Y SEMÁFORO DE RIESGO ---
-    st.subheader("🔍 Auditoría de Cumplimiento")
-    col_aud1, col_aud2 = st.columns([1, 1])
-    
-    with col_aud1:
-        empresa_name = st.text_input("Razón Social")
-        num_colabs = st.number_input("Número de Empleados", min_value=1, value=100)
-        meta_anual = num_colabs * 2
-    
-    with col_aud2:
-        st.write("#### Estado de Riesgo Legal")
-        if not empresa_name:
-            st.error("🔴 EMPRESA NO REGISTRADA - Riesgo de Sanción Ley 2173")
-        else:
-            st.warning(f"🟡 PENDIENTE: {meta_anual} árboles por certificar en 2026")
-
-    st.write("---")
-
-    # --- 3. GENERACIÓN DE CERTIFICADO DE CO-BRANDING ---
-    st.subheader("🛡️ Emisión de Certificado Oficial")
-    c_f1, c_f2 = st.columns(2)
-    
-    with c_f1:
-        logo_user = st.file_uploader("Cargar Logo de la Empresa para Co-Branding", type=['png', 'jpg'])
-        if st.button("⚖️ VALIDAR CUMPLIMIENTO Y GENERAR PDF", use_container_width=True):
-            if empresa_name:
-                h_cod = hashlib.sha256(f"{empresa_name}".encode()).hexdigest()[:12].upper()
-                st.session_state.legal_pdf = generar_pdf_certificado(empresa_name, meta_anual, f"NEXUS-LAW-{h_cod}")
-                st.success("Certificado de Cumplimiento Legal Generado.")
-            else:
-                st.error("Ingrese Razón Social.")
+    with c_l1:
+        st.markdown("""
+            <div style="background:#1e2630; padding:15px; border-radius:10px; border-left:5px solid #9BC63B; min-height:180px;">
+                <h4 style="color:#9BC63B; margin-bottom:5px;">LEY 2173 (SIEMBRA)</h4>
+                <p style="font-size:0.8rem; color:#ccc;">Obligación de 2 árboles por empleado. Serenity provee el terreno y la georreferenciación oficial.</p>
+            </div>
+        """, unsafe_allow_html=True)
 
     with c_l2:
-        if 'legal_pdf' in st.session_state:
-            st.download_button(
-                label="📥 DESCARGAR CERTIFICADO LEY 2173/2111",
-                data=st.session_state.legal_pdf,
-                file_name=f"Cumplimiento_{empresa_name}.pdf",
-                use_container_width=True
-            )
+        st.markdown("""
+            <div style="background:#1e2630; padding:15px; border-radius:10px; border-left:5px solid #3498db; min-height:180px;">
+                <h4 style="color:#3498db; margin-bottom:5px;">LEY 2169 (CLIMA)</h4>
+                <p style="font-size:0.8rem; color:#ccc;">Ruta a la Carbono Neutralidad. Nuestra IA certifica la captura real de CO2 en el KBA San Antonio.</p>
+            </div>
+        """, unsafe_allow_html=True)
+
+    with c_l3:
+        st.markdown("""
+            <div style="background:#1e2630; padding:15px; border-radius:10px; border-left:5px solid #e74c3c; min-height:180px;">
+                <h4 style="color:#e74c3c; margin-bottom:5px;">LEY 2111 (JUSTICIA)</h4>
+                <p style="font-size:0.8rem; color:#ccc;">Sanciones penales por daño ambiental. Los Faros actúan como evidencia digital ante autoridades.</p>
+            </div>
+        """, unsafe_allow_html=True)
+
+    st.write("")
+    
+    # --- RESUMEN DE SOLUCIONES Y VADEMECUM ---
+    with st.expander("📄 VER RESUMEN DE SOLUCIONES POR LEY (VADEMÉCUM)", expanded=False):
+        st.markdown("""
+        | Ley | Desafío para la Empresa | Solución Serenity Nexus |
+        | :--- | :--- | :--- |
+        | **Ley 2173** | Falta de predios para siembra obligatoria. | Áreas de Vida protegidas en Dagua y Felidia. |
+        | **Ley 2169** | Dificultad para medir captura de CO2. | Telemetría IA y datos biométricos certificados. |
+        | **Ley 99** | Inversión del 1% sin trazabilidad. | Reportes en tiempo real y Blockchain. |
+        | **Ley 2111** | Riesgo de invasión o daño en predios. | Vigilancia 24/7 con red de Faros inteligentes. |
+        """)
+        
+        vademecum_text = "RESUMEN EJECUTIVO: SOLUCIONES SERENITY NEXUS GLOBAL\n\nLeyes 2173, 2169, 2111 y 99 integradas."
+        st.download_button(
+            label="📥 DESCARGAR VADEMÉCUM DE SOLUCIONES (PDF)",
+            data=vademecum_text,
+            file_name="Vademecum_Legal_Serenity.txt",
+            mime="text/plain",
+            use_container_width=True
+        )
+
+    st.divider()
+
+    # --- SECCIÓN DE ACCIÓN CORPORATIVA ---
+    col_act1, col_act2 = st.columns([1, 1])
+
+    with col_act1:
+        with st.container(border=True):
+            st.markdown("#### 🏢 Registro de Cumplimiento")
+            nombre_corp = st.text_input("Nombre de la Compañía")
+            nit_corp = st.text_input("NIT")
+            num_personal = st.number_input("Número de Colaboradores", min_value=1, value=100)
+            st.markdown(f"**Requerimiento Anual:** {num_personal * 2} Árboles")
+            st.file_uploader("Vincular Logo de la Empresa", type=['png', 'jpg'])
+
+    with col_act2:
+        st.markdown("#### 🛡️ Certificación de Protección")
+        st.write("Vincule su empresa al sistema de protección de fauna y flora Nexus.")
+        if st.button("⚖️ VALIDAR Y GENERAR CERTIFICADO LEGAL", use_container_width=True):
+            if nombre_corp:
+                h_final = hashlib.sha256(f"{nombre_corp}".encode()).hexdigest()[:12].upper()
+                st.session_state.pdf_final = generar_pdf_certificado(nombre_corp, num_personal * 2, f"LEGAL-{h_final}")
+                st.success("Certificado Legal Generado.")
+                st.download_button("📥 Descargar Documento", st.session_state.pdf_final, "Cumplimiento_Legal.pdf", use_container_width=True)
 # =========================================================
 # BLOQUE 4: SUSCRIPCIONES (Impacto, Beneficios y Pasarela)
 # =========================================================
@@ -659,6 +668,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
