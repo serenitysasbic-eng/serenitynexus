@@ -261,61 +261,69 @@ elif menu == "DASHBOARD ESTADÍSTICO IA":
 
 
 # =========================================================
-# BLOQUE 3: NEXUS COMPLIANCE & LEGAL HUB (REDESIGN)
-# =========================================================
-# =========================================================
 # BLOQUE 3: NEXUS LEGAL & COMPLIANCE (INTEGRACIÓN TOTAL)
 # =========================================================
-elif menu == "GESTIÓN LEY 2173 (EMPRESAS)":
-    st.title("⚖️ Nexus Legal & Compliance Hub")
-    st.markdown("### Soluciones Tecnológicas a la Normativa Ambiental")
-
-    # --- Mantenemos tus tarjetas de colores (Pilar Visual) ---
-    c_l1, c_l2, c_l3 = st.columns(3)
-    with c_l1:
-        st.markdown('<div style="background:#1e2630; padding:15px; border-radius:10px; border-left:5px solid #9BC63B; min-height:180px;"><h4 style="color:#9BC63B;">LEY 2173</h4><p style="font-size:0.8rem; color:#ccc;">Obligación de 2 árboles por empleado. Serenity provee el terreno y GPS oficial.</p></div>', unsafe_allow_html=True)
-    with c_l2:
-        st.markdown('<div style="background:#1e2630; padding:15px; border-radius:10px; border-left:5px solid #3498db; min-height:180px;"><h4 style="color:#3498db;">LEY 2169</h4><p style="font-size:0.8rem; color:#ccc;">Ruta a la Carbono Neutralidad. Nuestra IA certifica la captura real de CO2.</p></div>', unsafe_allow_html=True)
-    with c_l3:
-        st.markdown('<div style="background:#1e2630; padding:15px; border-radius:10px; border-left:5px solid #e74c3c; min-height:180px;"><h4 style="color:#e74c3c;">LEY 2111</h4><p style="font-size:0.8rem; color:#ccc;">Justicia Ambiental. Faros Gemini como evidencia digital ante fiscalía.</p></div>', unsafe_allow_html=True)
-
-    st.write("")
+def generar_pdf_corporativo(nombre_entidad, impacto, hash_id, logo_bytes=None, es_vademecum=False):
+    pdf = FPDF()
+    pdf.add_page()
     
-    # --- 1. SECCIÓN VADEMÉCUM (RESUMEN PROFESIONAL) ---
-    with st.container(border=True):
-        st.subheader("📄 Vademécum de Soluciones Corporativas")
-        empresa_v = st.text_input("Nombre de la empresa para el reporte técnico")
-        if st.button("📊 GENERAR VADEMÉCUM TÉCNICO PDF", use_container_width=True):
-            if empresa_v:
-                # Usamos la función corporativa con bandera de vademécum
-                pdf_v = generar_pdf_corporativo(empresa_v, 0, "NEXUS-VAD-2026", es_vademecum=True)
-                st.download_button("📥 DESCARGAR VADEMÉCUM (ESTRUCTURA LEGAL)", pdf_v, f"Vademecum_Serenity_{empresa_v}.pdf", "application/pdf", use_container_width=True)
-            else:
-                st.warning("Ingrese el nombre de la empresa para personalizar el documento.")
+    # 1. ENCABEZADO: Título del Documento
+    pdf.set_font("Arial", 'B', 16)
+    if es_vademecum:
+        pdf.cell(0, 10, "VADEMECUM LEGAL - SERENITY NEXUS GLOBAL", ln=True, align='C')
+        pdf.set_font("Arial", 'B', 12)
+        pdf.cell(0, 10, "ESTRATEGIA INTEGRAL DE CUMPLIMIENTO AMBIENTAL", ln=True, align='C')
+    else:
+        pdf.cell(0, 10, "CERTIFICADO DE CUMPLIMIENTO LEY 2173", ln=True, align='C')
+    
+    pdf.ln(10)
 
-    st.divider()
+    # 2. ENLACE DEL LOGO (Si existe)
+    if logo_bytes:
+        # Guardamos el archivo temporalmente para que FPDF pueda leerlo
+        with open("temp_logo_empresa.png", "wb") as f:
+            f.write(logo_bytes.getbuffer())
+        # Lo posicionamos en la esquina superior derecha
+        pdf.image("temp_logo_empresa.png", x=160, y=10, w=35)
 
-    # --- 2. SECCIÓN CERTIFICADO (CO-BRANDING CON LOGO) ---
-    st.subheader("🛡️ Emisión de Certificado con Logo Empresarial")
-    col_act1, col_act2 = st.columns([1, 1])
+    # 3. CONTENIDO PROFESIONAL
+    pdf.set_font("Arial", '', 11)
+    fecha_hoy = datetime.now().strftime('%d/%m/%Y')
+    
+    if es_vademecum:
+        # Resumen estructurado de leyes
+        cuerpo = (
+            f"Entidad: {nombre_entidad}\n"
+            f"Fecha de Auditoria: {fecha_hoy}\n\n"
+            "RESUMEN DE SOLUCIONES LEGALES:\n"
+            "--------------------------------------------------------------------------------\n"
+            "1. LEY 2173 (2021): Asignacion de 'Areas de Vida' en Dagua y Felidia para reforestacion corporativa.\n"
+            "2. LEY 2169 (2021): Sistema de monitoreo IA para la certificacion de Carbono Neutralidad.\n"
+            "3. LEY 2111 (2021): Mitigacion de riesgos penales mediante vigilancia digital con Faros Gemini.\n"
+            "4. LEY 99 (1993): Inversion forzosa del 1% enfocada en la conservacion de cuencas hidrograficas.\n\n"
+            "Este documento certifica que Serenity Nexus provee la infraestructura tecnologica y fisica "
+            "necesaria para el cumplimiento de las normativas citadas."
+        )
+        pdf.multi_cell(0, 8, cuerpo)
+    else:
+        # Contenido del Certificado Corporativo
+        cuerpo = (
+            f"Por medio de la presente, Serenity Nexus Global certifica que la empresa:\n\n"
+            f"RAZON SOCIAL: {nombre_entidad}\n"
+            f"CODIGO DE VERIFICACION: {hash_id}\n"
+            f"FECHA: {fecha_hoy}\n\n"
+            f"Ha iniciado el proceso de mitigacion de impacto ambiental mediante la siembra de "
+            f"{impacto} individuos arboreos en la reserva Hacienda Monte Guadua.\n\n"
+            "Este certificado es valido ante las autoridades ambientales como prueba de cumplimiento "
+            "de la Ley 2173 de 2021."
+        )
+        pdf.multi_cell(0, 8, cuerpo)
 
-    with col_act1:
-        with st.container(border=True):
-            n_corp = st.text_input("Razón Social de la Compañía")
-            n_per = st.number_input("Número de Empleados", min_value=1, value=100)
-            archivo_logo = st.file_uploader("Cargar Logo de la Empresa (PNG/JPG)", type=['png', 'jpg'])
-
-    with col_act2:
-        st.info("Al subir el logo, el sistema lo enlazará automáticamente en la esquina superior del certificado oficial.")
-        if st.button("⚖️ VALIDAR Y EMITIR CERTIFICADO CON LOGO", use_container_width=True):
-            if n_corp and archivo_logo:
-                h_c = hashlib.sha256(f"{n_corp}".encode()).hexdigest()[:12].upper()
-                # Pasamos el archivo_logo a la función para que lo pegue en el PDF
-                pdf_c = generar_pdf_corporativo(n_corp, n_per*2, h_c, logo_bytes=archivo_logo)
-                st.success(f"Certificado vinculado para {n_corp}")
-                st.download_button("📥 DESCARGAR CERTIFICADO OFICIAL", pdf_c, f"Certificado_Ley2173_{n_corp}.pdf", "application/pdf", use_container_width=True)
-            else:
-                st.error("Se requiere Razón Social y el Logo para la emisión.")
+    pdf.ln(20)
+    pdf.set_font("Arial", 'I', 8)
+    pdf.cell(0, 10, f"Autenticidad verificada mediante Hash Blockchain: {hash_id}", ln=True, align='C')
+    
+    return pdf.output(dest='S').encode('latin-1')
 # =========================================================
 # BLOQUE 4: SUSCRIPCIONES (Impacto, Beneficios y Pasarela)
 # =========================================================
@@ -637,6 +645,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
