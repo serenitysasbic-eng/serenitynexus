@@ -283,34 +283,58 @@ elif menu == "BILLETERA CRYPTO (WEB3)":
         st.success("Billetera Conectada: 0x71C...9A23")
         st.metric(label="Saldo en $SNG", value="25,000.00")            
 
-# 6. DONACIONES
+# =========================================================
+# BLOQUE 6: DONACIONES Y CERTIFICADO (Diploma Oficial)
+# =========================================================
 elif menu == "DONACIONES Y CERTIFICADO":
-    st.title("📜 Generador de Diploma Oficial")
+    st.title("📜 Generador de Diploma y Certificado Nexus")
+    st.markdown("### Registro de Aportes a la Regeneración Biométrica")
+    
     colA, colB = st.columns([1, 1])
+    
     with colA:
         with st.container(border=True):
-            nombre_d = st.text_input("Nombre Completo del Donante")
-            monto_d = st.number_input("Monto Donación (USD)", min_value=1)
-            if st.button("✅ PROCESAR DONACIÓN"): 
+            st.markdown("#### Datos del Donante")
+            nombre_d = st.text_input("Nombre Completo o Razón Social")
+            monto_d = st.number_input("Monto del Aporte (USD)", min_value=1, step=10)
+            st.write("---")
+            
+            if st.button("✅ REGISTRAR APORTE Y GENERAR HASH"): 
                 if nombre_d:
+                    # Generación de Hash único para el certificado
+                    datos_hash = f"{nombre_d}{monto_d}{datetime.now()}"
+                    hash_certificado = hashlib.sha256(datos_hash.encode()).hexdigest()[:16].upper()
+                    
                     st.session_state.donaciones_recibidas += 1
-                    st.session_state.estado_gemini = "ACTIVO - EMITIENDO"
+                    # Guardamos el buffer del PDF en el estado de la sesión
                     st.session_state.pdf_buffer = generar_pdf_certificado(nombre_d, monto_d)
+                    st.session_state.current_hash = hash_certificado
+                    
                     st.balloons()
-                    st.success("¡Certificado generado y Faro Gemini Activado!")
+                    st.success(f"Aporte registrado con éxito.")
+                    st.code(f"HASH DE VERIFICACIÓN NEXUS: {hash_certificado}", language="text")
                 else:
-                    st.warning("Ingrese un nombre.")
+                    st.warning("Por favor, ingrese el nombre del donante para continuar.")
+
     with colB:
         if 'pdf_buffer' in st.session_state:
             st.markdown(f"""
-                <div style="background:white; color:black; padding:20px; text-align:center; border:5px double #2E7D32;">
-                    <h3 style="color:#2E7D32;">VISTA PREVIA</h3>
-                    <h1>{nombre_d.upper()}</h1>
-                    <p>Monto: ${monto_d}</p>
+                <div style="background:white; color:black; padding:30px; text-align:center; border:8px double #2E7D32; border-radius:15px;">
+                    <h2 style="color:#2E7D32; margin-bottom:10px;">VISTA PREVIA DEL DIPLOMA</h2>
+                    <hr style="border:1px solid #2E7D32;">
+                    <p style="font-size:1.2rem; margin-top:20px;">Gracias por tu aporte, <b>{nombre_d.upper()}</b></p>
+                    <p>Has contribuido con <b>${monto_d} USD</b> a la conservación de Serenity.</p>
+                    <p style="font-size:0.8rem; color:gray; margin-top:30px;">ID VERIFICACIÓN: {st.session_state.current_hash}</p>
                 </div>
             """, unsafe_allow_html=True)
-            st.download_button("📥 DESCARGAR DIPLOMA (PDF)", data=st.session_state.pdf_buffer, file_name=f"Diploma_Serenity_{nombre_d}.pdf", mime="application/pdf")
-
+            
+            st.write("")
+            st.download_button(
+                label="📥 DESCARGAR DIPLOMA OFICIAL (PDF)",
+                data=st.session_state.pdf_buffer,
+                file_name=f"Certificado_Serenity_{nombre_d.replace(' ', '_')}.pdf",
+                mime="application/pdf"
+            )
 # =========================================================
 # BLOQUE 7: LOGÍSTICA AEROLÍNEAS (Conexiones Globales)
 # =========================================================
@@ -426,6 +450,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
