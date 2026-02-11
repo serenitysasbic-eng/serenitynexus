@@ -481,57 +481,36 @@ elif menu_sel == menu_opts[1]:
                     </div>
                 """, unsafe_allow_html=True)
 
-# --- CAMBIO 21: DASHBOARD VIVO Y DINÁMICO ---
-import time
-import random
+# --- BLOQUE DASHBOARD VIVO (CORREGIDO) ---
+    elif menu_sel == menu_opts[2]:  # Dashboard Estadístico IA
+        st.title("📊 Analisis de Inteligencia Biologica")
+        
+        with st.status("🧬 Procesando señales de Faros inteligentes...", expanded=True) as status:
+            st.write("📡 Recibiendo telemetría de Monte Guadua...")
+            time.sleep(1)
+            st.write("🌿 Analizando salud foliar mediante IA...")
+            status.update(label="✅ Datos Actualizados", state="complete", expanded=False)
 
-def mostrar_dashboard_vivo():
-    st.title("📊 Análisis de Inteligencia Biológica")
-    
-    # Efecto de "Trabajando en tiempo real"
-    with st.status("🧬 Procesando señales de Faros inteligentes...", expanded=True) as status:
-        st.write("📡 Recibiendo telemetría de Monte Guadua...")
-        time.sleep(1)
-        st.write("🌿 Analizando salud foliar mediante IA...")
-        time.sleep(1)
-        st.write("🐾 Identificando especies por bioacústica...")
-        status.update(label="✅ Datos Actualizados en Tiempo Real", state="complete", expanded=False)
+        col_m1, col_m2, col_m3, col_m4 = st.columns(4)
+        with col_m1:
+            st.metric(label="🐾 Especies", value="1,252", delta="+4")
+        with col_m2:
+            st.metric(label="🌳 Hectáreas", value="14.5", delta="0")
+        with col_m3:
+            st.metric(label="🩺 Salud", value="98.7%", delta="+0.2%")
+        with col_m4:
+            st.metric(label="💰 $SNG", value="0.085", delta="+0.002")
 
-    # Métricas con movimiento (simulamos un ligero cambio aleatorio)
-    col_m1, col_m2, col_m3, col_m4 = st.columns(4)
-    especies = 1248 + random.randint(-2, 5)
-    salud = 98.5 + (random.random() * 0.5)
+        st.divider()
+        st.subheader("📁 Reportes Oficiales")
+        if st.button("📥 GENERAR ANALISIS PDF PROFESIONAL"):
+            st.info("Generando documento con Hash de seguridad...")
+            # Aquí va tu lógica de PDF
 
-    with col_m1:
-        st.metric(label="🐾 Especies Detectadas", value=especies, delta="+3 hoy")
-    with col_m2:
-        st.metric(label="🌳 Hectáreas Protegidas", value="14.5 Ha", delta="Estable")
-    with col_m3:
-        st.metric(label="🩺 Salud Ecosistema", value=f"{salud:.1f}%", delta="Optimo")
-    with col_m4:
-        st.metric(label="💰 Valor Activo $SNG", value="0.085 USD", delta="+0.002")
-
-    st.divider()
-
-    # --- BOTÓN DE DESCARGA PROFESIONAL ---
-    st.subheader("📁 Reportes Oficiales")
-    col_dl1, col_dl2 = st.columns([2, 1])
-    
-    with col_dl1:
-        st.write("Genere el certificado de estado biológico con validez legal y hash de seguridad.")
-    
-    with col_dl2:
-        # Aquí simulamos la creación del PDF con Hash
-        if st.button("📥 DESCARGAR ANÁLISIS PDF"):
-            import hashlib
-            # Generamos un Hash único para este reporte
-            report_hash = hashlib.sha256(f"Serenity_{time.time()}".encode()).hexdigest()[:16]
-            
-            st.success(f"Reporte Generado con éxito.")
-            st.code(f"HASH DE VERIFICACIÓN: {report_hash}")
-            
-            # Nota: Aquí llamamos a tu función de PDF existente
-            # st.download_button(label="Guardar Archivo", data=pdf_generado, file_name="Analisis_Serenity.pdf")
+    # --- AQUÍ EMPIEZA LA LÍNEA 536 ---
+    elif menu_sel == menu_opts[3]:  # Gestión Ley 2173
+        st.title("⚖️ Gestion Ley 2173 de 2021")
+        # ... resto de tu código de Ley 2173
 # 4. LEY 2173
 elif menu_sel == menu_opts[3]:
     tt = " Cumplimiento Ley 2173" if st.session_state.lang == 'ES' else " Law 2173 Compliance"
@@ -724,6 +703,7 @@ elif menu_sel == menu_opts[8]:
     folium.Polygon(locations=[[lat_guadua - offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua + offset], [lat_guadua - offset, lon_guadua + offset]], color="#9BC63B", fill=True, fill_opacity=0.3, tooltip="Hacienda Monte Guadua: 80 Ha").add_to(m)
     folium.CircleMarker(location=[lat_villa, lon_villa], radius=10, color="blue", fill=True, fill_color="blue", tooltip="Finca Villa Michelle (Sede)").add_to(m)
     st_folium(m, width="100%", height=600)
+
 
 
 
