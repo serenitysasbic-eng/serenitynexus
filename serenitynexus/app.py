@@ -64,7 +64,7 @@ Beneficio 2: Deducciones por inversión en proyectos de Ciencia, Tecnología e I
 Beneficio 3: Preferencia en contratación pública y acceso a líneas de crédito especiales.
 """
 
-# --- CAMBIO 14: LIMPIEZA TOTAL DEL DICCIONARIO DE TRADUCCIÓN ---
+# --- CAMBIO 14 (ALINEACIÓN CORRECTA) ---
 tr = {
     'menu_opts': {
         'ES': ["INICIO", "RED DE FAROS (7 NODOS)", "DASHBOARD ESTADÍSTICO IA", "GESTIÓN LEY 2173 (EMPRESAS)", "SUSCRIPCIONES", "BILLETERA CRYPTO (WEB3)", "DONACIONES Y CERTIFICADO", "LOGÍSTICA AEROLÍNEAS", "UBICACIÓN & MAPAS"],
@@ -79,8 +79,8 @@ tr = {
     'wallet_msg': {'ES': 'Billetera Conectada: 0x71C...9A23', 'EN': 'Wallet Connected: 0x71C...9A23'},
     'who_title': {'ES': 'QUIÉNES SOMOS', 'EN': 'WHO WE ARE'},
     'who_text': {
-        'ES': 'Serenity Nexus Global es la primera plataforma Phygital (Física + Digital) del Valle del Cauca que integra la conservación ambiental con tecnología Blockchain e Inteligencia Artificial.',
-        'EN': 'Serenity Nexus Global is the first Phygital (Physical + Digital) platform in Valle del Cauca integrating conservation with Blockchain and AI technology.'
+        'ES': 'Serenity Nexus Global es la primera plataforma Phygital del Valle del Cauca.',
+        'EN': 'Serenity Nexus Global is the first Phygital platform in Valle del Cauca.'
     },
     'mis_title': {'ES': 'NUESTRA MISIÓN', 'EN': 'OUR MISSION'},
     'mis_text': {
@@ -660,6 +660,7 @@ elif menu_sel == menu_opts[8]:
     folium.Polygon(locations=[[lat_guadua - offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua + offset], [lat_guadua - offset, lon_guadua + offset]], color="#9BC63B", fill=True, fill_opacity=0.3, tooltip="Hacienda Monte Guadua: 80 Ha").add_to(m)
     folium.CircleMarker(location=[lat_villa, lon_villa], radius=10, color="blue", fill=True, fill_color="blue", tooltip="Finca Villa Michelle (Sede)").add_to(m)
     st_folium(m, width="100%", height=600)
+
 
 
 
