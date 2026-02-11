@@ -350,7 +350,7 @@ with col_m2:
     st.write("---")
     st.subheader("📊 Indicadores ESG para Inversionistas")
     st.markdown("")
-c1, c2, c3 = st.columns(3)
+    c1, c2, c3 = st.columns(3)
     c1.metric("Mitigación CO2", f"{siembra_anual * 0.18:.2f} Ton/año")
     c2.metric("Área Protegida", f"{siembra_anual * 5} m²")
     c3.metric("Puntaje Cumplimiento", "100%", delta="Certificado")
@@ -686,6 +686,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
