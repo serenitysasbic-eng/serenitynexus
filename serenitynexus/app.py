@@ -563,7 +563,7 @@ elif menu_sel == menu_opts[5]:
 
     st.write("")
     if st.button("🔌 CONECTAR BILLETERA"):
-        st.success("Billetera Conectada: 0x71C...9A23 | Saldo: 25,000 $SNG"
+        st.success("Billetera Conectada: 0x71C...9A23 | Saldo: 25,000 $SNG")
 
 # 7. DONACIONES
 elif menu_sel == menu_opts[6]:
@@ -634,6 +634,7 @@ elif menu_sel == menu_opts[8]:
     folium.Polygon(locations=[[lat_guadua - offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua - offset], [lat_guadua + offset, lon_guadua + offset], [lat_guadua - offset, lon_guadua + offset]], color="#9BC63B", fill=True, fill_opacity=0.3, tooltip="Hacienda Monte Guadua: 80 Ha").add_to(m)
     folium.CircleMarker(location=[lat_villa, lon_villa], radius=10, color="blue", fill=True, fill_color="blue", tooltip="Finca Villa Michelle (Sede)").add_to(m)
     st_folium(m, width="100%", height=600)
+
 
 
 
