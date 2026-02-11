@@ -269,19 +269,106 @@ elif menu == "GESTIÓN LEY 2173 (EMPRESAS)":
         st.markdown(f"<div class='metric-card' style='text-align:left;'><h3>EMPRESA ACTIVA: NIT {nit}</h3><p>🌳 150 Árboles Monitoreados</p></div>", unsafe_allow_html=True)
         st.download_button("📄 DESCARGAR CERTIFICADO LEY 2173", data=f"Reporte NIT {nit}", file_name=f"Certificado_Ley2173.txt")
 
-# 5. SUSCRIPCIONES
+# =========================================================
+# BLOQUE 4: SUSCRIPCIONES (Impacto y Finanzas)
+# =========================================================
 elif menu == "SUSCRIPCIONES":
-    st.title("💎 Planes de Apoyo Regenerativo")
+    st.title("🌱 Membresías de Impacto Serenity")
+    st.markdown("### Transforma tu aporte en regeneración real")
+
+    # --- TARJETAS DE PLANES ---
     p1, p2, p3 = st.columns(3)
-    with p1: 
-        st.markdown("<div class='faro-card'><h3>Plan Semilla</h3><h2>$5 USD</h2><p>1 Faro / 1 Mes</p></div>", unsafe_allow_html=True)
-        if st.button("SUSCRIBIRSE SEMILLA"): st.success("Procesando pago Semilla...")
-    with p2: 
-        st.markdown("<div class='faro-card'><h3>Plan Guardián</h3><h2>$25 USD</h2><p>6 Faros / 1 Mes</p></div>", unsafe_allow_html=True)
-        if st.button("SUSCRIBIRSE GUARDIÁN"): st.success("Procesando pago Guardián...")
-    with p3: 
-        st.markdown("<div class='faro-card' style='border-color:#D4AF37;'><h3>Plan Halcón</h3><h2>$200 USD</h2><p>6 Faros / 6 Meses</p></div>", unsafe_allow_html=True)
-        if st.button("SUSCRIBIRSE HALCÓN"): st.success("Procesando pago Halcón...")
+    
+    with p1:
+        st.markdown("""
+            <div style="background:#1e2630; padding:20px; border-radius:15px; border:2px solid #9BC63B; text-align:center; height: 350px;">
+                <h3 style="color:#9BC63B;">PLAN SEMILLA</h3>
+                <h2>$25 USD <small>/mes</small></h2>
+                <hr style="border-color:#333;">
+                <p>🌲 5 Árboles Sembrados</p>
+                <p>📡 1 Faro Inteligente</p>
+                <p>🪙 50 Tokens $SNG</p>
+            </div>
+        """, unsafe_allow_html=True)
+        if st.button("ELEGIR SEMILLA", use_container_width=True):
+            st.session_state.plan_seleccionado = "SEMILLA"
+            st.session_state.monto_plan = 25
+
+    with p2:
+        st.markdown("""
+            <div style="background:#1e2630; padding:20px; border-radius:15px; border:3px solid #9BC63B; text-align:center; height: 350px; transform: scale(1.02);">
+                <h3 style="color:#9BC63B;">PLAN GUARDIÁN</h3>
+                <h2>$80 USD <small>/mes</small></h2>
+                <hr style="border-color:#333;">
+                <p>🌳 15 Árboles Sembrados</p>
+                <p>🎥 Acceso Cámaras 4K</p>
+                <p>🪙 200 Tokens $SNG</p>
+            </div>
+        """, unsafe_allow_html=True)
+        if st.button("ELEGIR GUARDIÁN", use_container_width=True):
+            st.session_state.plan_seleccionado = "GUARDIÁN"
+            st.session_state.monto_plan = 80
+
+    with p3:
+        st.markdown("""
+            <div style="background:#1e2630; padding:20px; border-radius:15px; border:2px solid #D4AF37; text-align:center; height: 350px;">
+                <h3 style="color:#D4AF37;">PLAN HALCÓN</h3>
+                <h2>$200 USD <small>/mes</small></h2>
+                <hr style="border-color:#333;">
+                <p>🐆 1 Hectárea Protegida</p>
+                <p>🛸 Vigilancia con Drones</p>
+                <p>🪙 600 Tokens $SNG</p>
+            </div>
+        """, unsafe_allow_html=True)
+        if st.button("ELEGIR HALCÓN", use_container_width=True):
+            st.session_state.plan_seleccionado = "HALCÓN"
+            st.session_state.monto_plan = 200
+
+    st.write("---")
+
+    # --- TABLA DE IMPACTO TANGIBLE ---
+    st.subheader("🌍 ¿Qué logras con tu apoyo?")
+    with st.container(border=True):
+        st.markdown("""
+        | Nivel de Aporte | Acción Regenerativa en el Territorio |
+        | :--- | :--- |
+        | **Aporte $5 USD** | **Rescate Genético:** Germinación de 2 plántulas nativas y mantenimiento de 1m² de bosque. |
+        | **Plan Semilla ($25)** | **Conectividad Bio:** Siembra de 5 árboles y activación de 1 nodo sensorial de fauna. |
+        | **Plan Guardián ($80)** | **Restauración Activa:** Siembra de 15 árboles y procesamiento IA de inventario de carbono. |
+        | **Plan Halcón ($200)** | **Soberanía Ecosistémica:** Protección total de 1 Ha y telemetría avanzada para felinos. |
+        """)
+
+    st.write("---")
+
+    # --- FORMULARIO Y PASARELA DE PAGO ---
+    if 'plan_seleccionado' in st.session_state:
+        st.subheader(f"💳 Finalizar Suscripción: {st.session_state.plan_seleccionado}")
+        
+        col_pay1, col_pay2 = st.columns(2)
+        
+        with col_pay1:
+            with st.container(border=True):
+                st.markdown("#### Tarjeta de Crédito/Débito")
+                st.text_input("Titular de la cuenta")
+                st.text_input("Número de Tarjeta", placeholder="xxxx xxxx xxxx xxxx")
+                c_exp, c_cvc = st.columns(2)
+                c_exp.text_input("Vencimiento (MM/AA)")
+                c_cvc.text_input("CVC")
+                if st.button("🚀 ACTIVAR SUSCRIPCIÓN"):
+                    st.balloons()
+                    st.success(f"¡Bienvenido al Plan {st.session_state.plan_seleccionado}! Pago de ${st.session_state.monto_plan} procesado.")
+
+        with col_pay2:
+            st.markdown("#### Pagos Locales y Alternativos")
+            st.markdown("""
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; background: #f9f9f9; padding: 20px; border-radius: 15px;">
+                    <div style="text-align:center;"><img src="https://upload.wikimedia.org/wikipedia/commons/b/bf/Nequi_logo.png" width="90"><p style="color:black; font-size:10px;">NEQUI</p></div>
+                    <div style="text-align:center;"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Bancolombia_logo.svg/2560px-Bancolombia_logo.svg.png" width="90"><p style="color:black; font-size:10px;">BANCOLOMBIA / PSE</p></div>
+                    <div style="text-align:center;"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/2560px-Visa_Inc._logo.svg.png" width="80"></div>
+                    <div style="text-align:center;"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1280px-Mastercard-logo.svg.png" width="80"></div>
+                </div>
+            """, unsafe_allow_html=True)
+            st.info("💡 También puedes redimir tus **$SNG** acumulados para pagar tu mensualidad.")
 # =========================================================
 # BLOQUE 5: BILLETERA CRYPTO (WEB3) - ECOSISTEMA $SNG
 # =========================================================
@@ -515,6 +602,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
