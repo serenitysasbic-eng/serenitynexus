@@ -358,7 +358,7 @@ with col_m2:
 # =========================================================
 # BLOQUE 4: SUSCRIPCIONES (Impacto y Finanzas)
 # =========================================================
-elif menu == "SUSCRIPCIONES":
+elif menu == ("SUSCRIPCIONES"):
     st.title("🌱 Membresías de Impacto Serenity")
     st.markdown("### Transforma tu aporte en regeneración real")
 
@@ -688,6 +688,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
