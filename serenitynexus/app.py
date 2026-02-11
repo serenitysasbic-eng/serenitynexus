@@ -216,6 +216,32 @@ elif menu == "SUSCRIPCIONES":
     with p3: 
         st.markdown("<div class='faro-card' style='border-color:#D4AF37;'><h3>Plan Halcón</h3><h2>$200 USD</h2><p>6 Faros / 6 Meses</p></div>", unsafe_allow_html=True)
         if st.button("SUSCRIBIRSE HALCÓN"): st.success("Procesando pago Halcón...")
+# --- PESTAÑA 5: BILLETERA CRYPTO (WEB3) ---
+elif menu == "BILLETERA CRYPTO (WEB3)":
+    st.title("💳 Web3 Green Wallet - Serenity Nexus")
+    st.info("Conecta tu billetera para visualizar tus activos digitales ($SNG).")
+
+    import base64
+    try:
+        with open("video_sng.mp4", "rb") as f:
+            data = f.read()
+            bin_str = base64.b64encode(data).decode()
+            
+        video_html = f"""
+            <div style="display: flex; justify-content: center;">
+                <video width="80%" height="auto" autoplay loop muted playsinline style="border-radius: 20px; border: 3px solid #9BC63B; box-shadow: 0 0 20px rgba(155, 198, 59, 0.5);">
+                    <source src="data:video/mp4;base64,{bin_str}" type="video/mp4">
+                </video>
+            </div>
+        """
+        st.markdown(video_html, unsafe_allow_html=True)
+    except FileNotFoundError:
+        st.warning("⚠️ El archivo 'video_sng.mp4' no se detecta en el repositorio.")
+
+    st.write("")
+    if st.button("🔌 CONECTAR BILLETERA WEB3"):
+        st.success("Billetera Conectada: 0x71C...9A23")
+        st.metric(label="Saldo en $SNG", value="25,000.00"            
 
 # 6. DONACIONES
 elif menu == "DONACIONES Y CERTIFICADO":
@@ -276,6 +302,7 @@ elif menu == "UBICACIÓN & MAPAS":
     folium.Polygon(locations=[[3.45, -76.67], [3.47, -76.67], [3.47, -76.64], [3.45, -76.64]], color="darkgreen", fill=True, fill_opacity=0.4, tooltip="Hacienda Monte Guadua: 80 Ha").add_to(m)
     folium.CircleMarker(location=[3.445, -76.645], radius=10, color="blue", fill=True, fill_color="blue", tooltip="Finca Villa Michelle").add_to(m)
     st_folium(m, width="100%", height=600)
+
 
 
 
