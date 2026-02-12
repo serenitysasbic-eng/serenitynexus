@@ -1,16 +1,18 @@
+# -*- coding: utf-8 -*-
 import streamlit as st
 import pandas as pd
 import hashlib
 import os
+import io  # <--- ESTO SOLUCIONA EL ERROR NameError: io
 from fpdf import FPDF
 from datetime import datetime
 
 # ESTA ES TU HERRAMIENTA PARA HACER PDFs (Tu licuadora)
-def generar_pdf_corporativo(entidad, impacto, hash_id, logo_bytes=None, es_vademecum=False):
+def generar_pdf_serenity(entidad, impacto, hash_id, logo_bytes=None, tipo="CERTIFICADO"):
     pdf = FPDF()
     pdf.add_page()
     
-    # --- LOGOS (Encabezado) ---
+    # Logos
     if os.path.exists("logo_serenity.png"):
         pdf.image("logo_serenity.png", x=10, y=8, w=30)
     if logo_bytes:
@@ -19,60 +21,33 @@ def generar_pdf_corporativo(entidad, impacto, hash_id, logo_bytes=None, es_vadem
         pdf.image("temp_logo_c.png", x=165, y=10, w=30)
 
     pdf.ln(30)
+    pdf.set_font("Arial", 'B', 16)
+    pdf.set_text_color(30, 70, 32)
     
-    # --- TÍTULOS Y CUERPO ---
-    if es_vademecum:
-        # DOCUMENTO LEGAL TÉCNICO
-        pdf.set_font("Arial", 'B', 16)
-        pdf.set_text_color(30, 70, 32)
-        pdf.cell(0, 10, "VADEMECUM DE SOLUCIONES LEGALES AMBIENTALES", ln=True, align='C')
-        pdf.ln(5)
-        pdf.set_font("Arial", 'B', 12)
-        pdf.set_text_color(0, 0, 0)
-        pdf.cell(0, 10, f"Entidad Analizada: {entidad}", ln=True, align='L')
-        pdf.ln(5)
+    if tipo == "VADEMECUM":
+        pdf.cell(0, 10, "VADEMECUM DE SOLUCIONES LEGALES", ln=True, align='C')
         pdf.set_font("Arial", '', 11)
-        
-        texto_vademecum = (
-            "Este reporte tecnico detalla la ruta de cumplimiento normativo bajo el ecosistema "
-            "Serenity Nexus Global, integrando las siguientes leyes de la Republica de Colombia:\n\n"
-            "1. LEY 2173 (2021) - AREAS DE VIDA: Serenity Nexus asigna y protege el inventario forestal "
-            "obligatorio (2 arboles por empleado) en predios georreferenciados en el Valle del Cauca.\n\n"
-            "2. LEY 2169 (2021) - ACCION CLIMATICA: Nuestra plataforma provee la medicion de biomasa "
-            "y captura de CO2 necesaria para las metas corporativas de Carbono Neutralidad.\n\n"
-            "3. LEY 2111 (2021) - DELITOS AMBIENTALES: Mitigacion de riesgos penales mediante vigilancia "
-            "digital con Faros Gemini, protegiendo a la empresa de sanciones por deforestacion ajena.\n\n"
-            "4. LEY 99 (1993) - RECURSO HIDRICO: Gestion del 1% forzoso para la conservacion de cuencas "
-            "hidrograficas, enfocada en la cuenca del Rio Dagua (Zona de amortiguacion KBA).\n"
-        )
-        pdf.multi_cell(0, 8, texto_vademecum)
-    else:
-        # DIPLOMA DE CERTIFICACIÓN
-        pdf.set_font("Arial", 'B', 20)
-        pdf.set_text_color(30, 70, 32)
-        pdf.cell(0, 20, "CERTIFICADO DE CUMPLIMIENTO", ln=True, align='C')
-        pdf.ln(10)
-        pdf.set_font("Arial", '', 14)
         pdf.set_text_color(0, 0, 0)
-        
-        cuerpo_cert = (
-            f"Serenity Nexus Global hace constar que la empresa:\n\n"
-            f"          {entidad.upper()}\n\n"
-            f"Ha formalizado su compromiso ambiental mediante la gestion y proteccion de:\n"
-            f"          {impacto} INDIVIDUOS ARBOREOS\n\n"
-            f"Ubicacion: Reserva Hacienda Monte Guadua, Dagua - Colombia.\n"
-            f"Este documento avala la Responsabilidad Socio-Ambiental Corporativa "
-            f"bajo los estandares de la Ley 2173 de 2021."
-        )
-        pdf.multi_cell(0, 10, cuerpo_cert, align='C')
+        cuerpo = (f"Entidad: {entidad}\n\n"
+                  "1. LEY 2173: Gestion de Areas de Vida.\n"
+                  "2. LEY 2169: Carbono Neutralidad e IA.\n"
+                  "3. LEY 2111: Vigilancia contra delitos ambientales.\n"
+                  "4. LEY 99: Conservacion de cuencas (1% hidrico).")
+    else:
+        pdf.cell(0, 10, "CERTIFICADO DE IMPACTO AMBIENTAL", ln=True, align='C')
+        pdf.set_font("Arial", '', 12)
+        pdf.set_text_color(0, 0, 0)
+        cuerpo = (f"Serenity Nexus Global certifica a:\n\n{entidad.upper()}\n\n"
+                  f"Por su contribucion de: {impacto} unidades de regeneracion.\n"
+                  f"Ubicacion: Hacienda Monte Guadua, Dagua.\n"
+                  f"ID de Seguimiento: {hash_id}")
 
-    # --- PIE DE PÁGINA SEGURIDAD ---
+    pdf.multi_cell(0, 10, cuerpo, align='C' if tipo != "VADEMECUM" else 'L')
     pdf.ln(20)
     pdf.set_font("Arial", 'I', 8)
-    pdf.set_text_color(120, 120, 120)
-    pdf.cell(0, 10, f"Autenticidad verificada mediante ID Blockchain: {hash_id}", ln=True, align='C')
-    pdf.cell(0, 5, f"Fecha de Emision: {datetime.now().strftime('%Y-%m-%d')}", ln=True, align='C')
+    pdf.cell(0, 10, f"Autenticidad Blockchain: {hash_id}", ln=True, align='C')
     
+    # Retornamos el archivo listo para descargar
     return pdf.output(dest='S').encode('latin-1')
 
 # --- LIBRERÍAS EXTENDIDAS ---
@@ -673,6 +648,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
