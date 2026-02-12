@@ -303,20 +303,20 @@ elif menu == "RED DE FAROS (7 NODOS)":
         
         url_v = "https://cdn.pixabay.com/video/2020/05/25/40146-424856038_tiny.mp4" if st.session_state.f_activo == "GEMINI" else "https://cdn.pixabay.com/video/2016/09/21/5316-184080169_tiny.mp4"
 
-    # --- GRILLA DE 8 CÁMARAS (VIDEO DE ALTA COMPATIBILIDAD) ---
+    # --- GRILLA DE 8 CÁMARAS (NATURALEZA REAL) ---
         c_cols = st.columns(4)
         for j in range(8):
             label_nodo = "GEMINI-CORE" if st.session_state.f_activo == "GEMINI" else f"NODO-{j+1}"
             
-            # Video de respaldo de alta disponibilidad (Naturaleza/Tecnología)
-            url_v = "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
+            # Video de naturaleza: Bosque denso y orgánico
+            url_v = "https://cdn.pixabay.com/video/2019/04/23/23011-332356616_tiny.mp4"
             
             with c_cols[j % 4]:
                 st.markdown(f"""
                     <div style='position: relative; background: #000; border: 1px solid {color_f}; border-radius: 8px; overflow: hidden; margin-bottom: 15px;'>
                         
                         <div style='position: absolute; top: 5px; left: 8px; z-index: 10;'>
-                            <span style='color: {color_f}; font-family: monospace; font-size: 10px; font-weight: bold; background: rgba(0,0,0,0.6); padding: 2px 5px; border-radius: 3px;'>
+                            <span style='color: {color_f}; font-family: monospace; font-size: 10px; font-weight: bold; background: rgba(0,0,0,0.5); padding: 2px 5px; border-radius: 3px;'>
                                 {label_nodo}
                             </span>
                         </div>
@@ -733,6 +733,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
