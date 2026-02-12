@@ -418,15 +418,16 @@ elif menu == "SUSCRIPCIONES":
 # =========================================================
 # BLOQUE 5: BILLETERA CRYPTO (WEB3) - ECOSISTEMA $SNG
 # =========================================================
-
-# --- BLOQUE ACTUALIZADO CON EL NOMBRE REAL DEL ARCHIVO ---
+elif menu == "BILLETERA CRYPTO (WEB3)":
+    st.title("👛 Tu Billetera Nexus")
+    
+    # --- BLOQUE DEL VIDEO (Alineado correctamente) ---
     st.write("---")
     st.subheader("🪙 Serenity Nexus Global (SNG) - Activo Digital")
     
     col_v1, col_v2 = st.columns([2, 1])
     
     with col_v1:
-        # Usamos el nombre que me confirmaste
         nombre_del_archivo = "video_sng.mp4" 
         
         if os.path.exists(nombre_del_archivo):
@@ -437,9 +438,9 @@ elif menu == "SUSCRIPCIONES":
             except Exception as e:
                 st.error("Error al reproducir el video.")
         else:
-            st.error(f"El archivo '{nombre_del_archivo}' no se detecta en el servidor.")
-            st.info("Verifica que el archivo esté en la carpeta principal de tu GitHub.")
-            # Respaldo visual
+            # Si sale este mensaje rojo, es porque el archivo no ha terminado de subir a GitHub
+            st.error(f"El archivo '{nombre_del_archivo}' no se detecta aún.")
+            st.info("Asegúrate de que el video esté en la carpeta principal de tu GitHub.")
             st.image("https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=1000")
 
     with col_v2:
@@ -682,6 +683,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
