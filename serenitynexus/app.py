@@ -306,14 +306,12 @@ elif menu == "RED DE FAROS (7 NODOS)":
     # --- GRILLA DE 8 CÁMARAS (NATURALEZA REAL) ---
         c_cols = st.columns(4)
         for j in range(8):
-            label_nodo = "GEMINI-CORE" if st.session_state.f_activo == "GEMINI" else f"NODO-{j+1}"
-            
-            # Video de naturaleza: Bosque denso y orgánico
-            url_v = "https://cdn.pixabay.com/video/2019/04/23/23011-332356616_tiny.mp4"
+            label_nodo = f"NODO-{j+1}"
             
             with c_cols[j % 4]:
+                # TODO lo que me pasaste debe ir dentro de este comando:
                 st.markdown(f"""
-                    <div style='position: relative; background: #000; border: 1px solid {color_f}; border-radius: 8px; overflow: hidden; margin-bottom: 15px;'>
+                    <div style='position: relative; background: black; border: 1px solid {color_f}; border-radius: 8px; overflow: hidden; margin-bottom: 15px;'>
                         
                         <div style='position: absolute; top: 5px; left: 8px; z-index: 10;'>
                             <span style='color: {color_f}; font-family: monospace; font-size: 10px; font-weight: bold; background: rgba(0,0,0,0.5); padding: 2px 5px; border-radius: 3px;'>
@@ -322,9 +320,9 @@ elif menu == "RED DE FAROS (7 NODOS)":
                         </div>
 
                         <video width="100%" autoplay loop muted playsinline style="display: block; object-fit: cover;">
-                            <source src="{url_v}" type="video/mp4">
+                            <source src="https://cdn.pixabay.com/video/2019/04/23/23011-332356616_tiny.mp4" type="video/mp4">
                         </video>
-                        
+
                         <div style='position: absolute; bottom: 5px; right: 8px; z-index: 10;'>
                             <span style='color: red; font-family: monospace; font-size: 10px; font-weight: bold; animation: blinker 1.5s linear infinite;'>
                                 ● LIVE
@@ -733,6 +731,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
