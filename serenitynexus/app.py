@@ -8,7 +8,7 @@ import io
 import os
 import base64
 def generar_pdf_corporativo(entidad, impacto, hash_id, logo_bytes=None, es_vademecum=False):
-    pdf = FPDF()
+    pdf = PDF()
     pdf.add_page()
     
     # --- LOGO DE LA EMPRESA (Si existe) ---
@@ -674,6 +674,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
