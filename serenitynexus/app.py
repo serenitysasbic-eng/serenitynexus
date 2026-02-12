@@ -290,8 +290,8 @@ elif menu == "RED DE FAROS (7 NODOS)":
         if st.button("ACTIVAR NÚCLEO GEMINI"): 
             st.session_state.f_activo = "GEMINI"
             st.session_state.estado_gemini = "ACTIVO - EMITIENDO"
-
-        if st.session_state.f_activo:
+            
+     if st.session_state.f_activo:
         st.divider()
         color_titulo = "#4285F4" if st.session_state.f_activo == "GEMINI" else "#9BC63B"
         st.markdown(f"<h2 style='color:{color_titulo}; text-align:center;'>TRANSMISIÓN MULTI-NODO: {st.session_state.f_activo.upper()}</h2>", unsafe_allow_html=True)
@@ -704,6 +704,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
