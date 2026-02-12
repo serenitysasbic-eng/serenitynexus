@@ -306,14 +306,14 @@ elif menu == "RED DE FAROS (7 NODOS)":
 
         # 8 CÁMARAS INDEPENDIENTES
         v_links = [
-            "https://cdn.pixabay.com/video/2019/04/23/23011-332356616_tiny.mp4",
-            "https://cdn.pixabay.com/video/2016/09/21/5316-184080169_tiny.mp4",
-            "https://cdn.pixabay.com/video/2020/05/25/40146-424856038_tiny.mp4",
-            "https://cdn.pixabay.com/video/2021/08/11/84704-586737526_tiny.mp4",
-            "https://cdn.pixabay.com/video/2016/03/24/2529-159678170_tiny.mp4",
-            "https://cdn.pixabay.com/video/2016/03/24/2530-159678385_tiny.mp4",
-            "https://cdn.pixabay.com/video/2023/10/24/186357-877713374_tiny.mp4",
-            "https://cdn.pixabay.com/video/2017/01/26/7543-202302306_tiny.mp4"
+            "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+            "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+            "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+            "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
+            "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
+            "https://storage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
+            "https://storage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackAds.mp4",
+            "https://storage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4"
         ]
 
         c_cam = st.columns(4)
@@ -333,8 +333,8 @@ elif menu == "RED DE FAROS (7 NODOS)":
         a_links = [
             "https://www.soundjay.com/nature/sounds/forest-birds-01.mp3",
             "https://www.soundjay.com/nature/sounds/bird-chirp-01.mp3",
-            "https://www.soundjay.com/nature/sounds/crows-cawing-1.mp3",
-            "https://www.soundjay.com/nature/sounds/forest-birds-02.mp3"
+            "https://www.soundjay.com/nature/sounds/forest-birds-02.mp3",
+            "https://www.soundjay.com/nature/sounds/crows-cawing-1.mp3"
         ]
         c_snd = st.columns(4)
         for k in range(4):
@@ -730,6 +730,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
