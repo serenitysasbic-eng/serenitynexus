@@ -350,13 +350,70 @@ elif menu == "RED DE FAROS (7 NODOS)":
             st.session_state.f_activo = "GEMINI"
             st.session_state.estado_gemini = "ACTIVO - EMITIENDO"
 
-    # 3. ESTADO DE CONEXIÓN ACTUAL
+# 3. PANTALLA DE MONITOREO ACTIVA
     if st.session_state.get('f_activo'):
         color_f = "#4285F4" if st.session_state.f_activo == "GEMINI" else "#9BC63B"
         st.write("---")
-        st.info(f"Conexión establecida con: {st.session_state.f_activo}")
-        st.success(f"Recibiendo telemetría desde Hacienda Monte Guadua vía satélite.")
+        st.markdown(f"<h2 style='text-align:center; color:{color_f};'>🛰️ FEED EN VIVO: {st.session_state.f_activo.upper()}</h2>", unsafe_allow_html=True)
 
+        # --- SECCIÓN DE 8 CÁMARAS ---
+        st.markdown("### 📽️ Unidades de Video Perimetral")
+        
+        # Enlaces de video independientes (Uso libre)
+        v_links = [
+            "https://cdn.pixabay.com/video/2019/04/23/23011-332356616_tiny.mp4",
+            "https://cdn.pixabay.com/video/2016/09/21/5316-184080169_tiny.mp4",
+            "https://cdn.pixabay.com/video/2020/05/25/40146-424856038_tiny.mp4",
+            "https://cdn.pixabay.com/video/2021/08/11/84704-586737526_tiny.mp4",
+            "https://cdn.pixabay.com/video/2016/03/24/2529-159678170_tiny.mp4",
+            "https://cdn.pixabay.com/video/2016/03/24/2530-159678385_tiny.mp4",
+            "https://cdn.pixabay.com/video/2023/10/24/186357-877713374_tiny.mp4",
+            "https://cdn.pixabay.com/video/2017/01/26/7543-202302306_tiny.mp4"
+        ]
+
+        # Grilla de 4 columnas (2 filas para las 8 cámaras)
+        c_cam = st.columns(4)
+        for i in range(8):
+            with c_cam[i % 4]:
+                st.markdown(f"""
+                    <div style='background: black; border: 2px solid {color_f}; border-radius: 10px; overflow: hidden; margin-bottom: 10px;'>
+                        <div style='background: {color_f}33; color: white; padding: 2px 8px; font-size: 10px; font-weight: bold;'>
+                            🎥 CÁMARA {i+1}
+                        </div>
+                        <video width="100%" autoplay loop muted playsinline style="display: block; object-fit: cover; height: 100px;">
+                            <source src="{v_links[i]}" type="video/mp4">
+                        </video>
+                        <div style='padding: 2px; text-align: right;'>
+                            <span style='color: red; font-size: 8px; animation: blink 1.5s infinite;'>● LIVE</span>
+                        </div>
+                    </div>
+                    <style>@keyframes blink {{ 50% {{ opacity: 0; }} }}</style>
+                """, unsafe_allow_html=True)
+
+        st.write("")
+
+        # --- SECCIÓN DE 4 SONIDOS ---
+        st.markdown("### 🔊 Sensores Bioacústicos")
+        
+        # Enlaces de audio de aves (Uso libre)
+        a_links = [
+            "https://www.soundjay.com/nature/sounds/forest-birds-01.mp3",
+            "https://www.soundjay.com/nature/sounds/bird-chirp-01.mp3",
+            "https://www.soundjay.com/nature/sounds/crows-cawing-1.mp3",
+            "https://www.soundjay.com/nature/sounds/forest-birds-02.mp3"
+        ]
+
+        c_snd = st.columns(4)
+        for k in range(4):
+            with c_snd[k]:
+                st.markdown(f"""
+                    <div style='background: #1e1e1e; border: 2px solid {color_f}; border-radius: 10px; padding: 10px; text-align: center; margin-bottom: 5px;'>
+                        <b style='color: {color_f}; font-size: 12px;'>🐦 SONIDO {k+1}</b>
+                        <p style='color: #888; font-size: 10px; margin: 0;'>Captación Real-Time</p>
+                    </div>
+                """, unsafe_allow_html=True)
+                # El reproductor de audio de Streamlit
+                st.audio(a_links[k])
 # 3. DASHBOARD
 elif menu == "DASHBOARD ESTADÍSTICO IA":
     st.title("Análisis de Inteligencia Biológica")
@@ -744,6 +801,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
