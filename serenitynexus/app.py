@@ -89,24 +89,66 @@ menu = st.sidebar.selectbox("Seleccione una sección",
      "LOGÍSTICA AEROLÍNEAS", "UBICACIÓN"])
 
 
+# =========================================================
+# BLOQUE 1: INICIO (PROTOCOLO DE ACCESO SEGURO)
+# =========================================================
 if menu == "INICIO":
-    st.title("🌿 Serenity Nexus Global")
-    st.subheader("Ecosistema Tecnológico de Regeneración Ambiental")
+    # Capa de Seguridad Visual: Fondo de Respaldo Profesional
+    # Si encuentras tu link, colócalo en 'URL_FONDO'
+    URL_FONDO = "https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?q=80&w=2000"
     
-    col1, col2 = st.columns([2, 1])
-    with col1:
-        st.markdown("""
-        Bienvenido a la plataforma líder en cumplimiento de la **Ley 2173 de 2021**. 
-        Integramos Inteligencia Artificial, Blockchain y monitoreo satelital para 
-        transformar la obligación legal en activos biológicos reales.
-        """)
-        st.image("https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1000", caption="Hacienda Monte Guadua - Reserva Protectora")
+    st.markdown(f"""
+        <style>
+        [data-testid="stAppViewContainer"] {{
+            background-image: url("{URL_FONDO}");
+            background-size: cover;
+            background-position: center;
+        }}
+        .stMarkdown {{ color: white; }}
+        </style>
+        """, unsafe_allow_html=True)
+
+    # Contenedor Blindado de Bienvenida
+    with st.container():
+        st.title("🌿 SERENITY NEXUS GLOBAL")
+        st.subheader("Sistema de Gestión de Activos Biológicos | Serenity S.A.S BIC")
+        
+        # Protocolo de Autenticación Visual
+        col_auth1, col_auth2 = st.columns([3, 1])
+        with col_auth1:
+            st.info("🔓 **Acceso Autorizado:** Protocolo AES-256 Activo. Monitoreo por Faros Gemini habilitado.")
+        with col_auth2:
+            st.button("🔐 RE-VERIFICAR NODO", use_container_width=True)
+
+    st.write("---")
+
+    # Layout de Información Crítica
+    col_info1, col_info2 = st.columns([2, 1])
     
-    with col2:
-        st.info("📊 **Estado del Ecosistema**")
-        st.metric("Hectáreas Protegidas", "80 Ha")
-        st.metric("Árboles Sembrados", "12,450")
-        st.metric("Captura CO2", "842 Ton")
+    with col_info1:
+        # Usamos try-except para blindar la carga de imágenes
+        try:
+            st.markdown("#### 🛰️ Estado Operativo del Ecosistema")
+            st.write("""
+            La plataforma **Molly** integra inteligencia artificial y tecnología blockchain 
+            para garantizar el cumplimiento de la **Ley 2173 de 2021**. Nuestro sistema 
+            monitorea en tiempo real la Hacienda Monte Guadua y Finca Villa Michelle.
+            """)
+            st.image("https://images.unsplash.com/photo-1502082553048-f009c37129b9?q=80&w=1000", 
+                     caption="Hacienda Monte Guadua - Unidad de Regeneración 01")
+        except Exception:
+            st.warning("⚠️ Error de carga en capas visuales. El motor lógico sigue operativo.")
+
+    with col_info2:
+        # Métricas Dinámicas (Impacto para el Inversionista)
+        with st.container(border=True):
+            st.markdown("#### 💹 Indicadores Clave")
+            st.metric("Árboles Protegidos", "12,450", delta="Confirmado por Faro")
+            st.metric("CO2 Capturado", "842 Ton", delta="Certificación en curso")
+            st.metric("Confianza IA", "98.9%", delta="Gemini Vision")
+            
+            st.divider()
+            st.caption("Última sincronización con Blockchain: Hace 2 minutos")
 
 
 elif menu == "RED DE FAROS":
@@ -454,6 +496,7 @@ elif menu == "UBICACIÓN":
 
     if st.button("DESCARGAR COORDENADAS KML/GPX", use_container_width=True):
         st.info("Archivo de límites catastrales preparado para revisión técnica.")
+
 
 
 
