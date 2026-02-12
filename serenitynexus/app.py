@@ -257,53 +257,6 @@ if menu == "INICIO":
 
     st.info("Ubicación del Proyecto: Dagua y Felidia, Valle del Cauca - Hacienda Monte Guadua & Finca Villa Michelle.")
 
-# --- PANTALLA DE TRANSMISIÓN (VERSIÓN FINAL BLINDADA) ---
-elif menu == "RED DE FAROS (7 NODOS)":
-    st.title("🛰️ Monitoreo Perimetral Nexus")
-    
-    # 1. BOTONES DE LOS FAROS
-    c1, c2, c3 = st.columns(3)
-    with c1: 
-        st.markdown("<div class='faro-card'><h3>🦅 FARO HALCÓN</h3></div>", unsafe_allow_html=True)
-        if st.button("Conectar Halcón", use_container_width=True): st.session_state.f_activo = "Halcón"
-    with c2: 
-        st.markdown("<div class='faro-card'><h3>🦜 FARO COLIBRÍ</h3></div>", unsafe_allow_html=True)
-        if st.button("Conectar Colibrí", use_container_width=True): st.session_state.f_activo = "Colibrí"
-    with c3: 
-        st.markdown("<div class='faro-card'><h3>🐸 FARO RANA</h3></div>", unsafe_allow_html=True)
-        if st.button("Conectar Rana", use_container_width=True): st.session_state.f_activo = "Rana"
-    
-    st.write("")
-    c4, c5, c6 = st.columns(3)
-    with c4: 
-        st.markdown("<div class='faro-card'><h3>🦌 FARO VENADO</h3></div>", unsafe_allow_html=True)
-        if st.button("Conectar Venado", use_container_width=True): st.session_state.f_activo = "Venado"
-    with c5: 
-        st.markdown("<div class='faro-card'><h3>🐆 FARO TIGRILLO</h3></div>", unsafe_allow_html=True)
-        if st.button("Conectar Tigrillo", use_container_width=True): st.session_state.f_activo = "Tigrillo"
-    with c6: 
-        st.markdown("<div class='faro-card'><h3>🦦 FARO CAPIBARA</h3></div>", unsafe_allow_html=True)
-        if st.button("Conectar Capibara", use_container_width=True): st.session_state.f_activo = "Capibara"
-
-    st.divider()
-
-    # 2. NODO MAESTRO GEMINI
-    col_gemini = st.columns([1,2,1])
-    with col_gemini[1]:
-        st.markdown(f"<div class='faro-gemini'><h3>🧠 NODO MAESTRO GEMINI</h3><p>Estado: {st.session_state.get('estado_gemini', 'STANDBY')}</p></div>", unsafe_allow_html=True)
-        if st.button("🔥 ACTIVAR NÚCLEO GEMINI VISION", use_container_width=True): 
-            st.session_state.f_activo = "GEMINI"
-            st.session_state.estado_gemini = "ACTIVO - EMITIENDO"
-
-# --- PANTALLA DE TRANSMISIÓN (REPARACIÓN DE VARIABLE) ---
-        if st.session_state.get('f_activo'):
-            st.write("---")
-            
-            # DEFINIMOS EL COLOR AQUÍ MISMO PARA EVITAR EL NAMEERROR
-            color_f = "#4285F4" if st.session_state.f_activo == "GEMINI" else "#9BC63B"
-            
-            st.markdown(f"<h2 style='color:{color_f}; text-align:center;'>🛰️ FEED EN VIVO: {st.session_state.f_activo.upper()}</h2>", unsafe_allow_html=True)
-            
 elif menu == "RED DE FAROS (7 NODOS)":
     st.title("🛰️ Monitoreo Perimetral Nexus")
     
@@ -388,6 +341,8 @@ elif menu == "RED DE FAROS (7 NODOS)":
             with c_snd[k]:
                 st.markdown(f"<b style='color:{color_f}; font-size:11px;'>🔊 MIC {k+1}</b>", unsafe_allow_html=True)
                 st.audio(a_links[k])
+
+                
 # 3. DASHBOARD
 elif menu == "DASHBOARD ESTADÍSTICO IA":
     st.title("Análisis de Inteligencia Biológica")
@@ -775,6 +730,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
