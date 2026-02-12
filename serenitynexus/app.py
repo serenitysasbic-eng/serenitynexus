@@ -1,9 +1,9 @@
-# -*- coding: utf-8 -*-
 import streamlit as st
 import pandas as pd
 import hashlib
 import os
-import io  # <--- ESTO SOLUCIONA EL ERROR NameError: io
+import io
+import base64
 from fpdf import FPDF
 from datetime import datetime
 
@@ -730,6 +730,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
