@@ -323,54 +323,32 @@ elif menu == "RED DE FAROS (7 NODOS)":
 # =========================================================
 elif menu == "GESTIÓN LEY 2173 (EMPRESAS)":
     st.title("⚖️ Nexus Legal & Compliance Hub")
-    st.markdown("### Soluciones Tecnológicas a la Normativa Ambiental")
-
-    # --- Tarjetas Visuales ---
-    c_l1, c_l2, c_l3 = st.columns(3)
-    with c_l1:
-        st.markdown('<div style="background:#1e2630; padding:15px; border-radius:10px; border-left:5px solid #9BC63B; min-height:180px;"><h4 style="color:#9BC63B;">LEY 2173</h4><p style="font-size:0.8rem; color:#ccc;">Obligación de 2 árboles por empleado. Serenity provee el terreno y GPS oficial.</p></div>', unsafe_allow_html=True)
-    with c_l2:
-        st.markdown('<div style="background:#1e2630; padding:15px; border-radius:10px; border-left:5px solid #3498db; min-height:180px;"><h4 style="color:#3498db;">LEY 2169</h4><p style="font-size:0.8rem; color:#ccc;">Ruta a la Carbono Neutralidad. Nuestra IA certifica la captura real de CO2.</p></div>', unsafe_allow_html=True)
-    with c_l3:
-        st.markdown('<div style="background:#1e2630; padding:15px; border-radius:10px; border-left:5px solid #e74c3c; min-height:180px;"><h4 style="color:#e74c3c;">LEY 2111</h4><p style="font-size:0.8rem; color:#ccc;">Justicia Ambiental. Faros Gemini como evidencia digital.</p></div>', unsafe_allow_html=True)
-
-    st.write("")
     
-    # --- Vademécum ---
-    with st.container(border=True):
-        st.subheader("📄 Vademécum de Soluciones Corporativas")
-        empresa_v = st.text_input("Nombre de la empresa para el reporte técnico", key="v_name_input")
-        if st.button("📊 GENERAR VADEMÉCUM TÉCNICO PDF", use_container_width=True):
-            if empresa_v:
-                pdf_v = generar_pdf_corporativo(empresa_v, 0, "NEXUS-VAD-2026", es_vademecum=True)
-                st.session_state.v_pdf = pdf_v
-                st.success("Vademécum estructurado generado.")
-            else:
-                st.warning("Ingrese el nombre de la empresa.")
-        
-        if 'v_pdf' in st.session_state:
-            st.download_button("📥 DESCARGAR VADEMÉCUM PDF", st.session_state.v_pdf, "Vademecum_Serenity.pdf", "application/pdf")
+    # Tarjetas de colores (Mantenemos la estética)
+    c1, c2, c3 = st.columns(3)
+    with c1: st.success("LEY 2173")
+    with c2: st.info("LEY 2169")
+    with c3: st.warning("LEY 2111")
+
+    # Botón para el Vademécum
+    st.subheader("📄 Reporte Técnico Legal")
+    emp_v = st.text_input("Razón Social", key="v_name")
+    if st.button("📊 GENERAR VADEMÉCUM PDF"):
+        if emp_v:
+            # Aquí llamamos a la función que definimos en el "piso de arriba"
+            pdf_v = generar_pdf_corporativo(emp_v, 0, "NEXUS-VAD", es_vademecum=True)
+            st.download_button("📥 Descargar Vademécum Profesional", pdf_v, "Vademecum.pdf")
 
     st.divider()
 
-    # --- Certificado con Logo ---
-    st.subheader("🛡️ Certificado con Logo")
-    c_act1, c_act2 = st.columns(2)
-    with c_act1:
-        n_c = st.text_input("Empresa", key="c_name_input")
-        n_e = st.number_input("Empleados", min_value=1, key="c_num_input")
-        logo_f = st.file_uploader("Subir Logo Empresarial", type=['png', 'jpg'], key="logo_uploader")
-    
-    with c_act2:
-        if st.button("⚖️ EMITIR CERTIFICADO CON LOGO", use_container_width=True):
-            if n_c and logo_f:
-                h_c = hashlib.sha256(f"{n_c}".encode()).hexdigest()[:12].upper()
-                pdf_c = generar_pdf_corporativo(n_c, n_e*2, h_c, logo_bytes=logo_f)
-                st.session_state.c_pdf = pdf_c
-                st.success("Certificado con logo listo.")
-        
-        if 'c_pdf' in st.session_state:
-            st.download_button("📥 DESCARGAR CERTIFICADO", st.session_state.c_pdf, "Certificado_Nexus.pdf", "application/pdf")
+    # Botón para el Certificado con Logo
+    st.subheader("🛡️ Certificado Corporativo")
+    logo_file = st.file_uploader("Subir Logo de la Empresa")
+    if st.button("⚖️ EMITIR CERTIFICADO CON LOGO"):
+        if logo_file and emp_v:
+            # Llamada a la función enviando los bytes del logo
+            pdf_c = generar_pdf_corporativo(emp_v, 100, "NEXUS-CERT", logo_bytes=logo_file)
+            st.download_button("📥 Descargar Certificado con Co-Branding", pdf_c, "Certificado.pdf")
 
 # =========================================================
 # BLOQUE 4: SUSCRIPCIONES
@@ -693,6 +671,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
