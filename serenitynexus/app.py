@@ -242,6 +242,28 @@ if menu == "INICIO":
 
     st.info("📍 Ubicación del Proyecto: Dagua y Felidia, Valle del Cauca - Hacienda Monte Guadua & Finca Villa Michelle.")
 
+
+# =========================================================
+# BLOQUE 6: DASHBOARD ESTADÍSTICO IA - MONITOREO EN VIVO
+# =========================================================
+elif menu == "DASHBOARD ESTADÍSTICO IA":
+    st.title("📊 IA Environmental Analytics")
+    st.markdown("### Monitorización en Tiempo Real de Activos Biológicos")
+
+    # --- 1. MÉTRICAS DE IMPACTO GLOBAL (DINÁMICAS) ---
+    st.write("---")
+    m1, m2, m3, m4 = st.columns(4)
+    with m1:
+        st.metric(label="🌳 Árboles Protegidos", value="12,450", delta="+120 esta semana")
+    with m2:
+        st.metric(label="💨 CO2 Capturado (Ton)", value="842.5", delta="4.2%")
+    with m3:
+        st.metric(label="🦉 Biodiversidad (Especies)", value="158", delta="Nuevos avistamientos")
+    with m4:
+        st.metric(label="🛡️ Faros Gemini Activos", value="24", delta="100% Cobertura")
+
+    st.write("")
+
 # =========================================================
 # BLOQUE 7: MONITOREO PERIMETRAL - RED DE FAROS GEMINI
 # =========================================================
@@ -327,90 +349,6 @@ elif menu == "MONITOREO PERIMETRAL":
     st.divider()
     if st.button("🚨 ACTIVAR ALERTA PERIMETRAL GLOBAL", use_container_width=True):
         st.error("NOTIFICACIÓN ENVIADA A SEGURIDAD Y FAROS GEMINI - PROTOCOLO LEY 2111 ACTIVADO")
-# =========================================================
-# BLOQUE 6: DASHBOARD ESTADÍSTICO IA - MONITOREO EN VIVO
-# =========================================================
-elif menu == "DASHBOARD ESTADÍSTICO IA":
-    st.title("📊 IA Environmental Analytics")
-    st.markdown("### Monitorización en Tiempo Real de Activos Biológicos")
-
-    # --- 1. MÉTRICAS DE IMPACTO GLOBAL (DINÁMICAS) ---
-    st.write("---")
-    m1, m2, m3, m4 = st.columns(4)
-    with m1:
-        st.metric(label="🌳 Árboles Protegidos", value="12,450", delta="+120 esta semana")
-    with m2:
-        st.metric(label="💨 CO2 Capturado (Ton)", value="842.5", delta="4.2%")
-    with m3:
-        st.metric(label="🦉 Biodiversidad (Especies)", value="158", delta="Nuevos avistamientos")
-    with m4:
-        st.metric(label="🛡️ Faros Gemini Activos", value="24", delta="100% Cobertura")
-
-    st.write("")
-
-    # --- 2. GRÁFICOS DINÁMICOS ---
-    col_chart1, col_chart2 = st.columns(2)
-    
-    with col_chart1:
-        with st.container(border=True):
-            st.markdown("#### 🌱 Crecimiento de Biomasa (Hectáreas)")
-            # Datos simulados para el gráfico
-            chart_data = pd.DataFrame({
-                'Mes': ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
-                'Hectáreas': [45, 48, 52, 60, 68, 80]
-            })
-            st.area_chart(chart_data.set_index('Mes'), color="#9BC63B")
-            st.caption("Incremento proyectado en Hacienda Monte Guadua.")
-
-    with col_chart2:
-        with st.container(border=True):
-            st.markdown("#### ☁️ Absorción de Carbono Certificada")
-            # Gráfico de barras
-            carbon_data = pd.DataFrame({
-                'Sede': ['Finca Michelle', 'Monte Guadua', 'Reserva Dagua'],
-                'Ton CO2': [120, 580, 142]
-            })
-            st.bar_chart(carbon_data.set_index('Sede'), color="#3498db")
-            st.caption("Distribución de créditos de carbono por predio.")
-
-    st.write("---")
-
-    # --- 3. MONITOR DE SALUD IA (FAROS GEMINI) ---
-    st.subheader("🛰️ Estado de la Reserva - Monitoreo IA")
-    
-    col_ia1, col_ia2 = st.columns([1, 2])
-    
-    with col_ia1:
-        st.markdown("#### Alertas de IA")
-        st.success("✅ Estabilidad de Suelo: ÓPTIMA")
-        st.success("✅ Riesgo de Incendio: BAJO")
-        st.warning("⚠️ Intrusión Detectada: Sector Norte (Analizando...)")
-        st.info("ℹ️ Humedad Promedio: 78%")
-        
-    with col_ia2:
-        st.markdown("#### Registro de Avistamientos Faros Gemini")
-        # Tabla dinámica de eventos
-        eventos = {
-            'Hora': ['08:15 AM', '10:30 AM', '02:45 PM'],
-            'Sensor': ['Faro 04', 'Faro 12', 'Faro 08'],
-            'Detección': ['Crecimiento Foliar', 'Fauna (Venado colablanca)', 'Persona Autorizada'],
-            'Confianza IA': ['98%', '94%', '99%']
-        }
-        st.table(eventos)
-
-    st.divider()
-    
-    # --- 4. MAPA DE CALOR DE IMPACTO ---
-    st.subheader("📍 Mapa de Cobertura y Reforestación")
-    # Coordenadas simuladas para mostrar puntos de siembra
-    map_data = pd.DataFrame({
-        'lat': [3.642, 3.645, 3.640, 3.648],
-        'lon': [-76.685, -76.680, -76.690, -76.675]
-    })
-    st.map(map_data, color="#2ecc71")
-    st.caption("Puntos georreferenciados de siembra activa LEY 2173.")
-
-
 
 # =========================================================
 # BLOQUE 3: GESTIÓN LEY 2173 (EMPRESAS)
@@ -792,6 +730,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
