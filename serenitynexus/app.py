@@ -304,43 +304,58 @@ elif menu == "RED DE FAROS (7 NODOS)":
             
             st.markdown(f"<h2 style='color:{color_f}; text-align:center;'>🛰️ FEED EN VIVO: {st.session_state.f_activo.upper()}</h2>", unsafe_allow_html=True)
             
-# --- GRILLA DE 8 CÁMARAS (FRAGMENTACIÓN DE VIDEO ÚNICO) ---
-        c_cols = st.columns(4)
+# --- RED DE FAROS (VERSIÓN MINIMALISTA) ---
+elif menu == "RED DE FAROS (7 NODOS)":
+    st.title("🛰️ Monitoreo Perimetral Nexus")
+    st.markdown("### Control de Nodos Bioacústicos")
+    
+    # 1. GRILLA DE SELECCIÓN DE FAROS
+    c1, c2, c3 = st.columns(3)
+    with c1: 
+        st.markdown("<div class='faro-card'><h3>🦅 FARO HALCÓN</h3></div>", unsafe_allow_html=True)
+        if st.button("Conectar Halcón", use_container_width=True): st.session_state.f_activo = "Halcón"
+    with c2: 
+        st.markdown("<div class='faro-card'><h3>🦜 FARO COLIBRÍ</h3></div>", unsafe_allow_html=True)
+        if st.button("Conectar Colibrí", use_container_width=True): st.session_state.f_activo = "Colibrí"
+    with c3: 
+        st.markdown("<div class='faro-card'><h3>🐸 FARO RANA</h3></div>", unsafe_allow_html=True)
+        if st.button("Conectar Rana", use_container_width=True): st.session_state.f_activo = "Rana"
+    
+    st.write("")
+    c4, c5, c6 = st.columns(3)
+    with c4: 
+        st.markdown("<div class='faro-card'><h3>🦌 FARO VENADO</h3></div>", unsafe_allow_html=True)
+        if st.button("Conectar Venado", use_container_width=True): st.session_state.f_activo = "Venado"
+    with c5: 
+        st.markdown("<div class='faro-card'><h3>🐆 FARO TIGRILLO</h3></div>", unsafe_allow_html=True)
+        if st.button("Conectar Tigrillo", use_container_width=True): st.session_state.f_activo = "Tigrillo"
+    with c6: 
+        st.markdown("<div class='faro-card'><h3>🦦 FARO CAPIBARA</h3></div>", unsafe_allow_html=True)
+        if st.button("Conectar Capibara", use_container_width=True): st.session_state.f_activo = "Capibara"
+
+    st.divider()
+
+    # 2. NODO MAESTRO GEMINI
+    col_gemini = st.columns([1,2,1])
+    with col_gemini[1]:
+        estado_g = st.session_state.get('estado_gemini', 'STANDBY')
+        st.markdown(f"""
+            <div class='faro-gemini' style='text-align: center;'>
+                <h3>🧠 NODO MAESTRO GEMINI</h3>
+                <p style='color: #4285F4; font-weight: bold;'>Estado: {estado_g}</p>
+            </div>
+        """, unsafe_allow_html=True)
         
-        # Este es un video de alta calidad de un bosque denso
-        url_unico = "https://cdn.pixabay.com/video/2019/04/23/23011-332356616_tiny.mp4"
+        if st.button("🔥 ACTIVAR NÚCLEO GEMINI VISION", use_container_width=True): 
+            st.session_state.f_activo = "GEMINI"
+            st.session_state.estado_gemini = "ACTIVO - EMITIENDO"
 
-        for j in range(8):
-            label_nodo = f"NODO-{j+1}"
-            
-            # El truco: cada cámara mueve el video para mostrar una parte distinta
-            # Usamos object-position para "desplazar" la vista del bosque
-            posiciones = ["top left", "top right", "bottom left", "bottom right", 
-                          "center", "top center", "bottom center", "center right"]
-            pos = posiciones[j]
-
-            with c_cols[j % 4]:
-                st.markdown(f"""
-                    <div style='position: relative; background: black; border: 1px solid {color_f}; border-radius: 8px; overflow: hidden; margin-bottom: 15px; height: 120px;'>
-                        
-                        <div style='position: absolute; top: 5px; left: 8px; z-index: 10;'>
-                            <span style='color: {color_f}; font-family: monospace; font-size: 10px; font-weight: bold; background: rgba(0,0,0,0.6); padding: 2px 5px; border-radius: 3px;'>
-                                {label_nodo}
-                            </span>
-                        </div>
-
-                        <video width="100%" height="100%" autoplay loop muted playsinline 
-                               style="display: block; object-fit: cover; object-position: {pos}; filter: contrast(1.1);">
-                            <source src="{url_unico}" type="video/mp4">
-                        </video>
-                        
-                        <div style='position: absolute; bottom: 5px; right: 8px; z-index: 10;'>
-                            <span style='color: red; font-family: monospace; font-size: 10px; font-weight: bold; animation: blinker 1.5s linear infinite;'>
-                                ● LIVE
-                            </span>
-                        </div>
-                    </div>
-                """, unsafe_allow_html=True)
+    # 3. ESTADO DE CONEXIÓN ACTUAL
+    if st.session_state.get('f_activo'):
+        color_f = "#4285F4" if st.session_state.f_activo == "GEMINI" else "#9BC63B"
+        st.write("---")
+        st.info(f"Conexión establecida con: {st.session_state.f_activo}")
+        st.success(f"Recibiendo telemetría desde Hacienda Monte Guadua vía satélite.")
 
 # 3. DASHBOARD
 elif menu == "DASHBOARD ESTADÍSTICO IA":
@@ -729,6 +744,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
