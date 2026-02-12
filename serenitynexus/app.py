@@ -30,40 +30,79 @@ if 'f_activo' not in st.session_state: st.session_state.f_activo = None
 def generar_pdf_corporativo(empresa, impacto, hash_id, logo_bytes=None, es_vademecum=False):
     buffer = io.BytesIO()
     c = canvas.Canvas(buffer, pagesize=letter)
-    c.setStrokeColor(VERDE_SERENITY)
-    c.setLineWidth(5)
-    c.rect(0.3*inch, 0.3*inch, 7.9*inch, 10.4*inch)
     
-    # Manejo de Logo Corporativo
+    # --- 1. MEMBRETE Y LOGOS (CO-BRANDING) ---
+    c.setStrokeColor(VERDE_SERENITY)
+    c.setLineWidth(2)
+    c.line(0.5*inch, 10.2*inch, 8*inch, 10.2*inch) # Línea superior
+    
+    # Logo Serenity (Siempre presente a la izquierda)
+    try:
+        if os.path.exists("logo_serenity.png"):
+            c.drawImage("logo_serenity.png", 0.5*inch, 9.2*inch, width=1.5*inch, height=0.8*inch, preserveAspectRatio=True, mask='auto')
+    except: pass
+
+    # Logo Empresa (Si se carga, a la derecha)
     if logo_bytes:
         try:
-            with open("temp_logo.png", "wb") as f:
+            with open("temp_logo_corp.png", "wb") as f:
                 f.write(logo_bytes.getbuffer())
-            c.drawImage("temp_logo.png", 3.25*inch, 9*inch, width=2*inch, height=1.2*inch, preserveAspectRatio=True)
+            c.drawImage("temp_logo_corp.png", 6*inch, 9.2*inch, width=1.5*inch, height=0.8*inch, preserveAspectRatio=True)
         except: pass
 
-    c.setFont("Helvetica-Bold", 22)
+    # --- 2. TÍTULO Y ENCABEZADO TÉCNICO ---
+    c.setFont("Helvetica-Bold", 18)
     c.setFillColor(VERDE_SERENITY)
-    titulo = "VADEMÉCUM LEGAL" if es_vademecum else "CERTIFICADO CORPORATIVO"
-    c.drawCentredString(4.25*inch, 8.5*inch, titulo)
+    titulo = "VADEMÉCUM TÉCNICO DE CUMPLIMIENTO LEGAL" if es_vademecum else "CERTIFICADO DE COMPENSACIÓN BIOMÉTRICA"
+    c.drawCentredString(4.25*inch, 8.8*inch, titulo)
     
-    c.setFont("Helvetica", 14)
+    c.setFont("Helvetica-Bold", 12)
     c.setFillColor(black)
-    c.drawCentredString(4.25*inch, 7.8*inch, f"ENTIDAD: {empresa.upper()}")
-    
-    c.setFont("Helvetica", 11)
-    lineas = [
-        "Este documento certifica el compromiso ambiental bajo la Ley 2173 de 2021.",
-        f"Impacto gestionado: {impacto} unidades biológicas.",
-        "Ubicación: Hacienda Monte Guadua - Dagua, Valle del Cauca."
-    ]
-    y_p = 7.0
-    for linea in lineas:
-        c.drawCentredString(4.25*inch, y_p*inch, linea)
-        y_p -= 0.3
+    c.drawCentredString(4.25*inch, 8.4*inch, f"RAZÓN SOCIAL: {empresa.upper()}")
+    c.drawCentredString(4.25*inch, 8.2*inch, f"ID DE REGISTRO NEXUS: {hash_id}")
 
-    c.setFont("Courier-Bold", 10)
-    c.drawCentredString(4.25*inch, 1.5*inch, f"NEXUS-ID: {hash_id}")
+    # --- 3. CUERPO TÉCNICO (CONTENIDO LEGAL) ---
+    text_object = c.beginText(0.8*inch, 7.5*inch)
+    text_object.setFont("Helvetica-Bold", 11)
+    text_object.setLeading(14)
+    
+    if es_vademecum:
+        lineas = [
+            "SOLUCIONES INTEGRADAS SERENITY S.A.S BIC:",
+            "",
+            "1. CUMPLIMIENTO LEY 2173 DE 2021 (ÁREAS DE VIDA):",
+            "   Garantizamos la siembra y mantenimiento por 3 años de 2 árboles por empleado.",
+            "   Nuestra labor: Geolocalización individual y custodia en la Hacienda Monte Guadua.",
+            "",
+            "2. CUMPLIMIENTO LEY 2169 DE 2021 (CARBONO NEUTRALIDAD):",
+            "   Monitoreo mediante Faros Gemini para la certificación de captura de CO2 real.",
+            "   Transformación de pasivos ambientales en activos biológicos verificables.",
+            "",
+            "3. PROTOCOLO LEY 2111 DE 2021 (DELITOS AMBIENTALES):",
+            "   Vigilancia perimetral mediante IA para prevenir la deforestación y el ecocidio.",
+            "",
+            "CONCLUSIÓN TÉCNICA: La entidad referenciada se vincula al Internet de la Naturaleza",
+            "asegurando la trazabilidad absoluta de su inversión ambiental mediante Blockchain."
+        ]
+    else:
+        lineas = [
+            "DETALLE DE COMPENSACIÓN:",
+            f"- Gestión de {impacto} individuos forestales en el corredor biológico de Dagua.",
+            "- Registro biométrico activo en la Red de Faros Serenity.",
+            "- Estado de mantenimiento: Vigente bajo protocolos de restauración activa.",
+            "- Este certificado avala la responsabilidad social y ambiental corporativa.",
+            "",
+            "FIRMA AUTORIZADA: Sistema Nexus IA - Serenity S.A.S BIC"
+        ]
+        
+    for linea in lineas:
+        text_object.textLine(linea)
+    c.drawText(text_object)
+
+    # --- 4. PIE DE PÁGINA SEGURIDAD ---
+    c.setFont("Helvetica-Oblique", 8)
+    c.drawCentredString(4.25*inch, 1.2*inch, "Documento generado electrónicamente. La validez de este reporte puede verificarse en la cadena de bloques Nexus.")
+    
     c.save()
     buffer.seek(0)
     return buffer
@@ -613,6 +652,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
