@@ -389,8 +389,28 @@ def generar_pdf_corporativo(entidad, impacto, hash_id, logo_bytes=None, es_vadem
     pdf.cell(0, 10, f"Autenticidad verificada mediante Blockchain Hash: {hash_id}", ln=True, align='C')
     
     return pdf.output(dest='S').encode('latin-1')
-    
+with col_act2:
+        st.info("Suba el logo para personalizar su certificado oficial.")
+        if st.button("⚖️ EMITIR CERTIFICADO CON LOGO", use_container_width=True):
+            if n_corp and archivo_logo:
+                h_c = hashlib.sha256(f"{n_corp}".encode()).hexdigest()[:12].upper()
+                # Generación del PDF con la función actualizada
+                pdf_c = generar_pdf_corporativo(n_corp, n_per*2, h_c, logo_bytes=archivo_logo)
+                st.session_state.pdf_legal_ready = pdf_c
+                st.success(f"Certificado para {n_corp} generado exitosamente.")
+            else:
+                st.error("Razón Social y Logo son obligatorios para el enlace.")
 
+        if 'pdf_legal_ready' in st.session_state:
+            st.download_button(
+                label="📥 DESCARGAR CERTIFICADO OFICIAL",
+                data=st.session_state.pdf_legal_ready,
+                file_name=f"Certificado_Nexus_{n_corp}.pdf",
+                mime="application/pdf",
+                use_container_width=True
+            )
+
+# =========================================================
 # BLOQUE 4: SUSCRIPCIONES
 # =========================================================
 elif menu == "SUSCRIPCIONES":
@@ -711,6 +731,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
