@@ -419,35 +419,31 @@ elif menu == "SUSCRIPCIONES":
 # BLOQUE 5: BILLETERA CRYPTO (WEB3) - ECOSISTEMA $SNG
 # =========================================================
 
-# --- BLOQUE VISUAL DE LA MONEDA SNG (SIN TOCAR NADA MÁS) ---
-with st.container():
-# --- BLOQUE DEL VIDEO DE LA MONEDA SNG (Encapsulado) ---
-    st.write("---")
-    with st.container():
-        col_v1, col_v2 = st.columns([2, 1])
-        with col_v1:
-            st.subheader("🪙 SNG Coin: La Criptomoneda Verde")
-            # Intento de cargar el video. Cámbialo por el nombre real de tu archivo si es distinto.
-            video_n = "moneda_sng.mp4" 
-            if os.path.exists(video_n):
-                st.video(video_n)
-            else:
-                st.info("Visualizando activo digital SNG...")
-                # Imagen de respaldo profesional
-                st.image("https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&q=80&w=1000", 
-                         caption="SNG Coin - Respaldada por Activos Biológicos")
-        
-        with col_v2:
-            st.markdown("""
-            **Detalles Técnicos:**
-            - **Respaldo:** Biomasa real.
-            - **Red:** Web3 / Polygon.
-            - **Uso:** Gobernanza ambiental.
-            """)
+# --- BLOQUE DEL VIDEO DE LA MONEDA SNG ---
+    st.divider()
+    col_vid1, col_vid2 = st.columns([2, 1])
+    
+    with col_vid1:
+        st.subheader("🪙 SNG Coin: Activo Digital Verde")
+        # Cambia "moneda_sng.mp4" por el nombre exacto de tu archivo en GitHub
+        nombre_video = "moneda_sng.mp4" 
+        if os.path.exists(nombre_video):
+            st.video(nombre_video)
+        else:
+            st.info("Presentando la evolución digital de Serenity Nexus...")
+            st.image("https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=1000", 
+                     caption="SNG Coin - Respaldada por Activos Biológicos")
 
-# =========================================================
-# BLOQUE SIGUIENTE (Aquí estaba el error)
-# =========================================================
+    with col_vid2:
+        st.markdown("""
+        **Especificaciones SNG:**
+        - **Respaldo:** Biomasa Real.
+        - **Red:** Web3 / Polygon.
+        - **Propósito:** Gobernanza.
+        """)
+    st.write("") # Espacio de seguridad para cerrar el bloque
+
+# === AQUÍ COMIENZA EL SIGUIENTE BLOQUE (Asegúrate que esté pegado a la izquierda) ===
 elif menu == "BILLETERA CRYPTO (WEB3)":
     st.title("👛 Tu Billetera Nexus")
     st.markdown("### El Futuro de la Conservación Tokenizada")
@@ -678,6 +674,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
