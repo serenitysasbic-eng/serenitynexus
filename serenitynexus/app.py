@@ -303,13 +303,13 @@ elif menu == "RED DE FAROS (7 NODOS)":
         
         url_v = "https://cdn.pixabay.com/video/2020/05/25/40146-424856038_tiny.mp4" if st.session_state.f_activo == "GEMINI" else "https://cdn.pixabay.com/video/2016/09/21/5316-184080169_tiny.mp4"
 
-    # --- GRILLA DE 8 CÁMARAS (NATURALEZA REAL) ---
+# --- GRILLA DE 8 CÁMARAS (SOLUCIÓN DEFINITIVA) ---
         c_cols = st.columns(4)
         for j in range(8):
             label_nodo = f"NODO-{j+1}"
             
             with c_cols[j % 4]:
-                # TODO lo que me pasaste debe ir dentro de este comando:
+                # Esta es la instrucción que "activa" el video y quita las letras
                 st.markdown(f"""
                     <div style='position: relative; background: black; border: 1px solid {color_f}; border-radius: 8px; overflow: hidden; margin-bottom: 15px;'>
                         
@@ -731,6 +731,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
