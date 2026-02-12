@@ -1,80 +1,39 @@
-# -*- coding: utf-8 -*-
 import streamlit as st
 import pandas as pd
-import random
 import hashlib
-from datetime import datetime
-import io
 import os
-import base64
-from fpdf import FPDF  # <--- IMPORTACIÓN FUNDAMENTAL QUE FALTABA
+from fpdf import FPDF
+from datetime import datetime
 
-# --- DEFINICIÓN DE LA CLASE PDF ---
-class PDF(FPDF):
-    def header(self):
-        # Aquí puedes agregar un encabezado global si quieres
-        pass
-
+# ESTA ES TU HERRAMIENTA PARA HACER PDFs (Tu licuadora)
 def generar_pdf_corporativo(entidad, impacto, hash_id, logo_bytes=None, es_vademecum=False):
-    # Usamos FPDF() directamente para evitar el NameError
-    pdf = FPDF() 
+    pdf = FPDF()
     pdf.add_page()
     
-    # --- LOGO DE LA EMPRESA (Enlace Real) ---
+    # Poner el logo de Serenity a la izquierda
+    if os.path.exists("logo_serenity.png"):
+        pdf.image("logo_serenity.png", x=10, y=8, w=30)
+    
+    # Poner el logo de la empresa a la derecha (si subieron uno)
     if logo_bytes:
-        try:
-            with open("temp_logo.png", "wb") as f:
-                f.write(logo_bytes.getbuffer())
-            pdf.image("temp_logo.png", x=160, y=10, w=35)
-        except:
-            pass # Si el logo falla, el PDF sigue sin él para no bloquear la app
+        with open("temp_logo_c.png", "wb") as f:
+            f.write(logo_bytes.getbuffer())
+        pdf.image("temp_logo_c.png", x=165, y=10, w=30)
 
-    # --- CONFIGURACIÓN DE FUENTES ---
-    # FPDF por defecto usa 'latin-1', hay que evitar caracteres raros o usar c. normales
+    pdf.ln(25)
     pdf.set_font("Arial", 'B', 16)
     
     if es_vademecum:
-        pdf.cell(0, 10, "VADEMECUM LEGAL - SERENITY NEXUS GLOBAL", ln=True, align='L')
-        pdf.set_font("Arial", 'B', 11)
-        pdf.cell(0, 10, "SOLUCIONES CORPORATIVAS DE CUMPLIMIENTO AMBIENTAL", ln=True, align='L')
+        pdf.cell(0, 10, "VADEMECUM LEGAL - SERENITY NEXUS", ln=True, align='C')
+        texto = f"Este documento detalla las leyes para: {entidad}"
     else:
-        pdf.cell(0, 10, "CERTIFICADO OFICIAL DE CUMPLIMIENTO", ln=True, align='L')
-    
+        pdf.cell(0, 10, "CERTIFICADO DE CUMPLIMIENTO", ln=True, align='C')
+        texto = f"Certificamos a: {entidad}\nImpacto: {impacto} arboles."
+
     pdf.ln(10)
-    pdf.set_font("Arial", '', 11)
-    fecha_actual = datetime.now().strftime('%d/%m/%Y')
-
-    if es_vademecum:
-        # CONTENIDO ESTRUCTURADO (Sin tildes para evitar errores de codificación en FPDF estándar)
-        cuerpo = (
-            f"DIRIGIDO A: {entidad}\n"
-            f"FECHA DE EMISION: {fecha_actual}\n\n"
-            "RESUMEN TECNICO DE SOLUCIONES LEGALES:\n"
-            "--------------------------------------------------------------------------------\n"
-            "1. LEY 2173 (2021) - AREAS DE VIDA: Serenity Nexus asigna coordenadas GPS unicas en \n"
-            "   Hacienda Monte Guadua para el cumplimiento de la siembra obligatoria empresarial.\n\n"
-            "2. LEY 2169 (2021) - ACCION CLIMATICA: Nuestra plataforma provee el inventario de \n"
-            "   biomasa y carbono certificado mediante monitoreo IA para metas de Carbono Neutralidad.\n\n"
-            "3. LEY 2111 (2021) - JUSTICIA AMBIENTAL: Mitigacion de riesgos penales mediante la red \n"
-            "   de Faros Gemini, que actua como evidencia digital ante la deforestacion y caza furtiva.\n\n"
-            "4. LEY 99 (1993) - RECURSO HIDRICO: Ejecucion del 1% forzoso para proyectos que \n"
-            "   toman agua de fuentes naturales, enfocada en la conservacion de la cuenca del Rio Dagua.\n"
-        )
-    else:
-        cuerpo = (
-            f"Certificamos que la empresa: {entidad}\n"
-            f"NIT / ID: {hash_id}\n\n"
-            f"Ha cumplido con la gestion de {impacto} individuos arboreos en las zonas de reserva \n"
-            "de Serenity Nexus Global. Este documento avala la responsabilidad social y ambiental \n"
-            "bajo los estandares de la Ley 2173 de 2021."
-        )
-
-    pdf.multi_cell(0, 8, cuerpo)
-    pdf.ln(20)
-    pdf.set_font("Arial", 'I', 8)
-    pdf.cell(0, 10, f"Autenticidad verificada mediante Hash Blockchain: {hash_id}", ln=True, align='C')
+    pdf.set_font("Arial", '', 12)
+    pdf.multi_cell(0, 10, texto)
     
-    # IMPORTANTE: Encode en latin-1 para evitar errores de caracteres
     return pdf.output(dest='S').encode('latin-1')
 
 # --- LIBRERÍAS EXTENDIDAS ---
@@ -322,33 +281,38 @@ elif menu == "RED DE FAROS (7 NODOS)":
 # BLOQUE 3: GESTIÓN LEY 2173 (EMPRESAS)
 # =========================================================
 elif menu == "GESTIÓN LEY 2173 (EMPRESAS)":
-    st.title("⚖️ Nexus Legal & Compliance Hub")
+    st.title("⚖️ Nexus Legal & Compliance")
     
-    # Tarjetas de colores (Mantenemos la estética)
-    c1, c2, c3 = st.columns(3)
-    with c1: st.success("LEY 2173")
-    with c2: st.info("LEY 2169")
-    with c3: st.warning("LEY 2111")
+    # Pedir el nombre de la empresa una sola vez
+    nombre_empresa = st.text_input("Nombre de la Empresa", key="nombre_corp")
+    
+    st.write("---")
+    
+    # SECCIÓN 1: VADEMÉCUM
+    st.subheader("📄 Reporte de Leyes")
+    if st.button("PREPARAR VADEMÉCUM"):
+        if nombre_empresa:
+            archivo = generar_pdf_corporativo(nombre_empresa, 0, "VAD-123", es_vademecum=True)
+            st.session_state.mi_vademecum = archivo
+            st.success("Reporte listo.")
+    
+    if 'mi_vademecum' in st.session_state:
+        st.download_button("📥 Descargar Vademécum", st.session_state.mi_vademecum, "Vademecum.pdf")
 
-    # Botón para el Vademécum
-    st.subheader("📄 Reporte Técnico Legal")
-    emp_v = st.text_input("Razón Social", key="v_name")
-    if st.button("📊 GENERAR VADEMÉCUM PDF"):
-        if emp_v:
-            # Aquí llamamos a la función que definimos en el "piso de arriba"
-            pdf_v = generar_pdf_corporativo(emp_v, 0, "NEXUS-VAD", es_vademecum=True)
-            st.download_button("📥 Descargar Vademécum Profesional", pdf_v, "Vademecum.pdf")
+    st.write("---")
 
-    st.divider()
-
-    # Botón para el Certificado con Logo
-    st.subheader("🛡️ Certificado Corporativo")
-    logo_file = st.file_uploader("Subir Logo de la Empresa")
-    if st.button("⚖️ EMITIR CERTIFICADO CON LOGO"):
-        if logo_file and emp_v:
-            # Llamada a la función enviando los bytes del logo
-            pdf_c = generar_pdf_corporativo(emp_v, 100, "NEXUS-CERT", logo_bytes=logo_file)
-            st.download_button("📥 Descargar Certificado con Co-Branding", pdf_c, "Certificado.pdf")
+    # SECCIÓN 2: CERTIFICADO
+    st.subheader("🛡️ Certificado con tu Logo")
+    tu_logo = st.file_uploader("Sube el logo de la empresa", type=['png', 'jpg'])
+    
+    if st.button("PREPARAR CERTIFICADO"):
+        if nombre_empresa and tu_logo:
+            archivo_c = generar_pdf_corporativo(nombre_empresa, 200, "CERT-456", logo_bytes=tu_logo)
+            st.session_state.mi_certificado = archivo_c
+            st.success("Certificado listo.")
+            
+    if 'mi_certificado' in st.session_state:
+        st.download_button("📥 Descargar Certificado", st.session_state.mi_certificado, "Certificado.pdf")
 
 # =========================================================
 # BLOQUE 4: SUSCRIPCIONES
@@ -671,6 +635,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
