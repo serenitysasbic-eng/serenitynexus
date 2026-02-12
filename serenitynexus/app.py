@@ -258,66 +258,84 @@ if menu == "INICIO":
     st.info("Ubicación del Proyecto: Dagua y Felidia, Valle del Cauca - Hacienda Monte Guadua & Finca Villa Michelle.")
 
 # 2. RED DE FAROS
-# 2. RED DE FAROS
 elif menu == "RED DE FAROS (7 NODOS)":
-    st.title("Monitoreo Perimetral")
+    st.title("🛰️ Monitoreo Perimetral Nexus")
+    
+    # --- FILA DE NODOS SUPERIOR ---
     c1, c2, c3 = st.columns(3)
     with c1: 
-        st.markdown("<div class='faro-card'><h3>FARO HALCÓN</h3></div>", unsafe_allow_html=True)
-        if st.button("Conectar Halcón"): st.session_state.f_activo = "Halcón"
+        st.markdown("<div class='faro-card'><h3>🦅 FARO HALCÓN</h3></div>", unsafe_allow_html=True)
+        if st.button("Conectar Halcón", use_container_width=True): st.session_state.f_activo = "Halcón"
     with c2: 
-        st.markdown("<div class='faro-card'><h3>FARO COLIBRÍ</h3></div>", unsafe_allow_html=True)
-        if st.button("Conectar Colibrí"): st.session_state.f_activo = "Colibrí"
+        st.markdown("<div class='faro-card'><h3>🦜 FARO COLIBRÍ</h3></div>", unsafe_allow_html=True)
+        if st.button("Conectar Colibrí", use_container_width=True): st.session_state.f_activo = "Colibrí"
     with c3: 
-        st.markdown("<div class='faro-card'><h3>FARO RANA</h3></div>", unsafe_allow_html=True)
-        if st.button("Conectar Rana"): st.session_state.f_activo = "Rana"
+        st.markdown("<div class='faro-card'><h3>🐸 FARO RANA</h3></div>", unsafe_allow_html=True)
+        if st.button("Conectar Rana", use_container_width=True): st.session_state.f_activo = "Rana"
     
     st.write("")
     c4, c5, c6 = st.columns(3)
     with c4: 
-        st.markdown("<div class='faro-card'><h3>FARO VENADO</h3></div>", unsafe_allow_html=True)
-        if st.button("Conectar Venado"): st.session_state.f_activo = "Venado"
+        st.markdown("<div class='faro-card'><h3>🦌 FARO VENADO</h3></div>", unsafe_allow_html=True)
+        if st.button("Conectar Venado", use_container_width=True): st.session_state.f_activo = "Venado"
     with c5: 
-        st.markdown("<div class='faro-card'><h3>FARO TIGRILLO</h3></div>", unsafe_allow_html=True)
-        if st.button("Conectar Tigrillo"): st.session_state.f_activo = "Tigrillo"
+        st.markdown("<div class='faro-card'><h3>🐆 FARO TIGRILLO</h3></div>", unsafe_allow_html=True)
+        if st.button("Conectar Tigrillo", use_container_width=True): st.session_state.f_activo = "Tigrillo"
     with c6: 
-        st.markdown("<div class='faro-card'><h3>FARO CAPIBARA</h3></div>", unsafe_allow_html=True)
-        if st.button("Conectar Capibara"): st.session_state.f_activo = "Capibara"
+        st.markdown("<div class='faro-card'><h3>🦦 FARO CAPIBARA</h3></div>", unsafe_allow_html=True)
+        if st.button("Conectar Capibara", use_container_width=True): st.session_state.f_activo = "Capibara"
 
-    st.write("---")
+    st.divider()
+
+    # --- NODO MAESTRO GEMINI ---
     col_gemini = st.columns([1,2,1])
     with col_gemini[1]:
-        st.markdown(f"<div class='faro-gemini'><h3>FARO GEMINI</h3><p>Estado: {st.session_state.estado_gemini}</p></div>", unsafe_allow_html=True)
-        if st.button("ACTIVAR NÚCLEO GEMINI"): 
+        st.markdown(f"<div class='faro-gemini'><h3>🧠 NODO MAESTRO GEMINI</h3><p>Estado: {st.session_state.estado_gemini}</p></div>", unsafe_allow_html=True)
+        if st.button("🔥 ACTIVAR NÚCLEO GEMINI VISION", use_container_width=True): 
             st.session_state.f_activo = "GEMINI"
             st.session_state.estado_gemini = "ACTIVO - EMITIENDO"
 
-    # --- PANTALLA DE TRANSMISIÓN (AQUÍ ESTABA EL ERROR) ---
+    # --- PANTALLA DE TRANSMISIÓN Y MICRÓFONOS ---
     if st.session_state.f_activo:
-        st.divider()
-        color_titulo = "#4285F4" if st.session_state.f_activo == "GEMINI" else "#9BC63B"
-        st.markdown(f"<h2 style='color:{color_titulo}; text-align:center;'>TRANSMISIÓN MULTI-NODO: {st.session_state.f_activo.upper()}</h2>", unsafe_allow_html=True)
+        st.write("---")
+        color_f = "#4285F4" if st.session_state.f_activo == "GEMINI" else "#9BC63B"
+        st.markdown(f"<h2 style='color:{color_f}; text-align:center;'>🛰️ FEED EN VIVO: {st.session_state.f_activo.upper()}</h2>", unsafe_allow_html=True)
         
-        # Videos de Referencia
-        if st.session_state.f_activo == "GEMINI":
-            url_ref = "https://cdn.pixabay.com/video/2020/05/25/40146-424856038_tiny.mp4"
-        else:
-            url_ref = "https://cdn.pixabay.com/video/2016/09/21/5316-184080169_tiny.mp4"
+        # URL de video según el modo
+        url_v = "https://cdn.pixabay.com/video/2020/05/25/40146-424856038_tiny.mp4" if st.session_state.f_activo == "GEMINI" else "https://cdn.pixabay.com/video/2016/09/21/5316-184080169_tiny.mp4"
 
-        # Grilla de 8 Cámaras
+        # 1. Grilla de 8 Cámaras (Videos de Referencia)
         c_cols = st.columns(4)
         for j in range(8):
             label = "IA-ANALYSIS" if st.session_state.f_activo == "GEMINI" else f"CAM-{j+1} LIVE"
             with c_cols[j % 4]:
                 st.markdown(f"""
-                    <div style='text-align:center; background:black; border:1px solid {color_titulo}; border-radius:10px; padding:5px; margin-bottom:15px;'>
-                        <p style='font-size:10px; color:{color_titulo}; margin:0;'>{label}</p>
+                    <div style='text-align:center; background:black; border:1px solid {color_f}; border-radius:10px; padding:5px; margin-bottom:10px;'>
+                        <p style='font-size:10px; color:{color_f}; margin:0;'>{label}</p>
                         <video width="100%" autoplay loop muted playsinline style="border-radius:5px;">
-                            <source src="{url_ref}" type="video/mp4">
+                            <source src="{url_v}" type="video/mp4">
                         </video>
-                        <p style='font-size:8px; color:red; margin:0;'>● REC</p>
                     </div>
                 """, unsafe_allow_html=True)
+
+        st.write("---")
+        
+        # 2. SECCIÓN DE MICROFONOS (Bioacústica)
+        st.subheader("🔊 Análisis Bioacústico Real-Time")
+        m_cols = st.columns(4)
+        for k in range(4):
+            val = random.randint(85,99) if st.session_state.f_activo == "GEMINI" else random.randint(40,90)
+            with m_cols[k]: 
+                st.markdown(f"""
+                    <div style='background:rgba(0,0,0,0.6); border:1px solid {color_f}; padding:15px; border-radius:10px; text-align:center;'>
+                        <b style='color:white;'>MIC {k+1}</b><br>
+                        <span style='color:{color_f}; font-family:monospace;'>||||| {val}%</span>
+                        <p style='font-size:8px; color:#aaa; margin-top:5px;'>FRECUENCIA: {random.randint(20,40)}kHz</p>
+                    </div>
+                """, unsafe_allow_html=True)
+        
+        # Audio General
+        st.audio("https://www.soundjay.com/nature/sounds/forest-birds-01.mp3")
                 
 # 3. DASHBOARD
 elif menu == "DASHBOARD ESTADÍSTICO IA":
@@ -706,6 +724,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
