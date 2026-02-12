@@ -229,7 +229,7 @@ elif menu == "RED DE FAROS (7 NODOS)":
     st.write("---")
     col_gemini = st.columns([1,2,1])
     with col_gemini[1]:
-        st.markdown(f"<div class='faro-gemini'><h3>?? FARO GEMINI ??</h3><p>Estado: {st.session_state.estado_gemini}</p></div>", unsafe_allow_html=True)
+        st.markdown(f"<div class='faro-gemini'><h3>FARO GEMINI</h3><p>Estado: {st.session_state.estado_gemini}</p></div>", unsafe_allow_html=True)
         if st.button("ACTIVAR NÚCLEO GEMINI"): 
             st.session_state.f_activo = "GEMINI"
             st.session_state.estado_gemini = "ACTIVO - EMITIENDO"
@@ -237,7 +237,7 @@ elif menu == "RED DE FAROS (7 NODOS)":
     if st.session_state.f_activo:
         st.divider()
         color_titulo = "#4285F4" if st.session_state.f_activo == "GEMINI" else "#9BC63B"
-        st.markdown(f"<h2 style='color:{color_titulo}; text-align:center;'>?? TRANSMISIÓN EN VIVO: {st.session_state.f_activo.upper()}</h2>", unsafe_allow_html=True)
+        st.markdown(f"<h2 style='color:{color_titulo}; text-align:center;'TRANSMISIÓN EN VIVO: {st.session_state.f_activo.upper()}</h2>", unsafe_allow_html=True)
         c_cols = st.columns(4)
         for j in range(8):
             label = "IA-ANALYSIS" if st.session_state.f_activo == "GEMINI" else "LIVE"
@@ -636,6 +636,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
