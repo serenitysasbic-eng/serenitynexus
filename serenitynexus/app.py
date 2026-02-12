@@ -303,10 +303,10 @@ elif menu == "RED DE FAROS (7 NODOS)":
         
         url_v = "https://cdn.pixabay.com/video/2020/05/25/40146-424856038_tiny.mp4" if st.session_state.f_activo == "GEMINI" else "https://cdn.pixabay.com/video/2016/09/21/5316-184080169_tiny.mp4"
 
-     # --- GRILLA DE 8 CÁMARAS (DISEÑO JORGE CARVAJAL) ---
+# --- GRILLA DE 8 CÁMARAS (DISEÑO FINAL JORGE CARVAJAL) ---
         c_cols = st.columns(4)
         for j in range(8):
-            # Esto hace que el nombre cambie de NODO-1 a NODO-8 automáticamente
+            # Cambia el nombre según el nodo
             label_nodo = "GEMINI-CORE" if st.session_state.f_activo == "GEMINI" else f"NODO-{j+1}"
             
             with c_cols[j % 4]:
@@ -331,6 +331,7 @@ elif menu == "RED DE FAROS (7 NODOS)":
                     </div>
                 """, unsafe_allow_html=True)
 
+        # Estilo para que el punto rojo parpadee (Asegúrate de tenerlo)
         st.markdown("<style>@keyframes blinker { 50% { opacity: 0; } }</style>", unsafe_allow_html=True)
         
         # 4. MICROFONOS
@@ -731,6 +732,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
