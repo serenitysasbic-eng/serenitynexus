@@ -98,7 +98,7 @@ def generar_pdf_certificado(nombre, monto, hash_id):
     # 4. CUERPO DEL DIPLOMA
     c.setFont("Helvetica", 16)
     c.setFillColor(black)
-    c.drawCentredString(4.25*inch, 7.0*inch, "SERENITY HUB S.A.S. BIC")
+    c.drawCentredString(4.25*inch, 7.0*inch, "SERENITY S.A.S. BIC")
     
     c.setFont("Helvetica-Bold", 20)
     c.drawCentredString(4.25*inch, 6.2*inch, f"{nombre.upper()}")
@@ -648,6 +648,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
