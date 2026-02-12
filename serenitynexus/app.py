@@ -307,41 +307,33 @@ elif menu == "RED DE FAROS (7 NODOS)":
 elif menu == "RED DE FAROS (7 NODOS)":
     st.title("🛰️ Monitoreo Perimetral Nexus")
     
-    # 1. BOTONES DE LOS FAROS CON REFRESCO FORZADO
+    # Función interna para cambiar el estado (Garantiza que Streamlit lo registre)
+    def conectar_faro(nombre):
+        st.session_state.f_activo = nombre
+
+    # 1. BOTONES DE LOS FAROS
     c1, c2, c3 = st.columns(3)
     with c1: 
         st.markdown("<div class='faro-card'><h3>🦅 FARO HALCÓN</h3></div>", unsafe_allow_html=True)
-        if st.button("Conectar Halcón", key="h1"): 
-            st.session_state.f_activo = "Halcón"
-            st.rerun()
+        st.button("Conectar Halcón", key="h1", on_click=conectar_faro, args=("Halcón",), use_container_width=True)
     with c2: 
         st.markdown("<div class='faro-card'><h3>🦜 FARO COLIBRÍ</h3></div>", unsafe_allow_html=True)
-        if st.button("Conectar Colibrí", key="c2"): 
-            st.session_state.f_activo = "Colibrí"
-            st.rerun()
+        st.button("Conectar Colibrí", key="c2", on_click=conectar_faro, args=("Colibrí",), use_container_width=True)
     with c3: 
         st.markdown("<div class='faro-card'><h3>🐸 FARO RANA</h3></div>", unsafe_allow_html=True)
-        if st.button("Conectar Rana", key="r3"): 
-            st.session_state.f_activo = "Rana"
-            st.rerun()
+        st.button("Conectar Rana", key="r3", on_click=conectar_faro, args=("Rana",), use_container_width=True)
     
     st.write("")
     c4, c5, c6 = st.columns(3)
     with c4: 
         st.markdown("<div class='faro-card'><h3>🦌 FARO VENADO</h3></div>", unsafe_allow_html=True)
-        if st.button("Conectar Venado", key="v4"): 
-            st.session_state.f_activo = "Venado"
-            st.rerun()
+        st.button("Conectar Venado", key="v4", on_click=conectar_faro, args=("Venado",), use_container_width=True)
     with c5: 
         st.markdown("<div class='faro-card'><h3>🐆 FARO TIGRILLO</h3></div>", unsafe_allow_html=True)
-        if st.button("Conectar Tigrillo", key="t5"): 
-            st.session_state.f_activo = "Tigrillo"
-            st.rerun()
+        st.button("Conectar Tigrillo", key="t5", on_click=conectar_faro, args=("Tigrillo",), use_container_width=True)
     with c6: 
         st.markdown("<div class='faro-card'><h3>🦦 FARO CAPIBARA</h3></div>", unsafe_allow_html=True)
-        if st.button("Conectar Capibara", key="cp6"): 
-            st.session_state.f_activo = "Capibara"
-            st.rerun()
+        st.button("Conectar Capibara", key="cp6", on_click=conectar_faro, args=("Capibara",), use_container_width=True)
 
     st.divider()
 
@@ -349,19 +341,17 @@ elif menu == "RED DE FAROS (7 NODOS)":
     col_gemini = st.columns([1,2,1])
     with col_gemini[1]:
         st.markdown("<div class='faro-gemini' style='text-align: center;'><h3>🧠 NODO MAESTRO GEMINI</h3></div>", unsafe_allow_html=True)
-        if st.button("🔥 ACTIVAR NÚCLEO GEMINI VISION", key="gm_btn"): 
-            st.session_state.f_activo = "GEMINI"
-            st.rerun()
+        st.button("🔥 ACTIVAR NÚCLEO GEMINI VISION", key="gm_btn", on_click=conectar_faro, args=("GEMINI",), use_container_width=True)
 
-    # 3. MOSTRAR MONITOREO SI HAY ALGO ACTIVO
-    faro_actual = st.session_state.get('f_activo')
-    
-    if faro_actual:
-        color_f = "#4285F4" if faro_actual == "GEMINI" else "#9BC63B"
+    # --- 3. LOGICA DE VISUALIZACIÓN ---
+    if "f_activo" in st.session_state:
+        f_nom = st.session_state.f_activo
+        color_f = "#4285F4" if f_nom == "GEMINI" else "#9BC63B"
+        
         st.write("---")
-        st.markdown(f"<h2 style='text-align:center; color:{color_f};'>🛰️ FEED EN VIVO: {faro_actual.upper()}</h2>", unsafe_allow_html=True)
+        st.markdown(f"<h2 style='text-align:center; color:{color_f};'>🛰️ FEED EN VIVO: {f_nom.upper()}</h2>", unsafe_allow_html=True)
 
-        # 8 CÁMARAS
+        # 8 CÁMARAS INDEPENDIENTES
         v_links = [
             "https://cdn.pixabay.com/video/2019/04/23/23011-332356616_tiny.mp4",
             "https://cdn.pixabay.com/video/2016/09/21/5316-184080169_tiny.mp4",
@@ -372,20 +362,21 @@ elif menu == "RED DE FAROS (7 NODOS)":
             "https://cdn.pixabay.com/video/2023/10/24/186357-877713374_tiny.mp4",
             "https://cdn.pixabay.com/video/2017/01/26/7543-202302306_tiny.mp4"
         ]
-        
+
         c_cam = st.columns(4)
         for i in range(8):
             with c_cam[i % 4]:
                 st.markdown(f"""
                 <div style='background: black; border: 2px solid {color_f}; border-radius: 8px; overflow: hidden; height: 110px;'>
-                    <div style='color:white; font-size:9px; padding:2px;'>CAM {i+1}</div>
-                    <video width="100%" height="70px" autoplay loop muted playsinline style="object-fit: cover;">
+                    <div style='color:white; font-size:9px; padding:2px; background:{color_f}44;'>CAM {i+1}</div>
+                    <video width="100%" height="75px" autoplay loop muted playsinline style="object-fit: cover;">
                         <source src="{v_links[i]}" type="video/mp4">
                     </video>
                 </div>""", unsafe_allow_html=True)
 
-        # 4 SONIDOS
+        # 4 SONIDOS INDEPENDIENTES
         st.write("---")
+        st.subheader("🔊 Sensores Bioacústicos")
         a_links = [
             "https://www.soundjay.com/nature/sounds/forest-birds-01.mp3",
             "https://www.soundjay.com/nature/sounds/bird-chirp-01.mp3",
@@ -395,9 +386,8 @@ elif menu == "RED DE FAROS (7 NODOS)":
         c_snd = st.columns(4)
         for k in range(4):
             with c_snd[k]:
-                st.markdown(f"<b style='color:{color_f}; font-size:10px;'>🔊 MIC {k+1}</b>", unsafe_allow_html=True)
+                st.markdown(f"<b style='color:{color_f}; font-size:11px;'>🔊 MIC {k+1}</b>", unsafe_allow_html=True)
                 st.audio(a_links[k])
-                
 # 3. DASHBOARD
 elif menu == "DASHBOARD ESTADÍSTICO IA":
     st.title("Análisis de Inteligencia Biológica")
@@ -785,6 +775,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
