@@ -323,9 +323,30 @@ def generar_pdf_corporativo(nombre_entidad, impacto, hash_id, logo_bytes=None, e
     pdf.set_font("Arial", 'I', 8)
     pdf.cell(0, 10, f"Autenticidad verificada mediante Hash Blockchain: {hash_id}", ln=True, align='C')
     
-    return pdf.output(dest='S').encode('latin-1')
+    return pdf.output(dest='S').encode('latin-1')# --- Final del Bloque 3: Gestión Leyes ---
+    with col_act2:
+        st.info("Suba el logo para personalizar su certificado oficial.")
+        if st.button("⚖️ EMITIR CERTIFICADO CON LOGO", use_container_width=True):
+            if n_corp and archivo_logo:
+                h_c = hashlib.sha256(f"{n_corp}".encode()).hexdigest()[:12].upper()
+                # Generamos el PDF usando la función nueva que pusiste al inicio
+                pdf_c = generar_pdf_corporativo(n_corp, n_per*2, h_c, logo_bytes=archivo_logo)
+                st.session_state.pdf_legal_ready = pdf_c
+                st.success(f"Certificado para {n_corp} generado.")
+            else:
+                st.error("Razón Social y Logo son obligatorios.")
+
+        if 'pdf_legal_ready' in st.session_state:
+            st.download_button(
+                label="📥 DESCARGAR CERTIFICADO OFICIAL",
+                data=st.session_state.pdf_legal_ready,
+                file_name="Certificado_Cumplimiento_Nexus.pdf",
+                mime="application/pdf",
+                use_container_width=True
+            )
+
 # =========================================================
-# BLOQUE 4: SUSCRIPCIONES (Impacto, Beneficios y Pasarela)
+# BLOQUE 4: SUSCRIPCIONES
 # =========================================================
 elif menu == "SUSCRIPCIONES":
     st.title("🌱 Membresías de Impacto Serenity")
@@ -645,6 +666,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
