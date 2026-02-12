@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import streamlit as st
 import pandas as pd
 import hashlib
@@ -9,715 +10,412 @@ from streamlit_folium import st_folium
 from fpdf import FPDF
 from datetime import datetime
 
-# En lugar de HexColor, definimos el color de Serenity en formato simple para FPDF
-# Verde Serenity: (46, 125, 50) en formato RGB
+# --- CONFIGURACIÓN DE PÁGINA ---
+st.set_page_config(page_title="Serenity Nexus Global", layout="wide")
 
-# ESTA ES TU HERRAMIENTA PARA HACER PDFs (Tu licuadora)
+# --- FUNCIÓN MAESTRA DE PDF (Blindada) ---
 def generar_pdf_serenity(entidad, impacto, hash_id, logo_bytes=None, tipo="CERTIFICADO"):
     pdf = FPDF()
     pdf.add_page()
-    
-    # Logos
     if os.path.exists("logo_serenity.png"):
         pdf.image("logo_serenity.png", x=10, y=8, w=30)
     if logo_bytes:
-        with open("temp_logo_c.png", "wb") as f:
-            f.write(logo_bytes.getbuffer())
-        pdf.image("temp_logo_c.png", x=165, y=10, w=30)
-
+        try:
+            with open("temp_logo_c.png", "wb") as f:
+                f.write(logo_bytes.getbuffer())
+            pdf.image("temp_logo_c.png", x=165, y=10, w=30)
+        except: pass
     pdf.ln(30)
     pdf.set_font("Arial", 'B', 16)
-    pdf.set_text_color(30, 70, 32)
-    
+    pdf.set_text_color(46, 125, 50) # Verde Serenity
     if tipo == "VADEMECUM":
-        pdf.cell(0, 10, "VADEMECUM DE SOLUCIONES LEGALES", ln=True, align='C')
+        pdf.cell(0, 10, "VADEMECUM LEGAL - SERENITY NEXUS", ln=True, align='C')
         pdf.set_font("Arial", '', 11)
         pdf.set_text_color(0, 0, 0)
-        cuerpo = (f"Entidad: {entidad}\n\n"
-                  "1. LEY 2173: Gestion de Areas de Vida.\n"
-                  "2. LEY 2169: Carbono Neutralidad e IA.\n"
-                  "3. LEY 2111: Vigilancia contra delitos ambientales.\n"
-                  "4. LEY 99: Conservacion de cuencas (1% hidrico).")
+        cuerpo = (f"Dirigido a: {entidad}\n\n1. LEY 2173: Gestion de Areas de Vida.\n2. LEY 2169: Carbono Neutralidad.\n3. LEY 2111: Delitos Ambientales.\n4. LEY 99: Recurso Hidrico.")
     else:
-        pdf.cell(0, 10, "CERTIFICADO DE IMPACTO AMBIENTAL", ln=True, align='C')
+        pdf.cell(0, 10, "CERTIFICADO DE CUMPLIMIENTO", ln=True, align='C')
         pdf.set_font("Arial", '', 12)
         pdf.set_text_color(0, 0, 0)
-        cuerpo = (f"Serenity Nexus Global certifica a:\n\n{entidad.upper()}\n\n"
-                  f"Por su contribucion de: {impacto} unidades de regeneracion.\n"
-                  f"Ubicacion: Hacienda Monte Guadua, Dagua.\n"
-                  f"ID de Seguimiento: {hash_id}")
-
-    pdf.multi_cell(0, 10, cuerpo, align='C' if tipo != "VADEMECUM" else 'L')
-    pdf.ln(20)
-    pdf.set_font("Arial", 'I', 8)
-    pdf.cell(0, 10, f"Autenticidad Blockchain: {hash_id}", ln=True, align='C')
-    
-    # Retornamos el archivo listo para descargar
+        cuerpo = (f"Entidad: {entidad.upper()}\nImpacto: {impacto} arboles.\nID: {hash_id}")
+    pdf.multi_cell(0, 10, cuerpo)
     return pdf.output(dest='S').encode('latin-1')
 
-import hashlib
-import os
-import io
-import base64
-import folium
-from streamlit_folium import st_folium
-from fpdf import FPDF
-from datetime import datetime
-
-# --- CONFIGURACIÓN E IDENTIDAD ---
-st.set_page_config(page_title="Serenity Nexus Global", page_icon="🌿", layout="wide")
+# --- MENÚ LATERAL ---
+menu = st.sidebar.selectbox("Seleccione una sección", 
+    ["INICIO", "RED DE FAROS", "DASHBOARD ESTADÍSTICO IA", "GESTIÓN LEY 2173", 
+     "SUSCRIPCIONES", "BILLETERA CRYPTO (WEB3)", "DONACIONES Y CERTIFICADO", 
+     "LOGÍSTICA AEROLÍNEAS", "UBICACIÓN"])
 
 
-# --- GESTIÓN DE ESTADO ---
-if 'total_protegido' not in st.session_state: st.session_state.total_protegido = 87.0
-if 'donaciones_recibidas' not in st.session_state: st.session_state.donaciones_recibidas = 0
-if 'estado_gemini' not in st.session_state: st.session_state.estado_gemini = "Latente"
-if 'auth' not in st.session_state: st.session_state.auth = False
-if 'f_activo' not in st.session_state: st.session_state.f_activo = None
-
-def generar_pdf_certificado(nombre, monto, hash_id):
-    buffer = io.BytesIO()
-    c = canvas.Canvas(buffer, pagesize=letter)
-    
-    # 1. Marco de Seguridad (Borde Verde Serenity)
-    c.setStrokeColor(VERDE_SERENITY)
-    c.setLineWidth(5)
-    c.rect(0.3*inch, 0.3*inch, 7.9*inch, 10.4*inch)
-    
-    # 2. LOGO (Arreglado para no salir achatado)
-    try:
-        if os.path.exists("logo_serenity.png"):
-            # Usamos preserveAspectRatio para que mantenga su forma original
-            c.drawImage("logo_serenity.png", 3.25*inch, 8.8*inch, width=2*inch, height=1.2*inch, mask='auto', preserveAspectRatio=True)
-    except:
-        pass
-
-    # 3. TEXTO DE CABECERA (Dividido y Centrado como pediste)
-    c.setFillColor(VERDE_SERENITY)
-    
-    c.setFont("Helvetica-Bold", 24)
-    c.drawCentredString(4.25*inch, 8.3*inch, "CERTIFICADO DE:")
-    
-    c.setFont("Helvetica-Bold", 28)
-    c.drawCentredString(4.25*inch, 7.8*inch, "DONACIÓN REGENERATIVA")
-    
-    # 4. CUERPO DEL DIPLOMA
-    c.setFont("Helvetica", 16)
-    c.setFillColor(black)
-    c.drawCentredString(4.25*inch, 7.0*inch, "SERENITY S.A.S. BIC")
-    
-    c.setFont("Helvetica-Bold", 20)
-    c.drawCentredString(4.25*inch, 6.2*inch, f"{nombre.upper()}")
-    
-    c.setFont("Helvetica", 14)
-    c.drawCentredString(4.25*inch, 5.5*inch, f"Por su valioso aporte de ${monto:,.0f} USD")
-    c.drawCentredString(4.25*inch, 5.1*inch, "Destinado a la regeneración del KBA Bosque San Antonio")
-    
-    # Mensaje de impacto
-    c.setFont("Helvetica-Oblique", 11)
-    c.drawCentredString(4.25*inch, 4.4*inch, "Tu contribución permite que la biodiversidad de Dagua y Felidia")
-    c.drawCentredString(4.25*inch, 4.2*inch, "se transforme en un activo vivo para el planeta. ¡Gracias!")
-
-    # 5. FIRMA
-    c.setLineWidth(1)
-    c.line(3*inch, 3.0*inch, 5.5*inch, 3.0*inch)
-    c.setFont("Helvetica-Bold", 12)
-    c.drawCentredString(4.25*inch, 2.8*inch, "Jorge Carvajal")
-    c.setFont("Helvetica", 10)
-    c.drawCentredString(4.25*inch, 2.6*inch, "Administrador Serenity S.A.S. BIC")
-    
-    # 6. HASH DE SEGURIDAD (Nexus Verification)
-    c.setFillColor(HexColor("#444444"))
-    c.setFont("Courier-Bold", 10)
-    c.drawCentredString(4.25*inch, 1.5*inch, f"HASH DE VERIFICACIÓN: {hash_id}")
-    
-    fecha_hoy = datetime.now().strftime("%d/%m/%Y %H:%M")
-    c.setFont("Helvetica", 8)
-    c.drawCentredString(4.25*inch, 1.2*inch, f"Emitido por Sistema Nexus IA | Fecha de registro: {fecha_hoy}")
-    
-    c.save()
-    buffer.seek(0)
-    return buffer
-
-# --- CSS (ESTILOS) ---
-st.markdown("""
-    <style>
-        .stApp { 
-            background-image: linear-gradient(rgba(5, 10, 4, 0.8), rgba(5, 10, 4, 0.9)), 
-            url('https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1920&q=80');
-            background-size: cover; background-position: center; background-attachment: fixed;
-            color: #e8f5e9; font-family: 'Montserrat', sans-serif; 
-        }
-        label, .stMarkdown p, [data-testid="stSidebar"] p, [data-testid="stSidebar"] span, .stMetricLabel { 
-            color: white !important; font-weight: 500; 
-        }
-        [data-testid="stSidebar"] { background-color: rgba(10, 20, 8, 0.9) !important; backdrop-filter: blur(10px); }
-        h1, h2, h3 { color: #9BC63B !important; text-shadow: 2px 2px 4px #000; }
-        .stButton>button { background-color: #2E7D32; color: white; border: 1px solid #9BC63B; border-radius: 8px; width: 100%; font-weight: bold; }
-        .stButton>button:hover { background-color: #9BC63B; color: black; box-shadow: 0 0 15px #9BC63B; }
-        .faro-card { border: 1px solid #9BC63B; padding: 15px; border-radius: 10px; background: rgba(0,0,0,0.6); text-align: center; height: 100%; }
-        .faro-gemini { border: 2px solid #4285F4; padding: 15px; border-radius: 10px; background: rgba(66, 133, 244, 0.2); text-align: center; box-shadow: 0 0 15px #4285F4; }
-        .cam-grid { background: #000; border: 1px solid #2E7D32; height: 80px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #ff0000; border-radius: 5px; }
-        .metric-card { background: rgba(0,0,0,0.7); padding: 20px; border-radius: 10px; border: 1px solid #9BC63B; text-align: center; }
-        .airline-grid { 
-            background: white; 
-            padding: 10px; 
-            border-radius: 10px; 
-            text-align: center; 
-            margin-bottom: 10px;
-            height: 120px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-        }
-        .airline-grid img { max-width: 90%; max-height: 70px; object-fit: contain; }
-        .airline-grid p { color: black !important; font-size: 0.7rem; font-weight: bold; margin-top: 5px; }
-    </style>
-""", unsafe_allow_html=True)
-
-# --- LOGIN ---
-if not st.session_state.auth:
-    st.markdown("<div style='text-align:center; padding-top: 50px;'><h1>SISTEMA NEXUS | SERENITY</h1></div>", unsafe_allow_html=True)
-    col_sec = st.columns([1,1,1])
-    with col_sec[1]:
-        clave = st.text_input("PASSWORD ADMIN", type="password")
-        if st.button("INGRESAR"):
-            if clave == "Serenity2026":
-                st.session_state.auth = True
-                st.rerun()
-    st.stop()
-
-# --- BUSCA ESTA SECCIÓN Y ACTUALIZA LA LISTA ---
-menu = st.sidebar.radio("CENTRO DE CONTROL", [
-    "INICIO", 
-    "RED DE FAROS (7 NODOS)", 
-    "DASHBOARD ESTADÍSTICO IA", 
-    "GESTIÓN LEY 2173 (EMPRESAS)",
-    "SUSCRIPCIONES", 
-    "BILLETERA CRYPTO (WEB3)",  
-    "DONACIONES Y CERTIFICADO", 
-    "LOGÍSTICA AEROLÍNEAS", 
-    "UBICACIÓN & MAPAS"
-])
-
-# 1. INICIO - RESTAURACIÓN COMPLETA
 if menu == "INICIO":
-    # --- LOGO CENTRADO ---
-    col_l1, col_l2, col_l3 = st.columns([1, 2, 1])
-    with col_l2:
-        if os.path.exists("logo_serenity.png"):
-            st.image("logo_serenity.png", use_container_width=True)
+    st.title("🌿 Serenity Nexus Global")
+    st.subheader("Ecosistema Tecnológico de Regeneración Ambiental")
+    
+    col1, col2 = st.columns([2, 1])
+    with col1:
+        st.markdown("""
+        Bienvenido a la plataforma líder en cumplimiento de la **Ley 2173 de 2021**. 
+        Integramos Inteligencia Artificial, Blockchain y monitoreo satelital para 
+        transformar la obligación legal en activos biológicos reales.
+        """)
+        st.image("https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1000", caption="Hacienda Monte Guadua - Reserva Protectora")
+    
+    with col2:
+        st.info("📊 **Estado del Ecosistema**")
+        st.metric("Hectáreas Protegidas", "80 Ha")
+        st.metric("Árboles Sembrados", "12,450")
+        st.metric("Captura CO2", "842 Ton")
+
+
+elif menu == "RED DE FAROS":
+    st.title("🛰️ Red de Faros Gemini")
+    st.markdown("### Vigilancia Activa y Monitoreo Acústico")
+
+    # Mapa de Ubicación
+    with st.container(border=True):
+        m = folium.Map(location=[3.642, -76.685], zoom_start=15)
+        folium.Marker([3.642, -76.685], popup="Faro Villa Michelle", icon=folium.Icon(color='green')).add_to(m)
+        folium.Marker([3.645, -76.680], popup="Faro Río Dagua", icon=folium.Icon(color='blue')).add_to(m)
+        st_folium(m, width=700, height=400)
+
+    # Video de Gemini Vision
+    col_v1, col_v2 = st.columns([2, 1])
+    with col_v1:
+        st.subheader("👁️ Visión Computacional Gemini")
+        if os.path.exists("video_gemini_vision.mp4"):
+            with open("video_gemini_vision.mp4", "rb") as f:
+                v_64 = base64.b64encode(f.read()).decode()
+            st.markdown(f'<video width="100%" autoplay loop muted playsinline><source src="data:video/mp4;base64,{v_64}"></video>', unsafe_allow_html=True)
         else:
-            st.markdown("<h1 style='text-align:center; color:#9BC63B;'>SERENITY NEXUS GLOBAL</h1>", unsafe_allow_html=True)
-
-    st.markdown("<h1 style='text-align:center; font-size:3.5rem;'>Serenity Nexus Global</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align:center; letter-spacing:5px; color:#9BC63B; font-weight:bold;'>SISTEMA REGENERATIVO BIOMÉTRICO KBA</p>", unsafe_allow_html=True)
+            st.image("https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1000", caption="Análisis IA Gemini en tiempo real")
     
-    # --- AUDIO EARTH ---
-    st.components.v1.html("""
-        <audio id="audio_earth" src="sonido_Earth.mp3" loop></audio>
-        <div style="text-align:center; margin-top:20px;">
-            <button onclick="document.getElementById('audio_earth').play()" style="background:#2E7D32; color:white; border:1px solid #9BC63B; padding:10px 20px; border-radius:10px; cursor:pointer; font-weight:bold;">🔊 ACTIVAR SONIDO GLOBAL EARTH</button>
-        </div>
-    """, height=100)
-
-    # --- DATOS DE GOBERNANZA ---
-    st.info("SPAM (40%) | TAF (60%) | JWCJ $SNG")
-
-    st.divider()
-
-    # --- QUIÉNES SOMOS, MISIÓN Y VISIÓN ---
-    col_inf1, col_inf2 = st.columns(2)
-    
-    with col_inf1:
-        st.subheader("🌿 QUIÉNES SOMOS / WHO WE ARE")
-        st.write("Serenity Nexus Global es la primera plataforma Phygital (Física + Digital) del Valle del Cauca que integra la conservación ambiental con tecnología Blockchain e Inteligencia Artificial, transformando la protección de la biodiversidad en un activo digital tangible.")
-
-    with col_inf2:
-        st.subheader("🎯 NUESTRA MISIÓN / OUR MISSION")
-        st.write("Regenerar el tejido ecológico y social mediante un modelo de negocio sostenible que permita a empresas y personas compensar su huella ambiental a través de la tecnología y la transparencia.")
-
-    st.write("---")
-    
-    col_inf3, col_inf4 = st.columns([1, 2])
-    with col_inf3:
-        st.subheader("🚀 NUESTRA VISIÓN / OUR VISION")
-    with col_inf4:
-        st.write("Ser el referente mundial del Internet de la Naturaleza para 2030, liderando la valorización de los servicios ecosistémicos mediante nuestra red de Faros inteligentes y el token $SNG.")
-
-    st.info("📍 Ubicación del Proyecto: Dagua y Felidia, Valle del Cauca - Hacienda Monte Guadua & Finca Villa Michelle.")
+    with col_v2:
+        st.audio("https://www.soundjay.com/nature/sounds/forest-birds-01.mp3")
+        st.success("✅ Sistema Acústico Operativo")
+        st.warning("⚠️ Alerta de Ruido: Sector Norte (Analizando...)")
 
 
-# =========================================================
-# BLOQUE 6: DASHBOARD ESTADÍSTICO IA - MONITOREO EN VIVO
-# =========================================================
 elif menu == "DASHBOARD ESTADÍSTICO IA":
     st.title("📊 IA Environmental Analytics")
-    st.markdown("### Monitorización en Tiempo Real de Activos Biológicos")
+    st.markdown("### Visualización de Impacto y Crecimiento")
 
-    # --- 1. MÉTRICAS DE IMPACTO GLOBAL (DINÁMICAS) ---
-    st.write("---")
-    m1, m2, m3, m4 = st.columns(4)
-    with m1:
-        st.metric(label="🌳 Árboles Protegidos", value="12,450", delta="+120 esta semana")
-    with m2:
-        st.metric(label="💨 CO2 Capturado (Ton)", value="842.5", delta="4.2%")
-    with m3:
-        st.metric(label="🦉 Biodiversidad (Especies)", value="158", delta="Nuevos avistamientos")
-    with m4:
-        st.metric(label="🛡️ Faros Gemini Activos", value="24", delta="100% Cobertura")
-
-    st.write("")
-
-# =========================================================
-# BLOQUE 7: MONITOREO PERIMETRAL - RED DE FAROS GEMINI
-# =========================================================
-elif menu == "MONITOREO PERIMETRAL":
-    st.title("🛰️ Red de Faros Gemini - Vigilancia Activa")
-    st.markdown("### Protección Biométrica y Acústica de la Reserva")
-
-    # --- 1. MAPA DINÁMICO DE PUNTOS FARO ---
-    with st.container(border=True):
-        st.subheader("📍 Ubicación Satelital de Dispositivos")
-        # Coordenadas aproximadas de la zona de reserva
-        m = folium.Map(location=[3.642, -76.685], zoom_start=15, control_scale=True)
-        
-        # Añadir marcadores de los Faros
-        puntos = [
-            {"name": "Faro 01 - Entrada", "pos": [3.642, -76.685], "color": "green"},
-            {"name": "Faro 04 - Río Dagua", "pos": [3.645, -76.680], "color": "blue"},
-            {"name": "Faro 08 - Límite Sur", "pos": [3.640, -76.690], "color": "red"}
-        ]
-        
-        for p in puntos:
-            folium.Marker(p["pos"], popup=p["name"], icon=folium.Icon(color=p["color"])).add_to(m)
-        
-        st_folium(m, width=700, height=400)
-        st.caption("Mapa georreferenciado de la Red de Faros en tiempo real.")
+    # MÉTRICAS SUPERIORES
+    m1, m2, m3 = st.columns(3)
+    m1.metric("CO2 Absorbido", "842.5 Ton", "+4.2% mensual")
+    m2.metric("Índice de Biodiversidad", "158 Especies", "Nuevos registros")
+    m3.metric("Cobertura Forestal", "92%", "Crecimiento óptimo")
 
     st.write("---")
-
-    # --- 2. VIDEO DE INTELIGENCIA GEMINI (VISIÓN IA) ---
-    col_v1, col_v2 = st.columns([2, 1])
-    with col_v1:
-        st.subheader("👁️ Visión Computacional")
-        video_n = "video_gemini_vision.mp4"
-        if os.path.exists(video_n):
-            with open(video_n, "rb") as f:
-                data = f.read()
-                b64 = base64.b64encode(data).decode()
-            st.markdown(f'<video width="100%" autoplay loop muted playsinline><source src="data:video/mp4;base64,{b64}"></video>', unsafe_allow_html=True)
-        else:
-            st.warning("Analizando patrones de biodiversidad...")
-            st.image("https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1000")
-
-    with col_v2:
-        st.info("**Estatus IA**")
-        st.write("✅ Detección de fauna")
-        st.write("✅ Alerta de intrusión")
-        st.metric("Precisión", "98.2%")
-
-    st.write("---")
-
-    # --- 3. MICRÓFONOS ACTIVOS (MONITOREO SÓNICO) ---
-    st.subheader("🎧 Monitoreo Acústico (Ley 2111)")
-    c1, c2, c3 = st.columns(3)
-    with c1:
-        st.markdown("**Faro 04**")
-        st.audio("https://www.soundjay.com/nature/sounds/rain-01.mp3")
-    with c2:
-        st.markdown("**Faro 08**")
-        st.error("⚠️ Ruido Sospechoso")
-        st.image("https://upload.wikimedia.org/wikipedia/commons/6/69/Waveform.png", width=120)
-    with c3:
-        st.markdown("**Faro 12**")
-        st.audio("https://www.soundjay.com/nature/sounds/forest-birds-01.mp3")
-
-    st.divider()
-    if st.button("🚨 ACTIVAR ALERTA GLOBAL", use_container_width=True):
-        st.error("NOTIFICACIÓN ENVIADA - PROTOCOLO DE SEGURIDAD ACTIVADO")
-
-# =========================================================
-# BLOQUE 3: GESTIÓN LEY 2173 (EMPRESAS)
-# =========================================================
-elif menu == "GESTIÓN LEY 2173 (EMPRESAS)":
-    st.title("⚖️ Nexus Legal & Compliance Hub")
     
-    # Campo único para el nombre
-    nombre_empresa = st.text_input("Razón Social de la Empresa", placeholder="Ej: EcoVida S.A.S")
+    col_g1, col_g2 = st.columns(2)
+    with col_g1:
+        st.subheader("🌱 Proyección de Reforestación")
+        # Gráfico de área dinámico
+        df_crecimiento = pd.DataFrame({
+            'Mes': ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+            'Hectáreas': [45, 48, 52, 60, 68, 80]
+        }).set_index('Mes')
+        st.area_chart(df_crecimiento, color="#2E7D32")
     
-    st.write("---")
+    with col_g2:
+        st.subheader("☁️ Captura por Predio")
+        # Gráfico de barras
+        df_carbono = pd.DataFrame({
+            'Predio': ['Villa Michelle', 'Monte Guadua', 'Reserva Dagua'],
+            'Toneladas': [120, 580, 142]
+        }).set_index('Predio')
+        st.bar_chart(df_carbono, color="#3498db")
+
+    st.info("💡 **Análisis de IA:** Se detecta una aceleración en la captura de carbono debido a la maduración de las plantaciones en el sector sur.")
+
+
+elif menu == "GESTIÓN LEY 2173":
+    st.title("⚖️ Nexus Legal Hub")
+    st.markdown("### Cumplimiento y Certificación de Áreas de Vida")
+
+    empresa = st.text_input("Nombre de la Empresa / Razón Social", placeholder="Ej: Serenity S.A.S BIC")
+    nit = st.text_input("NIT")
+
+    col_l1, col_l2 = st.columns(2)
     
-    col_pdf1, col_pdf2 = st.columns(2)
-    
-    with col_pdf1:
-        st.subheader("📄 Reporte de Leyes")
-        if st.button("PREPARAR VADEMÉCUM"):
-            if nombre_empresa:
-                archivo_v = generar_pdf_corporativo(nombre_empresa, 0, "VAD-NEXUS-2026", es_vademecum=True)
-                st.session_state.v_pdf = archivo_v
-                st.success("Vademécum Técnico Generado")
+    with col_l1:
+        st.subheader("📜 Vademécum Legal")
+        st.write("Genera el reporte técnico de leyes ambientales (99, 2169, 2173, 2111).")
+        if st.button("PREPARAR REPORTE TÉCNICO"):
+            if empresa:
+                st.session_state.v_file = generar_pdf_serenity(empresa, 0, "VAD-99", tipo="VADEMECUM")
+                st.success("Reporte generado con éxito.")
+            else:
+                st.error("Por favor ingrese el nombre de la empresa.")
         
-        if 'v_pdf' in st.session_state:
-            st.download_button("📥 Descargar Vademécum", st.session_state.v_pdf, f"Vademecum_{nombre_empresa}.pdf")
+        if 'v_file' in st.session_state:
+            st.download_button("📥 Descargar Vademécum", st.session_state.v_file, "Vademecum_Legal.pdf")
 
-    with col_pdf2:
-        st.subheader("🛡️ Certificado Oficial")
-        tu_logo = st.file_uploader("Logo de la Empresa", type=['png', 'jpg'])
+    with col_l2:
+        st.subheader("🏆 Certificado de Siembra")
+        arboles = st.number_input("Cantidad de árboles gestionados", min_value=1, value=50)
+        logo_c = st.file_uploader("Subir Logo Corporativo (Opcional)", type=['png', 'jpg'])
+        
         if st.button("PREPARAR CERTIFICADO"):
-            if nombre_empresa and tu_logo:
-                archivo_c = generar_pdf_corporativo(nombre_empresa, 200, "CERT-2173-LAW", logo_bytes=tu_logo)
-                st.session_state.c_pdf = archivo_c
-                st.success("Certificado Enlazado")
-        
-        if 'c_pdf' in st.session_state:
-            st.download_button("📥 Descargar Certificado", st.session_state.c_pdf, f"Certificado_{nombre_empresa}.pdf")
+            if empresa:
+                # Generamos un Hash único simulando Blockchain
+                h_id = hashlib.sha256(f"{empresa}{datetime.now()}".encode()).hexdigest()[:12].upper()
+                st.session_state.c_file = generar_pdf_serenity(empresa, arboles, h_id, logo_bytes=logo_c)
+                st.success("Certificado listo para descarga.")
+            else:
+                st.error("Por favor ingrese los datos requeridos.")
 
-# =========================================================
-# BLOQUE 4: SUSCRIPCIONES
-# =========================================================
+        if 'c_file' in st.session_state:
+            st.download_button("📥 Descargar Certificado", st.session_state.c_file, "Certificado_Siembra.pdf")
+
+
 elif menu == "SUSCRIPCIONES":
-    st.title("🌱 Membresías de Impacto Serenity")
-    st.markdown("### Transforma tu aporte en regeneración real")
+    st.title("💳 Planes de Regeneración")
+    st.markdown("### Elige tu nivel de impacto en el ecosistema")
 
-    # --- TARJETAS DE PLANES CON BENEFICIOS DETALLADOS ---
-    p1, p2, p3 = st.columns(3)
+    col_p1, col_p2, col_p3 = st.columns(3)
     
-    with p1:
-        st.markdown("""
-            <div style="background:#1e2630; padding:20px; border-radius:15px; border:2px solid #9BC63B; text-align:center; min-height: 420px;">
-                <h3 style="color:#9BC63B;">PLAN SEMILLA</h3>
-                <h2 style="color:white;">$25 USD <small>/mes</small></h2>
-                <hr style="border-color:#444;">
-                <p style="text-align:left; font-size:0.9rem;">🌲 <b>5 Árboles:</b> Siembra y mantenimiento.</p>
-                <p style="text-align:left; font-size:0.9rem;">📡 <b>1 Faro:</b> Datos biométricos básicos.</p>
-                <p style="text-align:left; font-size:0.9rem;">🪙 <b>50 Tokens:</b> $SNG de respaldo.</p>
-                <p style="text-align:left; font-size:0.9rem;">📑 <b>Certificado:</b> Digital con Hash.</p>
-            </div>
-        """, unsafe_allow_html=True)
-        if st.button("ELEGIR SEMILLA", use_container_width=True, key="p_semilla"):
-            st.session_state.p_sel = "SEMILLA"
-            st.session_state.m_plan = 25
+    with col_p1:
+        with st.container(border=True):
+            st.header("🌱 Semilla")
+            st.subheader("$50 / Mes")
+            st.write("- Protección de 5 árboles.")
+            st.write("- Certificado digital mensual.")
+            st.write("- Acceso a Dashboard básico.")
+            if st.button("Elegir Plan Semilla", use_container_width=True):
+                st.balloons()
 
-    with p2:
-        st.markdown("""
-            <div style="background:#1e2630; padding:20px; border-radius:15px; border:3px solid #9BC63B; text-align:center; min-height: 420px; transform: scale(1.02);">
-                <h3 style="color:#9BC63B;">PLAN GUARDIÁN</h3>
-                <h2 style="color:white;">$80 USD <small>/mes</small></h2>
-                <hr style="border-color:#444;">
-                <p style="text-align:left; font-size:0.9rem;">🌳 <b>15 Árboles:</b> Restauración activa.</p>
-                <p style="text-align:left; font-size:0.9rem;">🎥 <b>Cámaras 4K:</b> Streaming del bosque.</p>
-                <p style="text-align:left; font-size:0.9rem;">🪙 <b>200 Tokens:</b> Mayor respaldo $SNG.</p>
-                <p style="text-align:left; font-size:0.9rem;">📊 <b>Reporte IA:</b> Inventario de carbono.</p>
-            </div>
-        """, unsafe_allow_html=True)
-        if st.button("ELEGIR GUARDIÁN", use_container_width=True, key="p_guardian"):
-            st.session_state.p_sel = "GUARDIÁN"
-            st.session_state.m_plan = 80
+    with col_p2:
+        with st.container(border=True):
+            st.header("🌳 Bosque")
+            st.subheader("$150 / Mes")
+            st.write("- Protección de 20 árboles.")
+            st.write("- Monitoreo IA Gemini (Acceso).")
+            st.write("- Reporte de captura CO2.")
+            if st.button("Elegir Plan Bosque", use_container_width=True):
+                st.balloons()
 
-    with p3:
-        st.markdown("""
-            <div style="background:#1e2630; padding:20px; border-radius:15px; border:2px solid #D4AF37; text-align:center; min-height: 420px;">
-                <h3 style="color:#D4AF37;">PLAN HALCÓN</h3>
-                <h2 style="color:white;">$200 USD <small>/mes</small></h2>
-                <hr style="border-color:#444;">
-                <p style="text-align:left; font-size:0.9rem;">🐆 <b>1 Ha Protegida:</b> Soberanía total.</p>
-                <p style="text-align:left; font-size:0.9rem;">🛸 <b>Drones:</b> Vigilancia perimetral.</p>
-                <p style="text-align:left; font-size:0.9rem;">🪙 <b>600 Tokens:</b> Impacto Web3 máximo.</p>
-                <p style="text-align:left; font-size:0.9rem;">👑 <b>Visita VIP:</b> Acceso a Monte Guadua.</p>
-            </div>
-        """, unsafe_allow_html=True)
-        if st.button("ELEGIR HALCÓN", use_container_width=True, key="p_halcon"):
-            st.session_state.p_sel = "HALCÓN"
-            st.session_state.m_plan = 200
+    with col_p3:
+        with st.container(border=True):
+            st.header("🛡️ Reserva")
+            st.subheader("$500 / Mes")
+            st.write("- Protección de 100 árboles.")
+            st.write("- Micro-patrocinio de un Faro.")
+            st.write("- Vademécum legal incluido.")
+            if st.button("Elegir Plan Reserva", use_container_width=True):
+                st.balloons()
 
-    # --- PASARELA DE PAGO CON LOGOS REHABILITADOS ---
-    if 'p_sel' in st.session_state:
-        st.write("---")
-        st.subheader(f"💳 Finalizar Suscripción: {st.session_state.p_sel}")
-        
-        col_pay1, col_pay2 = st.columns(2)
-        with col_pay1:
-            with st.container(border=True):
-                st.markdown("#### Tarjeta de Crédito/Débito")
-                st.text_input("Titular de la cuenta")
-                st.text_input("Número de Tarjeta", placeholder="xxxx xxxx xxxx xxxx")
-                c_exp, c_cvc = st.columns(2)
-                c_exp.text_input("Vencimiento (MM/AA)")
-                c_cvc.text_input("CVC")
-                if st.button("🚀 ACTIVAR SUSCRIPCIÓN", use_container_width=True):
-                    st.balloons()
-                    st.success(f"¡Bienvenido al Plan {st.session_state.p_sel}! Impacto activado.")
 
-        with col_pay2:
-            st.markdown("#### Pagos Locales y Alternativos")
-            st.markdown("""
-                <div style="background: #ffffff; padding: 25px; border-radius: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: center; border: 1px solid #ddd;">
-                    <div style="text-align:center;"><img src="https://upload.wikimedia.org/wikipedia/commons/b/bf/Nequi_logo.png" width="90"></div>
-                    <div style="text-align:center;"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Bancolombia_logo.svg/2560px-Bancolombia_logo.svg.png" width="90"></div>
-                    <div style="text-align:center;"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/2560px-Visa_Inc._logo.svg.png" width="70"></div>
-                    <div style="text-align:center;"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1280px-Mastercard-logo.svg.png" width="70"></div>
-                </div>
-            """, unsafe_allow_html=True)
-            st.caption("🔒 Transacciones seguras mediante Nexus Gateway (Dagua-Colombia)")
-            
-# =========================================================
-# BLOQUE 5: BILLETERA CRYPTO (WEB3) - ECOSISTEMA $SNG
-# =========================================================
 elif menu == "BILLETERA CRYPTO (WEB3)":
-    st.title("👛 Tu Billetera Nexus")
-    st.markdown("### Gestión de Activos Digitales y Gobernanza Ambiental")
+    st.title("👛 Billetera Nexus Web3")
+    st.markdown("### Gestión de Activos Digitales $SNG")
 
-    # --- 1. EL VIDEO DE LA MONEDA EN BUCLE (LOOP INFINITO) ---
+    # --- VIDEO DE LA MONEDA EN BUCLE INFINITO ---
     st.write("---")
     col_v1, col_v2 = st.columns([2, 1])
     
     with col_v1:
-        st.subheader("🪙 SNG Coin: Activo Digital Verde")
-        nombre_del_archivo = "video_sng.mp4" 
-        
-        if os.path.exists(nombre_del_archivo):
+        st.subheader("🪙 SNG Coin: La Moneda de la Tierra")
+        v_nombre = "video_sng.mp4"
+        if os.path.exists(v_nombre):
             try:
                 import base64
-                with open(nombre_del_archivo, "rb") as f:
-                    data = f.read()
-                    base64_video = base64.b64encode(data).decode()
-                
+                with open(v_nombre, "rb") as f:
+                    v_data = f.read()
+                    v_b64 = base64.b64encode(v_data).decode()
                 # HTML para video automático, infinito y sin controles
-                video_html = f'''
-                    <video width="100%" height="auto" autoplay loop muted playsinline>
-                        <source src="data:video/mp4;base64,{base64_video}" type="video/mp4">
-                        Tu navegador no soporta el video.
+                st.markdown(f'''
+                    <video width="100%" autoplay loop muted playsinline>
+                        <source src="data:video/mp4;base64,{v_b64}" type="video/mp4">
                     </video>
-                '''
-                st.markdown(video_html, unsafe_allow_html=True)
-            except Exception:
-                st.error("Error visualizando el video infinito.")
+                ''', unsafe_allow_html=True)
+            except:
+                st.info("Visualizando activo digital SNG...")
         else:
-            st.info("Visualizando activo digital SNG...")
-            st.image("https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=1000", caption="SNG Coin")
+            st.image("https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=1000", caption="SNG Coin - Respaldada por Activos Biológicos")
 
     with col_v2:
-        st.markdown("""
-        **Respaldo SNG:**
-        - **Activo:** Biomasa Real Certificada.
-        - **Red:** Web3 / Polygon PoS.
-        - **Propósito:** Trazabilidad de CO2.
-        """)
+        st.write("")
+        st.metric("Saldo Actual $SNG", "1,250.00", "+12% Anual")
+        st.metric("Valorización MATIC", "45.50", "-2%")
+        st.info("🚀 Tu portafolio ha evitado 3.4 Ton de CO2")
 
     st.write("---")
 
-    # --- 2. SALDOS Y MÉTRICAS ---
-    c_b1, c_b2, c_b3 = st.columns(3)
-    with c_b1:
-        st.metric(label="Saldo $SNG", value="1,250.00", delta="12% Mensual")
-    with c_b2:
-        st.metric(label="Saldo MATIC", value="45.50", delta="-2%")
-    with c_b3:
-        st.metric(label="Carbono Capturado (Ton)", value="3.4", delta="0.5")
-
-    st.write("")
-    
-    # --- 3. ACCIONES DE BILLETERA (RECIBIR Y ENVIAR) ---
-    col_acc1, col_acc2 = st.columns(2)
-    with col_acc1:
+    # --- ACCIONES Y TABLA ---
+    c_acc1, c_acc2 = st.columns(2)
+    with c_acc1:
         with st.container(border=True):
             st.markdown("#### 📥 Recibir")
             st.code("0x7973...649", language="text")
-            st.caption("Dirección pública para recibir activos $SNG.")
-            
-    with col_acc2:
+            st.caption("Dirección pública para depósitos.")
+
+    with c_acc2:
         with st.container(border=True):
             st.markdown("#### 📤 Enviar")
-            destino = st.text_input("Dirección de destino", placeholder="0x...", key="web3_dest")
-            monto = st.number_input("Monto a enviar", min_value=0.0, key="web3_amount")
+            st.text_input("Billetera Destino", placeholder="0x...", key="w3_dest")
             if st.button("Confirmar Envío", use_container_width=True):
-                st.warning("Firma la transacción en tu MetaMask para continuar.")
+                st.warning("Firme la transacción en su billetera MetaMask.")
 
     st.divider()
-    
-    # --- 4. HISTORIAL DE TRANSACCIONES ---
-    st.markdown("#### 📜 Historial de Transacciones (Blockchain Explorer)")
-    data_web3 = {
+    st.markdown("#### 📜 Registro de Transacciones Blockchain")
+    data_w3 = {
         'Fecha': ['2026-02-10', '2026-02-08', '2026-02-05'],
         'Tipo': ['Recibido', 'Suscripción Plan Semilla', 'Recompensa Staking'],
         'Monto $SNG': ['+500', '-100', '+25'],
         'Estado': ['Confirmado ✅', 'Confirmado ✅', 'Procesando ⏳']
     }
-    st.table(data_web3)           
+    st.table(data_w3)
 
-# =========================================================
-# BLOQUE 6: DONACIONES Y CERTIFICADO (Diploma Oficial)
-# =========================================================
+
 elif menu == "DONACIONES Y CERTIFICADO":
-    st.title("📜 Generador de Diploma y Certificado Nexus")
-    st.markdown("### Registro de Aportes a la Regeneración Biométrica")
-    
-    colA, colB = st.columns([1, 1])
-    
-    with colA:
-        with st.container(border=True):
-            st.markdown("#### Datos del Donante")
-            nombre_d = st.text_input("Nombre Completo o Razón Social")
-            monto_d = st.number_input("Monto del Aporte (USD)", min_value=1, step=10)
-            
-            if st.button("✅ REGISTRAR APORTE Y GENERAR HASH"): 
-                if nombre_d:
-                    # 1. Generar Hash
-                    datos_hash = f"{nombre_d}{monto_d}{datetime.now()}"
-                    hash_certificado = hashlib.sha256(datos_hash.encode()).hexdigest()[:16].upper()
-                    
-                    # 2. Guardar en session_state
-                    st.session_state.current_hash = hash_certificado
-                    st.session_state.nombre_prev = nombre_d
-                    st.session_state.monto_prev = monto_d
-                    
-                    # 3. Generar PDF
-                    st.session_state.pdf_buffer = generar_pdf_certificado(nombre_d, monto_d, hash_certificado)
-                    
-                    st.session_state.donaciones_recibidas += 1
-                    st.balloons()
-                    st.success(f"¡Certificado generado con éxito!")
-                else:
-                    st.warning("Ingrese el nombre del donante.")
+    st.title("🎁 Donaciones Nexus")
+    st.markdown("### Transforma tu aporte en vida para la Hacienda Monte Guadua")
 
-    with colB:
-        if 'pdf_buffer' in st.session_state:
-            st.markdown(f"""
-                <div style="background:white; color:black; padding:30px; text-align:center; border:8px double #2E7D32; border-radius:15px;">
-                    <h2 style="color:#2E7D32; margin-bottom:10px;">VISTA PREVIA</h2>
-                    <hr style="border:1px solid #2E7D32;">
-                    <p style="font-size:1.2rem; margin-top:20px;">Gracias por tu aporte, <b>{st.session_state.nombre_prev.upper()}</b></p>
-                    <p>Has contribuido con <b>${st.session_state.monto_prev} USD</b></p>
-                    <div style="background:#f0f2f6; padding:10px; border-radius:5px; margin-top:20px;">
-                        <code style="font-size:0.8rem; color: #2E7D32;">HASH: {st.session_state.current_hash}</code>
-                    </div>
-                </div>
-            """, unsafe_allow_html=True)
-            
-            st.write("")
-            st.download_button(
-                label="📥 DESCARGAR DIPLOMA CON HASH (PDF)",
-                data=st.session_state.pdf_buffer,
-                file_name=f"Certificado_Nexus_{st.session_state.current_hash}.pdf",
-                mime="application/pdf"
-            )
-# =========================================================
-# BLOQUE 7: LOGÍSTICA AEROLÍNEAS (Conexiones Globales)
-# =========================================================
+    col_d1, col_d2 = st.columns(2)
+    
+    with col_d1:
+        st.subheader("Realizar Donación")
+        nombre_d = st.text_input("Nombre del Donante", placeholder="Ej: Jorge Carvajal")
+        monto_d = st.number_input("Monto a Donar (USD)", min_value=10, step=10)
+        metodo = st.selectbox("Método de Pago", ["Tarjeta de Crédito", "PayPal", "SNG Coin", "Cripto (MATIC)"])
+        
+        if st.button("PROCESAR DONACIÓN", use_container_width=True):
+            if nombre_d:
+                st.success(f"¡Gracias {nombre_d}! Tu aporte está regenerando la cuenca del Río Dagua.")
+                st.balloons()
+            else:
+                st.error("Por favor ingresa tu nombre.")
+
+    with col_d2:
+        st.subheader("Generar Certificado")
+        st.write("Una vez realizada tu donación, descarga tu certificado oficial de impacto.")
+        
+        if st.button("GENERAR MI CERTIFICADO"):
+            if nombre_d:
+                # Generamos un Hash único para el donante
+                hash_d = hashlib.md5(f"{nombre_d}{datetime.now()}".encode()).hexdigest()[:10].upper()
+                # Usamos nuestra función maestra del bloque 1
+                st.session_state.pdf_donacion = generar_pdf_serenity(nombre_d, f"${monto_d} USD", hash_d)
+                st.success("Certificado de Donante listo.")
+            else:
+                st.warning("Primero ingresa tu nombre en el panel de la izquierda.")
+
+        if 'pdf_donacion' in st.session_state:
+            st.download_button("📥 Descargar Certificado de Donación", 
+                             st.session_state.pdf_donacion, 
+                             f"Certificado_{nombre_d}.pdf")
+
+
 elif menu == "LOGÍSTICA AEROLÍNEAS":
-    st.title("✈️ Conectividad Global a Colombia")
-    st.markdown("Principales aerolíneas con conexión directa a Bogotá (BOG), Cali (CLO) o Medellín (MDE).")
-    
-    # --- EUROPA ---
-    st.subheader("🇪🇺 Europa")
-    e1, e2, e3, e4 = st.columns(4)
-    with e1: 
-        st.markdown("<a href='https://www.iberia.com' target='_blank'><div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Iberia_Logo.svg/320px-Iberia_Logo.svg.png'><p>IBERIA</p></div></a>", unsafe_allow_html=True)
-    with e2: 
-        st.markdown("<a href='https://www.lufthansa.com' target='_blank'><div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Lufthansa_Logo_2018.svg/320px-Lufthansa_Logo_2018.svg.png'><p>LUFTHANSA</p></div></a>", unsafe_allow_html=True)
-    with e3: 
-        st.markdown("<a href='https://www.airfrance.com' target='_blank'><div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Air_France_Logo.svg/320px-Air_France_Logo.svg.png'><p>AIR FRANCE</p></div></a>", unsafe_allow_html=True)
-    with e4: 
-        st.markdown("<a href='https://www.turkishairlines.com' target='_blank'><div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Turkish_Airlines_logo_2019.svg/320px-Turkish_Airlines_logo_2019.svg.png'><p>TURKISH</p></div></a>", unsafe_allow_html=True)
-    
-    e5, e6, e7 = st.columns(3)
-    with e5: 
-        st.markdown("<a href='https://www.klm.com' target='_blank'><div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/KLM_logo.svg/320px-KLM_logo.svg.png'><p>KLM</p></div></a>", unsafe_allow_html=True)
-    with e6: 
-        st.markdown("<a href='https://www.aireuropa.com' target='_blank'><div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Air_Europa_Logo.svg/320px-Air_Europa_Logo.svg.png'><p>AIR EUROPA</p></div></a>", unsafe_allow_html=True)
-    with e7: 
-        st.markdown("<a href='https://www.flyedelweiss.com' target='_blank'><div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Edelweiss_Air_Logo.svg/320px-Edelweiss_Air_Logo.svg.png'><p>EDELWEISS</p></div></a>", unsafe_allow_html=True)
+    st.title("✈️ Soluciones para el Sector Aeronáutico")
+    st.markdown("### Compensación de Emisiones y Logística de Combustible Sostenible")
 
-    # --- NORTEAMÉRICA ---
-    st.subheader("🇺🇸 Norteamérica")
-    n1, n2, n3, n4 = st.columns(4)
-    with n1: 
-        st.markdown("<a href='https://www.aa.com' target='_blank'><div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/American_Airlines_logo_2013.svg/320px-American_Airlines_logo_2013.svg.png'><p>AMERICAN</p></div></a>", unsafe_allow_html=True)
-    with n2: 
-        st.markdown("<a href='https://www.united.com' target='_blank'><div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/United_Airlines_Logo.svg/320px-United_Airlines_Logo.svg.png'><p>UNITED</p></div></a>", unsafe_allow_html=True)
-    with n3: 
-        st.markdown("<a href='https://www.delta.com' target='_blank'><div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Delta_logo.svg/320px-Delta_logo.svg.png'><p>DELTA</p></div></a>", unsafe_allow_html=True)
-    with n4: 
-        st.markdown("<a href='https://www.aircanada.com' target='_blank'><div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Air_Canada_Logo.svg/320px-Air_Canada_Logo.svg.png'><p>AIR CANADA</p></div></a>", unsafe_allow_html=True)
+    # MÉTRIZAS DE COMPENSACIÓN
+    c1, c2, c3 = st.columns(3)
+    c1.metric("Vuelos Compensados", "124", "Último mes")
+    c2.metric("CO2 Neutralizado", "1,250 Ton", "+15%")
+    c3.metric("Eficiencia de Huella", "94%", "Objetivo 2026")
 
-    # --- LATINOAMÉRICA ---
-    st.subheader("🌎 Latinoamérica")
-    l1, l2, l3, l4 = st.columns(4)
-    with l1: 
-        st.markdown("<a href='https://www.avianca.com' target='_blank'><div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Avianca_logo_2016.svg/320px-Avianca_logo_2016.svg.png'><p>AVIANCA</p></div></a>", unsafe_allow_html=True)
-    with l2: 
-        st.markdown("<a href='https://www.latamairlines.com' target='_blank'><div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Latam-logo_-_v2.svg/320px-Latam-logo_-_v2.svg.png'><p>LATAM</p></div></a>", unsafe_allow_html=True)
-    with l3: 
-        st.markdown("<a href='https://www.copaair.com' target='_blank'><div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Copa_Airlines_logo.svg/320px-Copa_Airlines_logo.svg.png'><p>COPA</p></div></a>", unsafe_allow_html=True)
-    with l4: 
-        st.markdown("<a href='https://www.aeromexico.com' target='_blank'><div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Aeromexico_Logo_2024.svg/320px-Aeromexico_Logo_2024.svg.png'><p>AEROMEXICO</p></div></a>", unsafe_allow_html=True)
-# =========================================================
-# BLOQUE FINAL: UBICACIÓN & MAPAS (Dagua y Felidia)
-# =========================================================
-elif menu == "UBICACIÓN & MAPAS":
-    st.title("📍 Ubicación Estratégica Serenity")
-    st.markdown("### Finca Villa Michelle & Hacienda Monte Guadua")
+    st.write("---")
     
-    # Coordenadas exactas
-    lat_villa = 3.465028; lon_villa = -76.634778
-    lat_guadua = 3.477917; lon_guadua = -76.657361
+    col_a1, col_a2 = st.columns([1, 2])
     
-    # Botón directo a la interfaz de Google Maps
-    url_gmaps = f"https://www.google.com/maps/search/?api=1&query={lat_villa},{lon_villa}"
-    st.markdown(f"""
-        <div style='text-align:center; margin-bottom: 20px;'>
-            <a href="{url_gmaps}" target="_blank">
-                <button style="background-color:#4285F4; color:white; border:none; padding:15px 30px; border-radius:10px; font-weight:bold; cursor:pointer; box-shadow: 0 4px 15px rgba(66, 133, 244, 0.3);">
-                    🌐 VER EN GOOGLE MAPS (SISTEMA EXTERNO)
-                </button>
-            </a>
-        </div>
-    """, unsafe_allow_html=True)
+    with col_a1:
+        st.subheader("Calculadora de Vuelo")
+        aerolinea = st.selectbox("Aerolínea", ["Avianca", "LATAM", "Copa Airlines", "American Airlines"])
+        ruta = st.text_input("Ruta (Origen - Destino)", "BOG - MAD")
+        pasajeros = st.number_input("Número de Pasajeros", min_value=1, value=150)
+        
+        if st.button("CALCULAR COMPENSACIÓN"):
+            impacto_vuelo = pasajeros * 0.15 # Estimación simple por pasajero
+            st.info(f"Emisiones estimadas: **{impacto_vuelo} Ton de CO2**")
+            st.write(f"Para neutralizar este vuelo se requieren **{int(impacto_vuelo * 10)} árboles**.")
 
-    # Configuración del mapa interactivo con capa satelital de Google
-    # Nota: Usamos la URL de los tiles de Google Maps directamente
-    google_map_tiles = 'https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}'
-    
-    m = folium.Map(
-        location=[lat_villa, lon_villa], 
-        zoom_start=15, 
-        tiles=google_map_tiles, 
-        attr='Google Maps Satellite'
-    )
-    
-    # --- CAMBIO SOLICITADO: FARO GEMINI EN VILLA MICHELLE ---
-    color_gemini_map = "green" if st.session_state.estado_gemini == "ACTIVO - EMITIENDO" else "orange"
-    
-    folium.Marker(
-        [lat_villa, lon_villa], 
-        popup=f"NÚCLEO CENTRAL: FARO GEMINI - Villa Michelle", 
-        icon=folium.Icon(color=color_gemini_map, icon='bolt', prefix='fa')
-    ).add_to(m)
-    
-    # Marcador de Hacienda Monte Guadua (Reserva)
-    folium.Marker(
-        [lat_guadua, lon_guadua], 
-        popup="Reserva Hacienda Monte Guadua", 
-        icon=folium.Icon(color='darkgreen', icon='leaf', prefix='fa')
-    ).add_to(m)
-    
-    # Delimitación del área de reserva en Monte Guadua
-    folium.Polygon(
-        locations=[
-            [3.475, -76.660], [3.480, -76.660], 
-            [3.480, -76.654], [3.475, -76.654]
-        ], 
-        color="#9BC63B", 
-        fill=True, 
-        fill_opacity=0.3, 
-        tooltip="Área de Conservación Serenity: 80 Ha"
-    ).add_to(m)
-    
-    st_folium(m, width="100%", height=600)
+    with col_a2:
+        st.subheader("📅 Cronograma de Reforestación Corporativa")
+        log_data = {
+            'Vuelo ID': ['AV244', 'LA809', 'CM122'],
+            'Fecha': ['2026-02-10', '2026-02-11', '2026-02-12'],
+            'Estado de Compensación': ['Completado ✅', 'En Proceso ⏳', 'Programado 📅'],
+            'Área Asignada': ['Cuenca Alta', 'Sector Guadua', 'Villa Michelle']
+        }
+        st.table(log_data)
+        st.caption("Seguimiento de cumplimiento normativo para aerolíneas internacionales.")
 
-# --- FIN DEL ARCHIVO ---
+
+elif menu == "UBICACIÓN":
+    st.title("📍 Georreferenciación de Activos")
+    st.markdown("### Ubicación Estratégica en el Corredor Biológico de Dagua, Valle del Cauca")
+
+    # MÉTRICAS DE TERRITORIO
+    c1, c2, c3 = st.columns(3)
+    c1.metric("Área Total", "80.6 Ha", "Hacienda + Finca")
+    c2.metric("Altitud Promedio", "1,250 msnm", "Óptima para Guadua")
+    c3.metric("Ecosistema", "Bosque Seco", "Prioridad de Conservación")
+
+    st.write("---")
+
+    # --- MAPA INTERACTIVO DE ALTA PRECISIÓN ---
+    with st.container(border=True):
+        st.subheader("🗺️ Mapa de Predios Serenity S.A.S BIC")
+        
+        # Centro del mapa en la zona de Dagua
+        m_final = folium.Map(location=[3.642, -76.685], zoom_start=14, control_scale=True)
+        
+        # Definición de los puntos clave
+        sedes = [
+            {
+                "nombre": "Finca Villa Michelle (Sede Operativa)",
+                "coords": [3.642, -76.685],
+                "desc": "6,000 m2 - Centro de Control Faros Gemini",
+                "color": "green",
+                "icon": "home"
+            },
+            {
+                "nombre": "Hacienda Monte Guadua (Reserva)",
+                "coords": [3.648, -76.678],
+                "desc": "80 Hectáreas - Área de Regeneración y Siembra",
+                "color": "darkgreen",
+                "icon": "leaf"
+            }
+        ]
+
+        for sede in sedes:
+            folium.Marker(
+                location=sede["coords"],
+                popup=f"<b>{sede['nombre']}</b><br>{sede['desc']}",
+                tooltip=sede["nombre"],
+                icon=folium.Icon(color=sede["color"], icon=sede["icon"], prefix='fa')
+            ).add_to(m_final)
+
+        # Mostrar el mapa
+        st_folium(m_final, width=None, height=500, use_container_width=True)
+    
+    st.write("---")
+
+    # --- INFORMACIÓN ADICIONAL PARA EL INVERSIONISTA ---
+    col_info1, col_info2 = st.columns(2)
+    
+    with col_info1:
+        st.markdown("""
+        **Importancia Geográfica:**
+        - **Conectividad:** Ubicada en el cañón del Río Dagua, zona clave para la biodiversidad del Chocó Biogeográfico.
+        - **Recurso Hídrico:** El proyecto protege fuentes de agua vitales para las comunidades locales (Ley 99).
+        - **Accesibilidad:** A solo 45 minutos de Cali, facilitando la logística de auditoría ambiental.
+        """)
+        
+    with col_info2:
+        with st.container(border=True):
+            st.markdown("🔔 **Nota Técnica:**")
+            st.write("Todos los puntos están integrados con la red de **Monitoreo Perimetral**. Cualquier actividad detectada por los Faros Gemini se georreferencia automáticamente en este mapa.")
+
+    if st.button("DESCARGAR COORDENADAS KML/GPX", use_container_width=True):
+        st.info("Archivo de límites catastrales preparado para revisión técnica.")
+
+
+
 
 
 
