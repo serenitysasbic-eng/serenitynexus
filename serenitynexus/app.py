@@ -296,14 +296,15 @@ elif menu == "RED DE FAROS (7 NODOS)":
         st.markdown("<div class='faro-gemini' style='text-align: center;'><h3>🧠 NODO MAESTRO GEMINI</h3></div>", unsafe_allow_html=True)
         st.button("🔥 ACTIVAR NÚCLEO GEMINI VISION", key="gm_btn", on_click=conectar_faro, args=("GEMINI",), use_container_width=True)
 
-    # --- 3. LOGICA DE VISUALIZACIÓN ---
-    if "f_activo" in st.session_state:
+# --- 3. LOGICA DE VISUALIZACIÓN (VERSIÓN BLINDADA CONTRA ERRORES) ---
+    if "f_activo" in st.session_state and st.session_state.f_activo is not None:
         f_nom = st.session_state.f_activo
         color_f = "#4285F4" if f_nom == "GEMINI" else "#9BC63B"
         
         st.write("---")
-        st.markdown(f"<h2 style='text-align:center; color:{color_f};'>🛰️ FEED EN VIVO: {f_nom.upper()}</h2>", unsafe_allow_html=True)
-
+        # Esta es la línea que corregimos para que no de error
+        nombre_display = str(f_nom).upper()
+        st.markdown(f"<h2 style='text-align:center; color:{color_f};'>🛰️ FEED EN VIVO: {nombre_display}</h2>", unsafe_allow_html=True)
         # 8 CÁMARAS INDEPENDIENTES
         v_links = [
             "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
@@ -730,6 +731,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
