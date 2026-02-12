@@ -305,9 +305,26 @@ elif menu == "RED DE FAROS (7 NODOS)":
         st.markdown(f"<h2 style='text-align:center; color:{color_f};'>🛰️ FEED EN VIVO: {f_nom.upper()}</h2>", unsafe_allow_html=True)
 
         # GRILLA DE 8 CÁMARAS (USANDO UN SOLO VIDEO FRAGMENTADO)
+if "f_activo" in st.session_state and st.session_state.f_activo:
+        f_nom = st.session_state.f_activo
+        # Definimos el color de seguridad por si acaso
+        color_f = "#4285F4" if f_nom == "GEMINI" else "#9BC63B"
+        
+        st.write("---")
+        
+        # Usamos un truco para que nunca falle el texto en mayúsculas
+        nombre_limpio = str(f_nom).upper()
+        
+        st.markdown(f"""
+            <h2 style='text-align:center; color:{color_f}; text-shadow: 1px 1px 2px rgba(0,0,0,0.5);'>
+                🛰️ FEED EN VIVO: {nombre_limpio}
+            </h2>
+        """, unsafe_allow_html=True)
+
+        # DE AQUÍ PARA ABAJO TUS 8 CUADROS Y 4 SONIDOS SIGUEN IGUAL
         st.markdown("### 📽️ Unidades de Video Perimetral")
         
-        # Un solo video de naturaleza de Wikipedia (Súper compatible)
+        # Video estable de Wikipedia (Naturaleza)
         url_v = "https://upload.wikimedia.org/wikipedia/commons/transcoded/1/18/Forest_Mountain_River.webm/Forest_Mountain_River.webm.480p.vp9.webm"
         
         c_cam = st.columns(4)
@@ -321,27 +338,23 @@ elif menu == "RED DE FAROS (7 NODOS)":
                         <source src="{url_v}" type="video/webm">
                     </video>
                 </div>
-                <p style="font-size: 10px; color: {color_f}; text-align: center; margin-top: -15px;">NODO {i+1}</p>
+                <p style="font-size: 10px; color: {color_f}; text-align: center; margin-top: 2px; font-weight: bold;">NODO {i+1}</p>
                 """
-                st.components.v1.html(html_video, height=110)
+                st.components.v1.html(html_video, height=125)
 
-        # --- 4 SONIDOS (MÉTODO DE SEGURIDAD) ---
+        # --- 4 SONIDOS ---
         st.write("---")
         st.subheader("🔊 Sensores Bioacústicos")
-        
-        # Audios de respaldo de servidores diferentes
         a_links = [
             "https://www.soundjay.com/nature/sounds/forest-birds-01.mp3",
             "https://www.soundjay.com/nature/sounds/bird-chirp-01.mp3",
             "https://www.soundjay.com/nature/sounds/forest-birds-02.mp3",
             "https://www.soundjay.com/nature/sounds/river-1.mp3"
         ]
-        
         c_snd = st.columns(4)
         for k in range(4):
             with c_snd[k]:
                 st.markdown(f"<b style='color:{color_f}; font-size:11px;'>🔊 MIC {k+1}</b>", unsafe_allow_html=True)
-                # Si el audio no carga, mostramos un link directo por si acaso
                 st.audio(a_links[k])
 
                 
@@ -732,6 +745,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
