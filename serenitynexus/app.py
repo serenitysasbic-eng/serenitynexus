@@ -303,7 +303,7 @@ elif menu == "RED DE FAROS (7 NODOS)":
         
         url_v = "https://cdn.pixabay.com/video/2020/05/25/40146-424856038_tiny.mp4" if st.session_state.f_activo == "GEMINI" else "https://cdn.pixabay.com/video/2016/09/21/5316-184080169_tiny.mp4"
 
-# --- GRILLA DE 8 CÁMARAS (DISEÑO FINAL JORGE CARVAJAL) ---
+     # --- GRILLA DE 8 CÁMARAS (DISEÑO FINAL JORGE CARVAJAL) ---
         c_cols = st.columns(4)
         for j in range(8):
             # Cambia el nombre según el nodo
@@ -732,6 +732,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
