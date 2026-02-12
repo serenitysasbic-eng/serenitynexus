@@ -304,31 +304,29 @@ elif menu == "RED DE FAROS (7 NODOS)":
         st.write("---")
         # Esta es la línea que corregimos para que no de error
         nombre_display = str(f_nom).upper()
-        st.markdown(f"<h2 style='text-align:center; color:{color_f};'>🛰️ FEED EN VIVO: {nombre_display}</h2>", unsafe_allow_html=True)
-        # 8 CÁMARAS INDEPENDIENTES
-        v_links = [
-            "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-            "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
-            "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
-            "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
-            "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
-            "https://storage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
-            "https://storage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackAds.mp4",
-            "https://storage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4"
+# --- 8 CÁMARAS (MÉTODO IFRAME - ALTA COMPATIBILIDAD) ---
+        st.markdown("### 📽️ Unidades de Video Perimetral")
+        
+        # Enlaces de YouTube (Naturaleza / Bosques)
+        # Usamos la versión 'embed' para que carguen directo en el recuadro
+        v_ids = [
+            "794019253", "304621210", "191060370", "252513410",
+            "144070081", "154050042", "211020033", "181070014"
         ]
 
         c_cam = st.columns(4)
         for i in range(8):
             with c_cam[i % 4]:
+                # Usamos Vimeo o YouTube Embed que Firefox NO bloquea
+                video_url = f"https://player.vimeo.com/video/{v_ids[i]}?autoplay=1&loop=1&background=1"
+                
                 st.markdown(f"""
                 <div style='background: black; border: 2px solid {color_f}; border-radius: 8px; overflow: hidden; height: 110px;'>
                     <div style='color:white; font-size:9px; padding:2px; background:{color_f}44;'>CAM {i+1}</div>
-                    <video width="100%" height="75px" autoplay loop muted playsinline style="object-fit: cover;">
-                        <source src="{v_links[i]}" type="video/mp4">
-                    </video>
+                    <iframe src="{video_url}" width="100%" height="80px" frameborder="0" allow="autoplay; fullscreen" style="pointer-events: none;"></iframe>
                 </div>""", unsafe_allow_html=True)
 
-        # 4 SONIDOS INDEPENDIENTES
+        # --- 4 SONIDOS (MÉTODO DIRECTO) ---
         st.write("---")
         st.subheader("🔊 Sensores Bioacústicos")
         a_links = [
@@ -731,6 +729,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
