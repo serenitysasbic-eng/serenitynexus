@@ -444,7 +444,7 @@ elif menu == "BILLETERA CRYPTO (WEB3)":
                 st.success("Orden de compra enviada al Nexus Gateway.")
 
     with col_vault:
-        st.markdown("#### ?? ¿Cómo tener una Billetera Nexus?")
+        st.markdown("####  ¿Cómo tener una Billetera Nexus?")
         st.write("Nexus Vault no es solo una App, es tu llave privada al Internet de la Naturaleza.")
         st.markdown("""
         * **Paso 1:** Descarga Nexus App o usa una compatible (Metamask/Ledger).
@@ -636,6 +636,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
