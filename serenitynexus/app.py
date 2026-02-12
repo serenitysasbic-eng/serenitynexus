@@ -418,6 +418,36 @@ elif menu == "SUSCRIPCIONES":
 # =========================================================
 # BLOQUE 5: BILLETERA CRYPTO (WEB3) - ECOSISTEMA $SNG
 # =========================================================
+
+# --- BLOQUE VISUAL DE LA MONEDA SNG (SIN TOCAR NADA MÁS) ---
+with st.container():
+    st.write("---")
+    st.subheader("🪙 Serenity Nexus Global (SNG) - El Futuro de la Regeneración")
+    
+    col_vid1, col_vid2 = st.columns([2, 1])
+    
+    with col_act1:
+        # Aquí cargamos el video. Asegúrate de que el nombre coincida con tu archivo en GitHub
+        video_path = "sng_coin_presentation.mp4" 
+        if os.path.exists(video_path):
+            st.video(video_path)
+        else:
+            st.info("Presentando la evolución digital de Serenity Nexus...")
+            # Placeholder visual en caso de que el video esté cargando
+            st.image("https://images.unsplash.com/photo-1621761191319-c6fb62004040?q=80&w=1000&auto=format&fit=crop", 
+                     caption="Moneda SNG - Respaldada por activos biológicos.")
+
+    with col_vid2:
+        st.markdown("""
+        **Especificaciones de la Moneda:**
+        * **Nombre:** SNG Coin
+        * **Respaldo:** Inventario Forestal Real (Hacienda Monte Guadua).
+        * **Utilidad:** Pago de suscripciones, gobernanza y trazabilidad de CO2.
+        * **Tecnología:** Blockchain con verificación mediante Faros Gemini.
+        """)
+        if st.button("Explorar Whitepaper SNG", use_container_width=True):
+            st.write("Abriendo documentación técnica...")
+
 elif menu == "BILLETERA CRYPTO (WEB3)":
     st.title("💳 Nexus Finance Control")
     st.markdown("### El Futuro de la Conservación Tokenizada")
@@ -648,6 +678,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
