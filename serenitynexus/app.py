@@ -242,55 +242,91 @@ if menu == "INICIO":
 
     st.info("📍 Ubicación del Proyecto: Dagua y Felidia, Valle del Cauca - Hacienda Monte Guadua & Finca Villa Michelle.")
 
-# 2. RED DE FAROS
-elif menu == "RED DE FAROS (7 NODOS)":
-    st.title("📡 Monitoreo Perimetral")
-    c1, c2, c3 = st.columns(3)
-    with c1: 
-        st.markdown("<div class='faro-card'><h3>FARO HALCÓN</h3></div>", unsafe_allow_html=True)
-        if st.button("Conectar Halcón"): st.session_state.f_activo = "Halcón"
-    with c2: 
-        st.markdown("<div class='faro-card'><h3>FARO COLIBRÍ</h3></div>", unsafe_allow_html=True)
-        if st.button("Conectar Colibrí"): st.session_state.f_activo = "Colibrí"
-    with c3: 
-        st.markdown("<div class='faro-card'><h3>FARO RANA</h3></div>", unsafe_allow_html=True)
-        if st.button("Conectar Rana"): st.session_state.f_activo = "Rana"
+# =========================================================
+# BLOQUE 7: MONITOREO PERIMETRAL - RED DE FAROS GEMINI
+# =========================================================
+elif menu == "MONITOREO PERIMETRAL":
+    st.title("🛰️ Red de Faros Gemini - Vigilancia Activa")
+    st.markdown("### Protección Biométrica y Acústica de la Reserva")
+
+    # --- 1. VIDEO PRINCIPAL: INTELIGENCIA GEMINI ---
+    with st.container(border=True):
+        col_vid_g1, col_vid_g2 = st.columns([2, 1])
+        with col_vid_g1:
+            st.subheader("👁️ Visión Computacional Gemini")
+            # Usaremos el video de Gemini (asegúrate que el nombre coincida en GitHub)
+            video_gemini = "video_gemini_vision.mp4" 
+            if os.path.exists(video_gemini):
+                try:
+                    import base64
+                    with open(video_gemini, "rb") as f:
+                        v_data = f.read()
+                        v_b64 = base64.b64encode(v_data).decode()
+                    st.markdown(f'<video width="100%" autoplay loop muted playsinline><source src="data:video/mp4;base64,{v_b64}" type="video/mp4"></video>', unsafe_allow_html=True)
+                except:
+                    st.info("Simulación de reconocimiento de patrones IA activa...")
+            else:
+                st.image("https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1000", caption="IA Gemini - Análisis de Seguridad")
+        
+        with col_vid_g2:
+            st.write("")
+            st.write("")
+            st.success("🤖 **IA Operativa**")
+            st.write("- Reconocimiento de especies.")
+            st.write("- Detección de intrusos.")
+            st.write("- Análisis de estrés hídrico.")
+            st.info("Nivel de Precisión: 98.2%")
+
+    st.divider()
+
+    # --- 2. MONITOREO ACÚSTICO (MICRÓFONOS ACTIVOS) ---
+    st.subheader("🎧 Red de Micrófonos - Análisis Sónico")
+    col_mic1, col_mic2, col_mic3 = st.columns(3)
     
-    st.write("")
-    c4, c5, c6 = st.columns(3)
-    with c4: 
-        st.markdown("<div class='faro-card'><h3>FARO VENADO</h3></div>", unsafe_allow_html=True)
-        if st.button("Conectar Venado"): st.session_state.f_activo = "Venado"
-    with c5: 
-        st.markdown("<div class='faro-card'><h3>FARO TIGRILLO</h3></div>", unsafe_allow_html=True)
-        if st.button("Conectar Tigrillo"): st.session_state.f_activo = "Tigrillo"
-    with c6: 
-        st.markdown("<div class='faro-card'><h3>FARO CAPIBARA</h3></div>", unsafe_allow_html=True)
-        if st.button("Conectar Capibara"): st.session_state.f_activo = "Capibara"
+    with col_mic1:
+        st.markdown("**Faro 04 (Norte)**")
+        st.audio("https://www.soundjay.com/nature/sounds/rain-01.mp3") # Simulación sonido ambiente
+        st.caption("Estado: Lluvia ligera detectada.")
+
+    with col_mic2:
+        st.markdown("**Faro 08 (Sur)**")
+        st.error("⚠️ Ruido Anómalo")
+        # Simulación visual de onda sonora
+        st.image("https://upload.wikimedia.org/wikipedia/commons/6/69/Waveform.png", width=150)
+        st.caption("Posible actividad: Herramienta eléctrica (Motosierra?).")
+
+    with col_mic3:
+        st.markdown("**Faro 12 (Este)**")
+        st.audio("https://www.soundjay.com/nature/sounds/forest-birds-01.mp3")
+        st.caption("Estado: Fauna activa (Aves).")
 
     st.write("---")
-    col_gemini = st.columns([1,2,1])
-    with col_gemini[1]:
-        st.markdown(f"<div class='faro-gemini'><h3>🤖 FARO GEMINI 🤖</h3><p>Estado: {st.session_state.estado_gemini}</p></div>", unsafe_allow_html=True)
-        if st.button("ACTIVAR NÚCLEO GEMINI"): 
-            st.session_state.f_activo = "GEMINI"
-            st.session_state.estado_gemini = "ACTIVO - EMITIENDO"
 
-    if st.session_state.f_activo:
-        st.divider()
-        color_titulo = "#4285F4" if st.session_state.f_activo == "GEMINI" else "#9BC63B"
-        st.markdown(f"<h2 style='color:{color_titulo}; text-align:center;'>📹 TRANSMISIÓN EN VIVO: {st.session_state.f_activo.upper()}</h2>", unsafe_allow_html=True)
-        c_cols = st.columns(4)
-        for j in range(8):
-            label = "IA-ANALYSIS" if st.session_state.f_activo == "GEMINI" else "LIVE"
-            with c_cols[j % 4]: st.markdown(f"<div class='cam-grid'>CAM {j+1}<br>📡 {label}</div>", unsafe_allow_html=True)
-        
-        st.subheader("Bioacústica")
-        m_cols = st.columns(4)
-        for k in range(4):
-            val = random.randint(85,99) if st.session_state.f_activo == "GEMINI" else random.randint(40,90)
-            with m_cols[k]: st.markdown(f"<div style='background:rgba(155,198,59,0.2); border:1px solid #2E7D32; padding:10px; border-radius:5px; text-align:center;'><b>MIC {k+1}</b><br><span style='color:#9BC63B;'>||||| {val}%</span></div>", unsafe_allow_html=True)
+    # --- 3. SIMULACIÓN DE PUNTOS FARO (VIGILANCIA 360) ---
+    st.subheader("📍 Estado de los Puntos Faro (Real-Time)")
+    
+    puntos_faro = {
+        'ID Faro': ['Faro-01', 'Faro-02', 'Faro-03', 'Faro-04'],
+        'Ubicación': ['Entrada Principal', 'Sendero Monte Guadua', 'Cuenca Río Dagua', 'Límite Norte'],
+        'Batería': ['95%', '88%', '100% (Solar)', '72%'],
+        'Estado': ['🟢 Activo', '🟢 Activo', '🔵 Cargando', '🟡 Mantenimiento'],
+        'Última Alerta': ['Ninguna', 'Fauna Detectada', 'Ninguna', 'Interferencia']
+    }
+    st.table(puntos_faro)
 
+    # --- 4. VIDEO DE SIMULACIÓN DE DRON / PERÍMETRO ---
+    st.write("")
+    with st.expander("🎥 Ver Simulación de Patrullaje Autónomo (Dron-Faro)"):
+        video_dron = "video_simulacion_dron.mp4"
+        if os.path.exists(video_dron):
+            st.video(video_dron)
+        else:
+            st.info("Iniciando secuencia de patrullaje virtual...")
+            st.image("https://images.unsplash.com/photo-1508614589041-895b88991e3e?q=80&w=1000", caption="Simulación de patrullaje perimetral")
+
+    st.divider()
+    if st.button("🚨 ACTIVAR ALERTA PERIMETRAL GLOBAL", use_container_width=True):
+        st.error("NOTIFICACIÓN ENVIADA A SEGURIDAD Y FAROS GEMINI - PROTOCOLO LEY 2111 ACTIVADO")
 # =========================================================
 # BLOQUE 6: DASHBOARD ESTADÍSTICO IA - MONITOREO EN VIVO
 # =========================================================
@@ -756,6 +792,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
