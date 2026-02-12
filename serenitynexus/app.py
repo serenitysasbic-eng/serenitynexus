@@ -3,8 +3,7 @@ import streamlit as st
 import pandas as pd
 import random
 import hashlib 
-from datetime 
-import datetime
+from datetime import datetime
 import io
 import os
 import base64
@@ -653,6 +652,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
