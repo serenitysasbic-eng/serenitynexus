@@ -304,46 +304,38 @@ elif menu == "RED DE FAROS (7 NODOS)":
             
             st.markdown(f"<h2 style='color:{color_f}; text-align:center;'>🛰️ FEED EN VIVO: {st.session_state.f_activo.upper()}</h2>", unsafe_allow_html=True)
             
-            # GRILLA DE 8 CÁMARAS
-            c_cols = st.columns(4)
-            url_video = "https://cdn.pixabay.com/video/2019/04/23/23011-332356616_tiny.mp4"
-            posiciones = ["top left", "top right", "bottom left", "bottom right", 
-                          "center", "top center", "bottom center", "center right"]
+# --- GRILLA DE 8 CÁMARAS (ESTÉTICA RECUPERADA) ---
+        c_cols = st.columns(4)
+        url_video = "https://cdn.pixabay.com/video/2019/04/23/23011-332356616_tiny.mp4"
+        posiciones = ["top left", "top right", "bottom left", "bottom right", 
+                      "center", "top center", "bottom center", "center right"]
 
-            for j in range(8):
-                label_nodo = f"NODO-{j+1}"
-                pos = posiciones[j]
-                
-                with c_cols[j % 4]:
-                    html_code = f"""
-                    <div style="position: relative; background: black; border: 1px solid {color_f}; border-radius: 8px; overflow: hidden; height: 120px; font-family: monospace;">
-                        <div style="position: absolute; top: 5px; left: 8px; z-index: 10; background: rgba(0,0,0,0.6); color: {color_f}; font-size: 10px; padding: 2px 5px; border-radius: 3px; font-weight: bold;">
-                            {{label_nodo}}
-                        </div>
-                        <video width="100%" height="100%" autoplay loop muted playsinline style="object-fit: cover; object-position: {pos};">
-                            <source src="{url_video}" type="video/mp4">
-                        </video>
-                        <div style="position: absolute; bottom: 5px; right: 8px; z-index: 10; color: red; font-size: 10px; font-weight: bold; animation: blink 1s infinite alternate;">
-                            ● LIVE
-                        </div>
-                        <style>
-                            @keyframes blink {{ from {{ opacity: 1; }} to {{ opacity: 0.3; }} }}
-                        </style>
-                    </div>
-                    """
-                    # IMPORTANTE: Usamos .format o f-string con cuidado aquí
-                    st.components.v1.html(html_code.replace("{{label_nodo}}", label_nodo), height=130)
-
-            # 4. MICROFONOS
-            st.write("---")
-            st.subheader("🔊 Análisis Bioacústico Real-Time")
-            m_cols = st.columns(4)
-            for k in range(4):
-                val = random.randint(85,99) if st.session_state.f_activo == "GEMINI" else random.randint(40,90)
-                with m_cols[k]: 
-                    st.markdown(f"<div style='background:rgba(0,0,0,0.6); border:1px solid {color_f}; padding:15px; border-radius:10px; text-align:center;'><b style='color:white;'>MIC {k+1}</b><br><span style='color:{color_f}; font-family:monospace;'>||||| {val}%</span></div>", unsafe_allow_html=True)
+        for j in range(8):
+            label_nodo = f"NODO-{j+1}"
+            pos = posiciones[j]
             
-            st.audio("https://www.soundjay.com/nature/sounds/forest-birds-01.mp3")         
+            with c_cols[j % 4]:
+                html_code = f"""
+                <div style="position: relative; background: black; border: 1px solid {color_f}; border-radius: 6px; overflow: hidden; height: 90px; margin-bottom: 5px;">
+                    
+                    <div style="position: absolute; top: 3px; left: 5px; z-index: 10; background: rgba(0,0,0,0.6); color: {color_f}; font-family: monospace; font-size: 9px; padding: 1px 4px; border-radius: 2px;">
+                        {label_nodo}
+                    </div>
+
+                    <video width="100%" height="100%" autoplay loop muted playsinline style="object-fit: cover; object-position: {pos};">
+                        <source src="{url_video}" type="video/mp4">
+                    </video>
+                    
+                    <div style="position: absolute; bottom: 3px; right: 5px; z-index: 10; color: red; font-family: monospace; font-size: 9px; font-weight: bold; animation: blink 1s infinite alternate;">
+                        ● LIVE
+                    </div>
+                    <style>
+                        @keyframes blink {{ from {{ opacity: 1; }} to {{ opacity: 0.3; }} }}
+                    </style>
+                </div>
+                """
+                st.components.v1.html(html_code, height=100)   
+
 # 3. DASHBOARD
 elif menu == "DASHBOARD ESTADÍSTICO IA":
     st.title("Análisis de Inteligencia Biológica")
@@ -731,6 +723,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
