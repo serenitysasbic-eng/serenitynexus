@@ -320,38 +320,37 @@ elif menu == "RED DE FAROS (7 NODOS)":
                 # Usamos Vimeo o YouTube Embed que Firefox NO bloquea
                 video_url = f"https://player.vimeo.com/video/{v_ids[i]}?autoplay=1&loop=1&background=1"
                 
-# --- 8 CÁMARAS (NATURALEZA REAL - VIMEO HD) ---
+# --- 8 CÁMARAS (MÉTODO NATIVO - MÁXIMA COMPATIBILIDAD) ---
         st.markdown("### 📽️ Unidades de Video Perimetral")
         
-        # Enlaces de Naturaleza Real (Uso Libre)
-        # 1: Bosque, 2: Río, 3: Lluvia, 4: Montañas, 5: Cascada, 6: Niebla, 7: Sol en árboles, 8: Aves
-        v_ids = [
-            "230118804", "108393517", "182104448", "252513410",
-            "144070081", "154050042", "211020033", "181070014"
+        # Enlaces directos de video (MP4) de alta velocidad
+        v_links = [
+            "https://raw.githubusercontent.com/intel-iot-devkit/sample-videos/master/free-nature-video-01.mp4",
+            "https://raw.githubusercontent.com/intel-iot-devkit/sample-videos/master/free-nature-video-02.mp4",
+            "https://raw.githubusercontent.com/intel-iot-devkit/sample-videos/master/free-nature-video-03.mp4",
+            "https://raw.githubusercontent.com/intel-iot-devkit/sample-videos/master/free-nature-video-04.mp4",
+            "https://www.w3schools.com/html/mov_bbb.mp4", # Video de prueba estable
+            "https://raw.githubusercontent.com/intel-iot-devkit/sample-videos/master/free-nature-video-01.mp4",
+            "https://raw.githubusercontent.com/intel-iot-devkit/sample-videos/master/free-nature-video-02.mp4",
+            "https://raw.githubusercontent.com/intel-iot-devkit/sample-videos/master/free-nature-video-03.mp4"
         ]
 
         c_cam = st.columns(4)
         for i in range(8):
             with c_cam[i % 4]:
-                # Estilo iframe para saltar bloqueos de Firefox
-                video_url = f"https://player.vimeo.com/video/{v_ids[i]}?autoplay=1&loop=1&background=1&muted=1"
-                
-                st.markdown(f"""
-                <div style='background: black; border: 2px solid {color_f}; border-radius: 8px; overflow: hidden; height: 110px;'>
-                    <div style='color:white; font-size:9px; padding:2px; background:{color_f}44;'>CAM {i+1}</div>
-                    <iframe src="{video_url}" width="100%" height="80px" frameborder="0" allow="autoplay; fullscreen" style="pointer-events: none;"></iframe>
-                </div>""", unsafe_allow_html=True)
+                st.markdown(f"<div style='background:{color_f}33; color:white; padding:2px; font-size:10px; border-radius:5px 5px 0 0; border:1px solid {color_f};'>📷 CÁMARA {i+1}</div>", unsafe_allow_html=True)
+                # Usamos el componente nativo de Streamlit que Firefox NO bloquea
+                st.video(v_links[i % len(v_links)], format="video/mp4", start_time=0)
 
-        # --- 4 SONIDOS (AVES DE SELVA) ---
+        # --- 4 SONIDOS (MÉTODO NATIVO) ---
         st.write("---")
         st.subheader("🔊 Sensores Bioacústicos")
         
-        # Enlaces directos de audio de alta disponibilidad
         a_links = [
-            "https://www.xeno-canto.org/sounds/uploaded/RMPNMGHREH/XC526952-Troglodytes-aedon.mp3",
-            "https://www.xeno-canto.org/sounds/uploaded/SYIPCHGZOR/XC612341-Amazona-amazonica.mp3",
-            "https://www.xeno-canto.org/sounds/uploaded/RMPNMGHREH/XC523451-Zenaida-auriculata.mp3",
-            "https://www.xeno-canto.org/sounds/uploaded/SYIPCHGZOR/XC615432-Ramphastos-tucanus.mp3"
+            "https://www.soundjay.com/nature/sounds/forest-birds-01.mp3",
+            "https://www.soundjay.com/nature/sounds/bird-chirp-01.mp3",
+            "https://www.soundjay.com/nature/sounds/forest-birds-02.mp3",
+            "https://www.soundjay.com/nature/sounds/crows-cawing-1.mp3"
         ]
         
         c_snd = st.columns(4)
@@ -748,6 +747,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
