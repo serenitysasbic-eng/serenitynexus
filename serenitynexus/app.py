@@ -296,54 +296,40 @@ elif menu == "RED DE FAROS (7 NODOS)":
         st.markdown("<div class='faro-gemini' style='text-align: center;'><h3>🧠 NODO MAESTRO GEMINI</h3></div>", unsafe_allow_html=True)
         st.button("🔥 ACTIVAR NÚCLEO GEMINI VISION", key="gm_btn", on_click=conectar_faro, args=("GEMINI",), use_container_width=True)
 
-# --- 3. LOGICA DE VISUALIZACIÓN (VERSIÓN BLINDADA CONTRA ERRORES) ---
-    if "f_activo" in st.session_state and st.session_state.f_activo is not None:
+# --- 3. PANTALLA DE MONITOREO (VERSIÓN ULTRA-COMPATIBLE) ---
+    if "f_activo" in st.session_state:
         f_nom = st.session_state.f_activo
         color_f = "#4285F4" if f_nom == "GEMINI" else "#9BC63B"
         
         st.write("---")
-        # Esta es la línea que corregimos para que no de error
-        nombre_display = str(f_nom).upper()
-# --- 8 CÁMARAS (MÉTODO IFRAME - ALTA COMPATIBILIDAD) ---
+        st.markdown(f"<h2 style='text-align:center; color:{color_f};'>🛰️ FEED EN VIVO: {f_nom.upper()}</h2>", unsafe_allow_html=True)
+
+        # GRILLA DE 8 CÁMARAS (USANDO UN SOLO VIDEO FRAGMENTADO)
         st.markdown("### 📽️ Unidades de Video Perimetral")
         
-        # Enlaces de YouTube (Naturaleza / Bosques)
-        # Usamos la versión 'embed' para que carguen directo en el recuadro
-        v_ids = [
-            "794019253", "304621210", "191060370", "252513410",
-            "144070081", "154050042", "211020033", "181070014"
-        ]
-
-        c_cam = st.columns(4)
-        for i in range(8):
-            with c_cam[i % 4]:
-                # Usamos Vimeo o YouTube Embed que Firefox NO bloquea
-                video_url = f"https://player.vimeo.com/video/{v_ids[i]}?autoplay=1&loop=1&background=1"
-                
-# --- 8 CÁMARAS: ECOSISTEMA SERENITY ---
-        st.markdown("### 📽️ Unidades de Video Perimetral")
+        # Un solo video de naturaleza de Wikipedia (Súper compatible)
+        url_v = "https://upload.wikimedia.org/wikipedia/commons/transcoded/1/18/Forest_Mountain_River.webm/Forest_Mountain_River.webm.480p.vp9.webm"
         
-        v_links = [
-            "https://assets.mixkit.co/videos/preview/mixkit-forest-stream-in-the-sunlight-529-large.mp4",
-            "https://assets.mixkit.co/videos/preview/mixkit-foggy-mountains-and-forest-4415-large.mp4",
-            "https://assets.mixkit.co/videos/preview/mixkit-waterfall-in-the-forest-363-large.mp4",
-            "https://assets.mixkit.co/videos/preview/mixkit-undergrowth-of-a-green-forest-4416-large.mp4",
-            "https://assets.mixkit.co/videos/preview/mixkit-aerial-view-of-a-coniferous-forest-1188-large.mp4",
-            "https://assets.mixkit.co/videos/preview/mixkit-mountain-river-with-clear-water-4554-large.mp4",
-            "https://assets.mixkit.co/videos/preview/mixkit-sunny-forest-4414-large.mp4",
-            "https://assets.mixkit.co/videos/preview/mixkit-slow-motion-of-a-forest-path-1594-large.mp4"
-        ]
-
         c_cam = st.columns(4)
+        posiciones = ["0% 0%", "50% 0%", "100% 0%", "0% 50%", "50% 50%", "100% 50%", "0% 100%", "50% 100%"]
+        
         for i in range(8):
             with c_cam[i % 4]:
-                st.markdown(f"<div style='background:{color_f}33; color:white; padding:2px; font-size:10px; border:1px solid {color_f}; border-radius:5px 5px 0 0;'>🍃 NODO {i+1}</div>", unsafe_allow_html=True)
-                st.video(v_links[i], format="video/mp4")
+                html_video = f"""
+                <div style="border: 2px solid {color_f}; border-radius: 8px; overflow: hidden; height: 100px; background: black;">
+                    <video width="100%" height="100%" autoplay loop muted playsinline style="object-fit: cover; object-position: {posiciones[i]};">
+                        <source src="{url_v}" type="video/webm">
+                    </video>
+                </div>
+                <p style="font-size: 10px; color: {color_f}; text-align: center; margin-top: -15px;">NODO {i+1}</p>
+                """
+                st.components.v1.html(html_video, height=110)
 
-        # --- 4 SONIDOS: AVES TROPICALES ---
+        # --- 4 SONIDOS (MÉTODO DE SEGURIDAD) ---
         st.write("---")
-        st.subheader("🔊 Sensores Bioacústicos (Selva)")
+        st.subheader("🔊 Sensores Bioacústicos")
         
+        # Audios de respaldo de servidores diferentes
         a_links = [
             "https://www.soundjay.com/nature/sounds/forest-birds-01.mp3",
             "https://www.soundjay.com/nature/sounds/bird-chirp-01.mp3",
@@ -355,6 +341,7 @@ elif menu == "RED DE FAROS (7 NODOS)":
         for k in range(4):
             with c_snd[k]:
                 st.markdown(f"<b style='color:{color_f}; font-size:11px;'>🔊 MIC {k+1}</b>", unsafe_allow_html=True)
+                # Si el audio no carga, mostramos un link directo por si acaso
                 st.audio(a_links[k])
 
                 
@@ -745,6 +732,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
