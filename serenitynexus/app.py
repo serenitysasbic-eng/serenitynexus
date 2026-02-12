@@ -303,24 +303,36 @@ elif menu == "RED DE FAROS (7 NODOS)":
         
         url_v = "https://cdn.pixabay.com/video/2020/05/25/40146-424856038_tiny.mp4" if st.session_state.f_activo == "GEMINI" else "https://cdn.pixabay.com/video/2016/09/21/5316-184080169_tiny.mp4"
 
-# --- GRILLA DE 8 CÁMARAS (VERSIÓN GARANTIZADA) ---
+# --- GRILLA DE 8 CÁMARAS (FRAGMENTACIÓN DE VIDEO ÚNICO) ---
         c_cols = st.columns(4)
+        
+        # Este es un video de alta calidad de un bosque denso
+        url_unico = "https://cdn.pixabay.com/video/2019/04/23/23011-332356616_tiny.mp4"
+
         for j in range(8):
             label_nodo = f"NODO-{j+1}"
-            # Este enlace es de Google y está diseñado para pruebas globales de video
-            video_url = "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
             
+            # El truco: cada cámara mueve el video para mostrar una parte distinta
+            # Usamos object-position para "desplazar" la vista del bosque
+            posiciones = ["top left", "top right", "bottom left", "bottom right", 
+                          "center", "top center", "bottom center", "center right"]
+            pos = posiciones[j]
+
             with c_cols[j % 4]:
                 st.markdown(f"""
-                    <div style='position: relative; background: black; border: 1px solid {color_f}; border-radius: 8px; overflow: hidden; margin-bottom: 15px;'>
+                    <div style='position: relative; background: black; border: 1px solid {color_f}; border-radius: 8px; overflow: hidden; margin-bottom: 15px; height: 120px;'>
+                        
                         <div style='position: absolute; top: 5px; left: 8px; z-index: 10;'>
-                            <span style='color: {color_f}; font-family: monospace; font-size: 10px; font-weight: bold; background: rgba(0,0,0,0.5); padding: 2px 5px; border-radius: 3px;'>
+                            <span style='color: {color_f}; font-family: monospace; font-size: 10px; font-weight: bold; background: rgba(0,0,0,0.6); padding: 2px 5px; border-radius: 3px;'>
                                 {label_nodo}
                             </span>
                         </div>
-                        <video width="100%" autoplay loop muted playsinline style="display: block; object-fit: cover;">
-                            <source src="{video_url}" type="video/mp4">
+
+                        <video width="100%" height="100%" autoplay loop muted playsinline 
+                               style="display: block; object-fit: cover; object-position: {pos}; filter: contrast(1.1);">
+                            <source src="{url_unico}" type="video/mp4">
                         </video>
+                        
                         <div style='position: absolute; bottom: 5px; right: 8px; z-index: 10;'>
                             <span style='color: red; font-family: monospace; font-size: 10px; font-weight: bold; animation: blinker 1.5s linear infinite;'>
                                 ● LIVE
@@ -328,8 +340,6 @@ elif menu == "RED DE FAROS (7 NODOS)":
                         </div>
                     </div>
                 """, unsafe_allow_html=True)
-
-        st.markdown("<style>@keyframes blinker { 50% { opacity: 0; } }</style>", unsafe_allow_html=True)
         
         # 4. MICROFONOS
         st.write("---")
@@ -729,6 +739,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
