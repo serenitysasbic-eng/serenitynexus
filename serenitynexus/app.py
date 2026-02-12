@@ -170,7 +170,7 @@ if menu == "INICIO":
     st.components.v1.html("""
         <audio id="audio_earth" src="sonido_Earth.mp3" loop></audio>
         <div style="text-align:center; margin-top:20px;">
-            <button onclick="document.getElementById('audio_earth').play()" style="background:#2E7D32; color:white; border:1px solid #9BC63B; padding:10px 20px; border-radius:10px; cursor:pointer; font-weight:bold;">?? ACTIVAR SONIDO GLOBAL EARTH</button>
+            <button onclick="document.getElementById('audio_earth').play()" style="background:#2E7D32; color:white; border:1px solid #9BC63B; padding:10px 20px; border-radius:10px; cursor:pointer; font-weight:bold;">ACTIVAR SONIDO GLOBAL EARTH</button>
         </div>
     """, height=100)
 
@@ -636,6 +636,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
