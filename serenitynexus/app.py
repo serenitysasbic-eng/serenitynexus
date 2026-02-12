@@ -27,66 +27,43 @@ if 'estado_gemini' not in st.session_state: st.session_state.estado_gemini = "La
 if 'auth' not in st.session_state: st.session_state.auth = False
 if 'f_activo' not in st.session_state: st.session_state.f_activo = None
 
-def generar_pdf_certificado(nombre, monto, hash_id):
+def generar_pdf_corporativo(empresa, impacto, hash_id, logo_bytes=None, es_vademecum=False):
     buffer = io.BytesIO()
     c = canvas.Canvas(buffer, pagesize=letter)
-    
-    # 1. Marco de Seguridad (Borde Verde Serenity)
     c.setStrokeColor(VERDE_SERENITY)
     c.setLineWidth(5)
     c.rect(0.3*inch, 0.3*inch, 7.9*inch, 10.4*inch)
     
-    # 2. LOGO (Arreglado para no salir achatado)
-    try:
-        if os.path.exists("logo_serenity.png"):
-            # Usamos preserveAspectRatio para que mantenga su forma original
-            c.drawImage("logo_serenity.png", 3.25*inch, 8.8*inch, width=2*inch, height=1.2*inch, mask='auto', preserveAspectRatio=True)
-    except:
-        pass
+    # Manejo de Logo Corporativo
+    if logo_bytes:
+        try:
+            with open("temp_logo.png", "wb") as f:
+                f.write(logo_bytes.getbuffer())
+            c.drawImage("temp_logo.png", 3.25*inch, 9*inch, width=2*inch, height=1.2*inch, preserveAspectRatio=True)
+        except: pass
 
-    # 3. TEXTO DE CABECERA (Dividido y Centrado como pediste)
+    c.setFont("Helvetica-Bold", 22)
     c.setFillColor(VERDE_SERENITY)
-    
-    c.setFont("Helvetica-Bold", 24)
-    c.drawCentredString(4.25*inch, 8.3*inch, "CERTIFICADO DE:")
-    
-    c.setFont("Helvetica-Bold", 28)
-    c.drawCentredString(4.25*inch, 7.8*inch, "DONACIÓN REGENERATIVA")
-    
-    # 4. CUERPO DEL DIPLOMA
-    c.setFont("Helvetica", 16)
-    c.setFillColor(black)
-    c.drawCentredString(4.25*inch, 7.0*inch, "SERENITY HUB S.A.S. BIC")
-    
-    c.setFont("Helvetica-Bold", 20)
-    c.drawCentredString(4.25*inch, 6.2*inch, f"{nombre.upper()}")
+    titulo = "VADEMÉCUM LEGAL" if es_vademecum else "CERTIFICADO CORPORATIVO"
+    c.drawCentredString(4.25*inch, 8.5*inch, titulo)
     
     c.setFont("Helvetica", 14)
-    c.drawCentredString(4.25*inch, 5.5*inch, f"Por su valioso aporte de ${monto:,.0f} USD")
-    c.drawCentredString(4.25*inch, 5.1*inch, "Destinado a la Regeneración del KBA Bosque San Antonio")
+    c.setFillColor(black)
+    c.drawCentredString(4.25*inch, 7.8*inch, f"ENTIDAD: {empresa.upper()}")
     
-    # Mensaje de impacto
-    c.setFont("Helvetica-Oblique", 11)
-    c.drawCentredString(4.25*inch, 4.4*inch, "Tu contribución permite que la biodiversidad de Dagua y Felidia")
-    c.drawCentredString(4.25*inch, 4.2*inch, "se transforme en un activo vivo para el planeta. ¡Gracias!")
+    c.setFont("Helvetica", 11)
+    lineas = [
+        "Este documento certifica el compromiso ambiental bajo la Ley 2173 de 2021.",
+        f"Impacto gestionado: {impacto} unidades biológicas.",
+        "Ubicación: Hacienda Monte Guadua - Dagua, Valle del Cauca."
+    ]
+    y_p = 7.0
+    for linea in lineas:
+        c.drawCentredString(4.25*inch, y_p*inch, linea)
+        y_p -= 0.3
 
-    # 5. FIRMA
-    c.setLineWidth(1)
-    c.line(3*inch, 3.0*inch, 5.5*inch, 3.0*inch)
-    c.setFont("Helvetica-Bold", 12)
-    c.drawCentredString(4.25*inch, 2.8*inch, "Jorge Carvajal")
-    c.setFont("Helvetica", 10)
-    c.drawCentredString(4.25*inch, 2.6*inch, "Administrador Serenity S.A.S. BIC")
-    
-    # 6. HASH DE SEGURIDAD (Nexus Verification)
-    c.setFillColor(HexColor("#444444"))
     c.setFont("Courier-Bold", 10)
-    c.drawCentredString(4.25*inch, 1.5*inch, f"HASH DE VERIFICACIÓN: {hash_id}")
-    
-    fecha_hoy = datetime.now().strftime("%d/%m/%Y %H:%M")
-    c.setFont("Helvetica", 8)
-    c.drawCentredString(4.25*inch, 1.2*inch, f"Emitido por Sistema Nexus IA | Fecha de registro: {fecha_hoy}")
-    
+    c.drawCentredString(4.25*inch, 1.5*inch, f"NEXUS-ID: {hash_id}")
     c.save()
     buffer.seek(0)
     return buffer
@@ -636,6 +613,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
