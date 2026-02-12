@@ -66,7 +66,7 @@ from datetime import datetime
 
 # --- CONFIGURACIÓN E IDENTIDAD ---
 st.set_page_config(page_title="Serenity Nexus Global", page_icon="🌿", layout="wide")
-VERDE_SERENITY = HexColor("#2E7D32")
+
 
 # --- GESTIÓN DE ESTADO ---
 if 'total_protegido' not in st.session_state: st.session_state.total_protegido = 87.0
@@ -718,6 +718,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
