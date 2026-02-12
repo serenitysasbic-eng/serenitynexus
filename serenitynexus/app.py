@@ -4,8 +4,13 @@ import hashlib
 import os
 import io
 import base64
+import folium
+from streamlit_folium import st_folium
 from fpdf import FPDF
 from datetime import datetime
+
+# En lugar de HexColor, definimos el color de Serenity en formato simple para FPDF
+# Verde Serenity: (46, 125, 50) en formato RGB
 
 # ESTA ES TU HERRAMIENTA PARA HACER PDFs (Tu licuadora)
 def generar_pdf_serenity(entidad, impacto, hash_id, logo_bytes=None, tipo="CERTIFICADO"):
@@ -713,6 +718,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
