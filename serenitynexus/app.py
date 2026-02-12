@@ -2,25 +2,39 @@
 import streamlit as st
 import pandas as pd
 import random
-import hashlib  # <--- ESTA ES LA LÍNEA QUE FALTA
+import hashlib
 from datetime import datetime
 import io
 import os
 import base64
+from fpdf import FPDF  # <--- IMPORTACIÓN FUNDAMENTAL QUE FALTABA
+
+# --- DEFINICIÓN DE LA CLASE PDF ---
+class PDF(FPDF):
+    def header(self):
+        # Aquí puedes agregar un encabezado global si quieres
+        pass
+
 def generar_pdf_corporativo(entidad, impacto, hash_id, logo_bytes=None, es_vademecum=False):
-    pdf = PDF()
+    # Usamos FPDF() directamente para evitar el NameError
+    pdf = FPDF() 
     pdf.add_page()
     
-    # --- LOGO DE LA EMPRESA (Si existe) ---
+    # --- LOGO DE LA EMPRESA (Enlace Real) ---
     if logo_bytes:
-        with open("temp_logo.png", "wb") as f:
-            f.write(logo_bytes.getbuffer())
-        pdf.image("temp_logo.png", x=160, y=10, w=35) # Esquina superior derecha
+        try:
+            with open("temp_logo.png", "wb") as f:
+                f.write(logo_bytes.getbuffer())
+            pdf.image("temp_logo.png", x=160, y=10, w=35)
+        except:
+            pass # Si el logo falla, el PDF sigue sin él para no bloquear la app
 
-    # --- TÍTULOS ---
+    # --- CONFIGURACIÓN DE FUENTES ---
+    # FPDF por defecto usa 'latin-1', hay que evitar caracteres raros o usar c. normales
     pdf.set_font("Arial", 'B', 16)
+    
     if es_vademecum:
-        pdf.cell(0, 10, "VADEMÉCUM LEGAL - SERENITY NEXUS GLOBAL", ln=True, align='L')
+        pdf.cell(0, 10, "VADEMECUM LEGAL - SERENITY NEXUS GLOBAL", ln=True, align='L')
         pdf.set_font("Arial", 'B', 11)
         pdf.cell(0, 10, "SOLUCIONES CORPORATIVAS DE CUMPLIMIENTO AMBIENTAL", ln=True, align='L')
     else:
@@ -31,29 +45,28 @@ def generar_pdf_corporativo(entidad, impacto, hash_id, logo_bytes=None, es_vadem
     fecha_actual = datetime.now().strftime('%d/%m/%Y')
 
     if es_vademecum:
-        # CONTENIDO ESTRUCTURADO DEL VADEMÉCUM
+        # CONTENIDO ESTRUCTURADO (Sin tildes para evitar errores de codificación en FPDF estándar)
         cuerpo = (
             f"DIRIGIDO A: {entidad}\n"
-            f"FECHA DE EMISIÓN: {fecha_actual}\n\n"
-            "RESUMEN TÉCNICO DE SOLUCIONES LEGALES:\n"
+            f"FECHA DE EMISION: {fecha_actual}\n\n"
+            "RESUMEN TECNICO DE SOLUCIONES LEGALES:\n"
             "--------------------------------------------------------------------------------\n"
-            "1. LEY 2173 (2021) - ÁREAS DE VIDA: Serenity Nexus asigna coordenadas GPS únicas en \n"
+            "1. LEY 2173 (2021) - AREAS DE VIDA: Serenity Nexus asigna coordenadas GPS unicas en \n"
             "   Hacienda Monte Guadua para el cumplimiento de la siembra obligatoria empresarial.\n\n"
-            "2. LEY 2169 (2021) - ACCIÓN CLIMÁTICA: Nuestra plataforma provee el inventario de \n"
+            "2. LEY 2169 (2021) - ACCION CLIMATICA: Nuestra plataforma provee el inventario de \n"
             "   biomasa y carbono certificado mediante monitoreo IA para metas de Carbono Neutralidad.\n\n"
-            "3. LEY 2111 (2021) - JUSTICIA AMBIENTAL: Mitigación de riesgos penales mediante la red \n"
-            "   de Faros Gemini, que actúa como evidencia digital ante la deforestación y caza furtiva.\n\n"
-            "4. LEY 99 (1993) - RECURSO HÍDRICO: Ejecución del 1% forzoso para proyectos que \n"
-            "   toman agua de fuentes naturales, enfocada en la conservación de la cuenca del Río Dagua.\n"
+            "3. LEY 2111 (2021) - JUSTICIA AMBIENTAL: Mitigacion de riesgos penales mediante la red \n"
+            "   de Faros Gemini, que actua como evidencia digital ante la deforestacion y caza furtiva.\n\n"
+            "4. LEY 99 (1993) - RECURSO HIDRICO: Ejecucion del 1% forzoso para proyectos que \n"
+            "   toman agua de fuentes naturales, enfocada en la conservacion de la cuenca del Rio Dagua.\n"
         )
     else:
-        # CONTENIDO DEL CERTIFICADO
         cuerpo = (
             f"Certificamos que la empresa: {entidad}\n"
             f"NIT / ID: {hash_id}\n\n"
-            f"Ha cumplido con la gestión de {impacto} individuos arbóreos en las zonas de reserva \n"
+            f"Ha cumplido con la gestion de {impacto} individuos arboreos en las zonas de reserva \n"
             "de Serenity Nexus Global. Este documento avala la responsabilidad social y ambiental \n"
-            "bajo los estándares de la Ley 2173 de 2021."
+            "bajo los estandares de la Ley 2173 de 2021."
         )
 
     pdf.multi_cell(0, 8, cuerpo)
@@ -61,6 +74,7 @@ def generar_pdf_corporativo(entidad, impacto, hash_id, logo_bytes=None, es_vadem
     pdf.set_font("Arial", 'I', 8)
     pdf.cell(0, 10, f"Autenticidad verificada mediante Hash Blockchain: {hash_id}", ln=True, align='C')
     
+    # IMPORTANTE: Encode en latin-1 para evitar errores de caracteres
     return pdf.output(dest='S').encode('latin-1')
 
 # --- LIBRERÍAS EXTENDIDAS ---
@@ -674,6 +688,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
