@@ -258,6 +258,7 @@ if menu == "INICIO":
     st.info("Ubicación del Proyecto: Dagua y Felidia, Valle del Cauca - Hacienda Monte Guadua & Finca Villa Michelle.")
 
 # 2. RED DE FAROS
+# 2. RED DE FAROS
 elif menu == "RED DE FAROS (7 NODOS)":
     st.title("Monitoreo Perimetral")
     c1, c2, c3 = st.columns(3)
@@ -290,20 +291,20 @@ elif menu == "RED DE FAROS (7 NODOS)":
         if st.button("ACTIVAR NÚCLEO GEMINI"): 
             st.session_state.f_activo = "GEMINI"
             st.session_state.estado_gemini = "ACTIVO - EMITIENDO"
-            
-     if st.session_state.f_activo:
+
+    # --- PANTALLA DE TRANSMISIÓN (AQUÍ ESTABA EL ERROR) ---
+    if st.session_state.f_activo:
         st.divider()
         color_titulo = "#4285F4" if st.session_state.f_activo == "GEMINI" else "#9BC63B"
         st.markdown(f"<h2 style='color:{color_titulo}; text-align:center;'>TRANSMISIÓN MULTI-NODO: {st.session_state.f_activo.upper()}</h2>", unsafe_allow_html=True)
         
-        # --- VIDEOS DE REFERENCIA (Respaldo Profesional) ---
-        # Si es GEMINI, usamos un video de análisis visual. Si es otro faro, usamos naturaleza.
+        # Videos de Referencia
         if st.session_state.f_activo == "GEMINI":
-            url_ref = "https://cdn.pixabay.com/video/2020/05/25/40146-424856038_tiny.mp4" # Video de tecnología/red
+            url_ref = "https://cdn.pixabay.com/video/2020/05/25/40146-424856038_tiny.mp4"
         else:
-            url_ref = "https://cdn.pixabay.com/video/2016/09/21/5316-184080169_tiny.mp4" # Video de bosque/fauna
+            url_ref = "https://cdn.pixabay.com/video/2016/09/21/5316-184080169_tiny.mp4"
 
-        # --- GRILLA DE 8 CÁMARAS CON VIDEO REAL ---
+        # Grilla de 8 Cámaras
         c_cols = st.columns(4)
         for j in range(8):
             label = "IA-ANALYSIS" if st.session_state.f_activo == "GEMINI" else f"CAM-{j+1} LIVE"
@@ -317,6 +318,7 @@ elif menu == "RED DE FAROS (7 NODOS)":
                         <p style='font-size:8px; color:red; margin:0;'>● REC</p>
                     </div>
                 """, unsafe_allow_html=True)
+                
 # 3. DASHBOARD
 elif menu == "DASHBOARD ESTADÍSTICO IA":
     st.title("Análisis de Inteligencia Biológica")
@@ -704,6 +706,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
