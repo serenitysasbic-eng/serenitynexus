@@ -319,55 +319,78 @@ elif menu == "RED DE FAROS (7 NODOS)":
             with m_cols[k]: st.markdown(f"<div style='background:rgba(155,198,59,0.2); border:1px solid #2E7D32; padding:10px; border-radius:5px; text-align:center;'><b>MIC {k+1}</b><br><span style='color:#9BC63B;'>||||| {val}%</span></div>", unsafe_allow_html=True)
 
 # 3. DASHBOARD
-elif menu == "DASHBOARD ESTADÍSTICO IA":
-    st.title("📊 Análisis de Inteligencia Biológica")
-    m = st.columns(4)
-    m[0].markdown(f"<div class='metric-card'><h3>Especies</h3><h1>1,248</h1></div>", unsafe_allow_html=True)
-    m[1].markdown(f"<div class='metric-card'><h3>Hectáreas</h3><h1>{st.session_state.total_protegido}</h1></div>", unsafe_allow_html=True)
-    m[2].markdown(f"<div class='metric-card'><h3>Inversiones</h3><h1>{st.session_state.donaciones_recibidas}</h1></div>", unsafe_allow_html=True)
-    m[3].markdown(f"<div class='metric-card'><h3>Salud</h3><h1>98%</h1></div>", unsafe_allow_html=True)
-    st.bar_chart(pd.DataFrame({'Detecciones': [120, 450, 300, 80, 45, 110, 950]}, index=["Halcón", "Colibrí", "Rana", "Venado", "Tigrillo", "Capibara", "GEMINI"]))
-
-
-# =========================================================
-# BLOQUE 3: GESTIÓN LEY 2173 (EMPRESAS)
-# =========================================================
-elif menu == "GESTIÓN LEY 2173 (EMPRESAS)":
-    st.title("⚖️ Nexus Legal & Compliance Hub")
+def generar_pdf_corporativo(entidad, impacto, hash_id, logo_bytes=None, es_vademecum=False):
+    pdf = FPDF()
+    pdf.add_page()
     
-    # --- Vademécum ---
-    with st.container(border=True):
-        st.subheader("📄 Vademécum Corporativo")
-        emp_v = st.text_input("Razón Social para el reporte", key="v_name")
-        if st.button("📊 GENERAR VADEMÉCUM TÉCNICO PDF", use_container_width=True):
-            if emp_v:
-                pdf_v = generar_pdf_corporativo(emp_v, 0, "NEXUS-VAD-2026", es_vademecum=True)
-                st.session_state.v_pdf = pdf_v
-                st.success("Vademécum estructurado generado.")
-        
-        if 'v_pdf' in st.session_state:
-            st.download_button("📥 DESCARGAR VADEMÉCUM PDF", st.session_state.v_pdf, "Vademecum_Serenity.pdf", "application/pdf")
+    # --- 1. LOGO DE SERENITY (ENCABEZADO IZQUIERDO) ---
+    # Intentamos cargar el logo local. Si no existe, el código no se rompe.
+    try:
+        if os.path.exists("logo_serenity.png"):
+            pdf.image("logo_serenity.png", x=10, y=8, w=30)
+    except:
+        pass
 
-    st.divider()
+    # --- 2. LOGO DE LA EMPRESA CLIENTE (ENCABEZADO DERECHO) ---
+    if logo_bytes:
+        try:
+            with open("temp_logo_cliente.png", "wb") as f:
+                f.write(logo_bytes.getbuffer())
+            pdf.image("temp_logo_cliente.png", x=165, y=10, w=30)
+        except:
+            pass
 
-    # --- Certificado con Logo ---
-    st.subheader("🛡️ Certificado con Logo")
-    c_act1, c_act2 = st.columns(2)
-    with c_act1:
-        n_c = st.text_input("Empresa", key="c_name")
-        n_e = st.number_input("Empleados", min_value=1, key="c_num")
-        logo_f = st.file_uploader("Subir Logo", type=['png', 'jpg'])
+    pdf.ln(20) # Espacio para que el texto no pise los logos
+
+    # --- 3. TÍTULOS ---
+    pdf.set_font("Arial", 'B', 16)
+    pdf.set_text_color(30, 70, 32) # Verde institucional Serenity
     
-    with c_act2:
-        if st.button("⚖️ EMITIR CERTIFICADO CON LOGO", use_container_width=True):
-            if n_c and logo_f:
-                h_c = hashlib.sha256(f"{n_c}".encode()).hexdigest()[:12].upper()
-                pdf_c = generar_pdf_corporativo(n_c, n_e*2, h_c, logo_bytes=logo_f)
-                st.session_state.c_pdf = pdf_c
-                st.success("Certificado con logo listo.")
-        
-        if 'c_pdf' in st.session_state:
-            st.download_button("📥 DESCARGAR CERTIFICADO", st.session_state.c_pdf, "Certificado_Nexus.pdf", "application/pdf")# =========================================================
+    if es_vademecum:
+        pdf.cell(0, 10, "VADEMECUM LEGAL - SERENITY NEXUS GLOBAL", ln=True, align='C')
+        pdf.set_font("Arial", 'B', 10)
+        pdf.set_text_color(100, 100, 100)
+        pdf.cell(0, 10, "SOLUCIONES TECNOLOGICAS DE CUMPLIMIENTO AMBIENTAL", ln=True, align='C')
+    else:
+        pdf.cell(0, 10, "CERTIFICADO DE CUMPLIMIENTO AMBIENTAL", ln=True, align='C')
+    
+    pdf.ln(10)
+    pdf.set_font("Arial", '', 11)
+    pdf.set_text_color(0, 0, 0)
+    fecha = datetime.now().strftime('%d/%m/%Y')
+
+    # --- 4. CONTENIDO ESTRUCTURADO ---
+    if es_vademecum:
+        cuerpo = (
+            f"DIRIGIDO A: {entidad}\n"
+            f"FECHA DE EMISION: {fecha}\n\n"
+            "RESUMEN TECNICO NORMATIVO:\n"
+            "--------------------------------------------------------------------------------\n"
+            "1. LEY 2173 (2021): Gestion de Areas de Vida para siembra obligatoria.\n"
+            "2. LEY 2169 (2021): Monitoreo de biomasa para Carbono Neutralidad.\n"
+            "3. LEY 2111 (2021): Vigilancia digital (Faros Gemini) contra delitos ambientales.\n"
+            "4. LEY 99 (1993): Inversion del 1% en conservacion de cuencas hidricas.\n"
+        )
+    else:
+        cuerpo = (
+            f"Serenity Nexus Global certifica que la empresa {entidad}\n"
+            f"ha gestionado el impacto de {impacto} individuos arboreos en la\n"
+            f"Reserva Hacienda Monte Guadua.\n\n"
+            f"Codigo de Verificacion: {hash_id}\n"
+            "Este documento soporta la Responsabilidad Ambiental Empresarial."
+        )
+
+    pdf.multi_cell(0, 8, cuerpo)
+    pdf.ln(20)
+    
+    # --- 5. FIRMA Y SEGURIDAD ---
+    pdf.set_font("Arial", 'I', 8)
+    pdf.set_text_color(150, 150, 150)
+    pdf.cell(0, 10, f"Autenticidad verificada mediante Blockchain Hash: {hash_id}", ln=True, align='C')
+    
+    return pdf.output(dest='S').encode('latin-1')
+    
+
 # BLOQUE 4: SUSCRIPCIONES
 # =========================================================
 elif menu == "SUSCRIPCIONES":
@@ -688,6 +711,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
