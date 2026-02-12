@@ -20,6 +20,47 @@ from reportlab.lib.colors import HexColor, black
 st.set_page_config(page_title="Serenity Nexus Global", page_icon="??", layout="wide")
 VERDE_SERENITY = HexColor("#2E7D32")
 
+def generar_pdf_certificado(nombre, monto, hash_id):
+    buffer = io.BytesIO()
+    c = canvas.Canvas(buffer, pagesize=letter)
+    c.setStrokeColor(VERDE_SERENITY)
+    c.setLineWidth(5)
+    c.rect(0.3*inch, 0.3*inch, 7.9*inch, 10.4*inch)
+    try:
+        if os.path.exists("logo_serenity.png"):
+            c.drawImage("logo_serenity.png", 3.25*inch, 8.8*inch, width=2*inch, height=1.2*inch, preserveAspectRatio=True, mask='auto')
+    except: pass
+    c.setFillColor(VERDE_SERENITY)
+    c.setFont("Helvetica-Bold", 24)
+    c.drawCentredString(4.25*inch, 8.3*inch, "CERTIFICADO DE:")
+    c.setFont("Helvetica-Bold", 28)
+    c.drawCentredString(4.25*inch, 7.8*inch, "DONACIÓN REGENERATIVA")
+    c.setFont("Helvetica", 16)
+    c.setFillColor(black)
+    c.drawCentredString(4.25*inch, 7.0*inch, "SERENITY S.A.S. BIC")
+    c.setFont("Helvetica-Bold", 20)
+    c.drawCentredString(4.25*inch, 6.2*inch, f"{nombre.upper()}")
+    c.setFont("Helvetica", 14)
+    c.drawCentredString(4.25*inch, 5.5*inch, f"Por su valioso aporte de ${monto:,.0f} USD")
+    c.drawCentredString(4.25*inch, 5.1*inch, "Destinado a la Regeneración del Corredor Biológico Dagua")
+    c.setFont("Helvetica-Bold", 12)
+    c.drawCentredString(4.25*inch, 2.8*inch, "Jorge Carvajal")
+    c.setFont("Courier-Bold", 10)
+    c.drawCentredString(4.25*inch, 1.5*inch, f"HASH DE VERIFICACIÓN: {hash_id}")
+    c.save()
+    buffer.seek(0)
+    return buffer
+
+def generar_pdf_corporativo(empresa, impacto, hash_id, logo_bytes=None, es_vademecum=False):
+    # (Pega aquí la función técnica que definimos antes con doble logo y leyes)
+    # Es vital que ambas estén aquí arriba.
+    buffer = io.BytesIO()
+    c = canvas.Canvas(buffer, pagesize=letter)
+    # ... (resto de la función corporativa) ...
+    c.save()
+    buffer.seek(0)
+    return buffer
+
 # --- GESTIÓN DE ESTADO ---
 if 'total_protegido' not in st.session_state: st.session_state.total_protegido = 87.0
 if 'donaciones_recibidas' not in st.session_state: st.session_state.donaciones_recibidas = 0
@@ -652,6 +693,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
