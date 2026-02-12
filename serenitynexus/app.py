@@ -63,7 +63,7 @@ def generar_pdf_certificado(nombre, monto, hash_id):
     
     c.setFont("Helvetica", 14)
     c.drawCentredString(4.25*inch, 5.5*inch, f"Por su valioso aporte de ${monto:,.0f} USD")
-    c.drawCentredString(4.25*inch, 5.1*inch, "Destinado a la regeneración del KBA Bosque San Antonio")
+    c.drawCentredString(4.25*inch, 5.1*inch, "Destinado a la Regeneración del KBA Bosque San Antonio")
     
     # Mensaje de impacto
     c.setFont("Helvetica-Oblique", 11)
@@ -331,10 +331,10 @@ elif menu == "SUSCRIPCIONES":
                 <h3 style="color:#9BC63B;">PLAN SEMILLA</h3>
                 <h2 style="color:white;">$25 USD <small>/mes</small></h2>
                 <hr style="border-color:#444;">
-                <p style="text-align:left; font-size:0.9rem;">?? <b>5 Árboles:</b> Siembra y mantenimiento.</p>
-                <p style="text-align:left; font-size:0.9rem;">?? <b>1 Faro:</b> Datos biométricos básicos.</p>
-                <p style="text-align:left; font-size:0.9rem;">?? <b>50 Tokens:</b> $SNG de respaldo.</p>
-                <p style="text-align:left; font-size:0.9rem;">?? <b>Certificado:</b> Digital con Hash.</p>
+                <p style="text-align:left; font-size:0.9rem;"> <b>5 Árboles:</b> Siembra y mantenimiento.</p>
+                <p style="text-align:left; font-size:0.9rem;"> <b>1 Faro:</b> Datos biométricos básicos.</p>
+                <p style="text-align:left; font-size:0.9rem;"> <b>50 Tokens:</b> $SNG de respaldo.</p>
+                <p style="text-align:left; font-size:0.9rem;"> <b>Certificado:</b> Digital con Hash.</p>
             </div>
         """, unsafe_allow_html=True)
         if st.button("ELEGIR SEMILLA", use_container_width=True, key="p_semilla"):
@@ -347,10 +347,10 @@ elif menu == "SUSCRIPCIONES":
                 <h3 style="color:#9BC63B;">PLAN GUARDIÁN</h3>
                 <h2 style="color:white;">$80 USD <small>/mes</small></h2>
                 <hr style="border-color:#444;">
-                <p style="text-align:left; font-size:0.9rem;">?? <b>15 Árboles:</b> Restauración activa.</p>
-                <p style="text-align:left; font-size:0.9rem;">?? <b>Cámaras 4K:</b> Streaming del bosque.</p>
-                <p style="text-align:left; font-size:0.9rem;">?? <b>200 Tokens:</b> Mayor respaldo $SNG.</p>
-                <p style="text-align:left; font-size:0.9rem;">?? <b>Reporte IA:</b> Inventario de carbono.</p>
+                <p style="text-align:left; font-size:0.9rem;"> <b>15 Árboles:</b> Restauración activa.</p>
+                <p style="text-align:left; font-size:0.9rem;"> <b>Cámaras 4K:</b> Streaming del bosque.</p>
+                <p style="text-align:left; font-size:0.9rem;"> <b>200 Tokens:</b> Mayor respaldo $SNG.</p>
+                <p style="text-align:left; font-size:0.9rem;"> <b>Reporte IA:</b> Inventario de carbono.</p>
             </div>
         """, unsafe_allow_html=True)
         if st.button("ELEGIR GUARDIÁN", use_container_width=True, key="p_guardian"):
@@ -363,10 +363,10 @@ elif menu == "SUSCRIPCIONES":
                 <h3 style="color:#D4AF37;">PLAN HALCÓN</h3>
                 <h2 style="color:white;">$200 USD <small>/mes</small></h2>
                 <hr style="border-color:#444;">
-                <p style="text-align:left; font-size:0.9rem;">?? <b>1 Ha Protegida:</b> Soberanía total.</p>
-                <p style="text-align:left; font-size:0.9rem;">?? <b>Drones:</b> Vigilancia perimetral.</p>
-                <p style="text-align:left; font-size:0.9rem;">?? <b>600 Tokens:</b> Impacto Web3 máximo.</p>
-                <p style="text-align:left; font-size:0.9rem;">?? <b>Visita VIP:</b> Acceso a Monte Guadua.</p>
+                <p style="text-align:left; font-size:0.9rem;"> <b>1 Plaza Protegida:</b> Soberanía total.</p>
+                <p style="text-align:left; font-size:0.9rem;"> <b>Cámaras:</b> Vigilancia perimetral.</p>
+                <p style="text-align:left; font-size:0.9rem;"> <b>600 Tokens:</b> Impacto Web3 máximo.</p>
+                <p style="text-align:left; font-size:0.9rem;"> <b>Visita 1 Persona VIP:</b> Acceso a Monte Guadua 2 Dias 1 Noche.</p>
             </div>
         """, unsafe_allow_html=True)
         if st.button("ELEGIR HALCÓN", use_container_width=True, key="p_halcon"):
@@ -440,7 +440,7 @@ elif menu == "BILLETERA CRYPTO (WEB3)":
             cantidad_usd = st.number_input("Monto a invertir (USD):", min_value=10, step=50)
             tasa = 0.50 # Ejemplo: 1 SNG = 0.50 USD
             st.metric("Recibirás aproximadamente:", f"{cantidad_usd / tasa:,.2f} $SNG")
-            if st.button("?? COMPRAR TOKENS $SNG"):
+            if st.button("COMPRAR TOKENS $SNG"):
                 st.success("Orden de compra enviada al Nexus Gateway.")
 
     with col_vault:
@@ -456,14 +456,14 @@ elif menu == "BILLETERA CRYPTO (WEB3)":
     st.write("---")
 
     # --- NIVEL 3: CONEXIÓN FINAL ---
-    st.markdown("#### ?? Centro de Conexión Web3")
+    st.markdown("Centro de Conexión Web3")
     cw1, cw2, cw3 = st.columns([1, 2, 1])
     with cw2:
         if st.button("VINCULAR BILLETERA AL SISTEMA NEXUS"):
             st.balloons()
             st.success("Billetera 0x71C...9A23 Conectada con éxito.")
-            st.metric(label="Saldo en Bóveda", value="25,000.00 $SNG", delta="500 Hectáreas Respaldadas")
-            st.write("? Verificado por Nodo Gemini en Finca Villa Michelle")            
+            st.metric(label="Saldo en Bóveda", value="25,000.00 $SNG", delta="80 Hectáreas Respaldadas")
+            st.write("Verificado por Nodo Gemini en Finca Villa Michelle")            
 
 # =========================================================
 # BLOQUE 6: DONACIONES Y CERTIFICADO (Diploma Oficial)
@@ -636,6 +636,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
