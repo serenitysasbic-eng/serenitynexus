@@ -50,13 +50,14 @@ def generar_pdf_serenity(entidad, impacto, hash_id, logo_bytes=None, tipo="CERTI
     # Retornamos el archivo listo para descargar
     return pdf.output(dest='S').encode('latin-1')
 
-# --- LIBRERÍAS EXTENDIDAS ---
+import hashlib
+import os
+import io
+import base64
 import folium
 from streamlit_folium import st_folium
-from reportlab.lib.pagesizes import letter
-from reportlab.pdfgen import canvas
-from reportlab.lib.units import inch
-from reportlab.lib.colors import HexColor, black
+from fpdf import FPDF
+from datetime import datetime
 
 # --- CONFIGURACIÓN E IDENTIDAD ---
 st.set_page_config(page_title="Serenity Nexus Global", page_icon="🌿", layout="wide")
@@ -271,84 +272,66 @@ elif menu == "MONITOREO PERIMETRAL":
     st.title("🛰️ Red de Faros Gemini - Vigilancia Activa")
     st.markdown("### Protección Biométrica y Acústica de la Reserva")
 
-    # --- 1. VIDEO PRINCIPAL: INTELIGENCIA GEMINI ---
+    # --- 1. MAPA DINÁMICO DE PUNTOS FARO ---
     with st.container(border=True):
-        col_vid_g1, col_vid_g2 = st.columns([2, 1])
-        with col_vid_g1:
-            st.subheader("👁️ Visión Computacional Gemini")
-            # Usaremos el video de Gemini (asegúrate que el nombre coincida en GitHub)
-            video_gemini = "video_gemini_vision.mp4" 
-            if os.path.exists(video_gemini):
-                try:
-                    import base64
-                    with open(video_gemini, "rb") as f:
-                        v_data = f.read()
-                        v_b64 = base64.b64encode(v_data).decode()
-                    st.markdown(f'<video width="100%" autoplay loop muted playsinline><source src="data:video/mp4;base64,{v_b64}" type="video/mp4"></video>', unsafe_allow_html=True)
-                except:
-                    st.info("Simulación de reconocimiento de patrones IA activa...")
-            else:
-                st.image("https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1000", caption="IA Gemini - Análisis de Seguridad")
+        st.subheader("📍 Ubicación Satelital de Dispositivos")
+        # Coordenadas aproximadas de la zona de reserva
+        m = folium.Map(location=[3.642, -76.685], zoom_start=15, control_scale=True)
         
-        with col_vid_g2:
-            st.write("")
-            st.write("")
-            st.success("🤖 **IA Operativa**")
-            st.write("- Reconocimiento de especies.")
-            st.write("- Detección de intrusos.")
-            st.write("- Análisis de estrés hídrico.")
-            st.info("Nivel de Precisión: 98.2%")
-
-    st.divider()
-
-    # --- 2. MONITOREO ACÚSTICO (MICRÓFONOS ACTIVOS) ---
-    st.subheader("🎧 Red de Micrófonos - Análisis Sónico")
-    col_mic1, col_mic2, col_mic3 = st.columns(3)
-    
-    with col_mic1:
-        st.markdown("**Faro 04 (Norte)**")
-        st.audio("https://www.soundjay.com/nature/sounds/rain-01.mp3") # Simulación sonido ambiente
-        st.caption("Estado: Lluvia ligera detectada.")
-
-    with col_mic2:
-        st.markdown("**Faro 08 (Sur)**")
-        st.error("⚠️ Ruido Anómalo")
-        # Simulación visual de onda sonora
-        st.image("https://upload.wikimedia.org/wikipedia/commons/6/69/Waveform.png", width=150)
-        st.caption("Posible actividad: Herramienta eléctrica (Motosierra?).")
-
-    with col_mic3:
-        st.markdown("**Faro 12 (Este)**")
-        st.audio("https://www.soundjay.com/nature/sounds/forest-birds-01.mp3")
-        st.caption("Estado: Fauna activa (Aves).")
+        # Añadir marcadores de los Faros
+        puntos = [
+            {"name": "Faro 01 - Entrada", "pos": [3.642, -76.685], "color": "green"},
+            {"name": "Faro 04 - Río Dagua", "pos": [3.645, -76.680], "color": "blue"},
+            {"name": "Faro 08 - Límite Sur", "pos": [3.640, -76.690], "color": "red"}
+        ]
+        
+        for p in puntos:
+            folium.Marker(p["pos"], popup=p["name"], icon=folium.Icon(color=p["color"])).add_to(m)
+        
+        st_folium(m, width=700, height=400)
+        st.caption("Mapa georreferenciado de la Red de Faros en tiempo real.")
 
     st.write("---")
 
-    # --- 3. SIMULACIÓN DE PUNTOS FARO (VIGILANCIA 360) ---
-    st.subheader("📍 Estado de los Puntos Faro (Real-Time)")
-    
-    puntos_faro = {
-        'ID Faro': ['Faro-01', 'Faro-02', 'Faro-03', 'Faro-04'],
-        'Ubicación': ['Entrada Principal', 'Sendero Monte Guadua', 'Cuenca Río Dagua', 'Límite Norte'],
-        'Batería': ['95%', '88%', '100% (Solar)', '72%'],
-        'Estado': ['🟢 Activo', '🟢 Activo', '🔵 Cargando', '🟡 Mantenimiento'],
-        'Última Alerta': ['Ninguna', 'Fauna Detectada', 'Ninguna', 'Interferencia']
-    }
-    st.table(puntos_faro)
-
-    # --- 4. VIDEO DE SIMULACIÓN DE DRON / PERÍMETRO ---
-    st.write("")
-    with st.expander("🎥 Ver Simulación de Patrullaje Autónomo (Dron-Faro)"):
-        video_dron = "video_simulacion_dron.mp4"
-        if os.path.exists(video_dron):
-            st.video(video_dron)
+    # --- 2. VIDEO DE INTELIGENCIA GEMINI (VISIÓN IA) ---
+    col_v1, col_v2 = st.columns([2, 1])
+    with col_v1:
+        st.subheader("👁️ Visión Computacional")
+        video_n = "video_gemini_vision.mp4"
+        if os.path.exists(video_n):
+            with open(video_n, "rb") as f:
+                data = f.read()
+                b64 = base64.b64encode(data).decode()
+            st.markdown(f'<video width="100%" autoplay loop muted playsinline><source src="data:video/mp4;base64,{b64}"></video>', unsafe_allow_html=True)
         else:
-            st.info("Iniciando secuencia de patrullaje virtual...")
-            st.image("https://images.unsplash.com/photo-1508614589041-895b88991e3e?q=80&w=1000", caption="Simulación de patrullaje perimetral")
+            st.warning("Analizando patrones de biodiversidad...")
+            st.image("https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1000")
+
+    with col_v2:
+        st.info("**Estatus IA**")
+        st.write("✅ Detección de fauna")
+        st.write("✅ Alerta de intrusión")
+        st.metric("Precisión", "98.2%")
+
+    st.write("---")
+
+    # --- 3. MICRÓFONOS ACTIVOS (MONITOREO SÓNICO) ---
+    st.subheader("🎧 Monitoreo Acústico (Ley 2111)")
+    c1, c2, c3 = st.columns(3)
+    with c1:
+        st.markdown("**Faro 04**")
+        st.audio("https://www.soundjay.com/nature/sounds/rain-01.mp3")
+    with c2:
+        st.markdown("**Faro 08**")
+        st.error("⚠️ Ruido Sospechoso")
+        st.image("https://upload.wikimedia.org/wikipedia/commons/6/69/Waveform.png", width=120)
+    with c3:
+        st.markdown("**Faro 12**")
+        st.audio("https://www.soundjay.com/nature/sounds/forest-birds-01.mp3")
 
     st.divider()
-    if st.button("🚨 ACTIVAR ALERTA PERIMETRAL GLOBAL", use_container_width=True):
-        st.error("NOTIFICACIÓN ENVIADA A SEGURIDAD Y FAROS GEMINI - PROTOCOLO LEY 2111 ACTIVADO")
+    if st.button("🚨 ACTIVAR ALERTA GLOBAL", use_container_width=True):
+        st.error("NOTIFICACIÓN ENVIADA - PROTOCOLO DE SEGURIDAD ACTIVADO")
 
 # =========================================================
 # BLOQUE 3: GESTIÓN LEY 2173 (EMPRESAS)
@@ -730,6 +713,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
