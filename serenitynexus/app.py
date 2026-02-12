@@ -291,21 +291,32 @@ elif menu == "RED DE FAROS (7 NODOS)":
             st.session_state.f_activo = "GEMINI"
             st.session_state.estado_gemini = "ACTIVO - EMITIENDO"
 
-    if st.session_state.f_activo:
+        if st.session_state.f_activo:
         st.divider()
         color_titulo = "#4285F4" if st.session_state.f_activo == "GEMINI" else "#9BC63B"
-        st.markdown(f"<h2 style='color:{color_titulo}; text-align:center;'>TRANSMISIÓN EN VIVO: {st.session_state.f_activo.upper()}</h2>", unsafe_allow_html=True)
+        st.markdown(f"<h2 style='color:{color_titulo}; text-align:center;'>TRANSMISIÓN MULTI-NODO: {st.session_state.f_activo.upper()}</h2>", unsafe_allow_html=True)
+        
+        # --- VIDEOS DE REFERENCIA (Respaldo Profesional) ---
+        # Si es GEMINI, usamos un video de análisis visual. Si es otro faro, usamos naturaleza.
+        if st.session_state.f_activo == "GEMINI":
+            url_ref = "https://cdn.pixabay.com/video/2020/05/25/40146-424856038_tiny.mp4" # Video de tecnología/red
+        else:
+            url_ref = "https://cdn.pixabay.com/video/2016/09/21/5316-184080169_tiny.mp4" # Video de bosque/fauna
+
+        # --- GRILLA DE 8 CÁMARAS CON VIDEO REAL ---
         c_cols = st.columns(4)
         for j in range(8):
-            label = "IA-ANALYSIS" if st.session_state.f_activo == "GEMINI" else "LIVE"
-            with c_cols[j % 4]: st.markdown(f"<div class='cam-grid'>CAM {j+1}<br>?? {label}</div>", unsafe_allow_html=True)
-        
-        st.subheader("Bioacústica")
-        m_cols = st.columns(4)
-        for k in range(4):
-            val = random.randint(85,99) if st.session_state.f_activo == "GEMINI" else random.randint(40,90)
-            with m_cols[k]: st.markdown(f"<div style='background:rgba(155,198,59,0.2); border:1px solid #2E7D32; padding:10px; border-radius:5px; text-align:center;'><b>MIC {k+1}</b><br><span style='color:#9BC63B;'>||||| {val}%</span></div>", unsafe_allow_html=True)
-
+            label = "IA-ANALYSIS" if st.session_state.f_activo == "GEMINI" else f"CAM-{j+1} LIVE"
+            with c_cols[j % 4]:
+                st.markdown(f"""
+                    <div style='text-align:center; background:black; border:1px solid {color_titulo}; border-radius:10px; padding:5px; margin-bottom:15px;'>
+                        <p style='font-size:10px; color:{color_titulo}; margin:0;'>{label}</p>
+                        <video width="100%" autoplay loop muted playsinline style="border-radius:5px;">
+                            <source src="{url_ref}" type="video/mp4">
+                        </video>
+                        <p style='font-size:8px; color:red; margin:0;'>● REC</p>
+                    </div>
+                """, unsafe_allow_html=True)
 # 3. DASHBOARD
 elif menu == "DASHBOARD ESTADÍSTICO IA":
     st.title("Análisis de Inteligencia Biológica")
@@ -693,6 +704,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
