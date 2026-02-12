@@ -257,55 +257,13 @@ if menu == "INICIO":
 
     st.info("Ubicación del Proyecto: Dagua y Felidia, Valle del Cauca - Hacienda Monte Guadua & Finca Villa Michelle.")
 
-# 2. RED DE FAROS
-elif menu == "RED DE FAROS (7 NODOS)":
-    st.title("🛰️ Monitoreo Perimetral Nexus")
-    
-    # 1. BOTONES DE LOS FAROS
-    c1, c2, c3 = st.columns(3)
-    with c1: 
-        st.markdown("<div class='faro-card'><h3>🦅 FARO HALCÓN</h3></div>", unsafe_allow_html=True)
-        if st.button("Conectar Halcón", use_container_width=True): st.session_state.f_activo = "Halcón"
-    with c2: 
-        st.markdown("<div class='faro-card'><h3>🦜 FARO COLIBRÍ</h3></div>", unsafe_allow_html=True)
-        if st.button("Conectar Colibrí", use_container_width=True): st.session_state.f_activo = "Colibrí"
-    with c3: 
-        st.markdown("<div class='faro-card'><h3>🐸 FARO RANA</h3></div>", unsafe_allow_html=True)
-        if st.button("Conectar Rana", use_container_width=True): st.session_state.f_activo = "Rana"
-    
-    st.write("")
-    c4, c5, c6 = st.columns(3)
-    with c4: 
-        st.markdown("<div class='faro-card'><h3>🦌 FARO VENADO</h3></div>", unsafe_allow_html=True)
-        if st.button("Conectar Venado", use_container_width=True): st.session_state.f_activo = "Venado"
-    with c5: 
-        st.markdown("<div class='faro-card'><h3>🐆 FARO TIGRILLO</h3></div>", unsafe_allow_html=True)
-        if st.button("Conectar Tigrillo", use_container_width=True): st.session_state.f_activo = "Tigrillo"
-    with c6: 
-        st.markdown("<div class='faro-card'><h3>🦦 FARO CAPIBARA</h3></div>", unsafe_allow_html=True)
-        if st.button("Conectar Capibara", use_container_width=True): st.session_state.f_activo = "Capibara"
-
-    st.divider()
-
-    # 2. NODO MAESTRO GEMINI
-    col_gemini = st.columns([1,2,1])
-    with col_gemini[1]:
-        st.markdown(f"<div class='faro-gemini'><h3>🧠 NODO MAESTRO GEMINI</h3><p>Estado: {st.session_state.estado_gemini}</p></div>", unsafe_allow_html=True)
-        if st.button("🔥 ACTIVAR NÚCLEO GEMINI VISION", use_container_width=True): 
-            st.session_state.f_activo = "GEMINI"
-            st.session_state.estado_gemini = "ACTIVO - EMITIENDO"
-
-    # 3. PANTALLA DE TRANSMISIÓN CON EFECTOS ESPECIALES
+# --- PANTALLA DE TRANSMISIÓN (VERSIÓN FINAL BLINDADA) ---
     if st.session_state.f_activo:
         st.write("---")
         color_f = "#4285F4" if st.session_state.f_activo == "GEMINI" else "#9BC63B"
         st.markdown(f"<h2 style='color:{color_f}; text-align:center;'>🛰️ FEED EN VIVO: {st.session_state.f_activo.upper()}</h2>", unsafe_allow_html=True)
         
-        url_v = "https://cdn.pixabay.com/video/2020/05/25/40146-424856038_tiny.mp4" if st.session_state.f_activo == "GEMINI" else "https://cdn.pixabay.com/video/2016/09/21/5316-184080169_tiny.mp4"
-
-Python
-
-        # --- GRILLA DE 8 CÁMARAS (VERSIÓN BLINDADA) ---
+        # GRILLA DE 8 CÁMARAS
         c_cols = st.columns(4)
         url_video = "https://cdn.pixabay.com/video/2019/04/23/23011-332356616_tiny.mp4"
         posiciones = ["top left", "top right", "bottom left", "bottom right", 
@@ -316,7 +274,6 @@ Python
             pos = posiciones[j]
             
             with c_cols[j % 4]:
-                # Usamos componentes de HTML directo para evitar que se vea como texto
                 html_code = f"""
                 <div style="position: relative; background: black; border: 1px solid {color_f}; border-radius: 8px; overflow: hidden; height: 120px; font-family: monospace;">
                     <div style="position: absolute; top: 5px; left: 8px; z-index: 10; background: rgba(0,0,0,0.6); color: {color_f}; font-size: 10px; padding: 2px 5px; border-radius: 3px; font-weight: bold;">
@@ -334,7 +291,7 @@ Python
                 </div>
                 """
                 st.components.v1.html(html_code, height=130)
-        
+
         # 4. MICROFONOS
         st.write("---")
         st.subheader("🔊 Análisis Bioacústico Real-Time")
@@ -733,6 +690,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
