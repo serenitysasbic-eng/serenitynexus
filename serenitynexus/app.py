@@ -419,29 +419,37 @@ elif menu == "SUSCRIPCIONES":
 # BLOQUE 5: BILLETERA CRYPTO (WEB3) - ECOSISTEMA $SNG
 # =========================================================
 
-# --- BLOQUE DEL VIDEO DE LA MONEDA SNG ---
-    st.divider()
-    col_vid1, col_vid2 = st.columns([2, 1])
+# --- BLOQUE ACTUALIZADO CON EL NOMBRE REAL DEL ARCHIVO ---
+    st.write("---")
+    st.subheader("🪙 Serenity Nexus Global (SNG) - Activo Digital")
     
-    with col_vid1:
-        st.subheader("🪙 SNG Coin: Activo Digital Verde")
-        # Cambia "moneda_sng.mp4" por el nombre exacto de tu archivo en GitHub
-        nombre_video = "moneda_sng.mp4" 
-        if os.path.exists(nombre_video):
-            st.video(nombre_video)
+    col_v1, col_v2 = st.columns([2, 1])
+    
+    with col_v1:
+        # Usamos el nombre que me confirmaste
+        nombre_del_archivo = "video_sng.mp4" 
+        
+        if os.path.exists(nombre_del_archivo):
+            try:
+                with open(nombre_del_archivo, 'rb') as v_file:
+                    video_bytes = v_file.read()
+                    st.video(video_bytes)
+            except Exception as e:
+                st.error("Error al reproducir el video.")
         else:
-            st.info("Presentando la evolución digital de Serenity Nexus...")
-            st.image("https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=1000", 
-                     caption="SNG Coin - Respaldada por Activos Biológicos")
+            st.error(f"El archivo '{nombre_del_archivo}' no se detecta en el servidor.")
+            st.info("Verifica que el archivo esté en la carpeta principal de tu GitHub.")
+            # Respaldo visual
+            st.image("https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=1000")
 
-    with col_vid2:
+    with col_v2:
         st.markdown("""
-        **Especificaciones SNG:**
-        - **Respaldo:** Biomasa Real.
-        - **Red:** Web3 / Polygon.
-        - **Propósito:** Gobernanza.
+        **Respaldo Biológico:**
+        La moneda SNG es la representación digital de los activos forestales de la **Hacienda Monte Guadua**.
+        
+        - **Tecnología:** Web3 / Blockchain.
+        - **Propósito:** Trazabilidad de impacto ambiental y Carbono Neutralidad.
         """)
-    st.write("") # Espacio de seguridad para cerrar el bloque
 
 # === AQUÍ COMIENZA EL SIGUIENTE BLOQUE (Asegúrate que esté pegado a la izquierda) ===
 elif menu == "BILLETERA CRYPTO (WEB3)":
@@ -674,6 +682,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
