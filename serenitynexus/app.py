@@ -306,16 +306,37 @@ elif menu == "RED DE FAROS (7 NODOS)":
 
         # 1. Grilla de 8 Cámaras (Videos de Referencia)
         c_cols = st.columns(4)
+# --- GRILLA DE 8 CÁMARAS (EFECTO SIMULACIÓN EN VIVO) ---
+        c_cols = st.columns(4)
         for j in range(8):
             label = "IA-ANALYSIS" if st.session_state.f_activo == "GEMINI" else f"CAM-{j+1} LIVE"
+            # Generamos coordenadas aleatorias para el efecto de simulación
+            lat_sim = f"3°38'{random.randint(10,59)}\"N"
+            lon_sim = f"76°38'{random.randint(10,59)}\"W"
+            
             with c_cols[j % 4]:
                 st.markdown(f"""
-                    <div style='text-align:center; background:black; border:1px solid {color_f}; border-radius:10px; padding:5px; margin-bottom:10px;'>
-                        <p style='font-size:10px; color:{color_f}; margin:0;'>{label}</p>
-                        <video width="100%" autoplay loop muted playsinline style="border-radius:5px;">
+                    <div style='position: relative; background: black; border: 1px solid {color_f}; border-radius: 10px; overflow: hidden; margin-bottom: 15px; box-shadow: 0 0 10px {color_f}44;'>
+                        <div style='position: absolute; top: 5px; left: 8px; z-index: 10; width: 90%;'>
+                            <p style='color: {color_f}; font-family: monospace; font-size: 9px; margin: 0; display: flex; justify-content: space-between;'>
+                                <span>{label}</span>
+                                <span style='color: red; font-weight: bold; animation: blinker 1.5s linear infinite;'>● REC</span>
+                            </p>
+                            <p style='color: rgba(255,255,255,0.7); font-family: monospace; font-size: 7px; margin: 0;'>{lat_sim} {lon_sim}</p>
+                        </div>
+                        
+                        <video width="100%" autoplay loop muted playsinline style="display: block;">
                             <source src="{url_v}" type="video/mp4">
                         </video>
+
+                        <div style='position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03)); background-size: 100% 2px, 3px 100%; pointer-events: none;'></div>
                     </div>
+                    
+                    <style>
+                        @keyframes blinker {{
+                            50% {{ opacity: 0; }}
+                        }}
+                    </style>
                 """, unsafe_allow_html=True)
 
         st.write("---")
@@ -724,6 +745,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
