@@ -420,97 +420,85 @@ elif menu == "SUSCRIPCIONES":
 # =========================================================
 elif menu == "BILLETERA CRYPTO (WEB3)":
     st.title("👛 Tu Billetera Nexus")
-    
-    # --- BLOQUE DEL VIDEO (Alineado correctamente) ---
+    st.markdown("### Gestión de Activos Digitales y Gobernanza Ambiental")
+
+    # --- 1. EL VIDEO DE LA MONEDA EN BUCLE (LOOP INFINITO) ---
     st.write("---")
-    st.subheader("🪙 Serenity Nexus Global (SNG) - Activo Digital")
-    
     col_v1, col_v2 = st.columns([2, 1])
     
     with col_v1:
+        st.subheader("🪙 SNG Coin: Activo Digital Verde")
         nombre_del_archivo = "video_sng.mp4" 
         
         if os.path.exists(nombre_del_archivo):
             try:
-                with open(nombre_del_archivo, 'rb') as v_file:
-                    video_bytes = v_file.read()
-                    st.video(video_bytes)
-            except Exception as e:
-                st.error("Error al reproducir el video.")
+                import base64
+                with open(nombre_del_archivo, "rb") as f:
+                    data = f.read()
+                    base64_video = base64.b64encode(data).decode()
+                
+                # HTML para video automático, infinito y sin controles
+                video_html = f'''
+                    <video width="100%" height="auto" autoplay loop muted playsinline>
+                        <source src="data:video/mp4;base64,{base64_video}" type="video/mp4">
+                        Tu navegador no soporta el video.
+                    </video>
+                '''
+                st.markdown(video_html, unsafe_allow_html=True)
+            except Exception:
+                st.error("Error visualizando el video infinito.")
         else:
-            # Si sale este mensaje rojo, es porque el archivo no ha terminado de subir a GitHub
-            st.error(f"El archivo '{nombre_del_archivo}' no se detecta aún.")
-            st.info("Asegúrate de que el video esté en la carpeta principal de tu GitHub.")
-            st.image("https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=1000")
+            st.info("Visualizando activo digital SNG...")
+            st.image("https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=1000", caption="SNG Coin")
 
     with col_v2:
         st.markdown("""
-        **Respaldo Biológico:**
-        La moneda SNG es la representación digital de los activos forestales de la **Hacienda Monte Guadua**.
-        
-        - **Tecnología:** Web3 / Blockchain.
-        - **Propósito:** Trazabilidad de impacto ambiental y Carbono Neutralidad.
+        **Respaldo SNG:**
+        - **Activo:** Biomasa Real Certificada.
+        - **Red:** Web3 / Polygon PoS.
+        - **Propósito:** Trazabilidad de CO2.
         """)
-
-# === AQUÍ COMIENZA EL SIGUIENTE BLOQUE (Asegúrate que esté pegado a la izquierda) ===
-elif menu == "BILLETERA CRYPTO (WEB3)":
-    st.title("👛 Tu Billetera Nexus")
-    st.markdown("### El Futuro de la Conservación Tokenizada")
-
-    # --- NIVEL 1: EL TOKEN (VISUAL) ---
-    try:
-        with open("video_sng.mp4", "rb") as f:
-            data = f.read()
-            bin_str = base64.b64encode(data).decode()
-        video_html = f"""
-            <div style="display: flex; justify-content: center; margin-bottom: 20px;">
-                <video width="60%" autoplay loop muted playsinline style="border-radius: 20px; border: 2px solid #9BC63B; box-shadow: 0 0 30px rgba(155, 198, 59, 0.3);">
-                    <source src="data:video/mp4;base64,{bin_str}" type="video/mp4">
-                </video>
-            </div>
-        """
-        st.markdown(video_html, unsafe_allow_html=True)
-    except:
-        st.info("🔄 Visualizador de Token $SNG Activo")
 
     st.write("---")
 
-    # --- NIVEL 2: ADQUISICIÓN Y CUSTODIA (Tus dos preguntas) ---
-    col_buy, col_vault = st.columns(2)
+    # --- 2. SALDOS Y MÉTRICAS ---
+    c_b1, c_b2, c_b3 = st.columns(3)
+    with c_b1:
+        st.metric(label="Saldo $SNG", value="1,250.00", delta="12% Mensual")
+    with c_b2:
+        st.metric(label="Saldo MATIC", value="45.50", delta="-2%")
+    with c_b3:
+        st.metric(label="Carbono Capturado (Ton)", value="3.4", delta="0.5")
 
-    with col_buy:
-        st.markdown("#### 🛒 ¿Cómo comprar $SNG?")
-        st.write("El token $SNG representa hectáreas regeneradas y datos biométricos de los Faros.")
+    st.write("")
+    
+    # --- 3. ACCIONES DE BILLETERA (RECIBIR Y ENVIAR) ---
+    col_acc1, col_acc2 = st.columns(2)
+    with col_acc1:
         with st.container(border=True):
-            st.write("**Simulador de Intercambio (Swap)**")
-            moneda_pago = st.selectbox("Pagar con:", ["USD (Tarjeta/Transferencia)", "USDT (Crypto)", "Ethereum"])
-            cantidad_usd = st.number_input("Monto a invertir (USD):", min_value=10, step=50)
-            tasa = 0.50 # Ejemplo: 1 SNG = 0.50 USD
-            st.metric("Recibirás aproximadamente:", f"{cantidad_usd / tasa:,.2f} $SNG")
-            if st.button("🚀 COMPRAR TOKENS $SNG"):
-                st.success("Orden de compra enviada al Nexus Gateway.")
+            st.markdown("#### 📥 Recibir")
+            st.code("0x7973...649", language="text")
+            st.caption("Dirección pública para recibir activos $SNG.")
+            
+    with col_acc2:
+        with st.container(border=True):
+            st.markdown("#### 📤 Enviar")
+            destino = st.text_input("Dirección de destino", placeholder="0x...", key="web3_dest")
+            monto = st.number_input("Monto a enviar", min_value=0.0, key="web3_amount")
+            if st.button("Confirmar Envío", use_container_width=True):
+                st.warning("Firma la transacción en tu MetaMask para continuar.")
 
-    with col_vault:
-        st.markdown("#### 🔐 ¿Cómo tener una Billetera Nexus?")
-        st.write("Nexus Vault no es solo una App, es tu llave privada al Internet de la Naturaleza.")
-        st.markdown("""
-        * **Paso 1:** Descarga Nexus App o usa una compatible (Metamask/Ledger).
-        * **Paso 2:** Genera tu frase semilla de 24 palabras.
-        * **Paso 3:** Vincula tu ID de Donante Serenity para recibir beneficios.
-        """)
-        st.button("📄 DESCARGAR GUÍA DE CONFIGURACIÓN")
-
-    st.write("---")
-
-    # --- NIVEL 3: CONEXIÓN FINAL ---
-    st.markdown("#### 🔗 Centro de Conexión Web3")
-    cw1, cw2, cw3 = st.columns([1, 2, 1])
-    with cw2:
-        if st.button("🔌 VINCULAR BILLETERA AL SISTEMA NEXUS"):
-            st.balloons()
-            st.success("Billetera 0x71C...9A23 Conectada con éxito.")
-            st.metric(label="Saldo en Bóveda", value="25,000.00 $SNG", delta="500 Hectáreas Respaldadas")
-            st.write("✅ Verificado por Nodo Gemini en Finca Villa Michelle")            
+    st.divider()
+    
+    # --- 4. HISTORIAL DE TRANSACCIONES ---
+    st.markdown("#### 📜 Historial de Transacciones (Blockchain Explorer)")
+    data_web3 = {
+        'Fecha': ['2026-02-10', '2026-02-08', '2026-02-05'],
+        'Tipo': ['Recibido', 'Suscripción Plan Semilla', 'Recompensa Staking'],
+        'Monto $SNG': ['+500', '-100', '+25'],
+        'Estado': ['Confirmado ✅', 'Confirmado ✅', 'Procesando ⏳']
+    }
+    st.table(data_web3)           
 
 # =========================================================
 # BLOQUE 6: DONACIONES Y CERTIFICADO (Diploma Oficial)
@@ -683,6 +671,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
