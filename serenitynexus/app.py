@@ -303,13 +303,11 @@ elif menu == "RED DE FAROS (7 NODOS)":
         
         url_v = "https://cdn.pixabay.com/video/2020/05/25/40146-424856038_tiny.mp4" if st.session_state.f_activo == "GEMINI" else "https://cdn.pixabay.com/video/2016/09/21/5316-184080169_tiny.mp4"
 
-    # --- GRILLA DE 8 CÁMARAS (NATURALEZA PURA) ---
+     # --- GRILLA DE 8 CÁMARAS (DISEÑO JORGE CARVAJAL) ---
         c_cols = st.columns(4)
         for j in range(8):
-            label = "GEMINI-CORE" if st.session_state.f_activo == "GEMINI" else f"NODO-{j+1}"
-            
-            # El video de naturaleza que seleccionamos
-            url_v = "https://cdn.pixabay.com/video/2019/04/23/23011-332356616_tiny.mp4"
+            # Esto hace que el nombre cambie de NODO-1 a NODO-8 automáticamente
+            label_nodo = "GEMINI-CORE" if st.session_state.f_activo == "GEMINI" else f"NODO-{j+1}"
             
             with c_cols[j % 4]:
                 st.markdown(f"""
@@ -317,12 +315,12 @@ elif menu == "RED DE FAROS (7 NODOS)":
                         
                         <div style='position: absolute; top: 5px; left: 8px; z-index: 10;'>
                             <span style='color: {color_f}; font-family: monospace; font-size: 10px; font-weight: bold; background: rgba(0,0,0,0.5); padding: 2px 5px; border-radius: 3px;'>
-                                {label}
+                                {label_nodo}
                             </span>
                         </div>
 
                         <video width="100%" autoplay loop muted playsinline style="display: block;">
-                            <source src="{url_v}" type="video/mp4">
+                            <source src="https://cdn.pixabay.com/video/2019/04/23/23011-332356616_tiny.mp4" type="video/mp4">
                         </video>
                         
                         <div style='position: absolute; bottom: 5px; right: 8px; z-index: 10;'>
@@ -733,6 +731,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
