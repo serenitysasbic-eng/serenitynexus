@@ -261,7 +261,7 @@ if menu == "INICIO":
 elif menu == "RED DE FAROS (7 NODOS)":
     st.title("🛰️ Monitoreo Perimetral Nexus")
     
-    # --- FILA DE NODOS SUPERIOR ---
+    # 1. BOTONES DE LOS FAROS
     c1, c2, c3 = st.columns(3)
     with c1: 
         st.markdown("<div class='faro-card'><h3>🦅 FARO HALCÓN</h3></div>", unsafe_allow_html=True)
@@ -287,7 +287,7 @@ elif menu == "RED DE FAROS (7 NODOS)":
 
     st.divider()
 
-    # --- NODO MAESTRO GEMINI ---
+    # 2. NODO MAESTRO GEMINI
     col_gemini = st.columns([1,2,1])
     with col_gemini[1]:
         st.markdown(f"<div class='faro-gemini'><h3>🧠 NODO MAESTRO GEMINI</h3><p>Estado: {st.session_state.estado_gemini}</p></div>", unsafe_allow_html=True)
@@ -295,67 +295,49 @@ elif menu == "RED DE FAROS (7 NODOS)":
             st.session_state.f_activo = "GEMINI"
             st.session_state.estado_gemini = "ACTIVO - EMITIENDO"
 
-    # --- PANTALLA DE TRANSMISIÓN Y MICRÓFONOS ---
+    # 3. PANTALLA DE TRANSMISIÓN CON EFECTOS ESPECIALES
     if st.session_state.f_activo:
         st.write("---")
         color_f = "#4285F4" if st.session_state.f_activo == "GEMINI" else "#9BC63B"
         st.markdown(f"<h2 style='color:{color_f}; text-align:center;'>🛰️ FEED EN VIVO: {st.session_state.f_activo.upper()}</h2>", unsafe_allow_html=True)
         
-        # URL de video según el modo
         url_v = "https://cdn.pixabay.com/video/2020/05/25/40146-424856038_tiny.mp4" if st.session_state.f_activo == "GEMINI" else "https://cdn.pixabay.com/video/2016/09/21/5316-184080169_tiny.mp4"
 
-        # 1. Grilla de 8 Cámaras (Videos de Referencia)
-        c_cols = st.columns(4)
-# --- GRILLA DE 8 CÁMARAS (EFECTO SIMULACIÓN EN VIVO) ---
+        # GRILLA DE 8 CÁMARAS CON EFECTO PROFESIONAL
         c_cols = st.columns(4)
         for j in range(8):
             label = "IA-ANALYSIS" if st.session_state.f_activo == "GEMINI" else f"CAM-{j+1} LIVE"
-            # Generamos coordenadas aleatorias para el efecto de simulación
-            lat_sim = f"3°38'{random.randint(10,59)}\"N"
-            lon_sim = f"76°38'{random.randint(10,59)}\"W"
-            
             with c_cols[j % 4]:
                 st.markdown(f"""
-                    <div style='position: relative; background: black; border: 1px solid {color_f}; border-radius: 10px; overflow: hidden; margin-bottom: 15px; box-shadow: 0 0 10px {color_f}44;'>
-                        <div style='position: absolute; top: 5px; left: 8px; z-index: 10; width: 90%;'>
+                    <div style='position: relative; background: black; border: 1px solid {color_f}; border-radius: 10px; overflow: hidden; margin-bottom: 15px;'>
+                        <div style='position: absolute; top: 5px; left: 10px; z-index: 10; width: 90%;'>
                             <p style='color: {color_f}; font-family: monospace; font-size: 9px; margin: 0; display: flex; justify-content: space-between;'>
                                 <span>{label}</span>
-                                <span style='color: red; font-weight: bold; animation: blinker 1.5s linear infinite;'>● REC</span>
+                                <span style='color: red; font-weight: bold; animation: blinker 1.5s linear infinite;'>● LIVE</span>
                             </p>
-                            <p style='color: rgba(255,255,255,0.7); font-family: monospace; font-size: 7px; margin: 0;'>{lat_sim} {lon_sim}</p>
                         </div>
-                        
                         <video width="100%" autoplay loop muted playsinline style="display: block;">
                             <source src="{url_v}" type="video/mp4">
                         </video>
-
-                        <div style='position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03)); background-size: 100% 2px, 3px 100%; pointer-events: none;'></div>
+                        <div style='position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+                                    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), 
+                                    linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03)); 
+                                    background-size: 100% 2px, 3px 100%; pointer-events: none;'>
+                        </div>
                     </div>
-                    
-                    <style>
-                        @keyframes blinker {{
-                            50% {{ opacity: 0; }}
-                        }}
-                    </style>
                 """, unsafe_allow_html=True)
 
-        st.write("---")
+        st.markdown("<style>@keyframes blinker { 50% { opacity: 0; } }</style>", unsafe_allow_html=True)
         
-        # 2. SECCIÓN DE MICROFONOS (Bioacústica)
+        # 4. MICROFONOS
+        st.write("---")
         st.subheader("🔊 Análisis Bioacústico Real-Time")
         m_cols = st.columns(4)
         for k in range(4):
             val = random.randint(85,99) if st.session_state.f_activo == "GEMINI" else random.randint(40,90)
             with m_cols[k]: 
-                st.markdown(f"""
-                    <div style='background:rgba(0,0,0,0.6); border:1px solid {color_f}; padding:15px; border-radius:10px; text-align:center;'>
-                        <b style='color:white;'>MIC {k+1}</b><br>
-                        <span style='color:{color_f}; font-family:monospace;'>||||| {val}%</span>
-                        <p style='font-size:8px; color:#aaa; margin-top:5px;'>FRECUENCIA: {random.randint(20,40)}kHz</p>
-                    </div>
-                """, unsafe_allow_html=True)
+                st.markdown(f"<div style='background:rgba(0,0,0,0.6); border:1px solid {color_f}; padding:15px; border-radius:10px; text-align:center;'><b style='color:white;'>MIC {k+1}</b><br><span style='color:{color_f}; font-family:monospace;'>||||| {val}%</span></div>", unsafe_allow_html=True)
         
-        # Audio General
         st.audio("https://www.soundjay.com/nature/sounds/forest-birds-01.mp3")
                 
 # 3. DASHBOARD
@@ -745,6 +727,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
