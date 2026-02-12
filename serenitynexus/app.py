@@ -456,7 +456,7 @@ elif menu == "BILLETERA CRYPTO (WEB3)":
     st.write("---")
 
     # --- NIVEL 3: CONEXIÓN FINAL ---
-    st.markdown("Centro de Conexión Web3")
+    st.markdown("#### Centro de Conexión Web3")
     cw1, cw2, cw3 = st.columns([1, 2, 1])
     with cw2:
         if st.button("VINCULAR BILLETERA AL SISTEMA NEXUS"):
@@ -636,6 +636,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
