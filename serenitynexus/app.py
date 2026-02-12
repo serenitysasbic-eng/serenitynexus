@@ -183,26 +183,26 @@ if menu == "INICIO":
     col_inf1, col_inf2 = st.columns(2)
     
     with col_inf1:
-        st.subheader("?? QUIÉNES SOMOS / WHO WE ARE")
+        st.subheader("QUIÉNES SOMOS / WHO WE ARE")
         st.write("Serenity Nexus Global es la primera plataforma Phygital (Física + Digital) del Valle del Cauca que integra la conservación ambiental con tecnología Blockchain e Inteligencia Artificial, transformando la protección de la biodiversidad en un activo digital tangible.")
 
     with col_inf2:
-        st.subheader("?? NUESTRA MISIÓN / OUR MISSION")
+        st.subheader("NUESTRA MISIÓN / OUR MISSION")
         st.write("Regenerar el tejido ecológico y social mediante un modelo de negocio sostenible que permita a empresas y personas compensar su huella ambiental a través de la tecnología y la transparencia.")
 
     st.write("---")
     
     col_inf3, col_inf4 = st.columns([1, 2])
     with col_inf3:
-        st.subheader("?? NUESTRA VISIÓN / OUR VISION")
+        st.subheader("NUESTRA VISIÓN / OUR VISION")
     with col_inf4:
         st.write("Ser el referente mundial del Internet de la Naturaleza para 2030, liderando la valorización de los servicios ecosistémicos mediante nuestra red de Faros inteligentes y el token $SNG.")
 
-    st.info("?? Ubicación del Proyecto: Dagua y Felidia, Valle del Cauca - Hacienda Monte Guadua & Finca Villa Michelle.")
+    st.info("Ubicación del Proyecto: Dagua y Felidia, Valle del Cauca - Hacienda Monte Guadua & Finca Villa Michelle.")
 
 # 2. RED DE FAROS
 elif menu == "RED DE FAROS (7 NODOS)":
-    st.title("?? Monitoreo Perimetral")
+    st.title("Monitoreo Perimetral")
     c1, c2, c3 = st.columns(3)
     with c1: 
         st.markdown("<div class='faro-card'><h3>FARO HALCÓN</h3></div>", unsafe_allow_html=True)
@@ -251,7 +251,7 @@ elif menu == "RED DE FAROS (7 NODOS)":
 
 # 3. DASHBOARD
 elif menu == "DASHBOARD ESTADÍSTICO IA":
-    st.title("?? Análisis de Inteligencia Biológica")
+    st.title("Análisis de Inteligencia Biológica")
     m = st.columns(4)
     m[0].markdown(f"<div class='metric-card'><h3>Especies</h3><h1>1,248</h1></div>", unsafe_allow_html=True)
     m[1].markdown(f"<div class='metric-card'><h3>Hectáreas</h3><h1>{st.session_state.total_protegido}</h1></div>", unsafe_allow_html=True)
@@ -264,7 +264,7 @@ elif menu == "DASHBOARD ESTADÍSTICO IA":
 # BLOQUE 3: GESTIÓN LEY 2173 (EMPRESAS)
 # =========================================================
 elif menu == "GESTIÓN LEY 2173 (EMPRESAS)":
-    st.title("?? Nexus Legal & Compliance Hub")
+    st.title("Nexus Legal & Compliance Hub")
     st.markdown("### Soluciones Tecnológicas a la Normativa Ambiental")
 
     # --- Tarjetas Visuales ---
@@ -280,9 +280,9 @@ elif menu == "GESTIÓN LEY 2173 (EMPRESAS)":
     
     # --- Vademécum ---
     with st.container(border=True):
-        st.subheader("?? Vademécum de Soluciones Corporativas")
+        st.subheader("Vademécum de Soluciones Corporativas")
         empresa_v = st.text_input("Nombre de la empresa para el reporte técnico", key="txt_vademecum")
-        if st.button("?? GENERAR VADEMÉCUM TÉCNICO PDF", use_container_width=True):
+        if st.button("GENERAR VADEMÉCUM TÉCNICO PDF", use_container_width=True):
             if empresa_v:
                 pdf_v = generar_pdf_corporativo(empresa_v, 0, "NEXUS-VAD-2026", es_vademecum=True)
                 st.session_state.vademecum_pdf = pdf_v
@@ -291,12 +291,12 @@ elif menu == "GESTIÓN LEY 2173 (EMPRESAS)":
                 st.warning("Ingrese el nombre de la empresa.")
         
         if 'vademecum_pdf' in st.session_state:
-            st.download_button("?? DESCARGAR VADEMÉCUM (PDF ESTRUCTURADO)", st.session_state.vademecum_pdf, "Vademecum_Legal.pdf", "application/pdf", use_container_width=True)
+            st.download_button("DESCARGAR VADEMÉCUM (PDF ESTRUCTURADO)", st.session_state.vademecum_pdf, "Vademecum_Legal.pdf", "application/pdf", use_container_width=True)
 
     st.divider()
 
     # --- Certificado con Logo ---
-    st.subheader("??? Emisión de Certificado con Logo")
+    st.subheader("Emisión de Certificado con Logo")
     col_act1, col_act2 = st.columns(2)
     with col_act1:
         n_corp = st.text_input("Razón Social de la Compañía", key="txt_corp")
@@ -304,7 +304,7 @@ elif menu == "GESTIÓN LEY 2173 (EMPRESAS)":
         archivo_logo = st.file_uploader("Cargar Logo Corporativo", type=['png', 'jpg'], key="file_logo")
 
     with col_act2:
-        if st.button("?? EMITIR CERTIFICADO OFICIAL", use_container_width=True):
+        if st.button("EMITIR CERTIFICADO OFICIAL", use_container_width=True):
             if n_corp and archivo_logo:
                 h_c = hashlib.sha256(f"{n_corp}".encode()).hexdigest()[:12].upper()
                 pdf_c = generar_pdf_corporativo(n_corp, n_per*2, h_c, logo_bytes=archivo_logo)
@@ -314,12 +314,12 @@ elif menu == "GESTIÓN LEY 2173 (EMPRESAS)":
                 st.error("Se requiere Razón Social y Logo.")
 
         if 'cert_corp_pdf' in st.session_state:
-            st.download_button("?? DESCARGAR CERTIFICADO CON LOGO", st.session_state.cert_corp_pdf, "Certificado_Nexus_Logo.pdf", "application/pdf", use_container_width=True)
+            st.download_button("DESCARGAR CERTIFICADO CON LOGO", st.session_state.cert_corp_pdf, "Certificado_Nexus_Logo.pdf", "application/pdf", use_container_width=True)
 # =========================================================
 # BLOQUE 4: SUSCRIPCIONES
 # =========================================================
 elif menu == "SUSCRIPCIONES":
-    st.title("?? Membresías de Impacto Serenity")
+    st.title("Membresías de Impacto Serenity")
     st.markdown("### Transforma tu aporte en regeneración real")
 
     # --- TARJETAS DE PLANES CON BENEFICIOS DETALLADOS ---
@@ -376,7 +376,7 @@ elif menu == "SUSCRIPCIONES":
     # --- PASARELA DE PAGO CON LOGOS REHABILITADOS ---
     if 'p_sel' in st.session_state:
         st.write("---")
-        st.subheader(f"?? Finalizar Suscripción: {st.session_state.p_sel}")
+        st.subheader(f"Finalizar Suscripción: {st.session_state.p_sel}")
         
         col_pay1, col_pay2 = st.columns(2)
         with col_pay1:
@@ -387,7 +387,7 @@ elif menu == "SUSCRIPCIONES":
                 c_exp, c_cvc = st.columns(2)
                 c_exp.text_input("Vencimiento (MM/AA)")
                 c_cvc.text_input("CVC")
-                if st.button("?? ACTIVAR SUSCRIPCIÓN", use_container_width=True):
+                if st.button("ACTIVAR SUSCRIPCIÓN", use_container_width=True):
                     st.balloons()
                     st.success(f"¡Bienvenido al Plan {st.session_state.p_sel}! Impacto activado.")
 
@@ -401,13 +401,13 @@ elif menu == "SUSCRIPCIONES":
                     <div style="text-align:center;"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1280px-Mastercard-logo.svg.png" width="70"></div>
                 </div>
             """, unsafe_allow_html=True)
-            st.caption("?? Transacciones seguras mediante Nexus Gateway (Dagua-Colombia)")
+            st.caption("Transacciones seguras mediante Nexus Gateway (Dagua-Colombia)")
             
 # =========================================================
 # BLOQUE 5: BILLETERA CRYPTO (WEB3) - ECOSISTEMA $SNG
 # =========================================================
 elif menu == "BILLETERA CRYPTO (WEB3)":
-    st.title("?? Nexus Finance Control")
+    st.title("Nexus Finance Control")
     st.markdown("### El Futuro de la Conservación Tokenizada")
 
     # --- NIVEL 1: EL TOKEN (VISUAL) ---
@@ -432,7 +432,7 @@ elif menu == "BILLETERA CRYPTO (WEB3)":
     col_buy, col_vault = st.columns(2)
 
     with col_buy:
-        st.markdown("#### ?? ¿Cómo comprar $SNG?")
+        st.markdown("####  ¿Cómo comprar $SNG?")
         st.write("El token $SNG representa hectáreas regeneradas y datos biométricos de los Faros.")
         with st.container(border=True):
             st.write("**Simulador de Intercambio (Swap)**")
@@ -451,7 +451,7 @@ elif menu == "BILLETERA CRYPTO (WEB3)":
         * **Paso 2:** Genera tu frase semilla de 24 palabras.
         * **Paso 3:** Vincula tu ID de Donante Serenity para recibir beneficios.
         """)
-        st.button("?? DESCARGAR GUÍA DE CONFIGURACIÓN")
+        st.button("DESCARGAR GUÍA DE CONFIGURACIÓN")
 
     st.write("---")
 
@@ -459,7 +459,7 @@ elif menu == "BILLETERA CRYPTO (WEB3)":
     st.markdown("#### ?? Centro de Conexión Web3")
     cw1, cw2, cw3 = st.columns([1, 2, 1])
     with cw2:
-        if st.button("?? VINCULAR BILLETERA AL SISTEMA NEXUS"):
+        if st.button("VINCULAR BILLETERA AL SISTEMA NEXUS"):
             st.balloons()
             st.success("Billetera 0x71C...9A23 Conectada con éxito.")
             st.metric(label="Saldo en Bóveda", value="25,000.00 $SNG", delta="500 Hectáreas Respaldadas")
@@ -469,7 +469,7 @@ elif menu == "BILLETERA CRYPTO (WEB3)":
 # BLOQUE 6: DONACIONES Y CERTIFICADO (Diploma Oficial)
 # =========================================================
 elif menu == "DONACIONES Y CERTIFICADO":
-    st.title("?? Generador de Diploma y Certificado Nexus")
+    st.title("Generador de Diploma y Certificado Nexus")
     st.markdown("### Registro de Aportes a la Regeneración Biométrica")
     
     colA, colB = st.columns([1, 1])
@@ -480,7 +480,7 @@ elif menu == "DONACIONES Y CERTIFICADO":
             nombre_d = st.text_input("Nombre Completo o Razón Social")
             monto_d = st.number_input("Monto del Aporte (USD)", min_value=1, step=10)
             
-            if st.button("? REGISTRAR APORTE Y GENERAR HASH"): 
+            if st.button("REGISTRAR APORTE Y GENERAR HASH"): 
                 if nombre_d:
                     # 1. Generar Hash
                     datos_hash = f"{nombre_d}{monto_d}{datetime.now()}"
@@ -516,7 +516,7 @@ elif menu == "DONACIONES Y CERTIFICADO":
             
             st.write("")
             st.download_button(
-                label="?? DESCARGAR DIPLOMA CON HASH (PDF)",
+                label="DESCARGAR DIPLOMA CON HASH (PDF)",
                 data=st.session_state.pdf_buffer,
                 file_name=f"Certificado_Nexus_{st.session_state.current_hash}.pdf",
                 mime="application/pdf"
@@ -525,11 +525,11 @@ elif menu == "DONACIONES Y CERTIFICADO":
 # BLOQUE 7: LOGÍSTICA AEROLÍNEAS (Conexiones Globales)
 # =========================================================
 elif menu == "LOGÍSTICA AEROLÍNEAS":
-    st.title("?? Conectividad Global a Colombia")
+    st.title("Conectividad Global a Colombia")
     st.markdown("Principales aerolíneas con conexión directa a Bogotá (BOG), Cali (CLO) o Medellín (MDE).")
     
     # --- EUROPA ---
-    st.subheader("???? Europa")
+    st.subheader("Europa")
     e1, e2, e3, e4 = st.columns(4)
     with e1: 
         st.markdown("<a href='https://www.iberia.com' target='_blank'><div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Iberia_Logo.svg/320px-Iberia_Logo.svg.png'><p>IBERIA</p></div></a>", unsafe_allow_html=True)
@@ -549,7 +549,7 @@ elif menu == "LOGÍSTICA AEROLÍNEAS":
         st.markdown("<a href='https://www.flyedelweiss.com' target='_blank'><div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Edelweiss_Air_Logo.svg/320px-Edelweiss_Air_Logo.svg.png'><p>EDELWEISS</p></div></a>", unsafe_allow_html=True)
 
     # --- NORTEAMÉRICA ---
-    st.subheader("???? Norteamérica")
+    st.subheader("Norteamérica")
     n1, n2, n3, n4 = st.columns(4)
     with n1: 
         st.markdown("<a href='https://www.aa.com' target='_blank'><div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/American_Airlines_logo_2013.svg/320px-American_Airlines_logo_2013.svg.png'><p>AMERICAN</p></div></a>", unsafe_allow_html=True)
@@ -561,7 +561,7 @@ elif menu == "LOGÍSTICA AEROLÍNEAS":
         st.markdown("<a href='https://www.aircanada.com' target='_blank'><div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Air_Canada_Logo.svg/320px-Air_Canada_Logo.svg.png'><p>AIR CANADA</p></div></a>", unsafe_allow_html=True)
 
     # --- LATINOAMÉRICA ---
-    st.subheader("?? Latinoamérica")
+    st.subheader("Latinoamérica")
     l1, l2, l3, l4 = st.columns(4)
     with l1: 
         st.markdown("<a href='https://www.avianca.com' target='_blank'><div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Avianca_logo_2016.svg/320px-Avianca_logo_2016.svg.png'><p>AVIANCA</p></div></a>", unsafe_allow_html=True)
@@ -575,7 +575,7 @@ elif menu == "LOGÍSTICA AEROLÍNEAS":
 # BLOQUE FINAL: UBICACIÓN & MAPAS (Dagua y Felidia)
 # =========================================================
 elif menu == "UBICACIÓN & MAPAS":
-    st.title("?? Ubicación Estratégica Serenity")
+    st.title("Ubicación Estratégica Serenity")
     st.markdown("### Finca Villa Michelle & Hacienda Monte Guadua")
     
     # Coordenadas exactas
@@ -588,7 +588,7 @@ elif menu == "UBICACIÓN & MAPAS":
         <div style='text-align:center; margin-bottom: 20px;'>
             <a href="{url_gmaps}" target="_blank">
                 <button style="background-color:#4285F4; color:white; border:none; padding:15px 30px; border-radius:10px; font-weight:bold; cursor:pointer; box-shadow: 0 4px 15px rgba(66, 133, 244, 0.3);">
-                    ?? VER EN GOOGLE MAPS (SISTEMA EXTERNO)
+                    VER EN GOOGLE MAPS (SISTEMA EXTERNO)
                 </button>
             </a>
         </div>
@@ -636,6 +636,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
