@@ -665,73 +665,83 @@ elif menu == "DONACIONES Y CERTIFICADO":
                 file_name=f"Certificado_Nexus_{st.session_state.current_hash}.pdf",
                 mime="application/pdf"
             )
+
 # =========================================================
-# BLOQUE 7: LOGÍSTICA AEROLÍNEAS (RESTAURADO E INTEGRADO)
+# BLOQUE 7: LOGÍSTICA MULTIMODAL (AÉREO & TERRESTRE)
 # =========================================================
 elif menu == "LOGÍSTICA AEROLÍNEAS":
-    st.title("✈️ Mitigación de Huella de Carbono Aérea")
-    
-    # 1. TU IDEA ORIGINAL: Cuadros de Selección y Enlaces
-    with st.container():
-        col_c1, col_c2 = st.columns([1, 1])
-        
-        with col_c1:
-            st.markdown("### 🏢 Empresa Asociada")
-            # Mantenemos tu selector original
-            aerolinea_sel = st.selectbox("Seleccione la Aerolínea", 
-                ["AVIANCA", "LATAM", "COPA AIRLINES", "SATENA", "VIVA AEROBUS", "OTRA"],
-                key="airline_selector")
-            
-            # Aquí iría tu link original
-            st.info(f"Conexión establecida con el portal oficial de {aerolinea_sel}")
-            st.markdown(f"[🔗 Ir a Página Oficial de la Aerolínea](https://google.com/search?q={aerolinea_sel}+oficial)")
+    st.title("🌐 Hub de Mitigación Multimodal Nexus")
+    st.markdown("### Alianza por la Descarbonización del Valle del Cauca y el Mundo")
 
-        with col_c2:
-            st.markdown("### 🖼️ Logos de Alianza")
-            # Mostramos ambos logos como tenías pensado
-            c_l1, c_l2 = st.columns(2)
-            with c_l1:
-                st.image("logo_serenity.png", width=100) if os.path.exists("logo_serenity.png") else st.write("Serenity Logo")
-            with c_l2:
-                # Espacio para el logo de la aerolínea cargado por el usuario
-                logo_corp = st.file_uploader("Subir Logo Aerolínea", type=["png", "jpg"])
+    # --- 1. SELECCIÓN DE MODALIDAD ---
+    tab_aire, tab_tierra = st.tabs(["✈️ AEROLÍNEAS INTERNACIONALES", "🚚 TRANSPORTE TERRESTRE & CARGA"])
+
+    with tab_aire:
+        st.subheader("Rutas Globales hacia Colombia")
+        cols_a = st.columns(3)
+        aero_list = [
+            {"n": "AVIANCA", "u": "https://www.avianca.com", "l": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Avianca_Logo.svg/512px-Avianca_Logo.svg.png"},
+            {"n": "IBERIA", "u": "https://www.iberia.com", "l": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Iberia_Logo.svg/512px-Iberia_Logo.svg.png"},
+            {"n": "AIR FRANCE", "u": "https://www.airfrance.com", "l": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Air_France_Logo.svg/512px-Air_France_Logo.svg.png"}
+        ]
+        for i, a in enumerate(aero_list):
+            with cols_a[i]:
+                st.markdown(f"""<div style="border:1px solid #ddd; padding:10px; border-radius:10px; text-align:center; background:white;">
+                    <img src="{a['l']}" width="70"><br><b>{a['n']}</b><br>
+                    <a href="{a['u']}" target="_blank" style="font-size:10px;">Portal Oficial</a></div>""", unsafe_allow_html=True)
+
+    with tab_tierra:
+        st.subheader("Conectividad Terrestre - Valle del Cauca")
+        cols_t = st.columns(3)
+        # Empresas clave para el Valle (Pasajeros y Carga)
+        terr_list = [
+            {"n": "EXPRESO PALMIRA", "u": "https://www.expresopalmira.com.co", "l": "https://www.expresopalmira.com.co/wp-content/uploads/2021/05/logo-expreso-palmira.png"},
+            {"n": "BOLIVARIANO", "u": "https://www.bolivariano.com.co", "l": "https://upload.wikimedia.org/wikipedia/commons/b/b3/Logo_Bolivariano.png"},
+            {"n": "S26 / ENVÍA", "u": "https://envia.co", "l": "https://envia.co/wp-content/uploads/2018/06/logo-envia.png"}
+        ]
+        for i, t in enumerate(terr_list):
+            with cols_t[i]:
+                # Nota: Algunos logos pueden requerir URLs directas válidas o archivos locales
+                st.markdown(f"""<div style="border:1px solid #9BC63B; padding:10px; border-radius:10px; text-align:center; background:white;">
+                    <p style="font-weight:bold; color:#333;">{t['n']}</p>
+                    <a href="{t['u']}" target="_blank" style="font-size:10px; color:#9BC63B;">Logística Terrestre</a></div>""", unsafe_allow_html=True)
 
     st.divider()
 
-    # 2. TU CALCULADORA ORIGINAL
-    with st.expander("📝 Formulario de Compensación", expanded=True):
-        col_f1, col_f2 = st.columns(2)
-        with col_f1:
-            impacto_val = st.number_input("Número de árboles a compensar", min_value=1, value=100)
-            detalle_vuelo = st.text_input("Referencia de Vuelo / Trayecto", "BOG-CLO")
-        with col_f2:
-            st.write("**Resumen Operativo:**")
-            st.write(f"Empresa: {aerolinea_sel}")
-            st.write(f"Estado Faros: ONLINE (KBA San Antonio)")
-
-    # 3. EL BOTÓN DE DESCARGA (LO QUE NO FUNCIONABA)
-    # Generamos un Hash ID único tipo NASA
-    hash_id_nexus = hashlib.md5(f"{aerolinea_sel}{impacto_val}".encode()).hexdigest()[:12].upper()
+    # --- 2. PANEL DE CÁLCULO UNIFICADO ---
+    st.markdown("### 📝 Panel de Compensación de Huella")
     
-    # Preparamos el PDF usando TU FUNCIÓN mejorada
+    with st.container(border=True):
+        c1, c2 = st.columns(2)
+        with c1:
+            empresa_final = st.text_input("Nombre de la Empresa a Certificar", value="TRANSPORTES DEL VALLE SAS")
+            tipo_transporte = st.selectbox("Modo de Operación", 
+                ["Vuelo Internacional", "Vuelo Nacional", "Transporte de Pasajeros (Bus)", "Carga Pesada (Tractocamión)", "Distribución Local"])
+        
+        with c2:
+            impacto_val = st.number_input("Árboles a Compensar (Activos Nexus)", min_value=1, value=50)
+            id_referencia = st.text_input("ID de Manifiesto o Ruta", "Ruta-Cali-Buenaventura-01")
+
+    # --- 3. GENERACIÓN DE CERTIFICADO ---
+    # Usamos hashlib para crear el ID único SHA-256
+    hash_id_nexus = hashlib.sha256(f"{empresa_final}{impacto_val}{id_referencia}".encode()).hexdigest()[:12].upper()
+    
+    # Generamos el PDF (Función creada anteriormente)
     pdf_file = generar_pdf_corporativo(
-        empresa=aerolinea_sel, 
+        empresa=empresa_final, 
         impacto=impacto_val, 
         hash_id=hash_id_nexus,
-        logo_bytes=logo_corp,
+        logo_bytes=None, 
         es_vademecum=False
     )
 
-    # El secreto para que descargue es el st.download_button
     st.download_button(
-        label=f"📥 DESCARGAR CERTIFICADO NEXUS: {aerolinea_sel}",
+        label=f"📥 EMITIR CERTIFICADO DE COMPENSACIÓN: {empresa_final}",
         data=pdf_file,
-        file_name=f"Certificado_Nexus_{aerolinea_sel}.pdf",
+        file_name=f"Nexus_Certificado_{empresa_final}.pdf",
         mime="application/pdf",
         use_container_width=True
-    )
 
-    st.success(f"Certificado listo bajo el ID: NEXUS-{hash_id_nexus}")
 
 # =========================================================
 # BLOQUE 8: UBICACIÓN & MAPAS (VERSIÓN FINAL NASA-GRADE)
@@ -814,6 +824,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st.info("💡 Cada Faro Nexus registra datos en tiempo real mediante 8 cámaras y 4 micrófonos dentro del KBA Bosque San Antonio.")
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
