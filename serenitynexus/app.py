@@ -52,11 +52,60 @@ def generar_pdf_certificado(nombre, monto, hash_id):
     return buffer
 
 def generar_pdf_corporativo(empresa, impacto, hash_id, logo_bytes=None, es_vademecum=False):
-    # (Pega aquí la función técnica que definimos antes con doble logo y leyes)
-    # Es vital que ambas estén aquí arriba.
     buffer = io.BytesIO()
     c = canvas.Canvas(buffer, pagesize=letter)
-    # ... (resto de la función corporativa) ...
+    
+    # --- Estética y Bordes ---
+    c.setStrokeColor(VERDE_SERENITY)
+    c.setLineWidth(2)
+    c.rect(0.5*inch, 0.5*inch, 7.5*inch, 10*inch)
+
+    # --- Lógica de Logos ---
+    if os.path.exists("logo_serenity.png"):
+        c.drawImage("logo_serenity.png", 0.7*inch, 9.2*inch, width=1.5*inch, height=0.7*inch, preserveAspectRatio=True)
+    
+    if logo_bytes:
+        # Usamos un archivo temporal para procesar el logo cargado
+        with open("temp_logo.png", "wb") as f:
+            f.write(logo_bytes.getbuffer())
+        c.drawImage("temp_logo.png", 6.3*inch, 9.2*inch, width=1.5*inch, height=0.7*inch, preserveAspectRatio=True)
+
+    # --- Títulos ---
+    c.setFont("Helvetica-Bold", 18)
+    c.setFillColor(VERDE_SERENITY)
+    titulo = "VADEMÉCUM TÉCNICO LEGAL" if es_vademecum else "CERTIFICADO DE COMPENSACIÓN"
+    c.drawCentredString(4.25*inch, 8.8*inch, titulo)
+    
+    # --- Cuerpo del Documento ---
+    c.setFillColor(black)
+    c.setFont("Helvetica", 12)
+    text = c.beginText(1*inch, 8*inch)
+    text.setLeading(16)
+    
+    if es_vademecum:
+        lines = [
+            f"ENTIDAD: {empresa.upper()}",
+            "REFERENCIA: Cumplimiento Normativo Ambiental 2026",
+            "",
+            "1. LEY 2173 (Áreas de Vida): Certificamos la custodia biométrica.",
+            "2. LEY 2169 (Carbono Neutralidad): Monitoreo vía Red de Faros.",
+            "3. LEY 2111 (Delitos Ambientales): Vigilancia mediante IA Gemini.",
+            "",
+            "Este documento vincula legalmente la inversión al ecosistema Nexus."
+        ]
+    else:
+        lines = [
+            f"Se certifica que la empresa {empresa.upper()}",
+            f"ha compensado un impacto equivalente a {impacto} unidades forestales.",
+            "Ubicación: Corredor Biológico Dagua, Valle del Cauca.",
+            "",
+            f"ID BLOCKCHAIN: {hash_id}"
+        ]
+
+    for line in lines:
+        text.textLine(line)
+    c.drawText(text)
+    
     c.save()
     buffer.seek(0)
     return buffer
@@ -745,6 +794,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
