@@ -7,6 +7,8 @@ from datetime import datetime
 import io
 import os
 import base64
+import librosa
+import numpy as np
 
 # --- LIBRERÍAS EXTENDIDAS ---
 import folium
@@ -776,6 +778,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
