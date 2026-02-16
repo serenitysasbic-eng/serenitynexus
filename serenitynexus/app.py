@@ -309,11 +309,10 @@ if menu == "INICIO":
 elif menu == "RED DE FAROS (7 NODOS)":
     st.title("🛰️ Monitoreo Perimetral Nexus")
     
-    # Función interna para cambiar el estado (Garantiza que Streamlit lo registre)
+    # --- 1. LÓGICA DE BOTONES ---
     def conectar_faro(nombre):
         st.session_state.f_activo = nombre
 
-    # 1. BOTONES DE LOS FAROS
     c1, c2, c3 = st.columns(3)
     with c1: 
         st.markdown("<div class='faro-card'><h3>🦅 FARO HALCÓN</h3></div>", unsafe_allow_html=True)
@@ -339,42 +338,24 @@ elif menu == "RED DE FAROS (7 NODOS)":
 
     st.divider()
 
-    # 2. NODO MAESTRO GEMINI
+    # --- 2. NODO MAESTRO ---
     col_gemini = st.columns([1,2,1])
     with col_gemini[1]:
         st.markdown("<div class='faro-gemini' style='text-align: center;'><h3>🧠 NODO MAESTRO GEMINI</h3></div>", unsafe_allow_html=True)
         st.button("🔥 ACTIVAR NÚCLEO GEMINI VISION", key="gm_btn", on_click=conectar_faro, args=("GEMINI",), use_container_width=True)
 
-# --- 3. PANTALLA DE MONITOREO (VERSIÓN ULTRA-COMPATIBLE) ---
-    if "f_activo" in st.session_state:
-        f_nom = st.session_state.f_activo
-        color_f = "#4285F4" if f_nom == "GEMINI" else "#9BC63B"
-        
-        st.write("---")
-nombre_display = str(f_nom).upper() if f_nom else "NODO DESCONECTADO"
-st.markdown(f"<h2 style='text-align:center; color:{color_f};'>🛰️ FEED EN VIVO: {nombre_display}</h2>", unsafe_allow_html=True)
+    # --- 3. PANTALLA DE MONITOREO (SEGURA) ---
+    # Usamos .get() para evitar el NameError si la variable no existe aún
+    f_nom = st.session_state.get('f_activo', None)
 
-        # GRILLA DE 8 CÁMARAS (USANDO UN SOLO VIDEO FRAGMENTADO)
-if "f_activo" in st.session_state and st.session_state.f_activo:
-        f_nom = st.session_state.f_activo
-        # Definimos el color de seguridad por si acaso
+    if f_nom:
         color_f = "#4285F4" if f_nom == "GEMINI" else "#9BC63B"
-        
-        st.write("---")
-        
-        # Usamos un truco para que nunca falle el texto en mayúsculas
         nombre_limpio = str(f_nom).upper()
         
-        st.markdown(f"""
-            <h2 style='text-align:center; color:{color_f}; text-shadow: 1px 1px 2px rgba(0,0,0,0.5);'>
-                🛰️ FEED EN VIVO: {nombre_limpio}
-            </h2>
-        """, unsafe_allow_html=True)
+        st.write("---")
+        st.markdown(f"<h2 style='text-align:center; color:{color_f};'>🛰️ FEED EN VIVO: {nombre_limpio}</h2>", unsafe_allow_html=True)
 
-        # DE AQUÍ PARA ABAJO TUS 8 CUADROS Y 4 SONIDOS SIGUEN IGUAL
         st.markdown("### 📽️ Unidades de Video Perimetral")
-        
-        # Video estable de Wikipedia (Naturaleza)
         url_v = "https://upload.wikimedia.org/wikipedia/commons/transcoded/1/18/Forest_Mountain_River.webm/Forest_Mountain_River.webm.480p.vp9.webm"
         
         c_cam = st.columns(4)
@@ -392,7 +373,7 @@ if "f_activo" in st.session_state and st.session_state.f_activo:
                 """
                 st.components.v1.html(html_video, height=125)
 
-        # --- 4 SONIDOS ---
+        # --- 4. SONIDOS (BIOACÚSTICA) ---
         st.write("---")
         st.subheader("🔊 Sensores Bioacústicos")
         a_links = [
@@ -795,6 +776,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
