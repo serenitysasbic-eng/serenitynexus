@@ -53,9 +53,21 @@ def generar_pdf_certificado(nombre, monto, hash_id):
     buffer.seek(0)
     return buffer
 
-def generar_pdf_corporativo(empresa, impacto, hash_id, logo_bytes=None, es_vademecum=False):
-    buffer = io.BytesIO()
-    c = canvas.Canvas(buffer, pagesize=letter)
+# --- SELLO DE AUTENTICIDAD NASA-GRADE ---
+    firma_verificacion = generar_firma_digital(empresa, impacto)
+    
+    c.setStrokeColor(VERDE_SERENITY)
+    c.rect(1*inch, 1.4*inch, 6.5*inch, 0.6*inch) # Cuadro de seguridad
+    
+    c.setFont("Courier-Bold", 8)
+    c.setFillColor(black)
+    c.drawCentredString(4.25*inch, 1.8*inch, "VERIFICACIÓN DE INTEGRIDAD BIOMÉTRICA (NEXUS ID)")
+    c.setFont("Courier", 7)
+    c.drawCentredString(4.25*inch, 1.6*inch, f"HASH: {firma_verificacion}")
+    
+    # Pie de página legal
+    c.setFont("Helvetica-Oblique", 7)
+    c.drawCentredString(4.25*inch, 0.8*inch, "Este documento representa un activo biológico real monitoreado por la Red de Faros Serenity.")
 
 def generar_firma_digital(empresa, impacto):
     """
@@ -797,6 +809,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
