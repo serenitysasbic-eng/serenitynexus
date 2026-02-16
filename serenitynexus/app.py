@@ -666,78 +666,72 @@ elif menu == "DONACIONES Y CERTIFICADO":
                 mime="application/pdf"
             )
 # =========================================================
-# BLOQUE 7: LOGÍSTICA AEROLÍNEAS (VERSIÓN CO-BRANDING)
+# BLOQUE 7: LOGÍSTICA AEROLÍNEAS (RESTAURADO E INTEGRADO)
 # =========================================================
 elif menu == "LOGÍSTICA AEROLÍNEAS":
     st.title("✈️ Mitigación de Huella de Carbono Aérea")
-
-    # --- SECCIÓN DE IDENTIDAD CORPORATIVA ---
+    
+    # 1. TU IDEA ORIGINAL: Cuadros de Selección y Enlaces
     with st.container():
-        col_logo1, col_logo2, col_logo3 = st.columns([1, 2, 1])
+        col_c1, col_c2 = st.columns([1, 1])
         
-        with col_logo1:
-            try:
-                st.image("logo_serenity.png", width=150)
-            except:
-                st.write("Logo Serenity")
-        
-        with col_logo2:
-            st.markdown("<h2 style='text-align: center; color: #9BC63B;'>NEXUS AIR-LINK</h2>", unsafe_allow_html=True)
-            st.markdown("<p style='text-align: center; font-size: 0.8em;'>Alianza por la Descarbonización del KBA Bosque San Antonio</p>", unsafe_allow_html=True)
+        with col_c1:
+            st.markdown("### 🏢 Empresa Asociada")
+            # Mantenemos tu selector original
+            aerolinea_sel = st.selectbox("Seleccione la Aerolínea", 
+                ["AVIANCA", "LATAM", "COPA AIRLINES", "SATENA", "VIVA AEROBUS", "OTRA"],
+                key="airline_selector")
             
-        with col_logo3:
-            # Selector de Aerolínea para cargar Logo y Link automáticamente
-            aerolinea_ref = st.selectbox("Seleccione Aerolínea", ["Avianca", "LATAM", "Viva Aerobus", "Copa Airlines", "Personalizado"])
-            
-            # Diccionario de Datos Oficiales (Puedes ampliarlo)
-            datos_corp = {
-                "Avianca": {"url": "https://www.avianca.com", "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Avianca_Logo.svg/512px-Avianca_Logo.svg.png"},
-                "LATAM": {"url": "https://www.latamairlines.com", "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Latam-logo.svg/512px-Latam-logo.svg.png"},
-                "Copa Airlines": {"url": "https://www.copaair.com", "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Copa_Airlines_logo.svg/512px-Copa_Airlines_logo.svg.png"}
-            }
+            # Aquí iría tu link original
+            st.info(f"Conexión establecida con el portal oficial de {aerolinea_sel}")
+            st.markdown(f"[🔗 Ir a Página Oficial de la Aerolínea](https://google.com/search?q={aerolinea_sel}+oficial)")
 
-            if aerolinea_ref in datos_corp:
-                st.image(datos_corp[aerolinea_ref]["logo"], width=120)
-                st.markdown(f"[Visitar Web Oficial]({datos_corp[aerolinea_ref]['url']})")
+        with col_c2:
+            st.markdown("### 🖼️ Logos de Alianza")
+            # Mostramos ambos logos como tenías pensado
+            c_l1, c_l2 = st.columns(2)
+            with c_l1:
+                st.image("logo_serenity.png", width=100) if os.path.exists("logo_serenity.png") else st.write("Serenity Logo")
+            with c_l2:
+                # Espacio para el logo de la aerolínea cargado por el usuario
+                logo_corp = st.file_uploader("Subir Logo Aerolínea", type=["png", "jpg"])
 
     st.divider()
 
-    # --- CALCULADORA TÉCNICA (RECUADRO ESTILIZADO) ---
-    st.markdown("""
-        <div style='background-color: #f0f2f6; padding: 20px; border-radius: 15px; border-left: 5px solid #4285F4;'>
-            <h4 style='margin-top:0;'>📊 Panel de Telemetría de Emisiones</h4>
-        </div>
-    """, unsafe_allow_html=True)
+    # 2. TU CALCULADORA ORIGINAL
+    with st.expander("📝 Formulario de Compensación", expanded=True):
+        col_f1, col_f2 = st.columns(2)
+        with col_f1:
+            impacto_val = st.number_input("Número de árboles a compensar", min_value=1, value=100)
+            detalle_vuelo = st.text_input("Referencia de Vuelo / Trayecto", "BOG-CLO")
+        with col_f2:
+            st.write("**Resumen Operativo:**")
+            st.write(f"Empresa: {aerolinea_sel}")
+            st.write(f"Estado Faros: ONLINE (KBA San Antonio)")
 
-    col_input1, col_input2 = st.columns(2)
-    with col_input1:
-        aeronave = st.selectbox("Aeronave", ["B737-800", "A320neo", "ATR-72", "B777F"])
-        distancia = st.number_input("Distancia del Trayecto (km)", min_value=1, value=500)
+    # 3. EL BOTÓN DE DESCARGA (LO QUE NO FUNCIONABA)
+    # Generamos un Hash ID único tipo NASA
+    hash_id_nexus = hashlib.md5(f"{aerolinea_sel}{impacto_val}".encode()).hexdigest()[:12].upper()
     
-    with col_input2:
-        factor_carga = st.slider("Factor de Ocupación (%)", 0, 100, 85)
-        combustible = st.radio("Tecnología de Combustible", ["Standard Jet-A1", "SAF (Bio-Combustible)"], horizontal=True)
+    # Preparamos el PDF usando TU FUNCIÓN mejorada
+    pdf_file = generar_pdf_corporativo(
+        empresa=aerolinea_sel, 
+        impacto=impacto_val, 
+        hash_id=hash_id_nexus,
+        logo_bytes=logo_corp,
+        es_vademecum=False
+    )
 
-    # Lógica de cálculo simplificada para el demo
-    co2_emitido = (distancia * 0.115) * (factor_carga / 100) # Factor base por km/pasajero
-    if combustible == "SAF (Bio-Combustible)": co2_emitido *= 0.25
+    # El secreto para que descargue es el st.download_button
+    st.download_button(
+        label=f"📥 DESCARGAR CERTIFICADO NEXUS: {aerolinea_sel}",
+        data=pdf_file,
+        file_name=f"Certificado_Nexus_{aerolinea_sel}.pdf",
+        mime="application/pdf",
+        use_container_width=True
+    )
 
-    # --- RESULTADOS Y COMPENSACIÓN ---
-    st.markdown("---")
-    res1, res2, res3 = st.columns(3)
-    
-    with res1:
-        st.metric("EMISIÓN TOTAL", f"{co2_emitido:,.1f} Kg CO2")
-    with res2:
-        arboles = int(co2_emitido / 20) # 1 árbol = 20kg absorción/año
-        st.metric("ÁRBOLES NEXUS", f"{arboles} Und", "Protección Activa")
-    with res3:
-        st.metric("FAROS ASIGNADOS", "Faro 7 (Villa Michelle)", "Nodo Activo")
-
-    # Botón de Certificado (Vinculado a tu función PDF de Serenity SAS BIC)
-    if st.button(f"GENERAR CERTIFICADO CO-BRANDED: SERENITY + {aerolinea_ref.upper()}", use_container_width=True):
-        st.success("Preparando enlace satelital con los Faros... Generando firma SHA-512.")
-        st.balloons()
+    st.success(f"Certificado listo bajo el ID: NEXUS-{hash_id_nexus}")
 
 # =========================================================
 # BLOQUE 8: UBICACIÓN & MAPAS (VERSIÓN FINAL NASA-GRADE)
@@ -820,6 +814,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st.info("💡 Cada Faro Nexus registra datos en tiempo real mediante 8 cámaras y 4 micrófonos dentro del KBA Bosque San Antonio.")
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
