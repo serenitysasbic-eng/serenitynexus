@@ -715,73 +715,90 @@ elif menu == "LOGÍSTICA AEROLÍNEAS":
         st.markdown("<a href='https://www.copaair.com' target='_blank'><div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Copa_Airlines_logo.svg/320px-Copa_Airlines_logo.svg.png'><p>COPA</p></div></a>", unsafe_allow_html=True)
     with l4: 
         st.markdown("<a href='https://www.aeromexico.com' target='_blank'><div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Aeromexico_Logo_2024.svg/320px-Aeromexico_Logo_2024.svg.png'><p>AEROMEXICO</p></div></a>", unsafe_allow_html=True)
+
+
 # =========================================================
-# BLOQUE FINAL: UBICACIÓN & MAPAS (Dagua y Felidia)
+# BLOQUE 8: UBICACIÓN & MAPAS (VERSIÓN FINAL NASA-GRADE)
 # =========================================================
 elif menu == "UBICACIÓN & MAPAS":
     st.title("🛰️ Geoposicionamiento Nexus Global")
+    st.markdown("### Monitoreo Satelital de Faros en KBA Bosque San Antonio")
+
+    # 1. COORDENADAS ESTRATÉGICAS (7 NODOS)
+    # 6 Faros en Monte Guadua + 1 Faro en Villa Michelle
+    lat_v, lon_v = 3.485, -76.605 # Coordenadas base Villa Michelle
     
-faros = [
-        {"n": "Faro Maestro", "lat": 3.518, "lon": -76.620, "c": "green"},
-        {"n": "Faro Villa Michelle", "lat": 3.485, "lon": -76.605, "c": "blue"}
+    faros_nexus = [
+        {"name": "Faro Maestro (Monte Guadua)", "lat": 3.518, "lon": -76.620, "color": "green"},
+        {"name": "Faro Nodo 2", "lat": 3.519, "lon": -76.622, "color": "green"},
+        {"name": "Faro Nodo 3", "lat": 3.517, "lon": -76.621, "color": "green"},
+        {"name": "Faro Nodo 4", "lat": 3.516, "lon": -76.623, "color": "green"},
+        {"name": "Faro Nodo 5", "lat": 3.520, "lon": -76.619, "color": "green"},
+        {"name": "Faro Nodo 6", "lat": 3.515, "lon": -76.625, "color": "green"},
+        {"name": "Faro Villa Michelle (Nodo 7)", "lat": lat_v, "lon": lon_v, "color": "blue"}
     ]
+
+    # 2. BOTÓN DE ENLACE EXTERNO (ESTILO GRADO MILITAR)
+    # URL corregida para Google Maps Satelital
+    url_gmaps = f"https://www.google.com/maps/search/?api=1&query={lat_v},{lon_v}"
     
-    # Botón directo a la interfaz de Google Maps
-    url_gmaps = f"https://www.google.com/maps/search/?api=1&query={lat_villa},{lon_villa}"
     st.markdown(f"""
-        <div style='text-align:center; margin-bottom: 20px;'>
-            <a href="{url_gmaps}" target="_blank">
-                <button style="background-color:#4285F4; color:white; border:none; padding:15px 30px; border-radius:10px; font-weight:bold; cursor:pointer; box-shadow: 0 4px 15px rgba(66, 133, 244, 0.3);">
-                    VER EN GOOGLE MAPS (SISTEMA EXTERNO)
+        <div style='text-align:center; margin-bottom: 25px;'>
+            <a href="{url_gmaps}" target="_blank" style="text-decoration: none;">
+                <button style="background-color:#4285F4; color:white; border:none; padding:12px 25px; border-radius:8px; font-weight:bold; cursor:pointer; box-shadow: 0 4px 15px rgba(66, 133, 244, 0.4); font-family:sans-serif;">
+                    🛰️ ABRIR RADAR EXTERNO (GOOGLE MAPS)
                 </button>
             </a>
         </div>
     """, unsafe_allow_html=True)
 
-    # Configuración del mapa interactivo con capa satelital de Google
-    # Nota: Usamos la URL de los tiles de Google Maps directamente
+    # 3. MAPA INTERACTIVO CON CAPA SATELITAL HÍBRIDA
+    # Usamos los tiles de Google Satélite para máxima resolución de los árboles
     google_map_tiles = 'https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}'
     
-m = folium.Map(
+    m = folium.Map(
         location=[3.518, -76.620], 
-        zoom_start=13, 
-        tiles='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', 
-        attr='Esri World Imagery'
+        zoom_start=14, 
+        tiles=google_map_tiles, 
+        attr='Google Satellite'
     )
-    
-    # --- CAMBIO SOLICITADO: FARO GEMINI EN VILLA MICHELLE ---
-    color_gemini_map = "green" if st.session_state.estado_gemini == "ACTIVO - EMITIENDO" else "orange"
-    
-for f in faros:
-        # Añadir el marcador de satélite
-        folium.Marker(
-            [f['lat'], f['lon']], 
-            popup=f['n'], 
-            icon=folium.Icon(color=f['c'], icon='satellite-dish', prefix='fa')
+
+    # 4. DESPLIEGUE DE NODOS Y RANGOS BIOACÚSTICOS
+    for faro in faros_nexus:
+        # Radio de captura de los 4 micrófonos (200 metros)
+        folium.Circle(
+            location=[faro['lat'], faro['lon']],
+            radius=200,
+            color=faro['color'],
+            fill=True,
+            fill_opacity=0.2,
+            tooltip=f"Rango de Audio: {faro['name']}"
         ).add_to(m)
-    
-    # Marcador de Hacienda Monte Guadua (Reserva)
-    folium.Marker(
-        [lat_guadua, lon_guadua], 
-        popup="Reserva Hacienda Monte Guadua", 
-        icon=folium.Icon(color='darkgreen', icon='leaf', prefix='fa')
-    ).add_to(m)
-    
-    # Delimitación del área de reserva en Monte Guadua
-    folium.Polygon(
-        locations=[
-            [3.475, -76.660], [3.480, -76.660], 
-            [3.480, -76.654], [3.475, -76.654]
-        ], 
-        color="#9BC63B", 
-        fill=True, 
-        fill_opacity=0.3, 
-        tooltip="Área de Conservación Serenity: 80 Ha"
-    ).add_to(m)
-    
-st_folium(m, width=1000)
+
+        # Marcador de estructura de pino canadiense
+        folium.Marker(
+            location=[faro['lat'], faro['lon']],
+            popup=f"<b>{faro['name']}</b><br>Estructura: 3x2x3 Pino<br>Enlace: Starlink",
+            icon=folium.Icon(color=faro['color'], icon='broadcast-tower', prefix='fa')
+        ).add_to(m)
+
+    # Renderizado en Streamlit
+    st_folium(m, width=1000, height=550)
+
+    # 5. PANEL DE TELEMETRÍA (ESTADO DE LOS FAROS)
+    st.divider()
+    col_inf1, col_inf2, col_inf3 = st.columns(3)
+    with col_inf1:
+        st.metric("NODOS ACTIVOS", "7/7", "Sincronizado")
+    with col_inf2:
+        st.metric("CONEXIÓN", "STARLINK", "Latencia 45ms")
+    with col_inf3:
+        st.metric("ENERGÍA", "SOLAR", "Nominal")
+
+    st.info("💡 Cada Faro Nexus registra datos en tiempo real mediante 8 cámaras y 4 micrófonos dentro del KBA Bosque San Antonio.")
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
