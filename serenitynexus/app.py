@@ -351,7 +351,8 @@ elif menu == "RED DE FAROS (7 NODOS)":
         color_f = "#4285F4" if f_nom == "GEMINI" else "#9BC63B"
         
         st.write("---")
-        st.markdown(f"<h2 style='text-align:center; color:{color_f};'>🛰️ FEED EN VIVO: {f_nom.upper()}</h2>", unsafe_allow_html=True)
+nombre_display = str(f_nom).upper() if f_nom else "NODO DESCONECTADO"
+st.markdown(f"<h2 style='text-align:center; color:{color_f};'>🛰️ FEED EN VIVO: {nombre_display}</h2>", unsafe_allow_html=True)
 
         # GRILLA DE 8 CÁMARAS (USANDO UN SOLO VIDEO FRAGMENTADO)
 if "f_activo" in st.session_state and st.session_state.f_activo:
@@ -794,6 +795,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
