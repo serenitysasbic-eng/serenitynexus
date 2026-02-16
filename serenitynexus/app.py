@@ -719,12 +719,12 @@ elif menu == "LOGÍSTICA AEROLÍNEAS":
 # BLOQUE FINAL: UBICACIÓN & MAPAS (Dagua y Felidia)
 # =========================================================
 elif menu == "UBICACIÓN & MAPAS":
-    st.title("Ubicación Estratégica Serenity")
-    st.markdown("### Finca Villa Michelle & Hacienda Monte Guadua")
+    st.title("🛰️ Geoposicionamiento Nexus Global")
     
-    # Coordenadas exactas
-    lat_villa = 3.465028; lon_villa = -76.634778
-    lat_guadua = 3.477917; lon_guadua = -76.657361
+faros = [
+        {"n": "Faro Maestro", "lat": 3.518, "lon": -76.620, "c": "green"},
+        {"n": "Faro Villa Michelle", "lat": 3.485, "lon": -76.605, "c": "blue"}
+    ]
     
     # Botón directo a la interfaz de Google Maps
     url_gmaps = f"https://www.google.com/maps/search/?api=1&query={lat_villa},{lon_villa}"
@@ -742,21 +742,23 @@ elif menu == "UBICACIÓN & MAPAS":
     # Nota: Usamos la URL de los tiles de Google Maps directamente
     google_map_tiles = 'https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}'
     
-    m = folium.Map(
-        location=[lat_villa, lon_villa], 
-        zoom_start=15, 
-        tiles=google_map_tiles, 
-        attr='Google Maps Satellite'
+m = folium.Map(
+        location=[3.518, -76.620], 
+        zoom_start=13, 
+        tiles='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', 
+        attr='Esri World Imagery'
     )
     
     # --- CAMBIO SOLICITADO: FARO GEMINI EN VILLA MICHELLE ---
     color_gemini_map = "green" if st.session_state.estado_gemini == "ACTIVO - EMITIENDO" else "orange"
     
-    folium.Marker(
-        [lat_villa, lon_villa], 
-        popup=f"NÚCLEO CENTRAL: FARO GEMINI - Villa Michelle", 
-        icon=folium.Icon(color=color_gemini_map, icon='bolt', prefix='fa')
-    ).add_to(m)
+for f in faros:
+        # Añadir el marcador de satélite
+        folium.Marker(
+            [f['lat'], f['lon']], 
+            popup=f['n'], 
+            icon=folium.Icon(color=f['c'], icon='satellite-dish', prefix='fa')
+        ).add_to(m)
     
     # Marcador de Hacienda Monte Guadua (Reserva)
     folium.Marker(
@@ -777,9 +779,10 @@ elif menu == "UBICACIÓN & MAPAS":
         tooltip="Área de Conservación Serenity: 80 Ha"
     ).add_to(m)
     
-    st_folium(m, width="100%", height=600)
+st_folium(m, width=1000)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
