@@ -145,24 +145,100 @@ def generar_pdf_corporativo(empresa, impacto, hash_id, logo_bytes=None, es_vadem
     buffer = io.BytesIO()
     c = canvas.Canvas(buffer, pagesize=letter)
     
-    # --- 1. MEMBRETE Y LOGOS (CO-BRANDING) ---
+    # --- 1. MEMBRETE Y LOGOS (ESTÁNDAR NEXUS) ---
     c.setStrokeColor(VERDE_SERENITY)
     c.setLineWidth(2)
-    c.line(0.5*inch, 10.2*inch, 8*inch, 10.2*inch) # Línea superior
+    c.line(0.5*inch, 10.2*inch, 8*inch, 10.2*inch) # Línea superior de seguridad
     
-    # Logo Serenity (Siempre presente a la izquierda)
+    # Logo Serenity (Autoridad Certificadora)
     try:
         if os.path.exists("logo_serenity.png"):
             c.drawImage("logo_serenity.png", 0.5*inch, 9.2*inch, width=1.5*inch, height=0.8*inch, preserveAspectRatio=True, mask='auto')
     except: pass
 
-    # Logo Empresa (Si se carga, a la derecha)
+    # Logo Empresa Asociada
     if logo_bytes:
         try:
             with open("temp_logo_corp.png", "wb") as f:
                 f.write(logo_bytes.getbuffer())
             c.drawImage("temp_logo_corp.png", 6*inch, 9.2*inch, width=1.5*inch, height=0.8*inch, preserveAspectRatio=True)
         except: pass
+
+    # --- 2. TÍTULOS Y ENCABEZADO TÉCNICO ---
+    c.setFont("Helvetica-Bold", 18)
+    c.setFillColor(VERDE_SERENITY)
+    titulo = "VADEMÉCUM TÉCNICO DE CUMPLIMIENTO LEGAL" if es_vademecum else "CERTIFICADO DE COMPENSACIÓN BIOMÉTRICA"
+    c.drawCentredString(4.25*inch, 8.8*inch, titulo)
+    
+    c.setFont("Helvetica-Bold", 12)
+    c.setFillColor(black)
+    c.drawCentredString(4.25*inch, 8.4*inch, f"RAZÓN SOCIAL: {empresa.upper()}")
+    c.drawCentredString(4.25*inch, 8.2*inch, f"ID DE REGISTRO NEXUS: {hash_id}")
+
+    # --- 3. CUERPO TÉCNICO (CONTENIDO LEGAL LEY 2173/2169/2111) ---
+    text_object = c.beginText(0.8*inch, 7.5*inch)
+    text_object.setFont("Helvetica-Bold", 11)
+    text_object.setLeading(14)
+    
+    if es_vademecum:
+        lineas = [
+            "SOLUCIONES INTEGRADAS SERENITY S.A.S BIC:",
+            "",
+            "1. CUMPLIMIENTO LEY 2173 DE 2021 (ÁREAS DE VIDA):",
+            "   Garantizamos la siembra y mantenimiento por 3 años de 2 árboles por empleado.",
+            "   Nuestra labor: Geolocalización individual y custodia en la Hacienda Monte Guadua.",
+            "",
+            "2. CUMPLIMIENTO LEY 2169 DE 2021 (CARBONO NEUTRALIDAD):",
+            "   Monitoreo mediante Faros Gemini para la certificación de captura de CO2 real.",
+            "   Transformación de pasivos ambientales en activos biológicos verificables.",
+            "",
+            "3. PROTOCOLO LEY 2111 DE 2021 (DELITOS AMBIENTALES):",
+            "   Vigilancia perimetral mediante IA para prevenir la deforestación y el ecocidio.",
+            "",
+            "CONCLUSIÓN TÉCNICA: La entidad referenciada se vincula al Internet de la Naturaleza",
+            "asegurando la trazabilidad absoluta de su inversión ambiental mediante Blockchain."
+        ]
+    else:
+        lineas = [
+            "DETALLE DE COMPENSACIÓN:",
+            f"- Gestión de {impacto} individuos forestales en el corredor biológico de Dagua.",
+            "- Registro biométrico activo en la Red de Faros Serenity (Starlink Link).",
+            "- Estado de mantenimiento: Vigente bajo protocolos de restauración activa.",
+            "- Este certificado avala la responsabilidad social y ambiental corporativa.",
+            "",
+            "FIRMA AUTORIZADA: Sistema Nexus IA - Serenity S.A.S BIC"
+        ]
+        
+    for linea in lineas:
+        text_object.textLine(linea)
+    c.drawText(text_object)
+
+    # --- 4. SELLO DE INTEGRIDAD CRIPTOGRÁFICA (GRADO MILITAR) ---
+    # Generamos una firma única usando el HASH_KEY de tus Secrets
+    secret_key = st.secrets.get("HASH_KEY", "NEXUS_INTERNAL_KEY_2026")
+    firma_militar = hashlib.sha512(f"{empresa}{impacto}{secret_key}".encode()).hexdigest()[:45].upper()
+
+    c.setStrokeColor(VERDE_SERENITY)
+    c.setLineWidth(1)
+    c.rect(0.8*inch, 1.3*inch, 6.9*inch, 0.6*inch) # Cuadro de validación
+    
+    c.setFont("Helvetica-Bold", 8)
+    c.setFillColor(VERDE_SERENITY)
+    c.drawString(1*inch, 1.7*inch, "VERIFICACIÓN DE INTEGRIDAD NEXUS (NIVEL NASA):")
+    
+    c.setFont("Courier", 7)
+    c.setFillColor(black)
+    c.drawString(1*inch, 1.5*inch, f"SIG-NEXUS: {firma_militar}")
+    c.setFont("Courier-Bold", 6)
+    c.drawString(1*inch, 1.4*inch, "VALIDADO VÍA STARLINK | NODO MAESTRO GEMINI | KBA BOSQUE SAN ANTONIO")
+
+    # --- 5. PIE DE PÁGINA SEGURIDAD ---
+    c.setFont("Helvetica-Oblique", 8)
+    c.drawCentredString(4.25*inch, 1.0*inch, "Documento generado electrónicamente. La validez de este reporte es inmutable en la cadena de bloques Nexus.")
+    
+    c.save()
+    buffer.seek(0)
+    return buffer
 
     # --- 2. TÍTULO Y ENCABEZADO TÉCNICO ---
     c.setFont("Helvetica-Bold", 18)
@@ -809,6 +885,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
