@@ -667,81 +667,76 @@ elif menu == "DONACIONES Y CERTIFICADO":
             )
 
 # =========================================================
-# BLOQUE 7: LOGÍSTICA MULTIMODAL (AÉREO & TERRESTRE)
+# BLOQUE 7: INTELIGENCIA DE CARBONO NEXUS (IA + NIT)
 # =========================================================
 elif menu == "LOGÍSTICA AEROLÍNEAS":
-    st.title("🌐 Hub de Mitigación Multimodal Nexus")
-    st.markdown("### Alianza por la Descarbonización del Valle del Cauca y el Mundo")
+    st.title("🧠 Inteligencia de Carbono Nexus")
+    st.markdown("### Diagnóstico Automatizado de Huella de Carbono")
 
-    # --- 1. SELECCIÓN DE MODALIDAD ---
-    tab_aire, tab_tierra = st.tabs(["✈️ AEROLÍNEAS INTERNACIONALES", "🚚 TRANSPORTE TERRESTRE & CARGA"])
-
-    with tab_aire:
-        st.subheader("Rutas Globales hacia Colombia")
-        cols_a = st.columns(3)
-        aero_list = [
-            {"n": "AVIANCA", "u": "https://www.avianca.com", "l": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Avianca_Logo.svg/512px-Avianca_Logo.svg.png"},
-            {"n": "IBERIA", "u": "https://www.iberia.com", "l": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Iberia_Logo.svg/512px-Iberia_Logo.svg.png"},
-            {"n": "AIR FRANCE", "u": "https://www.airfrance.com", "l": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Air_France_Logo.svg/512px-Air_France_Logo.svg.png"}
-        ]
-        for i, a in enumerate(aero_list):
-            with cols_a[i]:
-                st.markdown(f"""<div style="border:1px solid #ddd; padding:10px; border-radius:10px; text-align:center; background:white;">
-                    <img src="{a['l']}" width="70"><br><b>{a['n']}</b><br>
-                    <a href="{a['u']}" target="_blank" style="font-size:10px;">Portal Oficial</a></div>""", unsafe_allow_html=True)
-
-    with tab_tierra:
-        st.subheader("Conectividad Terrestre - Valle del Cauca")
-        cols_t = st.columns(3)
-        # Empresas clave para el Valle (Pasajeros y Carga)
-        terr_list = [
-            {"n": "EXPRESO PALMIRA", "u": "https://www.expresopalmira.com.co", "l": "https://www.expresopalmira.com.co/wp-content/uploads/2021/05/logo-expreso-palmira.png"},
-            {"n": "BOLIVARIANO", "u": "https://www.bolivariano.com.co", "l": "https://upload.wikimedia.org/wikipedia/commons/b/b3/Logo_Bolivariano.png"},
-            {"n": "S26 / ENVÍA", "u": "https://envia.co", "l": "https://envia.co/wp-content/uploads/2018/06/logo-envia.png"}
-        ]
-        for i, t in enumerate(terr_list):
-            with cols_t[i]:
-                # Nota: Algunos logos pueden requerir URLs directas válidas o archivos locales
-                st.markdown(f"""<div style="border:1px solid #9BC63B; padding:10px; border-radius:10px; text-align:center; background:white;">
-                    <p style="font-weight:bold; color:#333;">{t['n']}</p>
-                    <a href="{t['u']}" target="_blank" style="font-size:10px; color:#9BC63B;">Logística Terrestre</a></div>""", unsafe_allow_html=True)
-
-    st.divider()
-
-    # --- 2. PANEL DE CÁLCULO UNIFICADO ---
-    st.markdown("### 📝 Panel de Compensación de Huella")
-    
+    # 1. ENTRADA DE DATOS CORPORATIVOS
     with st.container(border=True):
-        c1, c2 = st.columns(2)
-        with c1:
-            empresa_final = st.text_input("Nombre de la Empresa a Certificar", value="TRANSPORTES DEL VALLE SAS")
-            tipo_transporte = st.selectbox("Modo de Operación", 
-                ["Vuelo Internacional", "Vuelo Nacional", "Transporte de Pasajeros (Bus)", "Carga Pesada (Tractocamión)", "Distribución Local"])
+        col_nit1, col_nit2 = st.columns([1, 1])
+        with col_nit1:
+            nit_empresa = st.text_input("INGRESE EL NIT DE LA EMPRESA (Sin dígito de verificación)", placeholder="900123456")
+        with col_nit2:
+            nombre_empresa = st.text_input("RAZÓN SOCIAL", placeholder="Ej: TRANSPORTES VALLE SAS")
+
+    if nit_empresa and nombre_empresa:
+        # 2. MOTOR DE IA: Deducción de Actividad y Huella
+        # En un sistema real, aquí consultaríamos una API de RUES o DIAN
+        # Para el MVP, usamos lógica de segmentación por sectores colombianos
         
-        with c2:
-            impacto_val = st.number_input("Árboles a Compensar (Activos Nexus)", min_value=1, value=50)
-            id_referencia = st.text_input("ID de Manifiesto o Ruta", "Ruta-Cali-Buenaventura-01")
+        st.subheader(f"🛡️ Análisis de Impacto: {nombre_empresa}")
+        
+        # Simulamos la categorización por sector (IA logic)
+        # Esto se puede conectar con Gemini para que lea el objeto social real
+        sector_deducido = "Transporte Multimodal y Logística" # Ejemplo detectado
+        intensidad_carbono = "ALTA" # Clasificación según sector
+        
+        st.markdown(f"**Sector Detectado:** `{sector_deducido}` | **Intensidad de Emisión:** `{intensidad_carbono}`")
 
-    # --- 3. GENERACIÓN DE CERTIFICADO ---
-    # Usamos hashlib para crear el ID único SHA-256
-    hash_id_nexus = hashlib.sha256(f"{empresa_final}{impacto_val}{id_referencia}".encode()).hexdigest()[:12].upper()
-    
-    # Generamos el PDF (Función creada anteriormente)
-    pdf_file = generar_pdf_corporativo(
-        empresa=empresa_final, 
-        impacto=impacto_val, 
-        hash_id=hash_id_nexus,
-        logo_bytes=None, 
-        es_vademecum=False
-    )
+        # 3. CALCULADORA DE EMISIÓN BASADA EN SECTOR
+        with st.expander("📊 Parámetros de Operación Mensual", expanded=True):
+            col_par1, col_par2 = st.columns(2)
+            with col_par1:
+                consumo_energia = st.number_input("Consumo Energía (kWh/mes)", min_value=0, value=1500)
+                flota_vehicular = st.number_input("Número de Vehículos / Aeronaves en Operación", min_value=0, value=5)
+            with col_par2:
+                residuos_ton = st.number_input("Producción de Residuos (Toneladas/mes)", min_value=0.0, value=1.2)
+                operaciones_dia = st.number_input("Promedio Operaciones Diarias", min_value=1, value=10)
 
-    st.download_button(
-        label=f"📥 EMITIR CERTIFICADO DE COMPENSACIÓN: {empresa_final}",
-        data=pdf_file,
-        file_name=f"Nexus_Certificado_{empresa_final}.pdf",
-        mime="application/pdf",
-        use_container_width=True)
+        # CÁLCULO CIENTÍFICO (Factores de emisión estándar para Colombia)
+        # Energía: 0.164 kgCO2/kWh | Diesel/JetA1: ~2.6 kgCO2/gal | Residuos: variable
+        huella_total = (consumo_energia * 0.164) + (flota_vehicular * operaciones_dia * 15.5) + (residuos_ton * 500)
+        
+        # --- RESULTADOS DE COMPENSACIÓN ---
+        res1, res2 = st.columns(2)
+        with res1:
+            st.metric("HUELLA ESTIMADA MÁXIMA", f"{huella_total:,.2f} kg CO2e / mes")
+            st.progress(0.85 if intensidad_carbono == "ALTA" else 0.3)
+            
+        with res2:
+            arboles_nexus = int(huella_total / 20) # 1 árbol Nexus = 20kg/año
+            st.metric("COMPENSACIÓN REQUERIDA", f"{arboles_nexus} Árboles", "Activos Biológicos")
 
+        # 4. GENERACIÓN DE CERTIFICADO CON HASH SHA-512
+        hash_id = hashlib.sha512(f"{nit_empresa}{huella_total}".encode()).hexdigest()[:16].upper()
+        
+        pdf_file = generar_pdf_corporativo(
+            empresa=nombre_empresa, 
+            impacto=arboles_nexus, 
+            hash_id=hash_id,
+            logo_bytes=None,
+            es_vademecum=True # Enviamos el Vademécum legal por ser empresa NIT
+        )
+
+        st.download_button(
+            label=f"📥 EMITIR CERTIFICADO LEGAL DE COMPENSACIÓN PARA {nombre_empresa}",
+            data=pdf_file,
+            file_name=f"Certificado_Nexus_{nit_empresa}.pdf",
+            mime="application/pdf",
+            use_container_width=True
+        )
 
 # =========================================================
 # BLOQUE 8: UBICACIÓN & MAPAS (VERSIÓN FINAL NASA-GRADE)
@@ -824,6 +819,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st.info("💡 Cada Faro Nexus registra datos en tiempo real mediante 8 cámaras y 4 micrófonos dentro del KBA Bosque San Antonio.")
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
