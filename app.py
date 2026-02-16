@@ -236,16 +236,34 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# --- LOGIN ---
+# --- PROTOCOLO DE ACCESO DE SEGURIDAD NEXUS ---
+def verificar_credenciales(password_input):
+    # El hash de "Serenity2026" generado con SHA-256
+    HASH_AUTORIZADO = "c46f6f966144e59f2f847528e10d28131580237c16d337d825838563a6e69315"
+    m = hashlib.sha256(password_input.encode()).hexdigest()
+    return m == HASH_AUTORIZADO
+
 if not st.session_state.auth:
-    st.markdown("<div style='text-align:center; padding-top: 50px;'><h1>SISTEMA NEXUS | SERENITY</h1></div>", unsafe_allow_html=True)
+    st.markdown("""
+        <div style='text-align:center; padding-top: 50px;'>
+            <h1 style='color:#9BC63B; letter-spacing:10px;'>SISTEMA NEXUS</h1>
+            <p style='color:white; font-family:monospace;'>AUTENTICACIÓN DE GRADO MILITAR REQUERIDA</p>
+        </div>
+    """, unsafe_allow_html=True)
+    
     col_sec = st.columns([1,1,1])
     with col_sec[1]:
-        clave = st.text_input("PASSWORD ADMIN", type="password")
-        if st.button("INGRESAR"):
-            if clave == "Serenity2026":
-                st.session_state.auth = True
-                st.rerun()
+        with st.container(border=True):
+            clave = st.text_input("PASSWORD ADMIN", type="password", help="Ingrese su credencial de acceso nivel 1")
+            if st.button("INGRESAR AL NÚCLEO", use_container_width=True):
+                if verificar_credenciales(clave):
+                    st.session_state.auth = True
+                    st.toast("ACCESO CONCEDIDO: BIENVENIDO JORGE CARVAJAL", icon="🔓")
+                    st.rerun()
+                else:
+                    st.error("ERROR DE AUTENTICACIÓN: ACCESO DENEGADO")
+                    # Log de intento fallido (Concepto NASA)
+                    print(f"Intento de acceso fallido a las {datetime.now()}")
     st.stop()
 
 # --- BUSCA ESTA SECCIÓN Y ACTUALIZA LA LISTA ---
@@ -778,6 +796,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
