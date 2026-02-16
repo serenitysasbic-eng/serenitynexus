@@ -740,7 +740,7 @@ elif menu == "LOGÍSTICA AEROLÍNEAS":
         data=pdf_file,
         file_name=f"Nexus_Certificado_{empresa_final}.pdf",
         mime="application/pdf",
-        use_container_width=True
+        use_container_width=True)
 
 
 # =========================================================
@@ -824,6 +824,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st.info("💡 Cada Faro Nexus registra datos en tiempo real mediante 8 cámaras y 4 micrófonos dentro del KBA Bosque San Antonio.")
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
