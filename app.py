@@ -56,6 +56,16 @@ def generar_pdf_certificado(nombre, monto, hash_id):
 def generar_pdf_corporativo(empresa, impacto, hash_id, logo_bytes=None, es_vademecum=False):
     buffer = io.BytesIO()
     c = canvas.Canvas(buffer, pagesize=letter)
+
+def generar_firma_digital(empresa, impacto):
+    """
+    Crea un Hash único que valida que el certificado fue emitido por 
+    el núcleo de Serenity Nexus Global.
+    """
+    secret_key = st.secrets["HASH_KEY"]
+    data = f"{empresa}{impacto}{secret_key}"
+    # Generamos un Hash de grado militar para el documento
+    return hashlib.sha512(data.encode()).hexdigest()[:32].upper()
     
     # --- Estética y Bordes ---
     c.setStrokeColor(VERDE_SERENITY)
@@ -787,6 +797,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
