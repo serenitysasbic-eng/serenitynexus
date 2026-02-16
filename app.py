@@ -820,71 +820,76 @@ elif menu == "LOGÍSTICA AEROLÍNEAS":
         st.markdown("<a href='https://www.copaair.com' target='_blank'><div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Copa_Airlines_logo.svg/320px-Copa_Airlines_logo.svg.png'><p>COPA</p></div></a>", unsafe_allow_html=True)
     with l4: 
         st.markdown("<a href='https://www.aeromexico.com' target='_blank'><div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Aeromexico_Logo_2024.svg/320px-Aeromexico_Logo_2024.svg.png'><p>AEROMEXICO</p></div></a>", unsafe_allow_html=True)
+
 # =========================================================
-# BLOQUE FINAL: UBICACIÓN & MAPAS (Dagua y Felidia)
+# BLOQUE 8: UBICACIÓN & MAPAS (VIGILANCIA SATELITAL)
 # =========================================================
 elif menu == "UBICACIÓN & MAPAS":
-    st.title("Ubicación Estratégica Serenity")
-    st.markdown("### Finca Villa Michelle & Hacienda Monte Guadua")
-    
-    # Coordenadas exactas
-    lat_villa = 3.465028; lon_villa = -76.634778
-    lat_guadua = 3.477917; lon_guadua = -76.657361
-    
-    # Botón directo a la interfaz de Google Maps
-    url_gmaps = f"https://www.google.com/maps/search/?api=1&query={lat_villa},{lon_villa}"
-    st.markdown(f"""
-        <div style='text-align:center; margin-bottom: 20px;'>
-            <a href="{url_gmaps}" target="_blank">
-                <button style="background-color:#4285F4; color:white; border:none; padding:15px 30px; border-radius:10px; font-weight:bold; cursor:pointer; box-shadow: 0 4px 15px rgba(66, 133, 244, 0.3);">
-                    VER EN GOOGLE MAPS (SISTEMA EXTERNO)
-                </button>
-            </a>
-        </div>
-    """, unsafe_allow_html=True)
+    st.title("🛰️ Geoposicionamiento Nexus Global")
+    st.markdown("### Monitoreo Satelital de Faros en KBA Bosque San Antonio")
 
-    # Configuración del mapa interactivo con capa satelital de Google
-    # Nota: Usamos la URL de los tiles de Google Maps directamente
-    google_map_tiles = 'https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}'
-    
-    m = folium.Map(
-        location=[lat_villa, lon_villa], 
-        zoom_start=15, 
-        tiles=google_map_tiles, 
-        attr='Google Maps Satellite'
-    )
-    
-    # --- CAMBIO SOLICITADO: FARO GEMINI EN VILLA MICHELLE ---
-    color_gemini_map = "green" if st.session_state.estado_gemini == "ACTIVO - EMITIENDO" else "orange"
-    
-    folium.Marker(
-        [lat_villa, lon_villa], 
-        popup=f"NÚCLEO CENTRAL: FARO GEMINI - Villa Michelle", 
-        icon=folium.Icon(color=color_gemini_map, icon='bolt', prefix='fa')
-    ).add_to(m)
-    
-    # Marcador de Hacienda Monte Guadua (Reserva)
-    folium.Marker(
-        [lat_guadua, lon_guadua], 
-        popup="Reserva Hacienda Monte Guadua", 
-        icon=folium.Icon(color='darkgreen', icon='leaf', prefix='fa')
-    ).add_to(m)
-    
-    # Delimitación del área de reserva en Monte Guadua
-    folium.Polygon(
-        locations=[
-            [3.475, -76.660], [3.480, -76.660], 
-            [3.480, -76.654], [3.475, -76.654]
-        ], 
-        color="#9BC63B", 
-        fill=True, 
-        fill_opacity=0.3, 
-        tooltip="Área de Conservación Serenity: 80 Ha"
-    ).add_to(m)
-    
-    st_folium(m, width="100%", height=600)
+    # 1. COORDENADAS DE LOS FAROS (Misión Crítica)
+    # Ubicaciones estratégicas en Monte Guadua y Villa Michelle
+    faros_data = pd.DataFrame([
+        {"nombre": "Faro Halcón (Maestro)", "lat": 3.518, "lon": -76.620, "tipo": "Monte Guadua"},
+        {"nombre": "Faro Colibrí", "lat": 3.519, "lon": -76.622, "tipo": "Monte Guadua"},
+        {"nombre": "Faro Rana", "lat": 3.517, "lon": -76.621, "tipo": "Monte Guadua"},
+        {"nombre": "Faro Venado", "lat": 3.516, "lon": -76.623, "tipo": "Monte Guadua"},
+        {"nombre": "Faro Tigrillo", "lat": 3.520, "lon": -76.619, "tipo": "Monte Guadua"},
+        {"nombre": "Faro Capibara", "lat": 3.515, "lon": -76.625, "tipo": "Monte Guadua"},
+        {"nombre": "Faro Villa Michelle (Nodo 7)", "lat": 3.485, "lon": -76.605, "tipo": "Villa Michelle"},
+    ])
 
-# --- FIN DEL ARCHIVO ---
+    col_map1, col_map2 = st.columns([3, 1])
+
+    with col_map1:
+        # Configuración del Mapa Base (Satélite)
+        # Nota: Usamos Esri World Imagery para vista grado militar
+        m = folium.Map(location=[3.518, -76.620], zoom_start=14, tiles='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', attr='Esri')
+
+        for _, faro in faros_data.iterrows():
+            color_nodo = "#4285F4" if "Villa Michelle" in faro['tipo'] else "#9BC63B"
+            
+            # Dibujar Rango de Cobertura de Micrófonos (Radio de 200m)
+            folium.Circle(
+                location=[faro['lat'], faro['lon']],
+                radius=200,
+                color=color_nodo,
+                fill=True,
+                fill_opacity=0.2,
+                tooltip=f"Rango Bioacústico: {faro['nombre']}"
+            ).add_to(m)
+
+            # Marcador de Estructura de Pino (Faro)
+            folium.Marker(
+                location=[faro['lat'], faro['lon']],
+                popup=f"<b>{faro['nombre']}</b><br>Estructura: Pino Canadiense<br>Conexión: Starlink",
+                icon=folium.Icon(color="green" if color_nodo == "#9BC63B" else "blue", icon="satellite-dish", prefix="fa")
+            ).add_to(m)
+
+        # Renderizar Mapa
+        st_folium(m, width=900, height=500)
+
+    with col_map2:
+        st.markdown("#### Estado de los Nodos")
+        for _, f in faros_data.iterrows():
+            st.success(f"📡 {f['nombre']}")
+            st.caption(f"Lat: {f['lat']} | Lon: {f['lon']}")
+        
+        st.info("💡 Vista Satelital validada por la Red de Faros Serenity S.A.S BIC.")
+
+    st.divider()
+    st.markdown("#### 📐 Especificaciones de la Estructura (Nivel ISS)")
+    c1, c2 = st.columns(2)
+    with c1:
+        st.write("**Dimensiones:** 3m x 2m x 3m")
+        st.write("**Material:** Pino Canadiense Tratado")
+        st.write("**Energía:** Panel Solar monocristalino 450W")
+    with c2:
+        st.write("**Sensores:** 8 Cámaras 4K + 4 Micrófonos de alta fidelidad")
+        st.write("**Ubicación:** Interior del KBA Bosque San Antonio")
+        st.write("**Enlace:** Terminal Starlink v3")
+
 
 
 
