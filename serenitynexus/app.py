@@ -9,9 +9,11 @@ import os
 import base64
 import librosa
 import numpy as np
+import folium # <--- ASEGÚRATE QUE ESTÉ ESTA
+from streamlit_folium import st_folium
+
 
 # --- LIBRERÍAS EXTENDIDAS ---
-import folium
 from streamlit_folium import st_folium
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
@@ -778,6 +780,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st_folium(m, width="100%", height=600)
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
