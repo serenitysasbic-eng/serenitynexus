@@ -5,9 +5,8 @@ folium
 streamlit-folium
 plotly
 psycopg2-binary
-streamlit
 reportlab
-streamlit
-pandas
 fpdf
-
+librosa
+opencv-python-headless
+google-generativeai
