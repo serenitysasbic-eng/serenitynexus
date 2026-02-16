@@ -822,73 +822,64 @@ elif menu == "LOGÍSTICA AEROLÍNEAS":
         st.markdown("<a href='https://www.aeromexico.com' target='_blank'><div class='airline-grid'><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Aeromexico_Logo_2024.svg/320px-Aeromexico_Logo_2024.svg.png'><p>AEROMEXICO</p></div></a>", unsafe_allow_html=True)
 
 # =========================================================
-# BLOQUE 8: UBICACIÓN & MAPAS (VIGILANCIA SATELITAL)
+# BLOQUE 8: UBICACIÓN & MAPAS (VERSIÓN SATELITAL NEXUS)
 # =========================================================
 elif menu == "UBICACIÓN & MAPAS":
     st.title("🛰️ Geoposicionamiento Nexus Global")
-    st.markdown("### Monitoreo Satelital de Faros en KBA Bosque San Antonio")
+    
+    # CSS para que el mapa se vea más profesional (borde verde Serenity)
+    st.markdown("""
+        <style>
+        .folium-map { border: 2px solid #9BC63B; border-radius: 10px; }
+        </style>
+    """, unsafe_allow_html=True)
 
-    # 1. COORDENADAS DE LOS FAROS (Misión Crítica)
-    # Ubicaciones estratégicas en Monte Guadua y Villa Michelle
+    # 1. DATOS TÉCNICOS DE LOS 7 FAROS
     faros_data = pd.DataFrame([
-        {"nombre": "Faro Halcón (Maestro)", "lat": 3.518, "lon": -76.620, "tipo": "Monte Guadua"},
-        {"nombre": "Faro Colibrí", "lat": 3.519, "lon": -76.622, "tipo": "Monte Guadua"},
-        {"nombre": "Faro Rana", "lat": 3.517, "lon": -76.621, "tipo": "Monte Guadua"},
-        {"nombre": "Faro Venado", "lat": 3.516, "lon": -76.623, "tipo": "Monte Guadua"},
-        {"nombre": "Faro Tigrillo", "lat": 3.520, "lon": -76.619, "tipo": "Monte Guadua"},
-        {"nombre": "Faro Capibara", "lat": 3.515, "lon": -76.625, "tipo": "Monte Guadua"},
-        {"nombre": "Faro Villa Michelle (Nodo 7)", "lat": 3.485, "lon": -76.605, "tipo": "Villa Michelle"},
+        {"nombre": "Faro Maestro (Monte Guadua)", "lat": 3.518, "lon": -76.620, "color": "green"},
+        {"nombre": "Faro 2 (Monte Guadua)", "lat": 3.519, "lon": -76.622, "color": "green"},
+        {"nombre": "Faro 3 (Monte Guadua)", "lat": 3.517, "lon": -76.621, "color": "green"},
+        {"nombre": "Faro 4 (Monte Guadua)", "lat": 3.516, "lon": -76.623, "color": "green"},
+        {"nombre": "Faro 5 (Monte Guadua)", "lat": 3.520, "lon": -76.619, "color": "green"},
+        {"nombre": "Faro 6 (Monte Guadua)", "lat": 3.515, "lon": -76.625, "color": "green"},
+        {"nombre": "Faro Nodo 7 (Villa Michelle)", "lat": 3.485, "lon": -76.605, "color": "blue"},
     ])
 
-    col_map1, col_map2 = st.columns([3, 1])
+    # 2. CREACIÓN DEL MAPA CON CAPA ESRI SATELITAL (NASA STYLE)
+    # Importante: Tiles de Esri World Imagery para ver los árboles reales
+    m = folium.Map(
+        location=[3.518, -76.620], 
+        zoom_start=14, 
+        tiles='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', 
+        attr='Esri World Imagery'
+    )
 
-    with col_map1:
-        # Configuración del Mapa Base (Satélite)
-        # Nota: Usamos Esri World Imagery para vista grado militar
-        m = folium.Map(location=[3.518, -76.620], zoom_start=14, tiles='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', attr='Esri')
+    # 3. AGREGAR LOS NODOS AL MAPA
+    from streamlit_folium import st_folium # Asegúrate de tener esta importación al inicio de tu app.py
 
-        for _, faro in faros_data.iterrows():
-            color_nodo = "#4285F4" if "Villa Michelle" in faro['tipo'] else "#9BC63B"
-            
-            # Dibujar Rango de Cobertura de Micrófonos (Radio de 200m)
-            folium.Circle(
-                location=[faro['lat'], faro['lon']],
-                radius=200,
-                color=color_nodo,
-                fill=True,
-                fill_opacity=0.2,
-                tooltip=f"Rango Bioacústico: {faro['nombre']}"
-            ).add_to(m)
-
-            # Marcador de Estructura de Pino (Faro)
-            folium.Marker(
-                location=[faro['lat'], faro['lon']],
-                popup=f"<b>{faro['nombre']}</b><br>Estructura: Pino Canadiense<br>Conexión: Starlink",
-                icon=folium.Icon(color="green" if color_nodo == "#9BC63B" else "blue", icon="satellite-dish", prefix="fa")
-            ).add_to(m)
-
-        # Renderizar Mapa
-        st_folium(m, width=900, height=500)
-
-    with col_map2:
-        st.markdown("#### Estado de los Nodos")
-        for _, f in faros_data.iterrows():
-            st.success(f"📡 {f['nombre']}")
-            st.caption(f"Lat: {f['lat']} | Lon: {f['lon']}")
+    for _, faro in faros_data.iterrows():
+        # Círculo de cobertura de los 4 micrófonos (Radio 200m)
+        folium.Circle(
+            location=[faro['lat'], faro['lon']],
+            radius=200,
+            color=faro['color'],
+            fill=True,
+            fill_opacity=0.3,
+            tooltip=f"Cobertura Bioacústica: {faro['nombre']}"
+        ).add_to(m)
         
-        st.info("💡 Vista Satelital validada por la Red de Faros Serenity S.A.S BIC.")
+        # Marcador tipo Satélite
+        folium.Marker(
+            location=[faro['lat'], faro['lon']],
+            popup=f"<b>{faro['nombre']}</b><br>Estructura: Pino Canadiense<br>Conexión: Starlink",
+            icon=folium.Icon(color=faro['color'], icon="broadcast-tower", prefix="fa")
+        ).add_to(m)
 
-    st.divider()
-    st.markdown("#### 📐 Especificaciones de la Estructura (Nivel ISS)")
-    c1, c2 = st.columns(2)
-    with c1:
-        st.write("**Dimensiones:** 3m x 2m x 3m")
-        st.write("**Material:** Pino Canadiense Tratado")
-        st.write("**Energía:** Panel Solar monocristalino 450W")
-    with c2:
-        st.write("**Sensores:** 8 Cámaras 4K + 4 Micrófonos de alta fidelidad")
-        st.write("**Ubicación:** Interior del KBA Bosque San Antonio")
-        st.write("**Enlace:** Terminal Starlink v3")
+    # 4. RENDERIZAR EN STREAMLIT
+    st_folium(m, width=1000, height=600, returned_objects=[])
+
+    st.info("💡 Los círculos representan el radio de captura de los 4 micrófonos instalados en cada estructura de 3x2x3.")
+
 
 
 
