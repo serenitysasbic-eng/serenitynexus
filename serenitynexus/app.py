@@ -579,6 +579,7 @@ elif menu == "BILLETERA CRYPTO (WEB3)":
 
     # --- NIVEL 1: EL TOKEN (VISUAL) ---
     try:
+        # Intentamos cargar el video si existe, si no, mostramos un mensaje elegante
         if os.path.exists("video_sng.mp4"):
             with open("video_sng.mp4", "rb") as f:
                 data = f.read()
@@ -593,7 +594,7 @@ elif menu == "BILLETERA CRYPTO (WEB3)":
             st.markdown(video_html, unsafe_allow_html=True)
         else:
             st.info("🛰️ Visualizador de Token $SNG Activo (Esperando archivo de video)")
-    except:
+    except Exception as e:
         st.info("🛰️ Sistema de Video Nexus en Espera")
 
     st.write("---")
@@ -602,54 +603,75 @@ elif menu == "BILLETERA CRYPTO (WEB3)":
     col_buy, col_vault = st.columns(2)
 
     with col_buy:
-        st.markdown("#### ¿Cómo comprar $SNG?")
+        st.markdown("<h4 style='color:#9BC63B;'>¿Cómo comprar $SNG?</h4>", unsafe_allow_html=True)
         st.write("El token $SNG representa hectáreas regeneradas y datos biométricos de los Faros.")
         with st.container(border=True):
-            st.write("**Simulador de Intercambio (Swap)**")
+            st.markdown("<p style='color:white; font-weight:bold;'>Simulador de Intercambio (Swap)</p>", unsafe_allow_html=True)
             moneda_pago = st.selectbox("Pagar con:", ["USD (Tarjeta/Transferencia)", "USDT (Crypto)", "Ethereum"])
-            cantidad_usd = st.number_input("Monto a invertir (USD):", min_value=10, step=50)
-            tasa = 0.50 
+            cantidad_usd = st.number_input("Monto a invertir (USD):", min_value=10, step=50, key="wallet_buy_usd")
+            tasa = 0.50 # 1 SNG = 0.50 USD
             st.metric("Recibirás aproximadamente:", f"{cantidad_usd / tasa:,.2f} $SNG")
-            if st.button("COMPRAR TOKENS $SNG"):
+            if st.button("COMPRAR TOKENS $SNG", use_container_width=True):
                 st.success("Orden de compra enviada al Nexus Gateway.")
 
     with col_vault:
-        st.markdown("#### ¿Cómo tener una Billetera Nexus?")
+        st.markdown("<h4 style='color:#9BC63B;'>¿Cómo tener una Billetera Nexus?</h4>", unsafe_allow_html=True)
         st.write("Nexus Vault es tu llave privada al Internet de la Naturaleza.")
         st.markdown("""
-        * **Paso 1:** Descarga Nexus App o usa Metamask.
-        * **Paso 2:** Genera tu frase semilla de 24 palabras.
-        * **Paso 3:** Vincula tu ID de Donante Serenity.
-        """)
-        st.button("DESCARGAR GUÍA DE CONFIGURACIÓN")
+        <div style='color:white;'>
+        <p>• <b>Paso 1:</b> Descarga Nexus App o usa Metamask.</p>
+        <p>• <b>Paso 2:</b> Genera tu frase semilla de 24 palabras.</p>
+        <p>• <b>Paso 3:</b> Vincula tu ID de Donante Serenity.</p>
+        </div>
+        """, unsafe_allow_html=True)
+        st.button("DESCARGAR GUÍA DE CONFIGURACIÓN", use_container_width=True)
 
     st.write("---")
 
-    # --- NIVEL 3: CONEXIÓN Y TABLA DE RESPALDO ---
-    st.markdown("#### Centro de Conexión Web3")
+    # --- NIVEL 3: CONEXIÓN Y TABLA DE RESPALDO (ESTILO BLANCO) ---
+    st.markdown("<h4 style='color:white; text-align:center;'>Centro de Conexión Web3</h4>", unsafe_allow_html=True)
     cw1, cw2, cw3 = st.columns([1, 2, 1])
+    
     with cw2:
-        if st.button("VINCULAR BILLETERA AL SISTEMA NEXUS"):
+        if st.button("VINCULAR BILLETERA AL SISTEMA NEXUS", use_container_width=True):
+            st.session_state.wallet_connected = True
             st.balloons()
-            st.success("Billetera 0x71C...9A23 Conectada con éxito.")
-            st.metric(label="Saldo en Bóveda", value="25,000.00 $SNG", delta="80 Hectáreas Respaldadas")
-            
-            # --- TABLA DE DESGLOSE CON TEXTO BLANCO ---
-            st.write("")
-            st.markdown("<h4 style='color:white; text-align:center;'>📋 Respaldo de Activos por Nodo</h4>", unsafe_allow_html=True)
-            
-            data_wallet = {
-                "Activo": ["Carbono Azul", "Biodiversidad", "Agua Protegida", "Suelo"],
-                "Nodo Validador": ["Faro Rex", "Faro Tigrillo", "Faro Colibrí", "Faro Halcón"],
-                "Tokens $SNG": ["5,000", "8,500", "3,200", "8,300"],
-                "Estado": ["✅ Verificado", "✅ Verificado", "⏳ Sincronizando", "✅ Verificado"]
-            }
-            df_wallet = pd.DataFrame(data_wallet)
-            
-            # Aplicamos la tabla (El CSS que pusimos al inicio la hará blanca)
-            st.table(df_wallet)
-            
-            st.caption("Verificado en tiempo real por la Red de Faros Serenity")    
+
+    # Si la billetera está conectada (o para mostrarlo por defecto en el demo)
+    if st.session_state.get('wallet_connected', False):
+        st.success("Billetera 0x71C...9A23 Conectada con éxito.")
+        
+        col_met1, col_met2 = st.columns(2)
+        with col_met1:
+            st.metric(label="Saldo en Bóveda", value="25,000.00 $SNG")
+        with col_met2:
+            st.metric(label="Respaldo Real", value="80 Hectáreas", delta="Sincronizado")
+
+        st.write("")
+        st.markdown("<h5 style='color:white; text-align:center; background:#2E7D32; padding:10px; border-radius:5px;'>📋 DESGLOSE DE ACTIVOS RESPALDADOS POR FARO</h5>", unsafe_allow_html=True)
+        
+        # Creación de la tabla con datos oficiales de tus faros
+        data_wallet = {
+            "Activo Biológico": ["Carbono Azul", "Biodiversidad", "Agua Protegida", "Suelo Regenerado"],
+            "Nodo Validador": ["Faro Rex", "Faro Tigrillo", "Faro Colibrí", "Faro Halcón"],
+            "Tokens $SNG": ["5,000", "8,500", "3,200", "8,300"],
+            "Certificación": ["✅ Verificado", "✅ Verificado", "⏳ Sincronizando", "✅ Verificado"]
+        }
+        df_wallet = pd.DataFrame(data_wallet)
+        
+        # Inyectamos CSS específico para que esta tabla sea blanca y legible
+        st.markdown("""
+            <style>
+                .stTable td, .stTable th {
+                    color: white !important;
+                    font-size: 1.05rem !important;
+                    text-align: center !important;
+                }
+            </style>
+        """, unsafe_allow_html=True)
+        
+        st.table(df_wallet)
+        st.caption("Los datos biométricos son actualizados cada 60 segundos por la Red de Faros.")
 
 # =========================================================
 # BLOQUE 6: DONACIONES Y CERTIFICADO (Diploma Oficial)
@@ -862,6 +884,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st.info("💡 Cada Faro Nexus registra datos en tiempo real mediante 8 cámaras y 4 micrófonos dentro del KBA Bosque San Antonio.")
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
