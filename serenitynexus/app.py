@@ -368,15 +368,15 @@ elif menu == "RED DE FAROS (7 NODOS)":
     # --- 2. NODO MAESTRO ---
     col_gemini = st.columns([1,2,1])
     with col_gemini[1]:
-        st.markdown("<div class='faro-gemini' style='text-align: center;'><h3>🧠 NODO MAESTRO GEMINI</h3></div>", unsafe_allow_html=True)
-        st.button("🔥 ACTIVAR NÚCLEO GEMINI VISION", key="gm_btn", on_click=conectar_faro, args=("GEMINI",), use_container_width=True)
+        st.markdown("<div class='faro-gemini-rex' style='text-align: center;'><h3>🧠 REX GEMINI</h3></div>", unsafe_allow_html=True)
+        st.button("🔥 ACTIVAR REX GEMINI VISION", key="gm_btn", on_click=conectar_faro, args=("REX GEMINI",), use_container_width=True)
 
     # --- 3. PANTALLA DE MONITOREO (SEGURA) ---
     # Usamos .get() para evitar el NameError si la variable no existe aún
     f_nom = st.session_state.get('f_activo', None)
 
     if f_nom:
-        color_f = "#4285F4" if f_nom == "GEMINI" else "#9BC63B"
+        color_f = "#4285F4" if f_nom == "REX GEMINI" else "#9BC63B"
         nombre_limpio = str(f_nom).upper()
         
         st.write("---")
@@ -842,6 +842,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st.info("💡 Cada Faro Nexus registra datos en tiempo real mediante 8 cámaras y 4 micrófonos dentro del KBA Bosque San Antonio.")
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
