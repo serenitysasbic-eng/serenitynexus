@@ -282,7 +282,7 @@ menu = st.sidebar.radio("CENTRO DE CONTROL", [
     "SUSCRIPCIONES", 
     "BILLETERA CRYPTO (WEB3)",  
     "DONACIONES Y CERTIFICADO", 
-    "LOGÍSTICA AEROLÍNEAS", 
+    "LDIAGNOSTICO HUELLA DE CARBONO", 
     "UBICACIÓN & MAPAS"
 ])
 
@@ -842,6 +842,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st.info("💡 Cada Faro Nexus registra datos en tiempo real mediante 8 cámaras y 4 micrófonos dentro del KBA Bosque San Antonio.")
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
