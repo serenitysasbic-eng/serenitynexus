@@ -782,7 +782,6 @@ elif menu == "UBICACIÓN & MAPAS":
         {"name": "Faro Capibara (Monte Guadua)", "lat": 3.515, "lon": -76.625, "color": "green"},
         {"name": "Faro Rex (Villa Michelle)", "lat": 3.485, "lon": -76.605, "color": "blue"}
     ]
-    ]
 
     # 2. BOTÓN DE ENLACE EXTERNO (ESTILO GRADO MILITAR)
     # URL corregida para Google Maps Satelital
@@ -844,6 +843,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st.info("💡 Cada Faro Nexus registra datos en tiempo real mediante 8 cámaras y 4 micrófonos dentro del KBA Bosque San Antonio.")
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
