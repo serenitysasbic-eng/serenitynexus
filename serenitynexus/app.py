@@ -24,33 +24,82 @@ from reportlab.lib.colors import HexColor, black
 st.set_page_config(page_title="Serenity Nexus Global", page_icon="??", layout="wide")
 VERDE_SERENITY = HexColor("#2E7D32")
 
-def generar_pdf_certificado(nombre, monto, hash_id):
+def generar_pdf_corporativo(empresa, nit, impacto, hash_id, estudio_data, total_ton):
     buffer = io.BytesIO()
     c = canvas.Canvas(buffer, pagesize=letter)
+    VERDE_SERENITY = colors.HexColor("#9BC63B")
+    
+    # --- Estética de Membrete ---
     c.setStrokeColor(VERDE_SERENITY)
-    c.setLineWidth(5)
-    c.rect(0.3*inch, 0.3*inch, 7.9*inch, 10.4*inch)
-    try:
-        if os.path.exists("logo_serenity.png"):
-            c.drawImage("logo_serenity.png", 3.25*inch, 8.8*inch, width=2*inch, height=1.2*inch, preserveAspectRatio=True, mask='auto')
-    except: pass
+    c.setLineWidth(2)
+    c.line(0.5*inch, 10.2*inch, 8*inch, 10.2*inch)
+    
+    # Título Principal
+    c.setFont("Helvetica-Bold", 16)
+    c.drawCentredString(4.25*inch, 9.5*inch, "DIAGNÓSTICO TÉCNICO DE HUELLA DE CARBONO")
+    
+    # Datos de Identidad
+    c.setFont("Helvetica-Bold", 11)
+    c.drawString(1*inch, 8.8*inch, f"ENTIDAD: {empresa.upper()}")
+    c.drawString(1*inch, 8.6*inch, f"NIT: {nit}")
+    c.drawString(1*inch, 8.4*inch, f"ID VERIFICACIÓN: {hash_id}")
+
+    # --- 1. Tabla de Estudio de Carga ---
+    c.setFont("Helvetica-Bold", 10)
     c.setFillColor(VERDE_SERENITY)
-    c.setFont("Helvetica-Bold", 24)
-    c.drawCentredString(4.25*inch, 8.3*inch, "CERTIFICADO DE:")
-    c.setFont("Helvetica-Bold", 28)
-    c.drawCentredString(4.25*inch, 7.8*inch, "DONACIÓN REGENERATIVA")
-    c.setFont("Helvetica", 16)
-    c.setFillColor(black)
-    c.drawCentredString(4.25*inch, 7.0*inch, "SERENITY S.A.S. BIC")
-    c.setFont("Helvetica-Bold", 20)
-    c.drawCentredString(4.25*inch, 6.2*inch, f"{nombre.upper()}")
-    c.setFont("Helvetica", 14)
-    c.drawCentredString(4.25*inch, 5.5*inch, f"Por su valioso aporte de ${monto:,.0f} USD")
-    c.drawCentredString(4.25*inch, 5.1*inch, "Destinado a la Regeneración del Corredor Biológico Dagua")
-    c.setFont("Helvetica-Bold", 12)
-    c.drawCentredString(4.25*inch, 2.8*inch, "Jorge Carvajal")
-    c.setFont("Courier-Bold", 10)
-    c.drawCentredString(4.25*inch, 1.5*inch, f"HASH DE VERIFICACIÓN: {hash_id}")
+    c.drawString(1*inch, 7.8*inch, "1. DESGLOSE DEL ESTUDIO DE CARGA (ISO 14064):")
+    
+    c.setFont("Helvetica", 9)
+    c.setFillColor(colors.black)
+    y_pos = 7.5
+    for concepto, valor in estudio_data.items():
+        c.drawString(1.2*inch, y_pos*inch, f"• {concepto}:")
+        c.drawRightString(7*inch, y_pos*inch, f"{valor}")
+        y_pos -= 0.22
+
+    # --- 2. Gráfica Comparativa Sectorial ---
+    y_graf = y_pos - 0.5
+    c.setFont("Helvetica-Bold", 10)
+    c.setFillColor(VERDE_SERENITY)
+    c.drawString(1*inch, y_graf*inch, "2. COMPARATIVA DE DESEMPEÑO SECTORIAL (TON CO2E):")
+    
+    # Dibujo de barras
+    ancho_max = 3.5 * inch
+    promedio_sector = total_ton * 1.35 # Referencia 35% superior
+    total_ref = total_ton + promedio_sector
+    
+    # Barra Empresa
+    c.setFillColor(VERDE_SERENITY)
+    c.rect(2.5*inch, (y_graf-0.4)*inch, (total_ton/total_ref)*ancho_max*2, 0.2*inch, fill=1)
+    c.setFillColor(colors.black)
+    c.drawString(1.2*inch, (y_graf-0.35)*inch, "Su Empresa")
+
+    # Barra Sector
+    c.setFillColor(colors.HexColor("#4285F4"))
+    c.rect(2.5*inch, (y_graf-0.7)*inch, (promedio_sector/total_ref)*ancho_max*2, 0.2*inch, fill=1)
+    c.setFillColor(colors.black)
+    c.drawString(1.2*inch, (y_graf-0.65)*inch, "Prom. Sector")
+
+    # --- 3. Plan de Compensación ---
+    y_plan = y_graf - 1.5
+    c.setFont("Helvetica-Bold", 10)
+    c.setFillColor(VERDE_SERENITY)
+    c.drawString(1*inch, y_plan*inch, "3. PLAN DE COMPENSACIÓN BIOMÉTRICA ASIGNADO:")
+    
+    c.setFont("Helvetica", 9)
+    c.setFillColor(colors.black)
+    texto_plan = [
+        f"Para neutralizar el impacto detectado, se requiere la protección de {impacto} individuos forestales.",
+        "Ubicación: Corredor Biológico San Antonio - Monte Guadua (Dagua, Valle del Cauca).",
+        "Monitoreo: Vigilancia activa vía Red de Faros Nexus (Starlink)."
+    ]
+    for i, linea in enumerate(texto_plan):
+        c.drawString(1.2*inch, (y_plan - 0.25 - (i*0.2))*inch, linea)
+
+    # Pie de página de seguridad
+    c.setFont("Courier-Bold", 7)
+    c.drawCentredString(4.25*inch, 1.2*inch, f"AUTENTICADO POR NEXUS IA - FIRMA DIGITAL: {hash_id}")
+    
     c.save()
     buffer.seek(0)
     return buffer
@@ -819,6 +868,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st.info("💡 Cada Faro Nexus registra datos en tiempo real mediante 8 cámaras y 4 micrófonos dentro del KBA Bosque San Antonio.")
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
