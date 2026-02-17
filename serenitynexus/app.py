@@ -577,67 +577,55 @@ elif menu == "BILLETERA CRYPTO (WEB3)":
     st.title("Nexus Finance Control")
     st.markdown("### El Futuro de la Conservación Tokenizada")
 
-    st.write("---")
-    st.subheader("📋 Desglose de Respaldo por Nodo")
-    
-    # Tabla de activos tokenizados
-    data_wallet = {
-        "Activo": ["Carbono Azul", "Biodiversidad", "Agua Protegida", "Suelo Regenerado"],
-        "Nodo Validador": ["Faro Rex", "Faro Tigrillo", "Faro Colibrí", "Faro Halcón"],
-        "Tokens $SNG": [5000, 8500, 3200, 8300],
-        "Estado": ["✅ Verificado", "✅ Verificado", "⏳ Sincronizando", "✅ Verificado"]
-    }
-    df_wallet = pd.DataFrame(data_wallet)
-    st.table(df_wallet)
-
-    st.info("💡 Cada token $SNG en tu billetera está vinculado a un registro de telemetría único generado por los Faros en Monte Guadua y Villa Michelle.")    
-
     # --- NIVEL 1: EL TOKEN (VISUAL) ---
     try:
-        with open("video_sng.mp4", "rb") as f:
-            data = f.read()
-            bin_str = base64.b64encode(data).decode()
-        video_html = f"""
-            <div style="display: flex; justify-content: center; margin-bottom: 20px;">
-                <video width="60%" autoplay loop muted playsinline style="border-radius: 20px; border: 2px solid #9BC63B; box-shadow: 0 0 30px rgba(155, 198, 59, 0.3);">
-                    <source src="data:video/mp4;base64,{bin_str}" type="video/mp4">
-                </video>
-            </div>
-        """
-        st.markdown(video_html, unsafe_allow_html=True)
+        if os.path.exists("video_sng.mp4"):
+            with open("video_sng.mp4", "rb") as f:
+                data = f.read()
+                bin_str = base64.b64encode(data).decode()
+            video_html = f"""
+                <div style="display: flex; justify-content: center; margin-bottom: 20px;">
+                    <video width="60%" autoplay loop muted playsinline style="border-radius: 20px; border: 2px solid #9BC63B; box-shadow: 0 0 30px rgba(155, 198, 59, 0.3);">
+                        <source src="data:video/mp4;base64,{bin_str}" type="video/mp4">
+                    </video>
+                </div>
+            """
+            st.markdown(video_html, unsafe_allow_html=True)
+        else:
+            st.info("🛰️ Visualizador de Token $SNG Activo (Esperando archivo de video)")
     except:
-        st.info("?? Visualizador de Token $SNG Activo")
+        st.info("🛰️ Sistema de Video Nexus en Espera")
 
     st.write("---")
 
-    # --- NIVEL 2: ADQUISICIÓN Y CUSTODIA (Tus dos preguntas) ---
+    # --- NIVEL 2: ADQUISICIÓN Y CUSTODIA ---
     col_buy, col_vault = st.columns(2)
 
     with col_buy:
-        st.markdown("####  ¿Cómo comprar $SNG?")
+        st.markdown("#### ¿Cómo comprar $SNG?")
         st.write("El token $SNG representa hectáreas regeneradas y datos biométricos de los Faros.")
         with st.container(border=True):
             st.write("**Simulador de Intercambio (Swap)**")
             moneda_pago = st.selectbox("Pagar con:", ["USD (Tarjeta/Transferencia)", "USDT (Crypto)", "Ethereum"])
             cantidad_usd = st.number_input("Monto a invertir (USD):", min_value=10, step=50)
-            tasa = 0.50 # Ejemplo: 1 SNG = 0.50 USD
+            tasa = 0.50 
             st.metric("Recibirás aproximadamente:", f"{cantidad_usd / tasa:,.2f} $SNG")
             if st.button("COMPRAR TOKENS $SNG"):
                 st.success("Orden de compra enviada al Nexus Gateway.")
 
     with col_vault:
-        st.markdown("####  ¿Cómo tener una Billetera Nexus?")
-        st.write("Nexus Vault no es solo una App, es tu llave privada al Internet de la Naturaleza.")
+        st.markdown("#### ¿Cómo tener una Billetera Nexus?")
+        st.write("Nexus Vault es tu llave privada al Internet de la Naturaleza.")
         st.markdown("""
-        * **Paso 1:** Descarga Nexus App o usa una compatible (Metamask/Ledger).
+        * **Paso 1:** Descarga Nexus App o usa Metamask.
         * **Paso 2:** Genera tu frase semilla de 24 palabras.
-        * **Paso 3:** Vincula tu ID de Donante Serenity para recibir beneficios.
+        * **Paso 3:** Vincula tu ID de Donante Serenity.
         """)
         st.button("DESCARGAR GUÍA DE CONFIGURACIÓN")
 
     st.write("---")
 
-# --- NIVEL 3: CONEXIÓN FINAL ---
+    # --- NIVEL 3: CONEXIÓN Y TABLA DE RESPALDO ---
     st.markdown("#### Centro de Conexión Web3")
     cw1, cw2, cw3 = st.columns([1, 2, 1])
     with cw2:
@@ -645,7 +633,23 @@ elif menu == "BILLETERA CRYPTO (WEB3)":
             st.balloons()
             st.success("Billetera 0x71C...9A23 Conectada con éxito.")
             st.metric(label="Saldo en Bóveda", value="25,000.00 $SNG", delta="80 Hectáreas Respaldadas")
-            st.write("Verificado por Nodo Gemini en Finca Villa Michelle")        
+            
+            # --- TABLA DE DESGLOSE CON TEXTO BLANCO ---
+            st.write("")
+            st.markdown("<h4 style='color:white; text-align:center;'>📋 Respaldo de Activos por Nodo</h4>", unsafe_allow_html=True)
+            
+            data_wallet = {
+                "Activo": ["Carbono Azul", "Biodiversidad", "Agua Protegida", "Suelo"],
+                "Nodo Validador": ["Faro Rex", "Faro Tigrillo", "Faro Colibrí", "Faro Halcón"],
+                "Tokens $SNG": ["5,000", "8,500", "3,200", "8,300"],
+                "Estado": ["✅ Verificado", "✅ Verificado", "⏳ Sincronizando", "✅ Verificado"]
+            }
+            df_wallet = pd.DataFrame(data_wallet)
+            
+            # Aplicamos la tabla (El CSS que pusimos al inicio la hará blanca)
+            st.table(df_wallet)
+            
+            st.caption("Verificado en tiempo real por la Red de Faros Serenity")    
 
 # =========================================================
 # BLOQUE 6: DONACIONES Y CERTIFICADO (Diploma Oficial)
@@ -858,6 +862,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st.info("💡 Cada Faro Nexus registra datos en tiempo real mediante 8 cámaras y 4 micrófonos dentro del KBA Bosque San Antonio.")
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
