@@ -365,10 +365,10 @@ elif menu == "RED DE FAROS (7 NODOS)":
 
     st.divider()
 
-    # --- 2. NODO MAESTRO ---
-    col_gemini = st.columns([1,2,1])
-    with col_gemini[1]:
-        st.markdown("<div class='faro-gemini-rex' style='text-align: center;'><h3>🧠 REX GEMINI</h3></div>", unsafe_allow_html=True)
+    # --- 2. NODO REX ---
+    col_rex_gemini = st.columns([1,2,1])
+    with col_rex_gemini[1]:
+        st.markdown("<div class='faro-rex-gemini' style='text-align: center;'><h3>🧠 REX GEMINI</h3></div>", unsafe_allow_html=True)
         st.button("🔥 ACTIVAR REX GEMINI VISION", key="gm_btn", on_click=conectar_faro, args=("REX GEMINI",), use_container_width=True)
 
     # --- 3. PANTALLA DE MONITOREO (SEGURA) ---
@@ -842,6 +842,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st.info("💡 Cada Faro Nexus registra datos en tiempo real mediante 8 cámaras y 4 micrófonos dentro del KBA Bosque San Antonio.")
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
