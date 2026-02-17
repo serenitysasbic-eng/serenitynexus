@@ -577,6 +577,21 @@ elif menu == "BILLETERA CRYPTO (WEB3)":
     st.title("Nexus Finance Control")
     st.markdown("### El Futuro de la Conservación Tokenizada")
 
+    st.write("---")
+    st.subheader("📋 Desglose de Respaldo por Nodo")
+    
+    # Tabla de activos tokenizados
+    data_wallet = {
+        "Activo": ["Carbono Azul", "Biodiversidad", "Agua Protegida", "Suelo Regenerado"],
+        "Nodo Validador": ["Faro Rex", "Faro Tigrillo", "Faro Colibrí", "Faro Halcón"],
+        "Tokens $SNG": [5000, 8500, 3200, 8300],
+        "Estado": ["✅ Verificado", "✅ Verificado", "⏳ Sincronizando", "✅ Verificado"]
+    }
+    df_wallet = pd.DataFrame(data_wallet)
+    st.table(df_wallet)
+
+    st.info("💡 Cada token $SNG en tu billetera está vinculado a un registro de telemetría único generado por los Faros en Monte Guadua y Villa Michelle.")    
+
     # --- NIVEL 1: EL TOKEN (VISUAL) ---
     try:
         with open("video_sng.mp4", "rb") as f:
@@ -843,6 +858,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st.info("💡 Cada Faro Nexus registra datos en tiempo real mediante 8 cámaras y 4 micrófonos dentro del KBA Bosque San Antonio.")
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
