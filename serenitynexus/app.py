@@ -539,27 +539,26 @@ elif menu == "GESTIÓN LEY 2173 (EMPRESAS)":
         
         if st.button("EMITIR CERTIFICADO OFICIAL CON LOGO", use_container_width=True):
             if n_corp and archivo_logo:
-                with st.spinner("Vinculando activos biométricos y generando Hash..."):
+                with st.spinner("Procesando identidad corporativa..."):
                     h_c = hashlib.sha256(f"{n_corp}{nit_corp}".encode()).hexdigest()[:12].upper()
                     
-                    # Leemos los bytes del logo cargado
-                    logo_bytes = archivo_logo.read()
+                    # --- SOLUCIÓN AL ERROR: REBOBINAR Y LEER ---
+                    archivo_logo.seek(0) # Volvemos al inicio del archivo
+                    logo_bytes = archivo_logo.getvalue() # Obtenemos los bytes de forma segura
                     
-                    # Generamos el PDF certificado con el logo del usuario y el cálculo de árboles
                     pdf_c = generar_pdf_corporativo(
                         empresa=n_corp, 
                         impacto=n_per*2, 
                         hash_id=h_c, 
                         nit=nit_corp, 
-                        logo_bytes=logo_bytes,
-                        faro_nombre="Faro Rex" # Nodo validador por defecto
+                        logo_bytes=logo_bytes, # Pasamos los bytes limpios
+                        faro_nombre="Faro Rex"
                     )
                     
                     st.session_state.cert_corp_pdf = pdf_c.getvalue()
-                    st.success("Certificado generado y validado por la Red de Faros.")
-                    st.balloons()
+                    st.success("Certificado generado exitosamente.")
             else:
-                st.error("Error: Se requiere el nombre de la empresa y el archivo del logo.")
+                st.error("Razón Social y Logo son obligatorios.")
 
         if 'cert_corp_pdf' in st.session_state:
             st.download_button(
@@ -972,6 +971,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st.info("💡 Cada Faro Nexus registra datos en tiempo real mediante 8 cámaras y 4 micrófonos dentro del KBA Bosque San Antonio.")
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
