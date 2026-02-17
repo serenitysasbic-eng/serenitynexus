@@ -423,10 +423,17 @@ elif menu == "DASHBOARD ESTADÍSTICO IA":
     st.title("🧠 Inteligencia de Datos Nexus")
     st.markdown("### Análisis Biométrico y Predictivo del Ecosistema")
 
-    # --- FILTRO POR FARO ---
+# --- FILTRO POR FARO CORREGIDO ---
     faro_seleccionado = st.selectbox("Seleccione el Faro para Auditoría IA:", 
-                                   ["Faro Maestro", "Faro Rex", "Faro Tigrillo", "Faro Colibrí", "Faro Halcón", "Faro Rana", "Faro Venado"])
-
+                                   [
+                                       "Faro Rex", 
+                                       "Faro Halcón", 
+                                       "Faro Colibrí", 
+                                       "Faro Rana", 
+                                       "Faro Venado", 
+                                       "Faro Tigrillo", 
+                                       "Faro Capibara"
+                                   ])
     st.write(f"Anatizando telemetría en tiempo real de: **{faro_seleccionado}**")
 
     # --- MÉTRICAS VIVAS (Simulación de Sensores) ---
@@ -925,6 +932,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st.info("💡 Cada Faro Nexus registra datos en tiempo real mediante 8 cámaras y 4 micrófonos dentro del KBA Bosque San Antonio.")
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
