@@ -772,14 +772,16 @@ elif menu == "UBICACIÓN & MAPAS":
     # 6 Faros en Monte Guadua + 1 Faro en Villa Michelle
     lat_v, lon_v = 3.485, -76.605 # Coordenadas base Villa Michelle
     
+# 1. COORDENADAS ESTRATÉGICAS CON NOMBRES OFICIALES
     faros_nexus = [
-        {"name": "Faro Maestro (Monte Guadua)", "lat": 3.518, "lon": -76.620, "color": "green"},
-        {"name": "Faro Nodo 2", "lat": 3.519, "lon": -76.622, "color": "green"},
-        {"name": "Faro Nodo 3", "lat": 3.517, "lon": -76.621, "color": "green"},
-        {"name": "Faro Nodo 4", "lat": 3.516, "lon": -76.623, "color": "green"},
-        {"name": "Faro Nodo 5", "lat": 3.520, "lon": -76.619, "color": "green"},
-        {"name": "Faro Nodo 6", "lat": 3.515, "lon": -76.625, "color": "green"},
-        {"name": "Faro Villa Michelle (Nodo 7)", "lat": lat_v, "lon": lon_v, "color": "blue"}
+        {"name": "Faro Halcón (Monte Guadua)", "lat": 3.518, "lon": -76.620, "color": "green"},
+        {"name": "Faro Colibrí (Monte Guadua)", "lat": 3.519, "lon": -76.622, "color": "green"},
+        {"name": "Faro Rana (Monte Guadua)", "lat": 3.517, "lon": -76.621, "color": "green"},
+        {"name": "Faro Venado (Monte Guadua)", "lat": 3.516, "lon": -76.623, "color": "green"},
+        {"name": "Faro Tigrillo (Monte Guadua)", "lat": 3.520, "lon": -76.619, "color": "green"},
+        {"name": "Faro Capibara (Monte Guadua)", "lat": 3.515, "lon": -76.625, "color": "green"},
+        {"name": "Faro Rex (Villa Michelle)", "lat": 3.485, "lon": -76.605, "color": "blue"}
+    ]
     ]
 
     # 2. BOTÓN DE ENLACE EXTERNO (ESTILO GRADO MILITAR)
@@ -842,6 +844,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st.info("💡 Cada Faro Nexus registra datos en tiempo real mediante 8 cámaras y 4 micrófonos dentro del KBA Bosque San Antonio.")
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
