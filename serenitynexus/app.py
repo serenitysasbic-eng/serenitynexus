@@ -282,7 +282,7 @@ menu = st.sidebar.radio("CENTRO DE CONTROL", [
     "SUSCRIPCIONES", 
     "BILLETERA CRYPTO (WEB3)",  
     "DONACIONES Y CERTIFICADO", 
-    "LDIAGNOSTICO HUELLA DE CARBONO", 
+    "DIAGNOSTICO HUELLA DE CARBONO", 
     "UBICACIÓN & MAPAS"
 ])
 
@@ -690,7 +690,7 @@ elif menu == "DONACIONES Y CERTIFICADO":
             )
 
 # =========================================================
-# BLOQUE 7: INTELIGENCIA DE CARBONO NEXUS (IA + NIT)
+# BLOQUE 7: DIAGNOSTICO HUELLA DE CARBONO
 # =========================================================
 elif menu == "LOGÍSTICA AEROLÍNEAS":
     st.title("🧠 Inteligencia de Carbono Nexus")
@@ -842,6 +842,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st.info("💡 Cada Faro Nexus registra datos en tiempo real mediante 8 cámaras y 4 micrófonos dentro del KBA Bosque San Antonio.")
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
