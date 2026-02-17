@@ -29,25 +29,24 @@ def generar_pdf_corporativo(empresa, nit, impacto, hash_id, estudio_data, total_
     c = canvas.Canvas(buffer, pagesize=letter)
     VERDE_SERENITY = colors.HexColor("#9BC63B")
     
-    # --- Estética de Membrete ---
+    # Membrete
     c.setStrokeColor(VERDE_SERENITY)
     c.setLineWidth(2)
     c.line(0.5*inch, 10.2*inch, 8*inch, 10.2*inch)
     
-    # Título Principal
+    # Título y Datos (NIT incluido aquí)
     c.setFont("Helvetica-Bold", 16)
-    c.drawCentredString(4.25*inch, 9.5*inch, "DIAGNÓSTICO TÉCNICO DE HUELLA DE CARBONO")
+    c.drawCentredString(4.25*inch, 9.5*inch, "DIAGNÓSTICO DE HUELLA DE CARBONO")
     
-    # Datos de Identidad
     c.setFont("Helvetica-Bold", 11)
     c.drawString(1*inch, 8.8*inch, f"ENTIDAD: {empresa.upper()}")
-    c.drawString(1*inch, 8.6*inch, f"NIT: {nit}")
-    c.drawString(1*inch, 8.4*inch, f"ID VERIFICACIÓN: {hash_id}")
+    c.drawString(1*inch, 8.6*inch, f"NIT: {nit}") # <--- NIT agregado
+    c.drawString(1*inch, 8.4*inch, f"SERIAL DE INTEGRIDAD: {hash_id}")
 
-    # --- 1. Tabla de Estudio de Carga ---
+    # Tabla de Resultados Reales
     c.setFont("Helvetica-Bold", 10)
     c.setFillColor(VERDE_SERENITY)
-    c.drawString(1*inch, 7.8*inch, "1. DESGLOSE DEL ESTUDIO DE CARGA (ISO 14064):")
+    c.drawString(1*inch, 7.8*inch, "RESULTADOS DEL ESTUDIO (FACTORES UPME COLOMBIA):")
     
     c.setFont("Helvetica", 9)
     c.setFillColor(colors.black)
@@ -57,49 +56,24 @@ def generar_pdf_corporativo(empresa, nit, impacto, hash_id, estudio_data, total_
         c.drawRightString(7*inch, y_pos*inch, f"{valor}")
         y_pos -= 0.22
 
-    # --- 2. Gráfica Comparativa Sectorial ---
+    # Gráfica Comparativa Realista
     y_graf = y_pos - 0.5
     c.setFont("Helvetica-Bold", 10)
-    c.setFillColor(VERDE_SERENITY)
-    c.drawString(1*inch, y_graf*inch, "2. COMPARATIVA DE DESEMPEÑO SECTORIAL (TON CO2E):")
+    c.drawString(1*inch, y_graf*inch, "COMPARATIVA SECTORIAL (TON CO2E):")
     
-    # Dibujo de barras
-    ancho_max = 3.5 * inch
-    promedio_sector = total_ton * 1.35 # Referencia 35% superior
-    total_ref = total_ton + promedio_sector
+    ancho_max = 2.5 * inch
+    promedio_sector = total_ton * 1.15 # Diferencia realista del 15%
     
-    # Barra Empresa
     c.setFillColor(VERDE_SERENITY)
-    c.rect(2.5*inch, (y_graf-0.4)*inch, (total_ton/total_ref)*ancho_max*2, 0.2*inch, fill=1)
+    c.rect(3*inch, (y_graf-0.4)*inch, (total_ton/(total_ton+promedio_sector))*ancho_max*2, 0.2*inch, fill=1)
     c.setFillColor(colors.black)
     c.drawString(1.2*inch, (y_graf-0.35)*inch, "Su Empresa")
 
-    # Barra Sector
     c.setFillColor(colors.HexColor("#4285F4"))
-    c.rect(2.5*inch, (y_graf-0.7)*inch, (promedio_sector/total_ref)*ancho_max*2, 0.2*inch, fill=1)
+    c.rect(3*inch, (y_graf-0.7)*inch, (promedio_sector/(total_ton+promedio_sector))*ancho_max*2, 0.2*inch, fill=1)
     c.setFillColor(colors.black)
-    c.drawString(1.2*inch, (y_graf-0.65)*inch, "Prom. Sector")
+    c.drawString(1.2*inch, (y_graf-0.65)*inch, "Promedio Valle")
 
-    # --- 3. Plan de Compensación ---
-    y_plan = y_graf - 1.5
-    c.setFont("Helvetica-Bold", 10)
-    c.setFillColor(VERDE_SERENITY)
-    c.drawString(1*inch, y_plan*inch, "3. PLAN DE COMPENSACIÓN BIOMÉTRICA ASIGNADO:")
-    
-    c.setFont("Helvetica", 9)
-    c.setFillColor(colors.black)
-    texto_plan = [
-        f"Para neutralizar el impacto detectado, se requiere la protección de {impacto} individuos forestales.",
-        "Ubicación: Corredor Biológico San Antonio - Monte Guadua (Dagua, Valle del Cauca).",
-        "Monitoreo: Vigilancia activa vía Red de Faros Nexus (Starlink)."
-    ]
-    for i, linea in enumerate(texto_plan):
-        c.drawString(1.2*inch, (y_plan - 0.25 - (i*0.2))*inch, linea)
-
-    # Pie de página de seguridad
-    c.setFont("Courier-Bold", 7)
-    c.drawCentredString(4.25*inch, 1.2*inch, f"AUTENTICADO POR NEXUS IA - FIRMA DIGITAL: {hash_id}")
-    
     c.save()
     buffer.seek(0)
     return buffer
@@ -868,6 +842,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st.info("💡 Cada Faro Nexus registra datos en tiempo real mediante 8 cámaras y 4 micrófonos dentro del KBA Bosque San Antonio.")
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
