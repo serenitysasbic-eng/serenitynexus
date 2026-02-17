@@ -692,7 +692,7 @@ elif menu == "DONACIONES Y CERTIFICADO":
 # =========================================================
 # BLOQUE 7: DIAGNOSTICO HUELLA DE CARBONO
 # =========================================================
-elif menu == "LOGÍSTICA AEROLÍNEAS":
+elif menu == "DIAGNOSTICO HUELLA DE CARBONO":
     st.title("🧠 Inteligencia de Carbono Nexus")
     st.markdown("### Diagnóstico Automatizado de Huella de Carbono")
 
@@ -842,6 +842,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st.info("💡 Cada Faro Nexus registra datos en tiempo real mediante 8 cámaras y 4 micrófonos dentro del KBA Bosque San Antonio.")
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
