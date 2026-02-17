@@ -78,64 +78,57 @@ def generar_pdf_corporativo(empresa, nit, impacto, hash_id, estudio_data, total_
     buffer.seek(0)
     return buffer
 
-def generar_pdf_corporativo(empresa, impacto, hash_id, logo_bytes=None, es_vademecum=False):
+
+def generar_pdf_corporativo(empresa, impacto, hash_id, nit="", logo_bytes=None, es_vademecum=False, faro_nombre="Red Nexus"):
     buffer = io.BytesIO()
     c = canvas.Canvas(buffer, pagesize=letter)
     
-    # --- Estética y Bordes ---
-    c.setStrokeColor(VERDE_SERENITY)
-    c.setLineWidth(2)
-    c.rect(0.5*inch, 0.5*inch, 7.5*inch, 10*inch)
+    # --- LOGO SERENITY (Izquierda) ---
+    try:
+        if os.path.exists("logo_serenity.png"):
+            c.drawImage("logo_serenity.png", 0.7*inch, 9.3*inch, width=1.5*inch, preserveAspectRatio=True, mask='auto')
+    except:
+        pass
 
-    # --- Lógica de Logos ---
-    if os.path.exists("logo_serenity.png"):
-        c.drawImage("logo_serenity.png", 0.7*inch, 9.2*inch, width=1.5*inch, height=0.7*inch, preserveAspectRatio=True)
-    
+    # --- LOGO EMPRESA (Derecha) ---
     if logo_bytes:
-        # Usamos un archivo temporal para procesar el logo cargado
-        with open("temp_logo.png", "wb") as f:
-            f.write(logo_bytes.getbuffer())
-        c.drawImage("temp_logo.png", 6.3*inch, 9.2*inch, width=1.5*inch, height=0.7*inch, preserveAspectRatio=True)
+        try:
+            from reportlab.lib.utils import ImageReader
+            logo_img = ImageReader(io.BytesIO(logo_bytes))
+            c.drawImage(logo_img, 6*inch, 9.3*inch, width=1.5*inch, preserveAspectRatio=True, mask='auto')
+        except:
+            pass
 
-    # --- Títulos ---
-    c.setFont("Helvetica-Bold", 18)
-    c.setFillColor(VERDE_SERENITY)
+    # Marco y Títulos
+    c.setStrokeColor(colors.green)
+    c.rect(0.5*inch, 0.5*inch, 7.5*inch, 10*inch)
+    
+    c.setFont("Helvetica-Bold", 16)
     titulo = "VADEMÉCUM TÉCNICO LEGAL" if es_vademecum else "CERTIFICADO DE COMPENSACIÓN"
-    c.drawCentredString(4.25*inch, 8.8*inch, titulo)
-    
-    # --- Cuerpo del Documento ---
-    c.setFillColor(black)
-    c.setFont("Helvetica", 12)
-    text = c.beginText(1*inch, 8*inch)
-    text.setLeading(16)
-    
-    if es_vademecum:
-        lines = [
-            f"ENTIDAD: {empresa.upper()}",
-            "REFERENCIA: Cumplimiento Normativo Ambiental 2026",
-            "",
-            "1. LEY 2173 (Áreas de Vida): Certificamos la custodia biométrica.",
-            "2. LEY 2169 (Carbono Neutralidad): Monitoreo vía Red de Faros.",
-            "3. LEY 2111 (Delitos Ambientales): Vigilancia mediante IA Gemini.",
-            "",
-            "Este documento vincula legalmente la inversión al ecosistema Nexus."
-        ]
-    else:
-        lines = [
-            f"Se certifica que la empresa {empresa.upper()}",
-            f"ha compensado un impacto equivalente a {impacto} unidades forestales.",
-            "Ubicación: Corredor Biológico Dagua, Valle del Cauca.",
-            "",
-            f"ID BLOCKCHAIN: {hash_id}"
-        ]
+    c.drawCentredString(4.25*inch, 9*inch, titulo)
 
-    for line in lines:
-        text.textLine(line)
+    # Datos
+    c.setFont("Helvetica", 12)
+    y = 8.2*inch
+    c.drawString(1*inch, y, f"RAZÓN SOCIAL: {empresa.upper()}")
+    c.drawString(1*inch, y-0.2*inch, f"NIT: {nit}")
+    c.drawString(1*inch, y-0.4*inch, f"NODO VALIDADOR: {faro_nombre}")
+    c.drawString(1*inch, y-0.6*inch, f"ID SEGURIDAD: {hash_id}")
+
+    # Contenido según tipo
+    text = c.beginText(1*inch, 6.5*inch)
+    text.setFont("Helvetica", 11)
+    if es_vademecum:
+        text.textLine("Este documento certifica el cumplimiento de las Leyes 2173, 2169 y 2111.")
+        text.textLine("Serenity Nexus garantiza la trazabilidad biométrica de los activos.")
+    else:
+        text.textLine(f"Se certifica la siembra y protección de {impacto} árboles.")
     c.drawText(text)
-    
+
     c.save()
     buffer.seek(0)
     return buffer
+
 
 # --- GESTIÓN DE ESTADO ---
 if 'total_protegido' not in st.session_state: st.session_state.total_protegido = 87.0
@@ -971,6 +964,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st.info("💡 Cada Faro Nexus registra datos en tiempo real mediante 8 cámaras y 4 micrófonos dentro del KBA Bosque San Antonio.")
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
