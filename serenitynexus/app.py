@@ -622,8 +622,7 @@ elif menu == "BILLETERA CRYPTO (WEB3)":
 
     st.write("---")
 
-    # --- NIVEL 3: CONEXIÓN FINAL ---
-    st.write("---")
+# --- NIVEL 3: CONEXIÓN FINAL ---
     st.markdown("#### Centro de Conexión Web3")
     cw1, cw2, cw3 = st.columns([1, 2, 1])
     with cw2:
@@ -631,7 +630,7 @@ elif menu == "BILLETERA CRYPTO (WEB3)":
             st.balloons()
             st.success("Billetera 0x71C...9A23 Conectada con éxito.")
             st.metric(label="Saldo en Bóveda", value="25,000.00 $SNG", delta="80 Hectáreas Respaldadas")
-            st.write("Verificado por Nodo Gemini en Finca Villa Michelle")          
+            st.write("Verificado por Nodo Gemini en Finca Villa Michelle")        
 
 # =========================================================
 # BLOQUE 6: DONACIONES Y CERTIFICADO (Diploma Oficial)
@@ -845,6 +844,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st.info("💡 Cada Faro Nexus registra datos en tiempo real mediante 8 cámaras y 4 micrófonos dentro del KBA Bosque San Antonio.")
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
