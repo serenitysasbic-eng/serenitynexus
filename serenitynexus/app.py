@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -- coding: utf-8 --
 import streamlit as st
 import pandas as pd
 import random
@@ -427,7 +427,7 @@ elif menu == "DASHBOARD ESTADÍSTICO IA":
                                        "Faro Tigrillo", 
                                        "Faro Capibara"
                                    ])
-    st.write(f"Anatizando telemetría en tiempo real de: **{faro_seleccionado}**")
+    st.write(f"Anatizando telemetría en tiempo real de: *{faro_seleccionado}*")
 
     # --- MÉTRICAS VIVAS (Simulación de Sensores) ---
     col_m1, col_m2, col_m3, col_m4 = st.columns(4)
@@ -460,8 +460,8 @@ elif menu == "DASHBOARD ESTADÍSTICO IA":
             with st.spinner("Analizando datos satelitales y biométricos..."):
                 # Aquí simulamos la respuesta de la IA basada en el contexto del Faro
                 st.markdown(f"""
-                **Respuesta Nexus AI:**
-                Basado en el análisis de audio del **{faro_seleccionado}**, se han detectado frecuencias consistentes con aves endémicas en las últimas 3 horas. 
+                *Respuesta Nexus AI:*
+                Basado en el análisis de audio del *{faro_seleccionado}*, se han detectado frecuencias consistentes con aves endémicas en las últimas 3 horas. 
                 La biomasa protegida está procesando CO2 a niveles óptimos y no se detectan intrusiones humanas ni ruidos de maquinaria.
                 """)
                 st.info("💡 Este análisis utiliza la API de Google Gemini para interpretar los sensores de campo.")
@@ -528,7 +528,7 @@ elif menu == "GESTIÓN LEY 2173 (EMPRESAS)":
         archivo_logo = st.file_uploader("Cargar Logo Corporativo (PNG/JPG)", type=['png', 'jpg'], key="file_logo")
 
     with col_act2:
-        st.info(f"**Requisito Ley 2173:** Su empresa debe compensar {n_per * 2} árboles este año.")
+        st.info(f"*Requisito Ley 2173:* Su empresa debe compensar {n_per * 2} árboles este año.")
         
         if st.button("EMITIR CERTIFICADO OFICIAL CON LOGO", use_container_width=True):
             if n_corp and archivo_logo:
@@ -837,7 +837,7 @@ elif menu == "DIAGNOSTICO HUELLA DE CARBONO":
         sector_deducido = "Transporte Multimodal y Logística" # Ejemplo detectado
         intensidad_carbono = "ALTA" # Clasificación según sector
         
-        st.markdown(f"**Sector Detectado:** `{sector_deducido}` | **Intensidad de Emisión:** `{intensidad_carbono}`")
+        st.markdown(f"*Sector Detectado:* {sector_deducido} | *Intensidad de Emisión:* {intensidad_carbono}")
 
         # 3. CALCULADORA DE EMISIÓN BASADA EN SECTOR
         with st.expander("📊 Parámetros de Operación Mensual", expanded=True):
