@@ -1,4 +1,4 @@
-# -- coding: utf-8 --
+# -*- coding: utf-8 -*-
 import streamlit as st
 import pandas as pd
 import random
@@ -7,9 +7,8 @@ from datetime import datetime
 import io
 import os
 import base64
-import librosa
 import numpy as np
-import folium # <--- ASEGÚRATE QUE ESTÉ ESTA
+import folium
 from streamlit_folium import st_folium
 
 
@@ -964,6 +963,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st.info("💡 Cada Faro Nexus registra datos en tiempo real mediante 8 cámaras y 4 micrófonos dentro del KBA Bosque San Antonio.")
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
