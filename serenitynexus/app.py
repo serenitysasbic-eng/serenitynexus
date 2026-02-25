@@ -2,7 +2,7 @@
 import streamlit as st
 import pandas as pd
 import random
-import hashlib 
+import hashlib
 from datetime import datetime
 import io
 import os
@@ -964,6 +964,7 @@ elif menu == "UBICACIÓN & MAPAS":
     st.info("💡 Cada Faro Nexus registra datos en tiempo real mediante 8 cámaras y 4 micrófonos dentro del KBA Bosque San Antonio.")
 
 # --- FIN DEL ARCHIVO ---
+
 
 
 
