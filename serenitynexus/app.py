@@ -24,6 +24,48 @@ from reportlab.lib.colors import HexColor, black
 from reportlab.lib import colors
 from reportlab.lib.utils import ImageReader
 
+
+# =========================================================
+# 8. VISTAS / BLOQUES FUNCIONALES
+# =========================================================
+
+if menu == "INICIO":
+    st.title("🌎 SERENITY NEXUS GLOBAL")
+    st.success("Sistema operativo correctamente")
+
+elif menu == "RED DE FAROS (7 NODOS)":
+    st.header("🌐 RED DE FAROS ACTIVOS")
+    st.write("Visualización de nodos en tiempo real")
+
+elif menu == "DASHBOARD ESTADÍSTICO IA":
+    st.header("📊 DASHBOARD INTELIGENTE")
+    st.write("Métricas ambientales y analítica IA")
+
+elif menu == "GESTIÓN LEY 2173 (EMPRESAS)":
+    st.header("🏢 CUMPLIMIENTO LEY 2173")
+    st.write("Registro y certificación empresarial")
+
+elif menu == "SUSCRIPCIONES":
+    st.header("💳 PLANES Y SUSCRIPCIONES")
+    st.write("Gestión de planes Nexus")
+
+elif menu == "BILLETERA CRYPTO (WEB3)":
+    st.header("🪙 BILLETERA WEB3")
+    st.write("Integración Blockchain")
+
+elif menu == "DONACIONES Y CERTIFICADO":
+    st.header("🎓 DONACIONES")
+    st.write("Generación de certificados oficiales")
+
+elif menu == "DIAGNOSTICO HUELLA DE CARBONO":
+    st.header("🌱 DIAGNÓSTICO AMBIENTAL")
+    st.write("Cálculo de impacto")
+
+elif menu == "UBICACIÓN & MAPAS":
+    st.header("🗺️ MAPA INTERACTIVO")
+    mapa = folium.Map(location=[4.57, -74.29], zoom_start=6)
+    st_folium(mapa, width=900)
+
 # =========================================================
 # 2. CONFIGURACIÓN GLOBAL
 # =========================================================
@@ -174,46 +216,7 @@ menu = st.sidebar.radio("CENTRO DE CONTROL", [
     "UBICACIÓN & MAPAS"
 ])
 
-# =========================================================
-# 8. VISTAS / BLOQUES FUNCIONALES
-# =========================================================
 
-if menu == "INICIO":
-    st.title("🌎 SERENITY NEXUS GLOBAL")
-    st.success("Sistema operativo correctamente")
-
-elif menu == "RED DE FAROS (7 NODOS)":
-    st.header("🌐 RED DE FAROS ACTIVOS")
-    st.write("Visualización de nodos en tiempo real")
-
-elif menu == "DASHBOARD ESTADÍSTICO IA":
-    st.header("📊 DASHBOARD INTELIGENTE")
-    st.write("Métricas ambientales y analítica IA")
-
-elif menu == "GESTIÓN LEY 2173 (EMPRESAS)":
-    st.header("🏢 CUMPLIMIENTO LEY 2173")
-    st.write("Registro y certificación empresarial")
-
-elif menu == "SUSCRIPCIONES":
-    st.header("💳 PLANES Y SUSCRIPCIONES")
-    st.write("Gestión de planes Nexus")
-
-elif menu == "BILLETERA CRYPTO (WEB3)":
-    st.header("🪙 BILLETERA WEB3")
-    st.write("Integración Blockchain")
-
-elif menu == "DONACIONES Y CERTIFICADO":
-    st.header("🎓 DONACIONES")
-    st.write("Generación de certificados oficiales")
-
-elif menu == "DIAGNOSTICO HUELLA DE CARBONO":
-    st.header("🌱 DIAGNÓSTICO AMBIENTAL")
-    st.write("Cálculo de impacto")
-
-elif menu == "UBICACIÓN & MAPAS":
-    st.header("🗺️ MAPA INTERACTIVO")
-    mapa = folium.Map(location=[4.57, -74.29], zoom_start=6)
-    st_folium(mapa, width=900)
 
 
 
