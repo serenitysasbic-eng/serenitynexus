@@ -6,7 +6,6 @@ streamlit-folium
 plotly
 psycopg2-binary
 reportlab
-fpdf
 librosa
 opencv-python-headless
 google-generativeai
