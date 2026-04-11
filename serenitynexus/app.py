@@ -22,31 +22,32 @@ from reportlab.lib import colors  # Importación base para evitar errores de col
 from reportlab.lib.colors import HexColor, black
 
 # --- CONFIGURACIÓN E IDENTIDAD ---
-st.set_page_config(page_title="Serenity Nexus Global", page_icon="??", layout="wide")
+st.set_page_config(page_title="Serenity Nexus Global", page_icon="🌳", layout="wide")
 VERDE_SERENITY = HexColor("#2E7D32")
 
-def generar_pdf_corporativo(empresa, nit, impacto, hash_id, estudio_data, total_ton):
+# FUNCIÓN 1: Para el Diagnóstico de Huella de Carbono (Bloque 7)
+def generar_pdf_diagnostico(empresa, nit, impacto, hash_id, estudio_data, total_ton):
     buffer = io.BytesIO()
     c = canvas.Canvas(buffer, pagesize=letter)
-    VERDE_SERENITY = colors.HexColor("#9BC63B")
+    VERDE_LIMA_NEXUS = colors.HexColor("#9BC63B")
     
     # Membrete
-    c.setStrokeColor(VERDE_SERENITY)
+    c.setStrokeColor(VERDE_LIMA_NEXUS)
     c.setLineWidth(2)
     c.line(0.5*inch, 10.2*inch, 8*inch, 10.2*inch)
     
-    # Título y Datos (NIT incluido aquí)
+    # Título y Datos
     c.setFont("Helvetica-Bold", 16)
     c.drawCentredString(4.25*inch, 9.5*inch, "DIAGNÓSTICO DE HUELLA DE CARBONO")
     
     c.setFont("Helvetica-Bold", 11)
     c.drawString(1*inch, 8.8*inch, f"ENTIDAD: {empresa.upper()}")
-    c.drawString(1*inch, 8.6*inch, f"NIT: {nit}") # <--- NIT agregado
+    c.drawString(1*inch, 8.6*inch, f"NIT: {nit}")
     c.drawString(1*inch, 8.4*inch, f"SERIAL DE INTEGRIDAD: {hash_id}")
 
-    # Tabla de Resultados Reales
+    # Tabla de Resultados
     c.setFont("Helvetica-Bold", 10)
-    c.setFillColor(VERDE_SERENITY)
+    c.setFillColor(VERDE_LIMA_NEXUS)
     c.drawString(1*inch, 7.8*inch, "RESULTADOS DEL ESTUDIO (FACTORES UPME COLOMBIA):")
     
     c.setFont("Helvetica", 9)
@@ -57,15 +58,15 @@ def generar_pdf_corporativo(empresa, nit, impacto, hash_id, estudio_data, total_
         c.drawRightString(7*inch, y_pos*inch, f"{valor}")
         y_pos -= 0.22
 
-    # Gráfica Comparativa Realista
+    # Gráfica Comparativa
     y_graf = y_pos - 0.5
     c.setFont("Helvetica-Bold", 10)
     c.drawString(1*inch, y_graf*inch, "COMPARATIVA SECTORIAL (TON CO2E):")
     
     ancho_max = 2.5 * inch
-    promedio_sector = total_ton * 1.15 # Diferencia realista del 15%
+    promedio_sector = total_ton * 1.15
     
-    c.setFillColor(VERDE_SERENITY)
+    c.setFillColor(VERDE_LIMA_NEXUS)
     c.rect(3*inch, (y_graf-0.4)*inch, (total_ton/(total_ton+promedio_sector))*ancho_max*2, 0.2*inch, fill=1)
     c.setFillColor(colors.black)
     c.drawString(1.2*inch, (y_graf-0.35)*inch, "Su Empresa")
@@ -79,19 +80,18 @@ def generar_pdf_corporativo(empresa, nit, impacto, hash_id, estudio_data, total_
     buffer.seek(0)
     return buffer
 
-
+# FUNCIÓN 2: Para Certificados y Vademécum (Bloque 5 y 6)
 def generar_pdf_corporativo(empresa, impacto, hash_id, nit="", logo_bytes=None, es_vademecum=False, faro_nombre="Red Nexus"):
     buffer = io.BytesIO()
     c = canvas.Canvas(buffer, pagesize=letter)
     
-    # --- LOGO SERENITY (Izquierda) ---
+    # --- LOGOS ---
     try:
         if os.path.exists("logo_serenity.png"):
             c.drawImage("logo_serenity.png", 0.7*inch, 9.3*inch, width=1.5*inch, preserveAspectRatio=True, mask='auto')
     except:
         pass
 
-    # --- LOGO EMPRESA (Derecha) ---
     if logo_bytes:
         try:
             from reportlab.lib.utils import ImageReader
@@ -100,7 +100,7 @@ def generar_pdf_corporativo(empresa, impacto, hash_id, nit="", logo_bytes=None, 
         except:
             pass
 
-    # Marco y Títulos
+    # Marco
     c.setStrokeColor(colors.green)
     c.rect(0.5*inch, 0.5*inch, 7.5*inch, 10*inch)
     
@@ -116,9 +116,10 @@ def generar_pdf_corporativo(empresa, impacto, hash_id, nit="", logo_bytes=None, 
     c.drawString(1*inch, y-0.4*inch, f"NODO VALIDADOR: {faro_nombre}")
     c.drawString(1*inch, y-0.6*inch, f"ID SEGURIDAD: {hash_id}")
 
-    # Contenido según tipo
+    # Texto Legal
     text = c.beginText(1*inch, 6.5*inch)
     text.setFont("Helvetica", 11)
+    text.setLeading(14)
     if es_vademecum:
         text.textLine("Este documento certifica el cumplimiento de las Leyes 2173, 2169 y 2111.")
         text.textLine("Serenity Nexus garantiza la trazabilidad biométrica de los activos.")
