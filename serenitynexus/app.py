@@ -1,23 +1,24 @@
 # -*- coding: utf-8 -*-
 import streamlit as st
 import pandas as pd
+import numpy as np
 import random
-import hashlib 
-from datetime import datetime
+import hashlib
 import io
 import os
 import base64
 import librosa
-import numpy as np
-import folium # <--- ASEGÚRATE QUE ESTÉ ESTA
+from datetime import datetime
+
+# --- LIBRERÍAS DE MAPAS ---
+import folium
 from streamlit_folium import st_folium
 
-
-# --- LIBRERÍAS EXTENDIDAS ---
-from streamlit_folium import st_folium
+# --- LIBRERÍAS DE REPORTE (PDF) ---
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
+from reportlab.lib import colors  # Importación base para evitar errores de color
 from reportlab.lib.colors import HexColor, black
 
 # --- CONFIGURACIÓN E IDENTIDAD ---
