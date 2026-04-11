@@ -30,10 +30,9 @@ st.set_page_config(page_title="Serenity Nexus Global", page_icon="🌳", layout=
 VERDE_SERENITY = HexColor("#2E7D32")
 
 # FUNCIÓN 1: Para el Diagnóstico de Huella de Carbono (CORREGIDA PARA LÍNEA 544)
-def generar_pdf_diagnostico(empresa, nit, impacto, hash_id, estudio_data, total_ton, faro_nombre="Red Nexus"):
+def generar_pdf_diagnostico(empresa, nit, impacto, hash_id, estudio_data, total_ton, **kwargs):
     buffer = io.BytesIO()
     c = canvas.Canvas(buffer, pagesize=letter)
-    VERDE_LIMA_NEXUS = colors.HexColor("#9BC63B")
     
     # Membrete
     c.setStrokeColor(VERDE_LIMA_NEXUS)
