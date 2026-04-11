@@ -541,7 +541,7 @@ elif menu == "GESTIÓN LEY 2173 (EMPRESAS)":
                     archivo_logo.seek(0) # Volvemos al inicio del archivo
                     logo_bytes = archivo_logo.getvalue() # Obtenemos los bytes de forma segura
                     
-                    pdf_c = generar_pdf_corporativo(
+                    pdf_c = generar_pdf_diagnostico(
                         empresa=n_corp, 
                         impacto=n_per*2, 
                         hash_id=h_c, 
