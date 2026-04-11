@@ -25,8 +25,12 @@ from reportlab.lib.colors import HexColor, black
 st.set_page_config(page_title="Serenity Nexus Global", page_icon="🌳", layout="wide")
 VERDE_SERENITY = HexColor("#2E7D32")
 
-# FUNCIÓN 1: Para el Diagnóstico de Huella de Carbono (Bloque 7)
-def generar_pdf_diagnostico(empresa, nit, impacto, hash_id, estudio_data, total_ton):
+# --- CONFIGURACIÓN E IDENTIDAD ---
+st.set_page_config(page_title="Serenity Nexus Global", page_icon="🌳", layout="wide")
+VERDE_SERENITY = HexColor("#2E7D32")
+
+# FUNCIÓN 1: Para el Diagnóstico de Huella de Carbono (CORREGIDA PARA LÍNEA 544)
+def generar_pdf_diagnostico(empresa, nit, impacto, hash_id, estudio_data, total_ton, faro_nombre="Red Nexus"):
     buffer = io.BytesIO()
     c = canvas.Canvas(buffer, pagesize=letter)
     VERDE_LIMA_NEXUS = colors.HexColor("#9BC63B")
@@ -44,6 +48,7 @@ def generar_pdf_diagnostico(empresa, nit, impacto, hash_id, estudio_data, total_
     c.drawString(1*inch, 8.8*inch, f"ENTIDAD: {empresa.upper()}")
     c.drawString(1*inch, 8.6*inch, f"NIT: {nit}")
     c.drawString(1*inch, 8.4*inch, f"SERIAL DE INTEGRIDAD: {hash_id}")
+    c.drawString(1*inch, 8.2*inch, f"NODO VALIDADOR: {faro_nombre}") # <--- Ahora acepta faro_nombre
 
     # Tabla de Resultados
     c.setFont("Helvetica-Bold", 10)
