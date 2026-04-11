@@ -81,7 +81,7 @@ def generar_pdf_diagnostico(empresa, nit, impacto, hash_id, estudio_data, total_
     return buffer
 
 # FUNCIÓN 2: Para Certificados y Vademécum (Bloque 5 y 6)
-def generar_pdf_corporativo(empresa, impacto, hash_id, nit="", logo_bytes=None, es_vademecum=False, faro_nombre="Red Nexus"):
+def generar_pdf_corporativo_1(empresa, impacto, hash_id, nit="", logo_bytes=None, es_vademecum=False, faro_nombre="Red Nexus"):
     buffer = io.BytesIO()
     c = canvas.Canvas(buffer, pagesize=letter)
     
