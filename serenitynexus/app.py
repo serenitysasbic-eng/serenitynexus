@@ -1182,14 +1182,14 @@ elif menu == "UBICACIÓN & MAPAS":
 
     lat_v, lon_v = 3.485, -76.605
 
-    faros_nexus = [
+faros_nexus = [
         {"name": "Faro Halcón (Monte Guadua)", "lat": 3.518, "lon": -76.620, "color": "green"},
         {"name": "Faro Colibrí (Monte Guadua)", "lat": 3.519, "lon": -76.622, "color": "green"},
         {"name": "Faro Rana (Monte Guadua)", "lat": 3.517, "lon": -76.621, "color": "green"},
         {"name": "Faro Venado (Monte Guadua)", "lat": 3.516, "lon": -76.623, "color": "green"},
         {"name": "Faro Tigrillo (Monte Guadua)", "lat": 3.520, "lon": -76.619, "color": "green"},
         {"name": "Faro Capibara (Monte Guadua)", "lat": 3.515, "lon": -76.625, "color": "green"},
-        {"name": "Faro Rex (Villa Michelle)", "lat": 3.485, "lon": -76.605, "color": "blue"},
+        {"name": "Faro Rex (Villa Michelle)", "lat": 3.485, "lon": -76.605, "color": "blue"}
     ]
 
     url_gmaps = f"https://www.google.com/maps/search/?api=1&query={lat_v},{lon_v}"
