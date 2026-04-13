@@ -1179,9 +1179,11 @@ elif menu == "DIAGNOSTICO HUELLA DE CARBONO":
 elif menu == "UBICACIÓN & MAPAS":
     st.title("🗺️ Geoposicionamiento Nexus Global")
     st.markdown("### Monitoreo Satelital de Faros en KBA Bosque San Antonio")
+    
     lat_v, lon_v = 3.485, -76.605
 
-faros_nexus = [
+    # Todo esto debe llevar la misma sangría (4 espacios o 1 tab adicional)
+    faros_nexus = [
         {"name": "Faro Halcón (Monte Guadua)", "lat": 3.518, "lon": -76.620, "color": "green"},
         {"name": "Faro Colibrí (Monte Guadua)", "lat": 3.519, "lon": -76.622, "color": "green"},
         {"name": "Faro Rana (Monte Guadua)", "lat": 3.517, "lon": -76.621, "color": "green"},
@@ -1190,6 +1192,7 @@ faros_nexus = [
         {"name": "Faro Capibara (Monte Guadua)", "lat": 3.515, "lon": -76.625, "color": "green"},
         {"name": "Faro Rex (Villa Michelle)", "lat": 3.485, "lon": -76.605, "color": "blue"}
     ]
+
     url_gmaps = f"https://www.google.com/maps/@{lat_v},{lon_v},18z/data=!3m1!1e3"
 
     st.markdown(
@@ -1205,7 +1208,7 @@ faros_nexus = [
         unsafe_allow_html=True,
     )
 
-    google_map_tiles = "https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}"
+    google_map_tiles = "https://mt1.google.com/vt/lyrs=y&x={{x}}&y={{y}}&z={{z}}"
 
     m = folium.Map(
         location=[3.518, -76.620],
@@ -1214,24 +1217,27 @@ faros_nexus = [
         attr="Google Satellite",
     )
 
-for faro in faros_nexus:
-    # Radio de captura de los 4 micrófonos (200 metros)
-    folium.Circle(
-        location=[faro['lat'], faro['lon']],
-        radius=200,
-        color=faro['color'],
-        fill=True,
-        fill_opacity=0.2,
-        tooltip=f"Rango de Audio: {faro['name']}"  # <--- ASEGÚRATE QUE ESTÉ ASÍ
-    ).add_to(m)
+    # Este bucle FOR también debe estar indentado dentro del ELIF
+    for faro in faros_nexus:
+        # Radio de captura
+        folium.Circle(
+            location=[faro['lat'], faro['lon']],
+            radius=200,
+            color=faro['color'],
+            fill=True,
+            fill_opacity=0.2,
+            tooltip=f"Rango de Audio: {faro['name']}"
+        ).add_to(m)
 
-    # Marcador de estructura de pino canadiense
-    folium.Marker(
-        location=[faro['lat'], faro['lon']],
-        popup=f"<b>{faro['name']}</b><br>Estructura: 3x2x3 Pino<br>Enlace: Starlink",
-        icon=folium.Icon(color=faro['color'], icon='broadcast-tower', prefix='fa')
-    ).add_to(m)
-
+        # Marcador
+        folium.Marker(
+            location=[faro['lat'], faro['lon']],
+            popup=f"<b>{faro['name']}</b><br>Estructura: 3x2x3 Pino<br>Enlace: Starlink",
+            icon=folium.Icon(color=faro['color'], icon='broadcast-tower', prefix='fa')
+        ).add_to(m)
+    
+    # No olvides mostrar el mapa en Streamlit al final del bloque
+    st_data = st_folium(m, width=700)
 
 
 
