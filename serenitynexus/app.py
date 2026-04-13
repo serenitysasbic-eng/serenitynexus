@@ -9,6 +9,8 @@ import os
 import base64
 from datetime import datetime
 import time
+import base64
+
 
 
 # Librería opcional: se conserva por compatibilidad con tu código original
@@ -1164,6 +1166,8 @@ elif menu == "BILLETERA CRYPTO (WEB3)":
             }
         )
         st.caption("📡 Los datos biométricos son actualizados cada 60 segundos por la Red de Faros Serenity.")
+
+
 # =========================================================
 # BLOQUE 7: DONACIONES Y CERTIFICADO
 # =========================================================
@@ -1171,41 +1175,58 @@ elif menu == "DONACIONES Y CERTIFICADO":
     st.title("Generador de Diploma y Certificado Nexus")
     st.markdown("### Registro de Aportes a la Regeneración Biométrica")
 
+    # Inicialización de contador de donaciones si no existe
+    if "donaciones_recibidas" not in st.session_state:
+        st.session_state.donaciones_recibidas = 0
+
     colA, colB = st.columns([1, 1])
 
     with colA:
         with st.container(border=True):
-            st.markdown("#### Datos del Donante")
-            nombre_d = st.text_input("Nombre Completo o Razón Social")
-            monto_d = st.number_input("Monto del Aporte (USD)", min_value=1, step=10)
+            st.markdown("#### ✨ Datos del Donante")
+            nombre_d = st.text_input("Nombre Completo o Razón Social", placeholder="Ej: Juan Pérez / Empresa Verde")
+            monto_d = st.number_input("Monto del Aporte (USD)", min_value=1, value=50, step=10)
+            
+            st.info("💡 Cada USD $10 representa la protección activa de 100m² de bosque nativo.")
 
-            if st.button("REGISTRAR APORTE Y GENERAR HASH"):
+            if st.button("REGISTRAR APORTE Y GENERAR HASH", use_container_width=True, type="primary"):
                 if nombre_d:
-                    datos_hash = f"{nombre_d}{monto_d}{datetime.now()}"
-                    hash_certificado = hashlib.sha256(datos_hash.encode()).hexdigest()[:16].upper()
+                    with st.spinner("Firmando certificado en la Red Nexus..."):
+                        # Creación del Hash único (Huella digital del certificado)
+                        datos_hash = f"{nombre_d}{monto_d}{datetime.now()}"
+                        hash_certificado = hashlib.sha256(datos_hash.encode()).hexdigest()[:16].upper()
 
-                    st.session_state.current_hash = hash_certificado
-                    st.session_state.nombre_prev = nombre_d
-                    st.session_state.monto_prev = monto_d
-                    st.session_state.pdf_buffer = generar_pdf_certificado(nombre_d, monto_d, hash_certificado).getvalue()
+                        # Guardar en Session State
+                        st.session_state.current_hash = hash_certificado
+                        st.session_state.nombre_prev = nombre_d
+                        st.session_state.monto_prev = monto_d
+                        
+                        # Generación del PDF (Usa tu función existente)
+                        buffer = generar_pdf_certificado(nombre_d, monto_d, hash_certificado)
+                        st.session_state.pdf_buffer = buffer.getvalue()
 
-                    st.session_state.donaciones_recibidas += 1
-                    st.balloons()
-                    st.success("¡Certificado generado con éxito!")
+                        st.session_state.donaciones_recibidas += 1
+                        st.balloons()
+                        st.success(f"¡Certificado #{st.session_state.donaciones_recibidas} generado!")
                 else:
-                    st.warning("Ingrese el nombre del donante.")
+                    st.error("⚠️ Por favor, ingrese el nombre del donante para continuar.")
 
     with colB:
         if "pdf_buffer" in st.session_state:
+            # Vista previa estilizada con aspecto de "Papel de Seguridad"
             st.markdown(
                 f"""
-                <div style="background:white; color:black; padding:30px; text-align:center; border:8px double #2E7D32; border-radius:15px;">
-                    <h2 style="color:#2E7D32; margin-bottom:10px;">VISTA PREVIA</h2>
-                    <hr style="border:1px solid #2E7D32;">
-                    <p style="font-size:1.2rem; margin-top:20px;">Gracias por tu aporte, <b>{st.session_state.nombre_prev.upper()}</b></p>
-                    <p>Has contribuido con <b>${st.session_state.monto_prev} USD</b></p>
-                    <div style="background:#f0f2f6; padding:10px; border-radius:5px; margin-top:20px;">
-                        <code style="font-size:0.8rem; color: #2E7D32;">HASH: {st.session_state.current_hash}</code>
+                <div style="background:#f9f9f9; color:#1a1a1a; padding:40px; text-align:center; 
+                            border:10px double #2E7D32; border-radius:5px; box-shadow: 10px 10px 20px rgba(0,0,0,0.2);">
+                    <h1 style="color:#2E7D32; font-family:serif; margin-bottom:0;">CERTIFICADO</h1>
+                    <p style="letter-spacing: 3px; font-size: 0.8rem; color:#666;">SERENITY NEXUS GLOBAL</p>
+                    <hr style="border:1px solid #2E7D32; width:80%;">
+                    <p style="font-size:1.1rem; margin-top:20px;">Este documento avala que:</p>
+                    <h2 style="color:#111; margin:10px 0;">{st.session_state.nombre_prev.upper()}</h2>
+                    <p>Ha contribuido con la suma de <b>${st.session_state.monto_prev} USD</b></p>
+                    <p style="font-size:0.9rem; font-style:italic;">Destinados a la restauración de la Red de Faros</p>
+                    <div style="background:#e8f5e9; padding:15px; border-radius:5px; margin-top:30px; border: 1px dashed #2E7D32;">
+                        <code style="font-size:0.9rem; color: #2E7D32; font-weight:bold;">ID VERIFICACIÓN: {st.session_state.current_hash}</code>
                     </div>
                 </div>
                 """,
@@ -1214,11 +1235,24 @@ elif menu == "DONACIONES Y CERTIFICADO":
 
             st.write("")
             st.download_button(
-                label="DESCARGAR DIPLOMA CON HASH (PDF)",
+                label="📥 DESCARGAR DIPLOMA OFICIAL (PDF)",
                 data=st.session_state.pdf_buffer,
                 file_name=f"Certificado_Nexus_{st.session_state.current_hash}.pdf",
                 mime="application/pdf",
+                use_container_width=True,
             )
+        else:
+            # Estado vacío para cuando no hay certificado generado
+            st.markdown(
+                """
+                <div style="height:400px; display:flex; align-items:center; justify-content:center; 
+                            border:2px dashed #444; border-radius:15px; color:#666;">
+                    La vista previa del certificado aparecerá aquí al registrar su aporte.
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
 
 # =========================================================
 # BLOQUE 8: DIAGNOSTICO HUELLA DE CARBONO
