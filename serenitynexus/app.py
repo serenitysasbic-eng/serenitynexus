@@ -1191,7 +1191,6 @@ faros_nexus = [
         {"name": "Faro Capibara (Monte Guadua)", "lat": 3.515, "lon": -76.625, "color": "green"},
         {"name": "Faro Rex (Villa Michelle)", "lat": 3.485, "lon": -76.605, "color": "blue"}
     ]
-
     url_gmaps = f"https://www.google.com/maps/search/?api=1&query={lat_v},{lon_v}"
 
     st.markdown(
