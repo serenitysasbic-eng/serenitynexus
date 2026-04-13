@@ -1370,71 +1370,76 @@ elif menu == "DIAGNOSTICO HUELLA DE CARBONO":
 
 
 # =========================================================
-# BLOQUE 9: UBICACIÓN & MAPAS
+# BLOQUE 9: UBICACIÓN & MAPAS (AVANZADO)
 # =========================================================
 elif menu == "UBICACIÓN & MAPAS":
-    st.title("🗺️ Geoposicionamiento Nexus Global")
-    st.markdown("### Monitoreo Satelital de Faros en KBA Bosque San Antonio")
+    from folium.plugins import HeatMap # Asegúrate de importar esto arriba
     
-    lat_v, lon_v = 3.485, -76.605
-
-    # Todo esto debe llevar la misma sangría (4 espacios o 1 tab adicional)
+    st.title("🗺️ Centro de Comando Geospacial Nexus")
+    st.markdown("### Análisis Satelital: Ubicación, Deforestación y Recuperación")
+    
+    # 1. Definición de Datos
+    lat_v, lon_v = 3.518, -76.620
+    
+    # Datos de los Faros
     faros_nexus = [
-        {"name": "Faro Halcón (Monte Guadua)", "lat": 3.518, "lon": -76.620, "color": "green"},
-        {"name": "Faro Colibrí (Monte Guadua)", "lat": 3.519, "lon": -76.622, "color": "green"},
-        {"name": "Faro Rana (Monte Guadua)", "lat": 3.517, "lon": -76.621, "color": "green"},
-        {"name": "Faro Venado (Monte Guadua)", "lat": 3.516, "lon": -76.623, "color": "green"},
-        {"name": "Faro Tigrillo (Monte Guadua)", "lat": 3.520, "lon": -76.619, "color": "green"},
-        {"name": "Faro Capibara (Monte Guadua)", "lat": 3.515, "lon": -76.625, "color": "green"},
-        {"name": "Faro Rex (Villa Michelle)", "lat": 3.485, "lon": -76.605, "color": "blue"}
+        {"name": "Faro Halcón", "lat": 3.518, "lon": -76.620, "color": "green"},
+        {"name": "Faro Colibrí", "lat": 3.519, "lon": -76.622, "color": "green"},
+        {"name": "Faro Rex", "lat": 3.485, "lon": -76.605, "color": "blue"}
     ]
 
-    url_gmaps = f"https://www.google.com/maps/@{lat_v},{lon_v},18z/data=!3m1!1e3"
+    # Simulación de Datos para Mapas de Calor (Lat, Lon, Intensidad)
+    # Datos de Deforestación (Zonas calientes de pérdida)
+    data_deforestacion = [
+        [3.515, -76.610, 0.8], [3.514, -76.612, 0.9], [3.516, -76.608, 0.7],
+        [3.480, -76.600, 0.9], [3.482, -76.602, 0.6]
+    ]
+    
+    # Datos de Reforestación (Zonas de siembra activa Serenity)
+    data_reforestacion = [
+        [3.518, -76.620, 1.0], [3.519, -76.622, 0.8], [3.517, -76.621, 0.9],
+        [3.520, -76.619, 0.7], [3.516, -76.623, 1.0]
+    ]
 
-    st.markdown(
-        f"""
-        <div style='text-align:center; margin-bottom: 25px;'>
-            <a href="{url_gmaps}" target="_blank" style="text-decoration: none;">
-                <button style="background-color:#4285F4; color:white; border:none; padding:12px 25px; border-radius:8px; font-weight:bold; cursor:pointer; box-shadow: 0 4px 15px rgba(66, 133, 244, 0.4); font-family:sans-serif;">
-                    ABRIR RADAR EXTERNO (GOOGLE MAPS)
-                </button>
-            </a>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
-    google_map_tiles = "https://mt1.google.com/vt/lyrs=y&x={{x}}&y={{y}}&z={{z}}"
-
+    # 2. Configuración del Mapa Base
+    google_hibrido = "https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}"
+    
     m = folium.Map(
-        location=[3.518, -76.620],
+        location=[lat_v, lon_v],
         zoom_start=14,
-        tiles=google_map_tiles,
-        attr="Google Satellite",
+        tiles=google_hibrido,
+        attr="Google Satellite Hybrid"
     )
 
-    # Este bucle FOR también debe estar indentado dentro del ELIF
+    # 3. Capa: Marcadores de Faros
+    capa_faros = folium.FeatureGroup(name="📍 Ubicación de Faros").add_to(m)
     for faro in faros_nexus:
-        # Radio de captura
-        folium.Circle(
-            location=[faro['lat'], faro['lon']],
-            radius=200,
-            color=faro['color'],
-            fill=True,
-            fill_opacity=0.2,
-            tooltip=f"Rango de Audio: {faro['name']}"
-        ).add_to(m)
-
-        # Marcador
         folium.Marker(
             location=[faro['lat'], faro['lon']],
-            popup=f"<b>{faro['name']}</b><br>Estructura: 3x2x3 Pino<br>Enlace: Starlink",
+            popup=faro['name'],
             icon=folium.Icon(color=faro['color'], icon='broadcast-tower', prefix='fa')
-        ).add_to(m)
-    
-    # No olvides mostrar el mapa en Streamlit al final del bloque
-    st_data = st_folium(m, width=700)
+        ).add_to(capa_faros)
 
+    # 4. Capa: Mapa de Calor de Deforestación (Rojo)
+    capa_defo = folium.FeatureGroup(name="🔥 Mapa de Calor: Deforestación", show=False).add_to(m)
+    HeatMap(data_deforestacion, radius=25, blur=15, gradient={0.4: 'yellow', 0.65: 'orange', 1: 'red'}).add_to(capa_defo)
+
+    # 5. Capa: Mapa de Calor de Reforestación (Verde/Azul)
+    capa_refo = folium.FeatureGroup(name="🌿 Mapa de Calor: Reforestación", show=False).add_to(m)
+    HeatMap(data_reforestacion, radius=25, blur=15, gradient={0.4: 'lime', 1: 'cyan'}).add_to(capa_refo)
+
+    # 6. Control de Capas (Permite al usuario activar/desactivar en el mapa)
+    folium.LayerControl(collapsed=False).add_to(m)
+
+    # Renderizado en Streamlit
+    st_folium(m, use_container_width=True, height=550)
+
+    # 7. Métricas de Soporte
+    st.write("---")
+    c1, c2, c3 = st.columns(3)
+    c1.metric("Área Protegida", "450 Ha", "+12 Ha")
+    c2.metric("Alertas Deforestación", "3", "-2", delta_color="inverse")
+    c3.metric("Tasa Supervivencia", "94%", "Especies Nativas")
 
 
 
