@@ -356,7 +356,7 @@ with tab4:
         st.download_button(
             label="🛡️ Download Military Certificate",
             data=st.session_state.military_pdf,
-            file_name=f"military_cert_{datetime.now()
+
 
 
 
