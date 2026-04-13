@@ -894,6 +894,7 @@ elif menu == "GESTIÓN LEY 2173 (EMPRESAS)":
             mime="application/pdf",
             use_container_width=True,
         )
+
 # =========================================================
 # BLOQUE 5: SUSCRIPCIONES
 # =========================================================
@@ -901,19 +902,37 @@ elif menu == "SUSCRIPCIONES":
     st.title("Membresías de Impacto Serenity")
     st.markdown("### Transforma tu aporte en regeneración real")
 
+    # CSS para igualar alturas y efectos de hover
+    st.markdown("""
+        <style>
+        .plan-card {
+            background:#1e2630; 
+            padding:25px; 
+            border-radius:15px; 
+            text-align:center; 
+            min-height: 450px;
+            transition: 0.3s ease;
+        }
+        .plan-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
     p1, p2, p3 = st.columns(3)
 
     with p1:
         st.markdown(
             """
-            <div style="background:#1e2630; padding:20px; border-radius:15px; border:2px solid #9BC63B; text-align:center; min-height: 420px;">
+            <div class="plan-card" style="border:2px solid #9BC63B;">
                 <h3 style="color:#9BC63B;">PLAN SEMILLA</h3>
-                <h2 style="color:white;">$25 USD <small>/mes</small></h2>
+                <h2 style="color:white;">$25 USD <small style="font-size:12px;">/mes</small></h2>
                 <hr style="border-color:#444;">
-                <p style="text-align:left; font-size:0.9rem;"><b>5 Árboles:</b> Siembra y mantenimiento.</p>
-                <p style="text-align:left; font-size:0.9rem;"><b>1 Faro:</b> Datos biométricos básicos.</p>
-                <p style="text-align:left; font-size:0.9rem;"><b>50 Tokens:</b> $SNG de respaldo.</p>
-                <p style="text-align:left; font-size:0.9rem;"><b>Certificado:</b> Digital con Hash.</p>
+                <p style="text-align:left; font-size:0.9rem;">🌱 <b>5 Árboles:</b> Siembra y mantenimiento.</p>
+                <p style="text-align:left; font-size:0.9rem;">📡 <b>1 Faro:</b> Datos biométricos básicos.</p>
+                <p style="text-align:left; font-size:0.9rem;">💎 <b>50 Tokens:</b> $SNG de respaldo.</p>
+                <p style="text-align:left; font-size:0.9rem;">📜 <b>Certificado:</b> Digital con Hash.</p>
             </div>
             """,
             unsafe_allow_html=True,
@@ -925,14 +944,14 @@ elif menu == "SUSCRIPCIONES":
     with p2:
         st.markdown(
             """
-            <div style="background:#1e2630; padding:20px; border-radius:15px; border:3px solid #9BC63B; text-align:center; min-height: 420px; transform: scale(1.02);">
+            <div class="plan-card" style="border:3px solid #9BC63B; background:#252e3a;">
                 <h3 style="color:#9BC63B;">PLAN GUARDIÁN</h3>
-                <h2 style="color:white;">$80 USD <small>/mes</small></h2>
+                <h2 style="color:white;">$80 USD <small style="font-size:12px;">/mes</small></h2>
                 <hr style="border-color:#444;">
-                <p style="text-align:left; font-size:0.9rem;"><b>15 Árboles:</b> Restauración activa.</p>
-                <p style="text-align:left; font-size:0.9rem;"><b>Cámaras 4K:</b> Streaming del bosque.</p>
-                <p style="text-align:left; font-size:0.9rem;"><b>200 Tokens:</b> Mayor respaldo $SNG.</p>
-                <p style="text-align:left; font-size:0.9rem;"><b>Reporte IA:</b> Inventario de carbono.</p>
+                <p style="text-align:left; font-size:0.9rem;">🌳 <b>15 Árboles:</b> Restauración activa.</p>
+                <p style="text-align:left; font-size:0.9rem;">🎥 <b>Cámaras 4K:</b> Streaming del bosque.</p>
+                <p style="text-align:left; font-size:0.9rem;">💎 <b>200 Tokens:</b> Mayor respaldo $SNG.</p>
+                <p style="text-align:left; font-size:0.9rem;">🤖 <b>Reporte IA:</b> Inventario de carbono.</p>
             </div>
             """,
             unsafe_allow_html=True,
@@ -944,14 +963,14 @@ elif menu == "SUSCRIPCIONES":
     with p3:
         st.markdown(
             """
-            <div style="background:#1e2630; padding:20px; border-radius:15px; border:2px solid #D4AF37; text-align:center; min-height: 420px;">
+            <div class="plan-card" style="border:2px solid #D4AF37;">
                 <h3 style="color:#D4AF37;">PLAN HALCÓN</h3>
-                <h2 style="color:white;">$200 USD <small>/mes</small></h2>
+                <h2 style="color:white;">$200 USD <small style="font-size:12px;">/mes</small></h2>
                 <hr style="border-color:#444;">
-                <p style="text-align:left; font-size:0.9rem;"><b>1 Plaza Protegida:</b> Soberanía total.</p>
-                <p style="text-align:left; font-size:0.9rem;"><b>Cámaras:</b> Vigilancia perimetral.</p>
-                <p style="text-align:left; font-size:0.9rem;"><b>600 Tokens:</b> Impacto Web3 máximo.</p>
-                <p style="text-align:left; font-size:0.9rem;"><b>Visita 1 Persona VIP:</b> Acceso a Monte Guadua 2 Días 1 Noche.</p>
+                <p style="text-align:left; font-size:0.9rem;">🏞️ <b>1 Plaza Protegida:</b> Soberanía total.</p>
+                <p style="text-align:left; font-size:0.9rem;">🛡️ <b>Cámaras:</b> Vigilancia perimetral.</p>
+                <p style="text-align:left; font-size:0.9rem;">💎 <b>600 Tokens:</b> Impacto Web3 máximo.</p>
+                <p style="text-align:left; font-size:0.9rem;">⛺ <b>Visita VIP:</b> Monte Guadua (2D/1N).</p>
             </div>
             """,
             unsafe_allow_html=True,
@@ -960,39 +979,49 @@ elif menu == "SUSCRIPCIONES":
             st.session_state.p_sel = "HALCÓN"
             st.session_state.m_plan = 200
 
+    # Lógica de Checkout
     if st.session_state.get("p_sel"):
         st.write("---")
-        st.subheader(f"Finalizar Suscripción: {st.session_state.p_sel}")
+        col_t1, col_t2 = st.columns([3, 1])
+        col_t1.subheader(f"💳 Finalizar Suscripción: Plan {st.session_state.p_sel}")
+        if col_t2.button("Cambiar Plan", size="small"):
+            st.session_state.p_sel = None
+            st.rerun()
 
         col_pay1, col_pay2 = st.columns(2)
+        
         with col_pay1:
             with st.container(border=True):
                 st.markdown("#### Tarjeta de Crédito/Débito")
-                st.text_input("Titular de la cuenta")
+                st.text_input("Titular de la cuenta", placeholder="Nombre como aparece en la tarjeta")
                 st.text_input("Número de Tarjeta", placeholder="xxxx xxxx xxxx xxxx")
                 c_exp, c_cvc = st.columns(2)
                 with c_exp:
                     st.text_input("Vencimiento (MM/AA)")
                 with c_cvc:
-                    st.text_input("CVC")
-                if st.button("ACTIVAR SUSCRIPCIÓN", use_container_width=True):
-                    st.balloons()
-                    st.success(f"¡Bienvenido al Plan {st.session_state.p_sel}! Impacto activado.")
+                    st.text_input("CVC", type="password") # Ocultar código de seguridad
+                
+                if st.button("✅ ACTIVAR SUSCRIPCIÓN", use_container_width=True, type="primary"):
+                    with st.spinner("Procesando pago seguro..."):
+                        time.sleep(2)
+                        st.balloons()
+                        st.success(f"¡Bienvenido al Plan {st.session_state.p_sel}! Tu impacto ha sido registrado en la red.")
 
         with col_pay2:
-            st.markdown("#### Pagos Locales y Alternativos")
+            st.markdown("#### Métodos Locales y Cripto")
             st.markdown(
                 """
-                <div style="background: #ffffff; padding: 25px; border-radius: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: center; border: 1px solid #ddd;">
-                    <div style="text-align:center;"><img src="https://upload.wikimedia.org/wikipedia/commons/b/bf/Nequi_logo.png" width="90"></div>
-                    <div style="text-align:center;"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Bancolombia_logo.svg/2560px-Bancolombia_logo.svg.png" width="90"></div>
-                    <div style="text-align:center;"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/2560px-Visa_Inc._logo.svg.png" width="70"></div>
-                    <div style="text-align:center;"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1280px-Mastercard-logo.svg.png" width="70"></div>
+                <div style="background: #ffffff; padding: 20px; border-radius: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; align-items: center; border: 1px solid #ddd; filter: grayscale(20%);">
+                    <div style="text-align:center;"><img src="https://upload.wikimedia.org/wikipedia/commons/b/bf/Nequi_logo.png" width="80"></div>
+                    <div style="text-align:center;"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Bancolombia_logo.svg/2560px-Bancolombia_logo.svg.png" width="80"></div>
+                    <div style="text-align:center;"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/2560px-Visa_Inc._logo.svg.png" width="60"></div>
+                    <div style="text-align:center;"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1280px-Mastercard-logo.svg.png" width="60"></div>
                 </div>
                 """,
                 unsafe_allow_html=True,
             )
-            st.caption("Transacciones seguras mediante Nexus Gateway (Dagua-Colombia)")
+            st.info("💡 **Dato Nexus:** Al suscribirte, tus primeros tokens $SNG serán transferidos a tu cuenta en las próximas 24 horas.")
+            st.caption("🔒 Transacciones seguras mediante Nexus Gateway (Dagua-Colombia)")
 
 # =========================================================
 # BLOQUE 6: BILLETERA CRYPTO (WEB3)
