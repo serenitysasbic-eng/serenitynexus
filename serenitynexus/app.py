@@ -984,7 +984,7 @@ elif menu == "SUSCRIPCIONES":
         st.write("---")
         col_t1, col_t2 = st.columns([3, 1])
         col_t1.subheader(f"💳 Finalizar Suscripción: Plan {st.session_state.p_sel}")
-        if col_t2.button("Cambiar Plan", size="small"):
+        if col_t2.button("Cambiar Plan"):
             st.session_state.p_sel = None
             st.rerun()
 
