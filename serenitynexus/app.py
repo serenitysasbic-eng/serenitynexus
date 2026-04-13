@@ -1027,49 +1027,81 @@ elif menu == "SUSCRIPCIONES":
 # BLOQUE 6: BILLETERA CRYPTO (WEB3)
 # =========================================================
 elif menu == "BILLETERA CRYPTO (WEB3)":
+    # --- FUNCIÓN INTERNA PARA LA GUÍA ---
+    def obtener_guia_web3():
+        return """
+        🌿 SERENITY NEXUS GLOBAL - GUÍA DE CONFIGURACIÓN WEB3
+        =====================================================
+        
+        1. INSTALACIÓN: Use MetaMask o Nexus Wallet App.
+        2. SEGURIDAD: Guarde su frase semilla (12/24 palabras) en papel.
+           NUNCA la comparta con nadie, ni siquiera con soporte de Serenity.
+        3. RED: Asegúrese de estar conectado a la red Polygon Mainnet.
+        4. IMPORTAR TOKEN:
+           - Contrato: 0x71C2B4... (Contrato Oficial SNG)
+           - Símbolo: $SNG
+           - Decimales: 18
+        
+        SNG es un token respaldado por activos biológicos reales (KBA).
+        """
+
     st.title("Nexus Finance Control")
     st.markdown("### El Futuro de la Conservación Tokenizada")
 
-    try:
-        if os.path.exists("video_sng.mp4"):
+    # 1. Visualizador de Token (Video en Base64)
+    if os.path.exists("video_sng.mp4"):
+        try:
             with open("video_sng.mp4", "rb") as f:
-                data = f.read()
-                bin_str = base64.b64encode(data).decode()
+                video_bytes = f.read()
+                video_base64 = base64.b64encode(video_bytes).decode()
+            
             video_html = f"""
-                <div style="display: flex; justify-content: center; margin-bottom: 20px;">
-                    <video width="60%" autoplay loop muted playsinline style="border-radius: 20px; border: 2px solid #9BC63B; box-shadow: 0 0 30px rgba(155, 198, 59, 0.3);">
-                        <source src="data:video/mp4;base64,{bin_str}" type="video/mp4">
+                <div style="display: flex; justify-content: center; margin-bottom: 25px;">
+                    <video width="50%" autoplay loop muted playsinline 
+                        style="border-radius: 20px; border: 2px solid #9BC63B; 
+                        box-shadow: 0 0 30px rgba(155, 198, 59, 0.4);">
+                        <source src="data:video/mp4;base64,{video_base64}" type="video/mp4">
                     </video>
                 </div>
             """
             st.markdown(video_html, unsafe_allow_html=True)
-        else:
-            st.info("🪙 Visualizador de Token $SNG Activo (Esperando archivo de video)")
-    except Exception:
-        st.info("🪙 Sistema de Video Nexus en Espera")
+        except Exception:
+            st.info("🪙 **SNG Token Activo** (Visualizador en carga...)")
+    else:
+        st.info("🪙 **SNG Token Viewer:** (Para ver el token 3D, asegúrate de que 'video_sng.mp4' esté en la carpeta raíz)")
 
     st.write("---")
 
     col_buy, col_vault = st.columns(2)
 
+    # 2. Simulador de Compra / Swap
     with col_buy:
-        st.markdown("<h4 style='color:#9BC63B;'>¿Cómo comprar $SNG?</h4>", unsafe_allow_html=True)
-        st.write("El token $SNG representa hectáreas regeneradas y datos biométricos de los Faros.")
+        st.markdown("<h4 style='color:#9BC63B;'>🔄 Intercambio Nexus (Swap)</h4>", unsafe_allow_html=True)
         with st.container(border=True):
-            st.markdown("<p style='color:white; font-weight:bold;'>Simulador de Intercambio (Swap)</p>", unsafe_allow_html=True)
-            moneda_pago = st.selectbox("Pagar con:", ["USD (Tarjeta/Transferencia)", "USDT (Crypto)", "Ethereum"])
-            cantidad_usd = st.number_input("Monto a invertir (USD):", min_value=10, step=50, key="wallet_buy_usd")
-            tasa = 0.50
-            st.metric("Recibirás aproximadamente:", f"{cantidad_usd / tasa:,.2f} $SNG")
-            if st.button("COMPRAR TOKENS $SNG", use_container_width=True):
-                st.success(f"Orden de compra enviada al Nexus Gateway usando {moneda_pago}.")
+            moneda_pago = st.selectbox("Pagar con:", ["USD (Tarjeta/PSE)", "USDT (Crypto)", "Ethereum (ETH)"])
+            cantidad_usd = st.number_input("Monto a invertir (USD):", min_value=10, value=100, step=50)
+            
+            tasa = 0.50 # Precio simulado del token
+            tokens_estimados = cantidad_usd / tasa
+            
+            st.metric("Recibirás aproximadamente:", f"{tokens_estimados:,.2f} $SNG")
+            
+            if st.button("COMPRAR TOKENS $SNG", use_container_width=True, type="primary"):
+                with st.status("Conectando con Nexus Gateway...") as status:
+                    time.sleep(1.2)
+                    st.write("Verificando liquidez en el pool...")
+                    time.sleep(1)
+                    status.update(label="¡Orden Generada con Éxito!", state="complete")
+                st.success(f"Se ha enviado la solicitud de compra por {tokens_estimados} $SNG.")
 
+    # 3. Bóveda y Guía de Configuración
     with col_vault:
-        st.markdown("<h4 style='color:#9BC63B;'>¿Cómo tener una Billetera Nexus?</h4>", unsafe_allow_html=True)
+        st.markdown("<h4 style='color:#9BC63B;'>🔐 Seguridad Nexus Vault</h4>", unsafe_allow_html=True)
         st.write("Nexus Vault es tu llave privada al Internet de la Naturaleza.")
+        
         st.markdown(
             """
-            <div style='color:white;'>
+            <div style='background: #1e2630; padding: 15px; border-radius: 12px; border-left: 5px solid #9BC63B;'>
                 <p>• <b>Paso 1:</b> Descarga Nexus App o usa Metamask.</p>
                 <p>• <b>Paso 2:</b> Genera tu frase semilla de 24 palabras.</p>
                 <p>• <b>Paso 3:</b> Vincula tu ID de Donante Serenity.</p>
@@ -1077,10 +1109,21 @@ elif menu == "BILLETERA CRYPTO (WEB3)":
             """,
             unsafe_allow_html=True,
         )
-        st.button("DESCARGAR GUÍA DE CONFIGURACIÓN", use_container_width=True)
+        st.write("")
+        
+        # Botón de Descarga Funcional
+        st.download_button(
+            label="📥 DESCARGAR GUÍA DE CONFIGURACIÓN",
+            data=obtener_guia_web3(),
+            file_name="Guia_Nexus_Web3.txt",
+            mime="text/plain",
+            use_container_width=True,
+        )
 
     st.write("---")
-    st.markdown("<h4 style='color:white; text-align:center;'>Centro de Conexión Web3</h4>", unsafe_allow_html=True)
+    
+    # 4. Conexión de Wallet
+    st.markdown("<h4 style='text-align:center;'>Centro de Conexión Web3</h4>", unsafe_allow_html=True)
     cw1, cw2, cw3 = st.columns([1, 2, 1])
 
     with cw2:
@@ -1088,8 +1131,9 @@ elif menu == "BILLETERA CRYPTO (WEB3)":
             st.session_state.wallet_connected = True
             st.balloons()
 
+    # 5. Estado de la Cuenta Tokenizada
     if st.session_state.get("wallet_connected", False):
-        st.success("Billetera 0x71C...9A23 Conectada con éxito.")
+        st.success("✅ Billetera 0x71C...9A23 Conectada con éxito.")
 
         col_met1, col_met2 = st.columns(2)
         with col_met1:
@@ -1103,30 +1147,23 @@ elif menu == "BILLETERA CRYPTO (WEB3)":
             unsafe_allow_html=True,
         )
 
-        data_wallet = {
+        # Tabla de activos mejorada
+        df_wallet = pd.DataFrame({
             "Activo Biológico": ["Carbono Azul", "Biodiversidad", "Agua Protegida", "Suelo Regenerado"],
             "Nodo Validador": ["Faro Rex", "Faro Tigrillo", "Faro Colibrí", "Faro Halcón"],
-            "Tokens $SNG": ["5,000", "8,500", "3,200", "8,300"],
-            "Certificación": ["✅ Verificado", "✅ Verificado", "🔄 Sincronizando", "✅ Verificado"],
-        }
-        df_wallet = pd.DataFrame(data_wallet)
+            "Tokens $SNG": [5000, 8500, 3200, 8300],
+            "Certificación": ["✅ Verificado", "✅ Verificado", "🔄 Sincronizando", "✅ Verificado"]
+        })
 
-        st.markdown(
-            """
-            <style>
-                .stTable td, .stTable th {
-                    color: white !important;
-                    font-size: 1.05rem !important;
-                    text-align: center !important;
-                }
-            </style>
-            """,
-            unsafe_allow_html=True,
+        st.dataframe(
+            df_wallet, 
+            use_container_width=True, 
+            hide_index=True,
+            column_config={
+                "Tokens $SNG": st.column_config.NumberColumn(format="%d $SNG")
+            }
         )
-
-        st.table(df_wallet)
-        st.caption("Los datos biométricos son actualizados cada 60 segundos por la Red de Faros.")
-
+        st.caption("📡 Los datos biométricos son actualizados cada 60 segundos por la Red de Faros Serenity.")
 # =========================================================
 # BLOQUE 7: DONACIONES Y CERTIFICADO
 # =========================================================
