@@ -1179,7 +1179,6 @@ elif menu == "DIAGNOSTICO HUELLA DE CARBONO":
 elif menu == "UBICACIÓN & MAPAS":
     st.title("🗺️ Geoposicionamiento Nexus Global")
     st.markdown("### Monitoreo Satelital de Faros en KBA Bosque San Antonio")
-
     lat_v, lon_v = 3.485, -76.605
 
 faros_nexus = [
@@ -1191,7 +1190,7 @@ faros_nexus = [
         {"name": "Faro Capibara (Monte Guadua)", "lat": 3.515, "lon": -76.625, "color": "green"},
         {"name": "Faro Rex (Villa Michelle)", "lat": 3.485, "lon": -76.605, "color": "blue"}
     ]
-    url_gmaps = f"https://www.google.com/maps/search/?api=1&query={lat_v},{lon_v}"
+    url_gmaps = f"https://www.google.com/maps/@{lat_v},{lon_v},18z/data=!3m1!1e3"
 
     st.markdown(
         f"""
