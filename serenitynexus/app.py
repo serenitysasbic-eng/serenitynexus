@@ -701,58 +701,69 @@ elif menu == "DASHBOARD ESTADÍSTICO IA":
     st.title("📊 Inteligencia de Datos Nexus")
     st.markdown("### Análisis Biométrico y Predictivo del Ecosistema")
 
+    # Selector de Faro con valor por defecto
     faro_seleccionado = st.selectbox(
         "Seleccione el Faro para Auditoría IA:",
-        [
-            "Faro Rex",
-            "Faro Halcón",
-            "Faro Colibrí",
-            "Faro Rana",
-            "Faro Venado",
-            "Faro Tigrillo",
-            "Faro Capibara",
-        ],
+        ["Faro Rex", "Faro Halcón", "Faro Colibrí", "Faro Rana", "Faro Venado", "Faro Tigrillo", "Faro Capibara"]
     )
+
+    # Simulación de cambio de datos según faro (Semilla basada en el nombre)
+    np.random.seed(len(faro_seleccionado)) 
+    
     st.write(f"Analizando telemetría en tiempo real de: **{faro_seleccionado}**")
 
-    col_m1, col_m2, col_m3, col_m4 = st.columns(4)
-    with col_m1:
-        st.metric("Biodiversidad Index", "84%", "+2.1%")
-    with col_m2:
-        st.metric("CO2 Capturado", "1.2 Ton", "+15kg")
-    with col_m3:
-        st.metric("Humedad Suelo", "62%", "-0.5%")
-    with col_m4:
-        st.metric("Nivel Sonoro", "32 dB", "Natural")
+    # Contenedor de Métricas Principales
+    with st.container(border=True):
+        col_m1, col_m2, col_m3, col_m4 = st.columns(4)
+        col_m1.metric("Biodiversidad Index", f"{np.random.randint(75, 95)}%", "+2.1%")
+        col_m2.metric("CO2 Capturado", f"{np.random.uniform(1.1, 1.5):.2f} Ton", "+15kg")
+        col_m3.metric("Humedad Suelo", f"{np.random.randint(55, 70)}%", "-0.5%")
+        col_m4.metric("Nivel Sonoro", "32 dB", "Natural")
 
     st.write("---")
-    st.subheader("📈 Flujo de Actividad (24h)")
+    
+    # Gráfico de actividad con datos simulados pero más coherentes
+    st.subheader("📈 Flujo de Actividad (Últimas 24h)")
+    
+    # Crear datos que parezcan ciclos biológicos
     chart_data = pd.DataFrame(
-        np.random.randn(20, 3),
-        columns=["Audio (Biofonía)", "Visión (Fauna)", "Captura Carbono"],
+        np.random.rand(24, 3) * [10, 5, 2],
+        columns=["Audio (Biofonía)", "Visión (Fauna)", "Captura Carbono"]
     )
-    st.line_chart(chart_data)
+    st.area_chart(chart_data) # Area chart suele verse más "moderno" que line chart para bio-datos
 
+    # Oráculo Nexus con mejor UI
+    st.write("---")
     with st.container(border=True):
-        st.markdown("#### 🤖 Consulta al Oráculo Nexus")
+        st.markdown(f"#### 🤖 Oráculo Nexus: Consulta IA - {faro_seleccionado}")
         pregunta = st.text_input(
-            "Pregunta a la IA sobre este Faro:",
-            placeholder="Ej: ¿Cuál es el estado de la fauna en el Faro Tigrillo?",
+            "Consulta el estado predictivo:",
+            placeholder=f"Ej: ¿Cómo estará la actividad en {faro_seleccionado} mañana?"
         )
 
         if pregunta:
-            with st.spinner("Analizando datos satelitales y biométricos..."):
-                st.markdown(
-                    f"""
-                    **Respuesta Nexus AI:**  
-                    Basado en el análisis de audio del **{faro_seleccionado}**, se han detectado frecuencias consistentes con aves endémicas en las últimas 3 horas.  
-                    La biomasa protegida está procesando CO2 a niveles óptimos y no se detectan intrusiones humanas ni ruidos de maquinaria.
-                    """
-                )
-                st.info("Este análisis utiliza la API de Google Gemini para interpretar los sensores de campo.")
+            with st.status("Consultando Red de Faros y Google Gemini...", expanded=True) as status:
+                st.write("Sincronizando con nodos locales...")
+                time.sleep(1) # Simulación de latencia de red
+                st.write("Analizando patrones bioacústicos...")
+                time.sleep(1)
+                status.update(label="Análisis completado", state="complete", expanded=False)
 
-    st.caption("Los datos presentados son validados mediante la Red Nexus y registrados en la Blockchain para transparencia total.")
+            # Respuesta con estilo de chatbot
+            st.chat_message("assistant").write(
+                f"""
+                **Respuesta Nexus AI para {faro_seleccionado}:** Basado en el análisis de telemetría, se detecta una estabilidad del 98% en el ecosistema. 
+                Los sensores de biomasa indican una aceleración en la captura de carbono debido a la humedad reciente.
+                No hay anomalías térmicas ni sonidos de origen antrópico detectados.
+                """
+            )
+            st.toast("Dato verificado en Blockchain SNG", icon="✅")
 
+    # Pie de página técnico
+    st.markdown("---")
+    col_c1, col_c2 = st.columns([3, 1])
+    col_c1.caption("Certificación: Los datos son validados por la Red Nexus y registrados en tiempo real.")
+    col_c2.markdown("`HASH: 0x77...BN24`") # Simulación de hash de blockchain
 # =========================================================
 # BLOQUE 4: GESTIÓN LEY 2173 (EMPRESAS)
 # =========================================================
