@@ -8,6 +8,8 @@ import io
 import os
 import base64
 from datetime import datetime
+import time
+
 
 # Librería opcional: se conserva por compatibilidad con tu código original
 try:
@@ -764,6 +766,7 @@ elif menu == "DASHBOARD ESTADÍSTICO IA":
     col_c1, col_c2 = st.columns([3, 1])
     col_c1.caption("Certificación: Los datos son validados por la Red Nexus y registrados en tiempo real.")
     col_c2.markdown("`HASH: 0x77...BN24`") # Simulación de hash de blockchain
+    
 # =========================================================
 # BLOQUE 4: GESTIÓN LEY 2173 (EMPRESAS)
 # =========================================================
@@ -771,103 +774,126 @@ elif menu == "GESTIÓN LEY 2173 (EMPRESAS)":
     st.title("⚖️ Nexus Legal & Compliance Hub")
     st.markdown("### Soluciones Tecnológicas a la Normativa Ambiental Colombiana")
 
+    # Tarjetas Informativas con CSS Refinado
+    st.markdown("""
+        <style>
+        .ley-card {
+            background: #1e2630; 
+            padding: 20px; 
+            border-radius: 12px; 
+            min-height: 220px;
+            border-bottom: 4px solid transparent;
+            transition: 0.3s;
+        }
+        .ley-card:hover { border-bottom: 4px solid #9BC63B; background: #252e3a; }
+        </style>
+    """, unsafe_allow_html=True)
+
     c_l1, c_l2, c_l3 = st.columns(3)
     with c_l1:
         st.markdown(
-            '<div style="background:#1e2630; padding:15px; border-radius:10px; border-left:5px solid #9BC63B; min-height:180px;"><h4 style="color:#9BC63B;">LEY 2173</h4><p style="font-size:0.8rem; color:#ccc;"><b>Áreas de Vida:</b> Obligación de 2 árboles por empleado anualmente. Serenity provee el terreno y GPS oficial para cumplimiento corporativo.</p></div>',
+            '<div class="ley-card" style="border-left:5px solid #9BC63B;"><h4 style="color:#9BC63B;">LEY 2173</h4><p style="font-size:0.85rem; color:#ccc;"><b>Áreas de Vida:</b> Obligación de 2 árboles por empleado anualmente. Serenity provee el terreno y registro GPS oficial.</p></div>',
             unsafe_allow_html=True,
         )
     with c_l2:
         st.markdown(
-            '<div style="background:#1e2630; padding:15px; border-radius:10px; border-left:5px solid #3498db; min-height:180px;"><h4 style="color:#3498db;">LEY 2169</h4><p style="font-size:0.8rem; color:#ccc;"><b>Acción Climática:</b> Ruta a la Carbono Neutralidad. Nuestra IA certifica la captura real de CO2 para reportes en el RENARE.</p></div>',
+            '<div class="ley-card" style="border-left:5px solid #3498db;"><h4 style="color:#3498db;">LEY 2169</h4><p style="font-size:0.85rem; color:#ccc;"><b>Acción Climática:</b> Ruta a la Carbono Neutralidad. Nuestra IA certifica captura real para reportes oficiales (RENARE).</p></div>',
             unsafe_allow_html=True,
         )
     with c_l3:
         st.markdown(
-            '<div style="background:#1e2630; padding:15px; border-radius:10px; border-left:5px solid #e74c3c; min-height:180px;"><h4 style="color:#e74c3c;">LEY 2111</h4><p style="font-size:0.8rem; color:#ccc;"><b>Justicia Ambiental:</b> Delitos Ambientales. Los Faros actúan como evidencia digital inmutable ante la deforestación.</p></div>',
+            '<div class="ley-card" style="border-left:5px solid #e74c3c;"><h4 style="color:#e74c3c;">LEY 2111</h4><p style="font-size:0.85rem; color:#ccc;"><b>Justicia Ambiental:</b> Delitos Ambientales. Los Faros actúan como evidencia digital inmutable ante la deforestación.</p></div>',
             unsafe_allow_html=True,
         )
 
-    st.write("")
+    st.write("---")
 
+    # SECCIÓN 1: VADEMÉCUM
     with st.container(border=True):
         st.subheader("📘 Vademécum de Soluciones Corporativas")
-        st.write("Genera un documento técnico que explica cómo Serenity Nexus ayuda a tu empresa a cumplir con las leyes ambientales.")
+        st.write("Documento técnico sobre el cumplimiento normativo mediante Serenity Nexus.")
 
-        empresa_v = st.text_input("Razón Social para el Reporte Técnico", placeholder="Ej: Transportes del Valle SAS", key="txt_vademecum")
+        empresa_v = st.text_input("Razón Social para el Reporte", placeholder="Ej: Transportes del Valle SAS", key="txt_vademecum")
 
-        if st.button("GENERAR VADEMÉCUM TÉCNICO PDF", use_container_width=True):
+        if st.button("GENERAR VADEMÉCUM TÉCNICO PDF", use_container_width=True, type="primary"):
             if empresa_v:
-                hash_v = hashlib.sha256(f"{empresa_v}VAD".encode()).hexdigest()[:12].upper()
-                pdf_v = generar_pdf_corporativo(
-                    empresa=empresa_v,
-                    impacto=0,
-                    hash_id=hash_v,
-                    es_vademecum=True
-                )
-                st.session_state.vademecum_pdf = pdf_v.getvalue()
-                st.session_state.vademecum_empresa = empresa_v
-                st.success(f"Vademécum para {empresa_v} generado exitosamente.")
+                with st.spinner("Generando documento estructurado..."):
+                    # Asegúrate de tener 'hashlib' importado
+                    hash_v = hashlib.sha256(f"{empresa_v}VAD".encode()).hexdigest()[:12].upper()
+                    
+                    # Llamada a tu función (asegúrate que esté definida globalmente)
+                    pdf_v = generar_pdf_corporativo(
+                        empresa=empresa_v,
+                        impacto=0,
+                        hash_id=hash_v,
+                        es_vademecum=True
+                    )
+                    st.session_state.vademecum_pdf = pdf_v.getvalue()
+                    st.session_state.vademecum_empresa = empresa_v
+                    st.success(f"✅ Vademécum para {empresa_v} listo.")
             else:
-                st.warning("Por favor, ingrese el nombre de la empresa.")
+                st.warning("⚠️ Ingrese el nombre de la empresa.")
 
         if "vademecum_pdf" in st.session_state:
             st.download_button(
-                label="📥 DESCARGAR VADEMÉCUM (PDF ESTRUCTURADO)",
+                label="📥 DESCARGAR VADEMÉCUM",
                 data=st.session_state.vademecum_pdf,
-                file_name=f"Vademecum_Nexus_{st.session_state.get('vademecum_empresa', 'empresa')}.pdf",
+                file_name=f"Vademecum_Nexus_{st.session_state.vademecum_empresa}.pdf",
                 mime="application/pdf",
                 use_container_width=True,
             )
 
-    st.divider()
+    st.write("")
 
-    st.subheader("🏢 Emisión de Certificado con Logo")
-    st.write("Cargue el logo de su empresa para emitir el certificado oficial de cumplimiento de la Ley 2173.")
+    # SECCIÓN 2: CERTIFICADO CON LOGO
+    st.subheader("🏢 Emisión de Certificado Oficial")
+    
+    with st.expander("Configurar Datos de Certificación", expanded=True):
+        col_act1, col_act2 = st.columns([1, 1])
 
-    col_act1, col_act2 = st.columns([1, 1])
+        with col_act1:
+            n_corp = st.text_input("Nombre de la Compañía", key="txt_corp")
+            nit_corp = st.text_input("NIT", placeholder="900.123.456-1", key="nit_corp")
+            n_per = st.number_input("Número de Empleados", min_value=1, value=100)
+            archivo_logo = st.file_uploader("Logo Corporativo (PNG/JPG)", type=["png", "jpg", "jpeg"])
 
-    with col_act1:
-        n_corp = st.text_input("Nombre de la Compañía (Para el Certificado)", key="txt_corp")
-        nit_corp = st.text_input("NIT de la Empresa", placeholder="900.123.456-1", key="nit_corp")
-        n_per = st.number_input("Número de Empleados Actuales", min_value=1, value=100, key="num_emp")
-        archivo_logo = st.file_uploader("Cargar Logo Corporativo (PNG/JPG)", type=["png", "jpg", "jpeg"], key="file_logo")
+        with col_act2:
+            arboles_req = n_per * 2
+            st.metric("Árboles Requeridos", arboles_req, delta="Ley 2173", delta_color="normal")
+            st.info(f"El certificado avalará la siembra de **{arboles_req}** individuos arbóreos en la Red de Faros Serenity.")
 
-    with col_act2:
-        st.info(f"**Requisito Ley 2173:** Su empresa debe compensar {n_per * 2} árboles este año.")
+            if st.button("EMITIR CERTIFICADO CON LOGO", use_container_width=True):
+                if n_corp and archivo_logo:
+                    with st.spinner("Sincronizando con la Red de Faros..."):
+                        h_c = hashlib.sha256(f"{n_corp}{nit_corp}".encode()).hexdigest()[:12].upper()
+                        
+                        # Guardar logo en bytes
+                        logo_bytes = archivo_logo.getvalue()
 
-        if st.button("EMITIR CERTIFICADO OFICIAL CON LOGO", use_container_width=True):
-            if n_corp and archivo_logo:
-                with st.spinner("Procesando identidad corporativa..."):
-                    h_c = hashlib.sha256(f"{n_corp}{nit_corp}".encode()).hexdigest()[:12].upper()
-                    archivo_logo.seek(0)
-                    logo_bytes = archivo_logo.getvalue()
+                        pdf_c = generar_pdf_corporativo(
+                            empresa=n_corp,
+                            impacto=arboles_req,
+                            hash_id=h_c,
+                            nit=nit_corp,
+                            logo_bytes=logo_bytes,
+                            es_vademecum=False,
+                            faro_nombre="Faro Rex"
+                        )
 
-                    pdf_c = generar_pdf_corporativo(
-                        empresa=n_corp,
-                        impacto=n_per * 2,
-                        hash_id=h_c,
-                        nit=nit_corp,
-                        logo_bytes=logo_bytes,
-                        es_vademecum=False,
-                        faro_nombre="Faro Rex",
-                    )
+                        st.session_state.cert_corp_pdf = pdf_c.getvalue()
+                        st.session_state.cert_corp_nombre = n_corp
+                        st.balloons() # Efecto visual de éxito
+                else:
+                    st.error("❌ Falta Razón Social o Logo.")
 
-                    st.session_state.cert_corp_pdf = pdf_c.getvalue()
-                    st.session_state.cert_corp_nombre = n_corp
-                    st.success("Certificado generado exitosamente.")
-            else:
-                st.error("Razón Social y Logo son obligatorios.")
-
-        if "cert_corp_pdf" in st.session_state:
-            st.download_button(
-                label="📥 DESCARGAR CERTIFICADO CON LOGO (PDF)",
-                data=st.session_state.cert_corp_pdf,
-                file_name=f"Certificado_Ley2173_{st.session_state.get('cert_corp_nombre', 'empresa')}.pdf",
-                mime="application/pdf",
-                use_container_width=True,
-            )
-
+    if "cert_corp_pdf" in st.session_state:
+        st.download_button(
+            label=f"📥 DESCARGAR CERTIFICADO: {st.session_state.cert_corp_nombre}",
+            data=st.session_state.cert_corp_pdf,
+            file_name=f"Certificado_Ley2173_{st.session_state.cert_corp_nombre}.pdf",
+            mime="application/pdf",
+            use_container_width=True,
+        )
 # =========================================================
 # BLOQUE 5: SUSCRIPCIONES
 # =========================================================
