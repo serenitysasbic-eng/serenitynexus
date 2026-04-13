@@ -1216,14 +1216,23 @@ elif menu == "UBICACIÓN & MAPAS":
         attr="Google Satellite",
     )
 
-    for faro in faros_nexus:
-        folium.Circle(
-            location=[faro["lat"], faro["lon"]],
-            radius=200,
-            color=faro["color"],
-            fill=True,
-            fill_opacity=0.2,
-            tooltip=f"Rango
+for faro in faros_nexus:
+    # Radio de captura de los 4 micrófonos (200 metros)
+    folium.Circle(
+        location=[faro['lat'], faro['lon']],
+        radius=200,
+        color=faro['color'],
+        fill=True,
+        fill_opacity=0.2,
+        tooltip=f"Rango de Audio: {faro['name']}"  # <--- ASEGÚRATE QUE ESTÉ ASÍ
+    ).add_to(m)
+
+    # Marcador de estructura de pino canadiense
+    folium.Marker(
+        location=[faro['lat'], faro['lon']],
+        popup=f"<b>{faro['name']}</b><br>Estructura: 3x2x3 Pino<br>Enlace: Starlink",
+        icon=folium.Icon(color=faro['color'], icon='broadcast-tower', prefix='fa')
+    ).add_to(m)
 
 
 
