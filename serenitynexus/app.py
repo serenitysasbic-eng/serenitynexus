@@ -598,106 +598,105 @@ if menu == "INICIO":
     )
 
 # =========================================================
-# BLOQUE 2: RED DE FAROS
+# BLOQUE 2: RED DE FAROS SERENITY (MONITOREO GLOBAL)
 # =========================================================
-elif menu == "RED DE FAROS (7 NODOS)":
-    # Inyectar CSS para que las clases funcionen
-    st.markdown("""
-        <style>
-        .faro-card {
-            background: #1a1a1a;
-            padding: 15px;
-            border-radius: 10px;
-            border-left: 5px solid #9BC63B;
-            text-align: center;
-            margin-bottom: 10px;
-        }
-        .faro-rex-gemini {
-            background: #001a33;
-            padding: 15px;
-            border-radius: 10px;
-            border: 1px solid #4285F4;
-            box-shadow: 0 0 15px rgba(66, 133, 244, 0.3);
-            margin-bottom: 10px;
-        }
-        </style>
-    """, unsafe_allow_html=True)
+elif menu == "RED DE FAROS SERENITY":
+    st.title("📡 Red de Faros: Vigilancia Biométrica")
+    st.markdown("### Monitoreo Multimodal en Tiempo Real")
 
-    st.title("🛰️ Monitoreo Perimetral Nexus")
+    # --- PARTE A: PANEL DE AUDIO (MICRÓFONOS LOCALES) ---
+    st.markdown("#### 🎙️ Nodos Bioacústicos (Bosque San Antonio)")
+    
+    col_mic1, col_mic2, col_mic3, col_mic4 = st.columns(4)
+    
+    with col_mic1:
+        with st.container(border=True):
+            st.write("🔊 **Faro Rex**")
+            st.caption("Estado: Conectado")
+            # Audio local o simulación (puedes reemplazar con rutas de archivos reales)
+            st.audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3") 
+            st.info("KBA: Villa Michelle")
 
-    def conectar_faro(nombre):
-        st.session_state.f_activo = nombre
+    with col_mic2:
+        with st.container(border=True):
+            st.write("🔊 **Faro Halcón**")
+            st.caption("Estado: Conectado")
+            st.audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3")
+            st.info("KBA: Monte Guadua")
 
-    # Renderizado de botones de Faros
-    filas_faros = [
-        [("🦅 HALCÓN", "h1", "Halcón"), ("🐦 COLIBRÍ", "c2", "Colibrí"), ("🐸 RANA", "r3", "Rana")],
-        [("🦌 VENADO", "v4", "Venado"), ("🐆 TIGRILLO", "t5", "Tigrillo"), ("🦫 CAPIBARA", "cp6", "Capibara")]
+    with col_mic3:
+        with st.container(border=True):
+            st.write("🔊 **Faro Colibrí**")
+            st.caption("Estado: Standby")
+            st.audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3")
+            st.info("KBA: Monte Guadua")
+
+    with col_mic4:
+        with st.container(border=True):
+            st.write("🔊 **Faro Tigrillo**")
+            st.caption("Estado: Conectado")
+            st.audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3")
+            st.info("KBA: San Antonio")
+
+    st.write("---")
+
+    # --- PARTE B: MOSAICO DE CÁMARAS (8 NODOS GLOBALES) ---
+    st.markdown("#### 🛰️ Mosaico Visual de Conservación (Nodos Aliados)")
+    
+    # Definición de cámaras (Enlaces activos de YouTube)
+    feeds = [
+        {"nombre": "Faro Amazonas (Selva)", "url": "https://www.youtube.com/watch?v=1-iS7LArMPA"},
+        {"nombre": "Faro Arrecife (Carbono Azul)", "url": "https://www.youtube.com/watch?v=F109TZt3nRc"},
+        {"nombre": "Faro Sabana (Vida Silvestre)", "url": "https://www.youtube.com/watch?v=kyS3E_9K_lE"},
+        {"nombre": "Faro Bosque Templado", "url": "https://www.youtube.com/watch?v=4L-vM9S-yCI"},
+        {"nombre": "Faro Manglar Costa", "url": "https://www.youtube.com/watch?v=3u_vIDp8vSc"},
+        {"nombre": "Faro Nevado (Alta Montaña)", "url": "https://www.youtube.com/watch?v=pSAtuC6V_mU"},
+        {"nombre": "Faro Tropical (Panamá)", "url": "https://www.youtube.com/watch?v=W0S8R6K-Y_0"},
+        {"nombre": "Faro Pantanal (Humedal)", "url": "https://www.youtube.com/watch?v=mY9vV_g77Sg"}
     ]
 
-    for fila in filas_faros:
-        cols = st.columns(3)
-        for i, (nombre_viz, llave, arg) in enumerate(fila):
-            with cols[i]:
-                st.markdown(f"<div class='faro-card'><h3>{nombre_viz}</h3></div>", unsafe_allow_html=True)
-                st.button(f"Conectar {arg}", key=llave, on_click=conectar_faro, args=(arg,), use_container_width=True)
+    # Distribución en 2 filas de 4 columnas
+    # Fila 1
+    c1, c2, c3, c4 = st.columns(4)
+    with c1: 
+        st.caption(feeds[0]["nombre"])
+        st.video(feeds[0]["url"])
+    with c2: 
+        st.caption(feeds[1]["nombre"])
+        st.video(feeds[1]["url"])
+    with c3: 
+        st.caption(feeds[2]["nombre"])
+        st.video(feeds[2]["url"])
+    with c4: 
+        st.caption(feeds[3]["nombre"])
+        st.video(feeds[3]["url"])
 
-    st.divider()
+    # Fila 2
+    c5, c6, c7, c8 = st.columns(4)
+    with c5: 
+        st.caption(feeds[4]["nombre"])
+        st.video(feeds[4]["url"])
+    with c6: 
+        st.caption(feeds[5]["nombre"])
+        st.video(feeds[5]["url"])
+    with c7: 
+        st.caption(feeds[6]["nombre"])
+        st.video(feeds[6]["url"])
+    with c8: 
+        st.caption(feeds[7]["nombre"])
+        st.video(feeds[7]["url"])
 
-    # Nodo Especial: REX GEMINI
-    col_rex = st.columns([1, 2, 1])
-    with col_rex[1]:
-        st.markdown("<div class='faro-rex-gemini' style='text-align:center;'><h3>🤖 REX GEMINI</h3></div>", unsafe_allow_html=True)
-        st.button("ACTIVAR REX GEMINI VISION", key="gm_btn", on_click=conectar_faro, args=("REX GEMINI",), use_container_width=True)
-
-    # Lógica de Visualización del Feed
-    f_nom = st.session_state.get("f_activo", None)
-
-    if f_nom:
-        color_f = "#4285F4" if f_nom == "REX GEMINI" else "#9BC63B"
-        nombre_limpio = str(f_nom).upper()
-
-        st.write("---")
-        st.markdown(f"<h2 style='text-align:center; color:{color_f};'>📡 FEED EN VIVO: {nombre_limpio}</h2>", unsafe_allow_html=True)
-
-        st.markdown("### 🎥 Unidades de Video Perimetral")
-        url_v = "https://upload.wikimedia.org/wikipedia/commons/transcoded/1/18/Forest_Mountain_River.webm/Forest_Mountain_River.webm.480p.vp9.webm"
-        
-        # Agrupamos los videos en menos componentes para ganar velocidad
-        posiciones = ["0% 0%", "50% 0%", "100% 0%", "0% 50%", "50% 50%", "100% 50%", "0% 100%", "50% 100%"]
-        
-        # Mostramos en 2 filas de 4 cámaras para mejor orden visual
-        for fila_vid in range(2):
-            c_cam = st.columns(4)
-            for i in range(4):
-                idx = i + (fila_vid * 4)
-                with c_cam[i]:
-                    html_video = f"""
-                    <div style="border: 1.5px solid {color_f}; border-radius: 5px; overflow: hidden; height: 80px; background: black;">
-                        <video width="100%" height="100%" autoplay loop muted playsinline style="object-fit: cover; object-position: {posiciones[idx]}; opacity: 0.8;">
-                            <source src="{url_v}" type="video/webm">
-                        </video>
-                    </div>
-                    <p style="font-size: 9px; color: {color_f}; text-align: center; margin-top: 2px;">NODO CAM-{idx+1}</p>
-                    """
-                    st.components.v1.html(html_video, height=110)
-
-        st.write("---")
-        st.subheader("🎙️ Monitoreo Bioacústico en Tiempo Real")
-        
-        # Audios con nombres descriptivos
-        sonidos = [
-            ("Aves Bosque", "https://www.soundjay.com/nature/sounds/forest-birds-01.mp3"),
-            ("Canto Colibrí", "https://www.soundjay.com/nature/sounds/bird-chirp-01.mp3"),
-            ("Ambiente Denso", "https://www.soundjay.com/nature/sounds/forest-birds-02.mp3"),
-            ("Río Próximo", "https://www.soundjay.com/nature/sounds/river-1.mp3")
-        ]
-        
-        c_snd = st.columns(4)
-        for k, (etiqueta, link) in enumerate(sonidos):
-            with c_snd[k]:
-                st.markdown(f"<p style='color:{color_f}; font-size:12px; font-weight:bold; margin-bottom:5px;'>MIC {k+1}: {etiqueta}</p>", unsafe_allow_html=True)
-                st.audio(link)
-
+    st.write("---")
+    
+    # --- PARTE C: ESTADO DE TRANSMISIÓN ---
+    with st.expander("📊 Estado Técnico de la Red de Faros", expanded=False):
+        col_t1, col_t2 = st.columns(2)
+        with col_t1:
+            st.write("**Latencia Promedio:** 120ms (Starlink)")
+            st.write("**Compresión de Video:** H.265")
+        with col_t2:
+            st.write("**Batería Promedio Nodos:** 89% (Carga Solar)")
+            st.write("**Ubicación:** 3.485, -76.605 (San Antonio, Cali)")
 # =========================================================
 # BLOQUE 3: DASHBOARD ESTADÍSTICO IA
 # =========================================================
