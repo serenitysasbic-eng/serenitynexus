@@ -597,41 +597,55 @@ if menu == "INICIO":
 # BLOQUE 2: RED DE FAROS
 # =========================================================
 elif menu == "RED DE FAROS (7 NODOS)":
+    # Inyectar CSS para que las clases funcionen
+    st.markdown("""
+        <style>
+        .faro-card {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 5px solid #9BC63B;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .faro-rex-gemini {
+            background: #001a33;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #4285F4;
+            box-shadow: 0 0 15px rgba(66, 133, 244, 0.3);
+            margin-bottom: 10px;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
     st.title("🛰️ Monitoreo Perimetral Nexus")
 
     def conectar_faro(nombre):
         st.session_state.f_activo = nombre
 
-    c1, c2, c3 = st.columns(3)
-    with c1:
-        st.markdown("<div class='faro-card'><h3>🦅 FARO HALCÓN</h3></div>", unsafe_allow_html=True)
-        st.button("Conectar Halcón", key="h1", on_click=conectar_faro, args=("Halcón",), use_container_width=True)
-    with c2:
-        st.markdown("<div class='faro-card'><h3>🐦 FARO COLIBRÍ</h3></div>", unsafe_allow_html=True)
-        st.button("Conectar Colibrí", key="c2", on_click=conectar_faro, args=("Colibrí",), use_container_width=True)
-    with c3:
-        st.markdown("<div class='faro-card'><h3>🐸 FARO RANA</h3></div>", unsafe_allow_html=True)
-        st.button("Conectar Rana", key="r3", on_click=conectar_faro, args=("Rana",), use_container_width=True)
+    # Renderizado de botones de Faros
+    filas_faros = [
+        [("🦅 HALCÓN", "h1", "Halcón"), ("🐦 COLIBRÍ", "c2", "Colibrí"), ("🐸 RANA", "r3", "Rana")],
+        [("🦌 VENADO", "v4", "Venado"), ("🐆 TIGRILLO", "t5", "Tigrillo"), ("🦫 CAPIBARA", "cp6", "Capibara")]
+    ]
 
-    st.write("")
-    c4, c5, c6 = st.columns(3)
-    with c4:
-        st.markdown("<div class='faro-card'><h3>🦌 FARO VENADO</h3></div>", unsafe_allow_html=True)
-        st.button("Conectar Venado", key="v4", on_click=conectar_faro, args=("Venado",), use_container_width=True)
-    with c5:
-        st.markdown("<div class='faro-card'><h3>🐆 FARO TIGRILLO</h3></div>", unsafe_allow_html=True)
-        st.button("Conectar Tigrillo", key="t5", on_click=conectar_faro, args=("Tigrillo",), use_container_width=True)
-    with c6:
-        st.markdown("<div class='faro-card'><h3>🦫 FARO CAPIBARA</h3></div>", unsafe_allow_html=True)
-        st.button("Conectar Capibara", key="cp6", on_click=conectar_faro, args=("Capibara",), use_container_width=True)
+    for fila in filas_faros:
+        cols = st.columns(3)
+        for i, (nombre_viz, llave, arg) in enumerate(fila):
+            with cols[i]:
+                st.markdown(f"<div class='faro-card'><h3>{nombre_viz}</h3></div>", unsafe_allow_html=True)
+                st.button(f"Conectar {arg}", key=llave, on_click=conectar_faro, args=(arg,), use_container_width=True)
 
     st.divider()
 
-    col_rex_gemini = st.columns([1, 2, 1])
-    with col_rex_gemini[1]:
+    # Nodo Especial: REX GEMINI
+    col_rex = st.columns([1, 2, 1])
+    with col_rex[1]:
         st.markdown("<div class='faro-rex-gemini' style='text-align:center;'><h3>🤖 REX GEMINI</h3></div>", unsafe_allow_html=True)
         st.button("ACTIVAR REX GEMINI VISION", key="gm_btn", on_click=conectar_faro, args=("REX GEMINI",), use_container_width=True)
 
+    # Lógica de Visualización del Feed
     f_nom = st.session_state.get("f_activo", None)
 
     if f_nom:
@@ -639,42 +653,46 @@ elif menu == "RED DE FAROS (7 NODOS)":
         nombre_limpio = str(f_nom).upper()
 
         st.write("---")
-        st.markdown(
-            f"<h2 style='text-align:center; color:{color_f};'>📡 FEED EN VIVO: {nombre_limpio}</h2>",
-            unsafe_allow_html=True,
-        )
+        st.markdown(f"<h2 style='text-align:center; color:{color_f};'>📡 FEED EN VIVO: {nombre_limpio}</h2>", unsafe_allow_html=True)
 
         st.markdown("### 🎥 Unidades de Video Perimetral")
         url_v = "https://upload.wikimedia.org/wikipedia/commons/transcoded/1/18/Forest_Mountain_River.webm/Forest_Mountain_River.webm.480p.vp9.webm"
-
-        c_cam = st.columns(4)
+        
+        # Agrupamos los videos en menos componentes para ganar velocidad
         posiciones = ["0% 0%", "50% 0%", "100% 0%", "0% 50%", "50% 50%", "100% 50%", "0% 100%", "50% 100%"]
-
-        for i in range(8):
-            with c_cam[i % 4]:
-                html_video = f"""
-                <div style="border: 2px solid {color_f}; border-radius: 8px; overflow: hidden; height: 100px; background: black;">
-                    <video width="100%" height="100%" autoplay loop muted playsinline style="object-fit: cover; object-position: {posiciones[i]};">
-                        <source src="{url_v}" type="video/webm">
-                    </video>
-                </div>
-                <p style="font-size: 10px; color: {color_f}; text-align: center; margin-top: 2px; font-weight: bold;">NODO {i+1}</p>
-                """
-                st.components.v1.html(html_video, height=125)
+        
+        # Mostramos en 2 filas de 4 cámaras para mejor orden visual
+        for fila_vid in range(2):
+            c_cam = st.columns(4)
+            for i in range(4):
+                idx = i + (fila_vid * 4)
+                with c_cam[i]:
+                    html_video = f"""
+                    <div style="border: 1.5px solid {color_f}; border-radius: 5px; overflow: hidden; height: 80px; background: black;">
+                        <video width="100%" height="100%" autoplay loop muted playsinline style="object-fit: cover; object-position: {posiciones[idx]}; opacity: 0.8;">
+                            <source src="{url_v}" type="video/webm">
+                        </video>
+                    </div>
+                    <p style="font-size: 9px; color: {color_f}; text-align: center; margin-top: 2px;">NODO CAM-{idx+1}</p>
+                    """
+                    st.components.v1.html(html_video, height=110)
 
         st.write("---")
-        st.subheader("🎙️ Sensores Bioacústicos")
-        a_links = [
-            "https://www.soundjay.com/nature/sounds/forest-birds-01.mp3",
-            "https://www.soundjay.com/nature/sounds/bird-chirp-01.mp3",
-            "https://www.soundjay.com/nature/sounds/forest-birds-02.mp3",
-            "https://www.soundjay.com/nature/sounds/river-1.mp3",
+        st.subheader("🎙️ Monitoreo Bioacústico en Tiempo Real")
+        
+        # Audios con nombres descriptivos
+        sonidos = [
+            ("Aves Bosque", "https://www.soundjay.com/nature/sounds/forest-birds-01.mp3"),
+            ("Canto Colibrí", "https://www.soundjay.com/nature/sounds/bird-chirp-01.mp3"),
+            ("Ambiente Denso", "https://www.soundjay.com/nature/sounds/forest-birds-02.mp3"),
+            ("Río Próximo", "https://www.soundjay.com/nature/sounds/river-1.mp3")
         ]
+        
         c_snd = st.columns(4)
-        for k in range(4):
+        for k, (etiqueta, link) in enumerate(sonidos):
             with c_snd[k]:
-                st.markdown(f"<b style='color:{color_f}; font-size:11px;'>🎧 MIC {k+1}</b>", unsafe_allow_html=True)
-                st.audio(a_links[k])
+                st.markdown(f"<p style='color:{color_f}; font-size:12px; font-weight:bold; margin-bottom:5px;'>MIC {k+1}: {etiqueta}</p>", unsafe_allow_html=True)
+                st.audio(link)
 
 # =========================================================
 # BLOQUE 3: DASHBOARD ESTADÍSTICO IA
