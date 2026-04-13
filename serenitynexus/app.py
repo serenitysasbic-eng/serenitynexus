@@ -1442,6 +1442,68 @@ elif menu == "UBICACIÓN & MAPAS":
     c3.metric("Tasa Supervivencia", "94%", "Especies Nativas")
 
 
+# =========================================================
+# BLOQUE 10: NEXUS GUARDIAN COMMAND (IA PREDICTIVA)
+# =========================================================
+elif menu == "NEXUS GUARDIAN COMMAND":
+    st.title("🛡️ Nexus Guardian Command")
+    st.markdown("### Prevención Proactiva y Análisis de Supervivencia Biótica")
+
+    # 1. Sistema de Alerta Temprana (IA Predictiva)
+    with st.container(border=True):
+        col_risk1, col_risk2 = st.columns([2, 1])
+        with col_risk1:
+            st.subheader("⚠️ Análisis de Riesgo de Incendio y Tala")
+            # Simulación de datos de sensores de humedad y calor en los Faros
+            datos_riesgo = pd.DataFrame({
+                'Faro': ['Rex', 'Halcón', 'Tigrillo', 'Colibrí'],
+                'Humedad Suelo (%)': [45, 32, 58, 20],
+                'Riesgo de Incendio': ['Bajo', 'Medio', 'Bajo', 'CRÍTICO']
+            })
+            st.table(datos_riesgo)
+        
+        with col_risk2:
+            st.metric("Índice de Salud del Bosque", "92%", "+1.5%")
+            st.warning("Alerta en Faro Colibrí: Estrés hídrico detectado.")
+
+    st.write("---")
+
+    # 2. Visión Artificial: Identificación de Especies (Cámaras de los Faros)
+    st.subheader("📸 Avistamientos Recientes (IA Vision)")
+    cv1, cv2, cv3 = st.columns(3)
+    
+    with cv1:
+        st.image("https://images.unsplash.com/photo-1591824438708-218337735a11?auto=format&fit=crop&w=400", 
+                 caption="Identificado: Tigrillo (Leopardus pardalis) - Confianza 98%")
+    with cv2:
+        st.image("https://images.unsplash.com/photo-1550159930-4014434285e0?auto=format&fit=crop&w=400", 
+                 caption="Identificado: Tucán Pichifrí - Confianza 94%")
+    with cv3:
+        st.info("📡 Procesando streaming de Faro Rex... Esperando movimiento.")
+
+    st.write("---")
+
+    # 3. Nexus Community: El Muro de los Guardianes
+    st.subheader("🤝 El Muro de los Guardianes")
+    st.write("Interactúa con otros protectores y vota por la siguiente zona de intervención.")
+    
+    with st.chat_message("user"):
+        st.write("¿Cuál será el próximo árbol a sembrar en Villa Michelle?")
+    
+    opciones = ["Guayacán Amarillo", "Roble Andino", "Cedro Rosado"]
+    voto = st.radio("Votación de Gobernanza $SNG:", opciones)
+    
+    if st.button("ENVIAR VOTO A BLOCKCHAIN"):
+        st.success(f"Voto registrado para {voto}. Tu poder de voto: 250 $SNG.")
+
+    st.write("---")
+    
+    # 4. Reporte Final de Operación
+    st.markdown("<h4 style='text-align:center;'>Estado de la Red Global</h4>", unsafe_allow_html=True)
+    st.progress(98)
+    st.caption("Uptime de la Red de Faros: 98.4% | Conectividad Starlink: Estable")
+
+
 
 
 
