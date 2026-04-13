@@ -519,67 +519,78 @@ menu = st.sidebar.radio(
 # BLOQUE 1: INICIO
 # =========================================================
 if menu == "INICIO":
+    # 1. Encabezado con Logo o Título Alternativo
     col_l1, col_l2, col_l3 = st.columns([1, 2, 1])
     with col_l2:
         if os.path.exists("logo_serenity.png"):
             st.image("logo_serenity.png", use_container_width=True)
         else:
             st.markdown(
-                "<h1 style='text-align:center; color:#9BC63B;'>SERENITY NEXUS GLOBAL</h1>",
+                "<h1 style='text-align:center; color:#9BC63B; margin-bottom:0;'>SERENITY NEXUS GLOBAL</h1>",
                 unsafe_allow_html=True,
             )
 
+    # 2. Subtítulo Dinámico
     st.markdown(
-        "<h1 style='text-align:center; font-size:3.5rem;'>Serenity Nexus Global</h1>",
-        unsafe_allow_html=True,
-    )
-    st.markdown(
-        "<p style='text-align:center; letter-spacing:5px; color:#9BC63B; font-weight:bold;'>SISTEMA REGENERATIVO BIOMÉTRICO KBA</p>",
+        """
+        <p style='text-align:center; letter-spacing:5px; color:#9BC63B; font-weight:bold; margin-top:-10px;'>
+            SISTEMA REGENERATIVO BIOMÉTRICO KBA
+        </p>
+        """,
         unsafe_allow_html=True,
     )
 
+    # 3. Componente de Audio (Optimizado en altura)
     st.components.v1.html(
         """
         <audio id="audio_earth" src="sonido_Earth.mp3" loop></audio>
-        <div style="text-align:center; margin-top:20px;">
+        <div style="text-align:center;">
             <button onclick="document.getElementById('audio_earth').play()"
-                style="background:#2E7D32; color:white; border:1px solid #9BC63B;
-                padding:10px 20px; border-radius:10px; cursor:pointer; font-weight:bold;">
-                ACTIVAR SONIDO GLOBAL EARTH
+                style="background:#2E7D32; color:white; border:2px solid #9BC63B;
+                padding:8px 16px; border-radius:10px; cursor:pointer; font-weight:bold;
+                transition: 0.3s; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+                🔊 ACTIVAR SONIDO GLOBAL EARTH
             </button>
         </div>
         """,
-        height=100,
+        height=60, # Reducido para evitar espacios muertos
     )
 
-    st.info("SPAM (40%) | TAF (60%) | JWCJ $SNG")
+    st.info("📊 **Métricas clave:** SPAM (40%) | TAF (60%) | **Token:** JWCJ $SNG")
     st.divider()
 
-    col_inf1, col_inf2 = st.columns(2)
+    # 4. Información Corporativa
+    col_inf1, col_inf2 = st.columns(2, gap="large")
     with col_inf1:
-        st.subheader("QUIÉNES SOMOS / WHO WE ARE")
+        st.subheader("🌐 QUIÉNES SOMOS")
         st.write(
-            "Serenity Nexus Global es la primera plataforma Phygital (Física + Digital) del Valle del Cauca que integra la conservación ambiental con tecnología Blockchain e Inteligencia Artificial, transformando la protección de la biodiversidad en un activo digital tangible."
+            "Serenity Nexus Global es la primera plataforma **Phygital** (Física + Digital) "
+            "del Valle del Cauca que integra la conservación ambiental con tecnología **Blockchain** "
+            "e **Inteligencia Artificial**."
         )
 
     with col_inf2:
-        st.subheader("NUESTRA MISIÓN / OUR MISSION")
+        st.subheader("🎯 NUESTRA MISIÓN")
         st.write(
-            "Regenerar el tejido ecológico y social mediante un modelo de negocio sostenible que permita a empresas y personas compensar su huella ambiental a través de la tecnología y la transparencia."
+            "Regenerar el tejido ecológico y social mediante un modelo de negocio sostenible "
+            "que permita compensar la huella ambiental a través de la tecnología y la transparencia."
         )
 
-    st.write("---")
+    st.divider()
 
+    # 5. Visión (Layout mejorado)
     col_inf3, col_inf4 = st.columns([1, 2])
     with col_inf3:
-        st.subheader("NUESTRA VISIÓN / OUR VISION")
+        st.subheader("🚀 NUESTRA VISIÓN")
     with col_inf4:
         st.write(
-            "Ser el referente mundial del Internet de la Naturaleza para 2030, liderando la valorización de los servicios ecosistémicos mediante nuestra red de Faros inteligentes y el token $SNG."
+            "Ser el referente mundial del **Internet de la Naturaleza** para 2030, liderando la "
+            "valorización de los servicios ecosistémicos mediante nuestra red de Faros inteligentes y el token **$SNG**."
         )
 
-    st.info(
-        "Ubicación del Proyecto: Dagua y Felidia, Valle del Cauca - Hacienda Monte Guadua & Finca Villa Michelle."
+    # 6. Pie de página de inicio
+    st.warning(
+        "📍 **Ubicación del Proyecto:** Dagua y Felidia, Valle del Cauca — Hacienda Monte Guadua & Finca Villa Michelle."
     )
 
 # =========================================================
