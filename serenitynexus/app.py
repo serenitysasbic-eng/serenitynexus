@@ -1255,89 +1255,119 @@ elif menu == "DONACIONES Y CERTIFICADO":
 
 
 # =========================================================
-# BLOQUE 8: DIAGNOSTICO HUELLA DE CARBONO
+# BLOQUE 8: DIAGNÓSTICO HUELLA DE CARBONO (PRO)
 # =========================================================
 elif menu == "DIAGNOSTICO HUELLA DE CARBONO":
     st.title("🌍 Inteligencia de Carbono Nexus")
-    st.markdown("### Diagnóstico Automatizado de Huella de Carbono")
+    st.markdown("### Diagnóstico Automatizado con Factores de Emisión Colombia")
+
+    # --- SIMULACIÓN DE BASE DE DATOS EMPRESARIAL COLOMBIANA ---
+    DB_EMPRESAS = {
+        "900123456": {"nombre": "TRANSPORTES DEL VALLE SAS", "sector": "Transporte de Carga", "consumo_avg": 4500, "flota": 12},
+        "800987654": {"nombre": "CONSTRUCTORA ANDINA", "sector": "Construcción / Infraestructura", "consumo_avg": 8200, "flota": 25},
+        "901555444": {"nombre": "FLORES DE LA SABANA", "sector": "Agroindustria", "consumo_avg": 3100, "flota": 8},
+    }
 
     with st.container(border=True):
         col_nit1, col_nit2 = st.columns([1, 1])
         with col_nit1:
-            nit_empresa = st.text_input(
-                "INGRESE EL NIT DE LA EMPRESA (Sin dígito de verificación)",
-                placeholder="900123456"
-            )
+            nit_busqueda = st.text_input("🔍 BUSCAR NIT DE LA EMPRESA", placeholder="Ej: 900123456")
+        
+        # Autocompletado inteligente
+        if nit_busqueda in DB_EMPRESAS:
+            nombre_sugerido = DB_EMPRESAS[nit_busqueda]["nombre"]
+            sector_sugerido = DB_EMPRESAS[nit_busqueda]["sector"]
+            st.success(f"Empresa encontrada: {nombre_sugerido}")
+        else:
+            nombre_sugerido = ""
+            sector_sugerido = "Sector General"
+
         with col_nit2:
-            nombre_empresa = st.text_input(
-                "RAZÓN SOCIAL",
-                placeholder="Ej: TRANSPORTES VALLE SAS"
+            nombre_empresa = st.text_input("RAZÓN SOCIAL", value=nombre_sugerido)
+
+    if nit_busqueda and nombre_empresa:
+        st.write("---")
+        
+        # Parámetros técnicos con datos sugeridos por la DB
+        with st.expander("📊 Parámetros de Operación (Valores Mensuales)", expanded=True):
+            c1, c2 = st.columns(2)
+            with c1:
+                # Si la empresa está en la DB, precargamos sus promedios
+                val_kwh = DB_EMPRESAS[nit_busqueda]["consumo_avg"] if nit_busqueda in DB_EMPRESAS else 1000
+                kwh = st.number_input("Consumo Eléctrico (kWh)", min_value=0, value=val_kwh)
+                
+                val_flota = DB_EMPRESAS[nit_busqueda]["flota"] if nit_busqueda in DB_EMPRESAS else 1
+                vehiculos = st.number_input("Vehículos en Operación", min_value=0, value=val_flota)
+            
+            with c2:
+                gasolina = st.number_input("Consumo Galones Gasolina/Diesel", min_value=0, value=100)
+                residuos = st.number_input("Residuos Sólidos (Toneladas)", min_value=0.0, value=1.0)
+
+        # --- LÓGICA DE CÁLCULO REALISTA (Factores de Emisión) ---
+        # FE Energía Colombia (UPME): ~0.126 kg CO2/kWh
+        # FE Diesel/Gasolina: ~10.15 kg CO2/galón
+        # FE Residuos: ~450 kg CO2/ton (relleno sanitario promedio)
+        
+        h_energia = kwh * 0.126
+        h_combustible = gasolina * 10.15
+        h_residuos = residuos * 450
+        
+        huella_total_kg = h_energia + h_combustible + h_residuos
+        huella_total_ton = huella_total_kg / 1000
+        
+        # Compensación: 1 árbol nativo en Colombia captura aprox 25kg CO2/año
+        # Para neutralidad mensual:
+        arboles_mes = int(huella_total_kg / 25)
+
+        # Dashboard de Resultados
+        st.subheader(f"📈 Reporte de Sustentabilidad: {sector_sugerido}")
+        
+        m1, m2, m3 = st.columns(3)
+        m1.metric("HUELLA MENSUAL", f"{huella_total_ton:.2f} Ton CO2e")
+        m2.metric("ÁRBOLES NEXUS / MES", f"{arboles_mes} u")
+        
+        # KPI de Eficiencia (Simulado)
+        eficiencia = "ÓPTIMA" if huella_total_ton < 5 else "CRÍTICA"
+        m3.metric("ESTADO DE EMISIONES", eficiencia, delta="-2% vs mes anterior")
+
+        # --- VISUALIZACIÓN GRÁFICA ---
+        st.write("### Desglose de Fuentes de Emisión")
+        chart_data = pd.DataFrame({
+            'Fuente': ['Energía', 'Combustible', 'Residuos'],
+            'kg CO2e': [h_energia, h_combustible, h_residuos]
+        })
+        st.bar_chart(chart_data.set_index('Fuente'))
+
+        # --- GENERACIÓN DEL DIAGNÓSTICO ---
+        st.divider()
+        hash_legal = hashlib.sha256(f"{nit_busqueda}{huella_total_kg}".encode()).hexdigest()[:12].upper()
+        
+        if st.button(f"📄 GENERAR DIAGNÓSTICO TÉCNICO PARA {nombre_empresa}", use_container_width=True):
+            # Aquí llamas a tu función de PDF con los datos calculados
+            pdf_data = generar_pdf_diagnostico(
+                empresa=nombre_empresa,
+                nit=nit_busqueda,
+                impacto=arboles_mes,
+                hash_id=hash_legal,
+                estudio_data={
+                    "Sector": sector_sugerido,
+                    "Energía (kWh)": f"{kwh:,}",
+                    "Combustible (Gal)": f"{gasolina:,}",
+                    "Residuos (Ton)": residuos,
+                    "Huella Mensual": f"{huella_total_ton:.2f} Ton"
+                },
+                total_ton=huella_total_ton,
+                faro_nombre="Faro Rex"
+            )
+            
+            st.download_button(
+                label="📥 DESCARGAR DOCUMENTO DE CUMPLIMIENTO",
+                data=pdf_data.getvalue(),
+                file_name=f"Nexus_Report_{nit_busqueda}.pdf",
+                mime="application/pdf",
+                use_container_width=True
             )
 
-    if nit_empresa and nombre_empresa:
-        st.subheader(f"🧠 Análisis de Impacto: {nombre_empresa}")
-
-        sector_deducido = "Transporte Multimodal y Logística"
-        intensidad_carbono = "ALTA"
-
-        st.markdown(
-            f"**Sector Detectado:** `{sector_deducido}` | **Intensidad de Emisión:** `{intensidad_carbono}`"
-        )
-
-        with st.expander("📦 Parámetros de Operación Mensual", expanded=True):
-            col_par1, col_par2 = st.columns(2)
-            with col_par1:
-                consumo_energia = st.number_input("Consumo Energía (kWh/mes)", min_value=0, value=1500)
-                flota_vehicular = st.number_input("Número de Vehículos / Aeronaves en Operación", min_value=0, value=5)
-            with col_par2:
-                residuos_ton = st.number_input("Producción de Residuos (Toneladas/mes)", min_value=0.0, value=1.2)
-                operaciones_dia = st.number_input("Promedio Operaciones Diarias", min_value=1, value=10)
-
-        huella_total_kg = (
-            (consumo_energia * 0.164) +
-            (flota_vehicular * operaciones_dia * 15.5) +
-            (residuos_ton * 500)
-        )
-        huella_total_ton = huella_total_kg / 1000
-        arboles_nexus = int(huella_total_kg / 20)
-
-        res1, res2 = st.columns(2)
-        with res1:
-            st.metric("HUELLA ESTIMADA MÁXIMA", f"{huella_total_kg:,.2f} kg CO2e / mes")
-            st.progress(85 if intensidad_carbono == "ALTA" else 30)
-        with res2:
-            st.metric("COMPENSACIÓN REQUERIDA", f"{arboles_nexus} Árboles", "Activos Biológicos")
-
-        estudio_data = {
-            "Sector Económico Inferido": sector_deducido,
-            "Intensidad de Emisión": intensidad_carbono,
-            "Consumo Energía": f"{consumo_energia:,} kWh/mes",
-            "Flota Operativa": f"{flota_vehicular} unidades",
-            "Residuos Generados": f"{residuos_ton:.2f} ton/mes",
-            "Operaciones Promedio": f"{operaciones_dia} por día",
-            "Huella Estimada": f"{huella_total_kg:,.2f} kg CO2e/mes",
-            "Compensación Referencial": f"{arboles_nexus} árboles Nexus",
-        }
-
-        hash_id = hashlib.sha512(f"{nit_empresa}{huella_total_kg}".encode()).hexdigest()[:16].upper()
-
-        pdf_diag = generar_pdf_diagnostico(
-            empresa=nombre_empresa,
-            nit=nit_empresa,
-            impacto=arboles_nexus,
-            hash_id=hash_id,
-            estudio_data=estudio_data,
-            total_ton=huella_total_ton,
-            faro_nombre="Faro Rex"
-        )
-
-        st.download_button(
-            label=f"📥 EMITIR DIAGNÓSTICO LEGAL DE COMPENSACIÓN PARA {nombre_empresa}",
-            data=pdf_diag.getvalue(),
-            file_name=f"Diagnostico_Nexus_{nit_empresa}.pdf",
-            mime="application/pdf",
-            use_container_width=True,
-        )
 
 # =========================================================
 # BLOQUE 9: UBICACIÓN & MAPAS
