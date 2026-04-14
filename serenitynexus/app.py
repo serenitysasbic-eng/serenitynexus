@@ -469,7 +469,6 @@ menu = st.sidebar.radio(
         "UBICACIÓN & MAPAS",
     ],
 )
-
 # =========================================================
 # BLOQUE 2: RED DE FAROS (7 NODOS) - DISEÑO DE DESPLIEGUE
 # =========================================================
@@ -483,13 +482,17 @@ elif menu == "RED DE FAROS (7 NODOS)":
         "Faro Tigrillo", "Faro Amazonas", "Faro Arrecife", "Faro Sabana"
     ]
 
-    # Cuadrícula de selección de Faros
+    # Inicializar el estado si no existe
+    if 'f_activo' not in st.session_state:
+        st.session_state.f_activo = None
+
+    # Cuadrícula de selección de Faros (7 columnas)
     cols_faros = st.columns(7)
     
     for i, nombre_faro in enumerate(faros_principales):
         with cols_faros[i]:
-            # Usamos el estilo faro-card definido en tus estilos
-            st.markdown(f'<div class="faro-card">', unsafe_allow_html=True)
+            # Contenedor visual para el botón
+            st.markdown('<div class="faro-card">', unsafe_allow_html=True)
             if st.button(f"📍 {nombre_faro}", key=f"btn_{nombre_faro}"):
                 st.session_state.f_activo = nombre_faro
             st.markdown('</div>', unsafe_allow_html=True)
@@ -513,10 +516,9 @@ elif menu == "RED DE FAROS (7 NODOS)":
 
         st.write("---")
 
-    # 2. Ocho Cámaras (Video) - Usando enlaces compatibles con términos de uso
+        # 2. Ocho Cámaras (Video) - Enlaces compatibles con políticas de inserción
         st.markdown("### 🛰️ Mosaico Visual de Soporte")
         
-        # Enlaces que permiten inserción externa (Embed friendly)
         vids = [
             "https://www.youtube.com/watch?v=21-vj6pGYHw", "https://www.youtube.com/watch?v=F109TZt3nRc",
             "https://www.youtube.com/watch?v=kyS3E_9K_lE", "https://www.youtube.com/watch?v=4L-vM9S-yCI",
@@ -524,26 +526,28 @@ elif menu == "RED DE FAROS (7 NODOS)":
             "https://www.youtube.com/watch?v=W0S8R6K-Y_0", "https://www.youtube.com/watch?v=S0yC0Bv_46E"
         ]
 
-        # Fila 1 de cámaras
+        # Fila 1 de cámaras (1-4)
         c_row1 = st.columns(4)
         for k in range(4):
             with c_row1[k]:
-                st.markdown(f'<div class="cam-grid">CAM 0{k+1} | {faro}</div>', unsafe_allow_html=True)
+                st.markdown(f'<div class="cam-grid">REC 🔴 CAM 0{k+1} | {faro}</div>', unsafe_allow_html=True)
                 st.video(vids[k])
 
-        # Fila 2 de cámaras
+        # Fila 2 de cámaras (5-8)
         c_row2 = st.columns(4)
         for k in range(4):
-            with c_row2[k+4]:
-                st.markdown(f'<div class="cam-grid">CAM 0{k+5} | {faro}</div>', unsafe_allow_html=True)
+            with c_row2[k]:
+                st.markdown(f'<div class="cam-grid">REC 🔴 CAM 0{k+5} | {faro}</div>', unsafe_allow_html=True)
                 st.video(vids[k+4])
                 
-        # Botón para cerrar el despliegue
-        if st.button("Cerrar Monitoreo Detallado"):
+        st.write("")
+        if st.button("❌ Cerrar Monitoreo Detallado"):
             st.session_state.f_activo = None
             st.rerun()
     else:
         st.info("💡 Por favor, seleccione uno de los Faros superiores para ver la actividad en tiempo real.")
+
+
 # =========================================================
 # BLOQUE 3: DASHBOARD ESTADÍSTICO IA
 # =========================================================
