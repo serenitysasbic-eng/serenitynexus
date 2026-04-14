@@ -551,82 +551,80 @@ if menu == "INICIO":
 
 
 # =========================================================
-# BLOQUE 2: RED DE FAROS (7 NODOS) - DISEÑO DE DESPLIEGUE
+# BLOQUE 2: RED DE FAROS (7 NODOS) - DISEÑO ORIGINAL RECUPERADO
 # =========================================================
 elif menu == "RED DE FAROS (7 NODOS)":
     st.markdown("<h1 style='text-align: center;'>📡 Red de Faros Serenity</h1>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: center;'>Seleccione un nodo para desplegar telemetría multimodal</p>", unsafe_allow_html=True)
 
-    # Definición de los 7 Faros principales
-    faros_principales = [
-        "Faro Rex", "Faro Halcón", "Faro Colibrí", 
-        "Faro Tigrillo", "Faro Rana", "Faro Venado", "Faro Capibara"
-    ]
+    # Listado exacto de tus 7 Faros
+    faros = ["Faro Halcon", "Faro Colibri", "Faro Tigrillo", "Faro Rana", "Faro Venado", "Faro Capibara", "Faro Rex"]
 
-    # Inicializar el estado si no existe
-    if 'f_activo' not in st.session_state:
-        st.session_state.f_activo = None
-
-    # Cuadrícula de selección de Faros (7 columnas)
+    # Cuadrícula de Selección (7 Contenedores)
     cols_faros = st.columns(7)
     
-    for i, nombre_faro in enumerate(faros_principales):
+    for i, nombre in enumerate(faros):
         with cols_faros[i]:
-            # Contenedor visual para el botón
-            st.markdown('<div class="faro-card">', unsafe_allow_html=True)
-            if st.button(f"📍 {nombre_faro}", key=f"btn_{nombre_faro}"):
-                st.session_state.f_activo = nombre_faro
+            # Aplicar color azul si es Rex, verde para los demás
+            clase_estilo = "faro-gemini" if nombre == "Faro Rex" else "faro-card"
+            
+            st.markdown(f'<div class="{clase_estilo}">', unsafe_allow_html=True)
+            if st.button(f"📍 {nombre}", key=f"btn_{nombre}"):
+                st.session_state.f_activo = nombre
             st.markdown('</div>', unsafe_allow_html=True)
 
     st.write("---")
 
-    # --- DESPLIEGUE DEL FARO SELECCIONADO ---
+    # --- DESPLIEGUE DE INFRAESTRUCTURA AL SELECCIONAR ---
     if st.session_state.f_activo:
-        faro = st.session_state.f_activo
-        st.markdown(f"<h2 style='text-align: center; color: #9BC63B;'>🔍 Monitoreo Activo: {faro}</h2>", unsafe_allow_html=True)
+        f_sel = st.session_state.f_activo
+        # Color de cabecera dinámico
+        color_header = "#4285F4" if f_sel == "Faro Rex" else "#9BC63B"
         
-        # 1. Cuatro Micrófonos (Audio)
-        st.markdown("### 🎙️ Canales Bioacústicos del Nodo")
+        st.markdown(f"<h2 style='text-align: center; color: {color_header};'>🔍 Nodo Activo: {f_sel}</h2>", unsafe_allow_html=True)
+
+        # 1. CUATRO CANALES DE AUDIO (4 Micrófonos)
+        st.markdown("### 🎙️ Canales Bioacústicos")
         mics = st.columns(4)
-        for j in range(4):
-            with mics[j]:
+        for m in range(4):
+            with mics[m]:
                 with st.container(border=True):
-                    st.write(f"🔊 Micrófono 0{j+1}")
-                    st.audio(f"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-{j+1}.mp3")
+                    st.write(f"🔊 Micrófono 0{m+1}")
+                    # Enlace de audio de prueba estable
+                    st.audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3")
                     st.caption("Frecuencia: 20Hz-22kHz")
 
         st.write("---")
 
-        # 2. Ocho Cámaras (Video) - Enlaces compatibles con políticas de inserción
-        st.markdown("### 🛰️ Mosaico Visual de Soporte")
+        # 2. OCHO RECUADROS DE CÁMARA (Simulación de Cámaras)
+        st.markdown("### 🛰️ Mosaico Visual (8 Cámaras)")
         
-        vids = [
-            "https://www.youtube.com/watch?v=21-vj6pGYHw", "https://www.youtube.com/watch?v=F109TZt3nRc",
-            "https://www.youtube.com/watch?v=kyS3E_9K_lE", "https://www.youtube.com/watch?v=4L-vM9S-yCI",
-            "https://www.youtube.com/watch?v=3u_vIDp8vSc", "https://www.youtube.com/watch?v=pSAtuC6V_mU",
-            "https://www.youtube.com/watch?v=W0S8R6K-Y_0", "https://www.youtube.com/watch?v=S0yC0Bv_46E"
-        ]
+        # Generar las 8 cámaras en 2 filas de 4
+        for fila in range(2):
+            c_cols = st.columns(4)
+            for col in range(4):
+                cam_num = (fila * 4) + col + 1
+                with c_cols[col]:
+                    # Usamos la clase cam-grid que definiste en tus estilos para la estética REC
+                    st.markdown(
+                        f'''
+                        <div class="cam-grid" style="height: 150px; flex-direction: column;">
+                            <div style="font-size: 1.2rem;">REC 🔴</div>
+                            <div>CAM 0{cam_num}</div>
+                            <div style="font-size: 0.7rem; color: #555;">{f_sel} - EN VIVO</div>
+                        </div>
+                        ''', 
+                        unsafe_allow_html=True
+                    )
+                    # Nota: Aquí puedes integrar iframes de RTVE o Pluto TV si tienes los links directos de streaming
+                    st.caption(f"Sensor Óptico {cam_num}")
 
-        # Fila 1 de cámaras (1-4)
-        c_row1 = st.columns(4)
-        for k in range(4):
-            with c_row1[k]:
-                st.markdown(f'<div class="cam-grid">REC 🔴 CAM 0{k+1} | {faro}</div>', unsafe_allow_html=True)
-                st.video(vids[k])
-
-        # Fila 2 de cámaras (5-8)
-        c_row2 = st.columns(4)
-        for k in range(4):
-            with c_row2[k]:
-                st.markdown(f'<div class="cam-grid">REC 🔴 CAM 0{k+5} | {faro}</div>', unsafe_allow_html=True)
-                st.video(vids[k+4])
-                
         st.write("")
-        if st.button("❌ Cerrar Monitoreo Detallado"):
+        if st.button("❌ Cerrar Monitoreo Detallado", use_container_width=True):
             st.session_state.f_activo = None
             st.rerun()
     else:
-        st.info("💡 Por favor, seleccione uno de los Faros superiores para ver la actividad en tiempo real.")
+        st.info("💡 Por favor, seleccione uno de los Faros superiores para desplegar los 4 canales de audio y las 8 cámaras de vigilancia.")
 
 
 # =========================================================
