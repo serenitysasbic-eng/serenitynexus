@@ -7,29 +7,38 @@ import hashlib
 import io
 import os
 import base64
-from datetime import datetime
 import time
-import base64
+from datetime import datetime
+from io import BytesIO  # Necesario para el manejo de PDFs en memoria
 
-
-
-# Librería opcional: se conserva por compatibilidad con tu código original
-try:
-    import librosa  # noqa: F401
-except Exception:
-    librosa = None
-
-# --- LIBRERÍAS DE MAPAS ---
+# --- LIBRERÍAS DE MAPAS & GEOPOSICIONAMIENTO ---
 import folium
 from streamlit_folium import st_folium
+from folium.plugins import HeatMap  # Fundamental para los mapas de deforestación
 
-# --- LIBRERÍAS DE REPORTE (PDF) ---
+# --- LIBRERÍAS DE REPORTE (PDF - ReportLab) ---
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
 from reportlab.lib import colors
 from reportlab.lib.colors import HexColor, black
 from reportlab.lib.utils import ImageReader
+
+# --- PROCESAMIENTO DE AUDIO (Opcional) ---
+try:
+    import librosa  # Se conserva por compatibilidad con bioacústica
+except ImportError:
+    librosa = None
+
+# =========================================================
+# CONFIGURACIÓN DE PÁGINA (Debe ser el primer comando de ST)
+# =========================================================
+st.set_page_config(
+    page_title="Serenity Nexus Global",
+    page_icon="🌿",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
 
 # =========================================================
 # CONFIGURACIÓN GENERAL
@@ -40,18 +49,21 @@ st.set_page_config(
     layout="wide"
 )
 
+# Definición de Colores Corporativos para ReportLab (PDF)
 VERDE_SERENITY = HexColor("#2E7D32")
 VERDE_LIMA_NEXUS = HexColor("#9BC63B")
 AZUL_GEMINI = HexColor("#4285F4")
 DORADO = HexColor("#D4AF37")
 
+# Seguridad: Contraseña de administración
 ADMIN_PASSWORD = os.getenv("SERENITY_ADMIN_PASSWORD", "Serenity2026")
 
+# =========================================================
+# HELPERS (FUNCIONES DE APOYO)
+# =========================================================
 
-# =========================================================
-# HELPERS
-# =========================================================
 def init_session_state():
+    """Inicializa las variables globales de la aplicación"""
     defaults = {
         "total_protegido": 87.0,
         "donaciones_recibidas": 0,
@@ -61,13 +73,18 @@ def init_session_state():
         "wallet_connected": False,
         "p_sel": None,
         "m_plan": None,
+        # Variables nuevas para evitar errores en Bloque 7 y 8
+        "current_hash": None,
+        "nombre_prev": "",
+        "monto_prev": 0,
+        "pdf_buffer": None
     }
     for key, value in defaults.items():
         if key not in st.session_state:
             st.session_state[key] = value
 
-
 def dibujar_logo_serenity(c):
+    """Dibuja el logo principal desde un archivo local en el PDF"""
     try:
         if os.path.exists("logo_serenity.png"):
             c.drawImage(
@@ -82,13 +99,15 @@ def dibujar_logo_serenity(c):
     except Exception:
         pass
 
-
 def dibujar_logo_desde_bytes(c, logo_bytes, x=6 * inch, y=9.2 * inch, w=1.5 * inch, h=0.8 * inch):
+    """Dibuja logos dinámicos (como el QR o logos de aliados) desde memoria"""
     if not logo_bytes:
         return
     try:
+        # Si recibimos un objeto BytesIO, extraemos el contenido
         if hasattr(logo_bytes, "getvalue"):
             logo_bytes = logo_bytes.getvalue()
+        
         logo_img = ImageReader(io.BytesIO(logo_bytes))
         c.drawImage(
             logo_img,
@@ -102,20 +121,24 @@ def dibujar_logo_desde_bytes(c, logo_bytes, x=6 * inch, y=9.2 * inch, w=1.5 * in
     except Exception:
         pass
 
+# Llamamos a la inicialización al cargar
+init_session_state()
 
 # =========================================================
-# PDFS
+# PDFS: GENERACIÓN DE DOCUMENTOS LEGALES Y TÉCNICOS
 # =========================================================
+
 def generar_pdf_certificado(nombre_donante, monto, hash_id):
+    """Genera el diploma para donantes individuales (Bloque 7)"""
     buffer = io.BytesIO()
     c = canvas.Canvas(buffer, pagesize=letter)
 
-    # Marco
+    # Marco decorativo
     c.setStrokeColor(VERDE_SERENITY)
     c.setLineWidth(3)
     c.rect(0.6 * inch, 0.6 * inch, 7.3 * inch, 9.7 * inch)
 
-    # Logo / Cabecera
+    # Cabecera
     dibujar_logo_serenity(c)
     c.setStrokeColor(VERDE_LIMA_NEXUS)
     c.setLineWidth(2)
@@ -129,7 +152,7 @@ def generar_pdf_certificado(nombre_donante, monto, hash_id):
     c.setFillColor(black)
     c.drawCentredString(4.25 * inch, 8.3 * inch, "SERENITY NEXUS GLOBAL")
 
-    # Cuerpo
+    # Cuerpo del documento
     text = c.beginText(1.0 * inch, 7.4 * inch)
     text.setFont("Helvetica", 12)
     text.setLeading(18)
@@ -150,32 +173,19 @@ def generar_pdf_certificado(nombre_donante, monto, hash_id):
     text.textLine("integridad puede verificarse mediante el serial consignado.")
     c.drawText(text)
 
-    # Pie
+    # Pie de página
     c.setFont("Helvetica-Oblique", 9)
-    c.drawCentredString(
-        4.25 * inch,
-        1.1 * inch,
-        "Documento emitido por Nexus IA | Serenity S.A.S. BIC"
-    )
+    c.drawCentredString(4.25 * inch, 1.1 * inch, "Documento emitido por Nexus IA | Serenity S.A.S. BIC")
 
     c.save()
     buffer.seek(0)
     return buffer
 
-
-def generar_pdf_corporativo(
-    empresa,
-    impacto,
-    hash_id,
-    nit="",
-    logo_bytes=None,
-    es_vademecum=False,
-    faro_nombre="Red Nexus"
-):
+def generar_pdf_corporativo(empresa, impacto, hash_id, nit="", logo_bytes=None, es_vademecum=False, faro_nombre="Red Nexus"):
+    """Genera certificados de cumplimiento (Leyes 2173, 2169, 2111)"""
     buffer = io.BytesIO()
     c = canvas.Canvas(buffer, pagesize=letter)
 
-    # 1. Membrete y logos
     c.setStrokeColor(VERDE_SERENITY)
     c.setLineWidth(2)
     c.line(0.5 * inch, 10.2 * inch, 8 * inch, 10.2 * inch)
@@ -183,49 +193,36 @@ def generar_pdf_corporativo(
     dibujar_logo_serenity(c)
     dibujar_logo_desde_bytes(c, logo_bytes)
 
-    # 2. Título
     c.setFont("Helvetica-Bold", 16)
     c.setFillColor(VERDE_SERENITY)
-    titulo = (
-        "VADEMÉCUM TÉCNICO DE CUMPLIMIENTO LEGAL"
-        if es_vademecum
-        else "CERTIFICADO DE COMPENSACIÓN BIOMÉTRICA"
-    )
+    titulo = "VADEMÉCUM TÉCNICO DE CUMPLIMIENTO LEGAL" if es_vademecum else "CERTIFICADO DE COMPENSACIÓN BIOMÉTRICA"
     c.drawCentredString(4.25 * inch, 8.85 * inch, titulo)
 
-    # 3. Encabezado
     c.setFillColor(black)
     c.setFont("Helvetica-Bold", 11)
     c.drawString(0.9 * inch, 8.35 * inch, f"RAZÓN SOCIAL: {empresa.upper()}")
-    if nit:
-        c.drawString(0.9 * inch, 8.10 * inch, f"NIT: {nit}")
+    if nit: c.drawString(0.9 * inch, 8.10 * inch, f"NIT: {nit}")
     c.drawString(0.9 * inch, 7.85 * inch, f"NODO VALIDADOR: {faro_nombre}")
     c.drawString(0.9 * inch, 7.60 * inch, f"ID DE REGISTRO NEXUS: {hash_id}")
 
-    # 4. Cuerpo
     text_object = c.beginText(0.9 * inch, 7.0 * inch)
     text_object.setFont("Helvetica", 11)
     text_object.setLeading(15)
 
     if es_vademecum:
         lineas = [
-            "SOLUCIONES INTEGRADAS SERENITY S.A.S BIC:",
-            "",
+            "SOLUCIONES INTEGRADAS SERENITY S.A.S BIC:", "",
             "1. CUMPLIMIENTO LEY 2173 DE 2021 (ÁREAS DE VIDA):",
             "   Garantizamos la siembra y mantenimiento por 3 años de 2 árboles por empleado.",
-            "   Nuestra labor: Geolocalización individual y custodia en la Hacienda Monte Guadua.",
-            "",
+            "   Nuestra labor: Geolocalización individual y custodia en la Hacienda Monte Guadua.", "",
             "2. CUMPLIMIENTO LEY 2169 DE 2021 (CARBONO NEUTRALIDAD):",
             "   Monitoreo mediante Faros Gemini para la certificación de captura de CO2 real.",
-            "   Transformación de pasivos ambientales en activos biológicos verificables.",
-            "",
+            "   Transformación de pasivos ambientales en activos biológicos verificables.", "",
             "3. PROTOCOLO LEY 2111 DE 2021 (DELITOS AMBIENTALES):",
-            "   Vigilancia perimetral mediante IA para prevenir la deforestación y el ecocidio.",
-            "",
+            "   Vigilancia perimetral mediante IA para prevenir la deforestación y el ecocidio.", "",
             "CONCLUSIÓN TÉCNICA:",
             "La entidad referenciada se vincula al Internet de la Naturaleza,",
-            "asegurando la trazabilidad absoluta de su inversión ambiental",
-            "mediante monitoreo biométrico y registro digital verificable.",
+            "asegurando la trazabilidad absoluta de su inversión ambiental.",
         ]
     else:
         lineas = [
@@ -233,65 +230,25 @@ def generar_pdf_corporativo(
             f"- Gestión de {impacto} individuos forestales en el corredor biológico de Dagua.",
             "- Registro biométrico activo en la Red de Faros Serenity.",
             "- Estado de mantenimiento: Vigente bajo protocolos de restauración activa.",
-            "- Este certificado avala la responsabilidad social y ambiental corporativa.",
-            "",
+            "- Este certificado avala la responsabilidad social y ambiental corporativa.", "",
             "FIRMA AUTORIZADA: Sistema Nexus IA - Serenity S.A.S BIC",
         ]
 
-    for linea in lineas:
-        text_object.textLine(linea)
-
+    for linea in lineas: text_object.textLine(linea)
     c.drawText(text_object)
 
-    # 5. Pie de página
     c.setFont("Helvetica-Oblique", 8)
-    c.drawCentredString(
-        4.25 * inch,
-        1.2 * inch,
-        "Documento generado electrónicamente. La validez de este reporte puede verificarse en la cadena de integridad Nexus."
-    )
+    c.drawCentredString(4.25 * inch, 1.2 * inch, "La validez de este reporte puede verificarse en la cadena de integridad Nexus.")
 
     c.save()
     buffer.seek(0)
     return buffer
 
-
-def generar_pdf_corporativo_1(
-    empresa,
-    impacto,
-    hash_id,
-    nit="",
-    logo_bytes=None,
-    es_vademecum=False,
-    faro_nombre="Red Nexus"
-):
-    # Wrapper de compatibilidad con tu versión anterior
-    return generar_pdf_corporativo(
-        empresa=empresa,
-        impacto=impacto,
-        hash_id=hash_id,
-        nit=nit,
-        logo_bytes=logo_bytes,
-        es_vademecum=es_vademecum,
-        faro_nombre=faro_nombre,
-    )
-
-
-def generar_pdf_diagnostico(
-    empresa,
-    nit,
-    impacto,
-    hash_id,
-    estudio_data,
-    total_ton,
-    faro_nombre="Red Nexus",
-    logo_bytes=None,
-    **kwargs
-):
+def generar_pdf_diagnostico(empresa, nit, impacto, hash_id, estudio_data, total_ton, faro_nombre="Red Nexus", logo_bytes=None, **kwargs):
+    """Genera el reporte técnico de Huella de Carbono (Bloque 8)"""
     buffer = io.BytesIO()
     c = canvas.Canvas(buffer, pagesize=letter)
 
-    # Logos y membrete
     dibujar_logo_serenity(c)
     dibujar_logo_desde_bytes(c, logo_bytes)
 
@@ -299,7 +256,6 @@ def generar_pdf_diagnostico(
     c.setLineWidth(2)
     c.line(0.5 * inch, 10.2 * inch, 8 * inch, 10.2 * inch)
 
-    # Título y datos
     c.setFont("Helvetica-Bold", 16)
     c.setFillColor(VERDE_SERENITY)
     c.drawCentredString(4.25 * inch, 9.45 * inch, "DIAGNÓSTICO DE HUELLA DE CARBONO")
@@ -310,67 +266,51 @@ def generar_pdf_diagnostico(
     c.drawString(0.9 * inch, 8.60 * inch, f"NIT: {nit}")
     c.drawString(0.9 * inch, 8.35 * inch, f"SERIAL DE INTEGRIDAD: {hash_id}")
     c.drawString(0.9 * inch, 8.10 * inch, f"NODO VALIDADOR: {faro_nombre}")
-    c.drawString(0.9 * inch, 7.85 * inch, f"COMPENSACIÓN REFERENCIAL: {impacto} árboles")
 
-    # Tabla
     c.setFont("Helvetica-Bold", 10)
     c.setFillColor(VERDE_LIMA_NEXUS)
-    c.drawString(0.9 * inch, 7.45 * inch, "RESULTADOS DEL ESTUDIO (FACTORES UPME COLOMBIA):")
+    c.drawString(0.9 * inch, 7.65 * inch, "RESULTADOS DEL ESTUDIO (FACTORES UPME COLOMBIA):")
 
     c.setFont("Helvetica", 9)
     c.setFillColor(black)
-
-    y_pos = 7.15
+    y_pos = 7.35
     for concepto, valor in estudio_data.items():
         c.drawString(1.1 * inch, y_pos * inch, f"• {concepto}:")
         c.drawRightString(7.4 * inch, y_pos * inch, f"{valor}")
         y_pos -= 0.22
 
-    # Comparativa
-    y_graf = y_pos - 0.45
+    # Gráfico de barras comparativo (Simple canvas drawing)
+    y_graf = y_pos - 0.5
     c.setFont("Helvetica-Bold", 10)
     c.drawString(0.9 * inch, y_graf * inch, "COMPARATIVA SECTORIAL (TON CO2E / MES):")
-
-    promedio_sector = total_ton * 1.15 if total_ton > 0 else 1
-    denominador = total_ton + promedio_sector if (total_ton + promedio_sector) > 0 else 1
-    ancho_max = 3.0 * inch
-
-    # Empresa
+    
+    ancho_base = 3.0 * inch
+    # Barra Empresa
     c.setFillColor(VERDE_LIMA_NEXUS)
-    ancho_empresa = (total_ton / denominador) * ancho_max * 2
-    c.rect(3.2 * inch, (y_graf - 0.35) * inch, ancho_empresa, 0.18 * inch, fill=1, stroke=0)
+    c.rect(3.2 * inch, (y_graf - 0.35) * inch, ancho_base * 0.7, 0.18 * inch, fill=1, stroke=0)
     c.setFillColor(black)
-    c.drawString(1.1 * inch, (y_graf - 0.30) * inch, "Su Empresa")
-
-    # Promedio sector
-    c.setFillColor(AZUL_GEMINI)
-    ancho_sector = (promedio_sector / denominador) * ancho_max * 2
-    c.rect(3.2 * inch, (y_graf - 0.65) * inch, ancho_sector, 0.18 * inch, fill=1, stroke=0)
+    c.drawString(1.1 * inch, (y_graf - 0.30) * inch, "Su Empresa (Actual)")
+    
+    # Barra Promedio
+    c.setFillColor(colors.lightgrey)
+    c.rect(3.2 * inch, (y_graf - 0.65) * inch, ancho_base, 0.18 * inch, fill=1, stroke=0)
     c.setFillColor(black)
-    c.drawString(1.1 * inch, (y_graf - 0.60) * inch, "Promedio Sector")
-
-    # Pie
-    c.setFont("Helvetica-Oblique", 8)
-    c.drawCentredString(
-        4.25 * inch,
-        1.2 * inch,
-        "Diagnóstico estimado con base en parámetros operativos declarados por la entidad."
-    )
+    c.drawString(1.1 * inch, (y_graf - 0.60) * inch, "Promedio Industrial")
 
     c.save()
     buffer.seek(0)
     return buffer
 
-
 # =========================================================
-# ESTILOS
+# ESTILOS (CSS PERSONALIZADO)
 # =========================================================
 def aplicar_estilos():
     st.markdown(
         """
         <style>
+            /* Fondo de la aplicación con superposición oscura para legibilidad */
             .stApp {
-                background-image:
+                background-image: 
                     linear-gradient(rgba(5, 10, 4, 0.8), rgba(5, 10, 4, 0.9)),
                     url('https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1920&q=80');
                 background-size: cover;
@@ -380,22 +320,27 @@ def aplicar_estilos():
                 font-family: 'Montserrat', sans-serif;
             }
 
-            label, .stMarkdown p, [data-testid="stSidebar"] p,
+            /* Estilo de textos generales y Sidebar */
+            label, .stMarkdown p, [data-testid="stSidebar"] p, 
             [data-testid="stSidebar"] span, .stMetricLabel {
                 color: white !important;
                 font-weight: 500;
             }
 
+            /* Efecto Glassmorphism en el Sidebar */
             [data-testid="stSidebar"] {
                 background-color: rgba(10, 20, 8, 0.9) !important;
                 backdrop-filter: blur(10px);
+                border-right: 1px solid #2E7D32;
             }
 
+            /* Encabezados con color institucional Serenity */
             h1, h2, h3 {
                 color: #9BC63B !important;
                 text-shadow: 2px 2px 4px #000;
             }
 
+            /* Botones estilo "Guardian" */
             .stButton>button {
                 background-color: #2E7D32;
                 color: white;
@@ -403,14 +348,17 @@ def aplicar_estilos():
                 border-radius: 8px;
                 width: 100%;
                 font-weight: bold;
+                transition: all 0.3s ease;
             }
 
             .stButton>button:hover {
                 background-color: #9BC63B;
                 color: black;
                 box-shadow: 0 0 15px #9BC63B;
+                transform: translateY(-2px);
             }
 
+            /* Tarjetas de los Faros (Bloque 2 y 9) */
             .faro-card {
                 border: 1px solid #9BC63B;
                 padding: 15px;
@@ -420,6 +368,7 @@ def aplicar_estilos():
                 height: 100%;
             }
 
+            /* Estilo especial para nodos integrados con Google Gemini */
             .faro-gemini, .faro-rex-gemini {
                 border: 2px solid #4285F4;
                 padding: 15px;
@@ -429,6 +378,7 @@ def aplicar_estilos():
                 box-shadow: 0 0 15px #4285F4;
             }
 
+            /* Grid para el mosaico de cámaras (Bloque 2) */
             .cam-grid {
                 background: #000;
                 border: 1px solid #2E7D32;
@@ -437,10 +387,11 @@ def aplicar_estilos():
                 align-items: center;
                 justify-content: center;
                 font-size: 10px;
-                color: #ff0000;
+                color: #ff0000; /* Color de alerta/grabación */
                 border-radius: 5px;
             }
 
+            /* Tarjetas de métricas ambientales */
             .metric-card {
                 background: rgba(0,0,0,0.7);
                 padding: 20px;
@@ -449,6 +400,7 @@ def aplicar_estilos():
                 text-align: center;
             }
 
+            /* Grid para logos de aerolíneas o aliados (Diagnóstico) */
             .airline-grid {
                 background: white;
                 padding: 10px;
@@ -478,7 +430,6 @@ def aplicar_estilos():
         """,
         unsafe_allow_html=True
     )
-
 
 # =========================================================
 # APP
