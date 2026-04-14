@@ -560,7 +560,7 @@ elif menu == "RED DE FAROS (7 NODOS)":
     # Definición de los 7 Faros principales
     faros_principales = [
         "Faro Rex", "Faro Halcón", "Faro Colibrí", 
-        "Faro Tigrillo", "Faro Amazonas", "Faro Arrecife", "Faro Sabana"
+        "Faro Tigrillo", "Faro Rana", "Faro Venado", "Faro Capibara"
     ]
 
     # Inicializar el estado si no existe
