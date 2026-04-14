@@ -471,155 +471,79 @@ menu = st.sidebar.radio(
 )
 
 # =========================================================
-# BLOQUE 1: INICIO
-# =========================================================
-if menu == "INICIO":
-    # 1. Encabezado con Logo o Título Alternativo
-    col_l1, col_l2, col_l3 = st.columns([1, 2, 1])
-    with col_l2:
-        if os.path.exists("logo_serenity.png"):
-            st.image("logo_serenity.png", use_container_width=True)
-        else:
-            st.markdown(
-                "<h1 style='text-align:center; color:#9BC63B; margin-bottom:0;'>SERENITY NEXUS GLOBAL</h1>",
-                unsafe_allow_html=True,
-            )
-
-    # 2. Subtítulo Dinámico
-    st.markdown(
-        """
-        <p style='text-align:center; letter-spacing:5px; color:#9BC63B; font-weight:bold; margin-top:-10px;'>
-            SISTEMA REGENERATIVO BIOMÉTRICO KBA
-        </p>
-        """,
-        unsafe_allow_html=True,
-    )
-
-    # 3. Componente de Audio (Optimizado en altura)
-    st.components.v1.html(
-        """
-        <audio id="audio_earth" src="sonido_Earth.mp3" loop></audio>
-        <div style="text-align:center;">
-            <button onclick="document.getElementById('audio_earth').play()"
-                style="background:#2E7D32; color:white; border:2px solid #9BC63B;
-                padding:8px 16px; border-radius:10px; cursor:pointer; font-weight:bold;
-                transition: 0.3s; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
-                🔊 ACTIVAR SONIDO GLOBAL EARTH
-            </button>
-        </div>
-        """,
-        height=60, # Reducido para evitar espacios muertos
-    )
-
-    st.info("📊 **Métricas clave:** SPAM (40%) | TAF (60%) | **Token:** JWCJ $SNG")
-    st.divider()
-
-    # 4. Información Corporativa
-    col_inf1, col_inf2 = st.columns(2, gap="large")
-    with col_inf1:
-        st.subheader("🌐 QUIÉNES SOMOS")
-        st.write(
-            "Serenity Nexus Global es la primera plataforma **Phygital** (Física + Digital) "
-            "del Valle del Cauca que integra la conservación ambiental con tecnología **Blockchain** "
-            "e **Inteligencia Artificial**."
-        )
-
-    with col_inf2:
-        st.subheader("🎯 NUESTRA MISIÓN")
-        st.write(
-            "Regenerar el tejido ecológico y social mediante un modelo de negocio sostenible "
-            "que permita compensar la huella ambiental a través de la tecnología y la transparencia."
-        )
-
-    st.divider()
-
-    # 5. Visión (Layout mejorado)
-    col_inf3, col_inf4 = st.columns([1, 2])
-    with col_inf3:
-        st.subheader("🚀 NUESTRA VISIÓN")
-    with col_inf4:
-        st.write(
-            "Ser el referente mundial del **Internet de la Naturaleza** para 2030, liderando la "
-            "valorización de los servicios ecosistémicos mediante nuestra red de Faros inteligentes y el token **$SNG**."
-        )
-
-    # 6. Pie de página de inicio
-    st.warning(
-        "📍 **Ubicación del Proyecto:** Dagua y Felidia, Valle del Cauca — Hacienda Monte Guadua & Finca Villa Michelle."
-    )
-
-# =========================================================
-# BLOQUE 2: RED DE FAROS (7 NODOS) - DISEÑO ORIGINAL RECUPERADO
+# BLOQUE 2: RED DE FAROS (7 NODOS) - DISEÑO DE DESPLIEGUE
 # =========================================================
 elif menu == "RED DE FAROS (7 NODOS)":
-    st.markdown("<h1 style='text-align: center;'>📡 Centro de Monitoreo Nexus</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center;'>📡 Red de Faros Serenity</h1>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center;'>Seleccione un nodo para desplegar telemetría multimodal</p>", unsafe_allow_html=True)
+
+    # Definición de los 7 Faros principales
+    faros_principales = [
+        "Faro Rex", "Faro Halcón", "Faro Colibrí", 
+        "Faro Tigrillo", "Faro Amazonas", "Faro Arrecife", "Faro Sabana"
+    ]
+
+    # Cuadrícula de selección de Faros
+    cols_faros = st.columns(7)
     
-    # --- PANEL DE AUDIO (MICROFONOS) ---
-    st.markdown("### 🎙️ Canales Bioacústicos Activos")
-    col_m1, col_m2, col_m3, col_m4 = st.columns(4)
-    
-    with col_m1:
-        st.markdown('<div class="faro-card">', unsafe_allow_html=True)
-        st.write("🔊 **Faro Rex**")
-        st.audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3")
-        st.caption("Villa Michelle")
-        st.markdown('</div>', unsafe_allow_html=True)
-
-    with col_m2:
-        st.markdown('<div class="faro-card">', unsafe_allow_html=True)
-        st.write("🔊 **Faro Halcón**")
-        st.audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3")
-        st.caption("Monte Guadua")
-        st.markdown('</div>', unsafe_allow_html=True)
-
-    with col_m3:
-        st.markdown('<div class="faro-card">', unsafe_allow_html=True)
-        st.write("🔊 **Faro Colibrí**")
-        st.audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3")
-        st.caption("Monte Guadua")
-        st.markdown('</div>', unsafe_allow_html=True)
-
-    with col_m4:
-        st.markdown('<div class="faro-card">', unsafe_allow_html=True)
-        st.write("🔊 **Faro Tigrillo**")
-        st.audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3")
-        st.caption("San Antonio")
-        st.markdown('</div>', unsafe_allow_html=True)
+    for i, nombre_faro in enumerate(faros_principales):
+        with cols_faros[i]:
+            # Usamos el estilo faro-card definido en tus estilos
+            st.markdown(f'<div class="faro-card">', unsafe_allow_html=True)
+            if st.button(f"📍 {nombre_faro}", key=f"btn_{nombre_faro}"):
+                st.session_state.f_activo = nombre_faro
+            st.markdown('</div>', unsafe_allow_html=True)
 
     st.write("---")
 
-    # --- PANEL DE VIDEO (8 NODOS DE TRANSMISIÓN) ---
-    st.markdown("### 🛰️ Vigilancia Visual Global")
-    
-    # Enlaces de alta disponibilidad (Embed-Friendly)
-    cam_links = [
-        "https://www.youtube.com/watch?v=21-vj6pGYHw", # Transmisión oficial selva
-        "https://www.youtube.com/watch?v=F109TZt3nRc", # Coral City (Carbono Azul)
-        "https://www.youtube.com/watch?v=kyS3E_9K_lE", # Africam 1
-        "https://www.youtube.com/watch?v=4L-vM9S-yCI", # Brooks Falls
-        "https://www.youtube.com/watch?v=3u_vIDp8vSc", # Manglares
-        "https://www.youtube.com/watch?v=pSAtuC6V_mU", # High Alt. Snowy
-        "https://www.youtube.com/watch?v=W0S8R6K-Y_0", # Panama Canopy
-        "https://www.youtube.com/watch?v=S0yC0Bv_46E"  # Marine Life
-    ]
-
-    # Mosaico de Cámaras (4x2)
-    row1 = st.columns(4)
-    row2 = st.columns(4)
-
-    for i in range(4):
-        with row1[i]:
-            st.markdown(f'<div class="cam-grid">REC 🔴 FARO 0{i+1}</div>', unsafe_allow_html=True)
-            st.video(cam_links[i])
+    # --- DESPLIEGUE DEL FARO SELECCIONADO ---
+    if st.session_state.f_activo:
+        faro = st.session_state.f_activo
+        st.markdown(f"<h2 style='text-align: center; color: #9BC63B;'>🔍 Monitoreo Activo: {faro}</h2>", unsafe_allow_html=True)
         
-    for i in range(4):
-        with row2[i]:
-            st.markdown(f'<div class="cam-grid">REC 🔴 FARO 0{i+5}</div>', unsafe_allow_html=True)
-            st.video(cam_links[i+4])
+        # 1. Cuatro Micrófonos (Audio)
+        st.markdown("### 🎙️ Canales Bioacústicos del Nodo")
+        mics = st.columns(4)
+        for j in range(4):
+            with mics[j]:
+                with st.container(border=True):
+                    st.write(f"🔊 Micrófono 0{j+1}")
+                    st.audio(f"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-{j+1}.mp3")
+                    st.caption("Frecuencia: 20Hz-22kHz")
 
-    st.info("💡 Nota: Si un video muestra 'No disponible', es una restricción regional de YouTube. Los enlaces seleccionados permiten la inserción en la mayoría de países.")
+        st.write("---")
 
+    # 2. Ocho Cámaras (Video) - Usando enlaces compatibles con términos de uso
+        st.markdown("### 🛰️ Mosaico Visual de Soporte")
+        
+        # Enlaces que permiten inserción externa (Embed friendly)
+        vids = [
+            "https://www.youtube.com/watch?v=21-vj6pGYHw", "https://www.youtube.com/watch?v=F109TZt3nRc",
+            "https://www.youtube.com/watch?v=kyS3E_9K_lE", "https://www.youtube.com/watch?v=4L-vM9S-yCI",
+            "https://www.youtube.com/watch?v=3u_vIDp8vSc", "https://www.youtube.com/watch?v=pSAtuC6V_mU",
+            "https://www.youtube.com/watch?v=W0S8R6K-Y_0", "https://www.youtube.com/watch?v=S0yC0Bv_46E"
+        ]
 
+        # Fila 1 de cámaras
+        c_row1 = st.columns(4)
+        for k in range(4):
+            with c_row1[k]:
+                st.markdown(f'<div class="cam-grid">CAM 0{k+1} | {faro}</div>', unsafe_allow_html=True)
+                st.video(vids[k])
+
+        # Fila 2 de cámaras
+        c_row2 = st.columns(4)
+        for k in range(4):
+            with c_row2[k+4]:
+                st.markdown(f'<div class="cam-grid">CAM 0{k+5} | {faro}</div>', unsafe_allow_html=True)
+                st.video(vids[k+4])
+                
+        # Botón para cerrar el despliegue
+        if st.button("Cerrar Monitoreo Detallado"):
+            st.session_state.f_activo = None
+            st.rerun()
+    else:
+        st.info("💡 Por favor, seleccione uno de los Faros superiores para ver la actividad en tiempo real.")
 # =========================================================
 # BLOQUE 3: DASHBOARD ESTADÍSTICO IA
 # =========================================================
