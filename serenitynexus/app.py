@@ -549,82 +549,77 @@ if menu == "INICIO":
     )
 
 # =========================================================
-# BLOQUE 2: RED DE FAROS SERENITY (MONITOREO GLOBAL)
+# BLOQUE 2: RED DE FAROS (7 NODOS) - DISEÑO ORIGINAL RECUPERADO
 # =========================================================
 elif menu == "RED DE FAROS (7 NODOS)":
-    # Título con estilo consistente al resto de la app
-    st.markdown("<h1 style='text-align: center; color: #9BC63B;'>📡 Red de Faros: Vigilancia Biométrica</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center; font-size: 1.2rem;'>Monitoreo Multimodal en Tiempo Real desde el KBA San Antonio hacia el Mundo</p>", unsafe_allow_html=True)
-
-    # --- PARTE A: PANEL DE AUDIO (4 MICRÓFONOS LOCALES) ---
-    st.markdown("#### 🎙️ Escucha Bioacústica Activa")
+    st.markdown("<h1 style='text-align: center;'>📡 Centro de Monitoreo Nexus</h1>", unsafe_allow_html=True)
     
-    # Creamos 4 columnas para los micrófonos de los Faros locales
-    col_mic1, col_mic2, col_mic3, col_mic4 = st.columns(4)
+    # --- PANEL DE AUDIO (MICROFONOS) ---
+    st.markdown("### 🎙️ Canales Bioacústicos Activos")
+    col_m1, col_m2, col_m3, col_m4 = st.columns(4)
     
-    with col_mic1:
-        with st.container(border=True):
-            st.markdown("<p style='color:#9BC63B; font-weight:bold; margin-bottom:0;'>Faro Rex</p>", unsafe_allow_html=True)
-            st.audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3") 
-            st.caption("📍 Villa Michelle")
+    with col_m1:
+        st.markdown('<div class="faro-card">', unsafe_allow_html=True)
+        st.write("🔊 **Faro Rex**")
+        st.audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3")
+        st.caption("Villa Michelle")
+        st.markdown('</div>', unsafe_allow_html=True)
 
-    with col_mic2:
-        with st.container(border=True):
-            st.markdown("<p style='color:#9BC63B; font-weight:bold; margin-bottom:0;'>Faro Halcón</p>", unsafe_allow_html=True)
-            st.audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3")
-            st.caption("📍 Monte Guadua")
+    with col_m2:
+        st.markdown('<div class="faro-card">', unsafe_allow_html=True)
+        st.write("🔊 **Faro Halcón**")
+        st.audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3")
+        st.caption("Monte Guadua")
+        st.markdown('</div>', unsafe_allow_html=True)
 
-    with col_mic3:
-        with st.container(border=True):
-            st.markdown("<p style='color:#9BC63B; font-weight:bold; margin-bottom:0;'>Faro Colibrí</p>", unsafe_allow_html=True)
-            st.audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3")
-            st.caption("📍 Monte Guadua")
+    with col_m3:
+        st.markdown('<div class="faro-card">', unsafe_allow_html=True)
+        st.write("🔊 **Faro Colibrí**")
+        st.audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3")
+        st.caption("Monte Guadua")
+        st.markdown('</div>', unsafe_allow_html=True)
 
-    with col_mic4:
-        with st.container(border=True):
-            st.markdown("<p style='color:#9BC63B; font-weight:bold; margin-bottom:0;'>Faro Tigrillo</p>", unsafe_allow_html=True)
-            st.audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3")
-            st.caption("📍 San Antonio")
+    with col_m4:
+        st.markdown('<div class="faro-card">', unsafe_allow_html=True)
+        st.write("🔊 **Faro Tigrillo**")
+        st.audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3")
+        st.caption("San Antonio")
+        st.markdown('</div>', unsafe_allow_html=True)
 
-    st.markdown("---")
+    st.write("---")
 
-    # --- PARTE B: MOSAICO DE CÁMARAS (8 NODOS GLOBALES) ---
-    st.markdown("#### 🛰️ Mosaico Visual de Conservación (Transmisión Satelital)")
+    # --- PANEL DE VIDEO (8 NODOS DE TRANSMISIÓN) ---
+    st.markdown("### 🛰️ Vigilancia Visual Global")
     
-    # Lista de feeds reales de YouTube para la simulación
-    feeds = [
-        {"n": "Faro Amazonas", "u": "https://www.youtube.com/watch?v=1-iS7LArMPA"},
-        {"n": "Faro Arrecife", "u": "https://www.youtube.com/watch?v=F109TZt3nRc"},
-        {"n": "Faro Sabana", "u": "https://www.youtube.com/watch?v=kyS3E_9K_lE"},
-        {"n": "Faro Bosque Templado", "u": "https://www.youtube.com/watch?v=4L-vM9S-yCI"},
-        {"n": "Faro Manglar", "u": "https://www.youtube.com/watch?v=3u_vIDp8vSc"},
-        {"n": "Faro Nevado", "u": "https://www.youtube.com/watch?v=pSAtuC6V_mU"},
-        {"n": "Faro Tropical", "u": "https://www.youtube.com/watch?v=W0S8R6K-Y_0"},
-        {"n": "Faro Pantanal", "u": "https://www.youtube.com/watch?v=mY9vV_g77Sg"}
+    # Enlaces de alta disponibilidad (Embed-Friendly)
+    cam_links = [
+        "https://www.youtube.com/watch?v=21-vj6pGYHw", # Transmisión oficial selva
+        "https://www.youtube.com/watch?v=F109TZt3nRc", # Coral City (Carbono Azul)
+        "https://www.youtube.com/watch?v=kyS3E_9K_lE", # Africam 1
+        "https://www.youtube.com/watch?v=4L-vM9S-yCI", # Brooks Falls
+        "https://www.youtube.com/watch?v=3u_vIDp8vSc", # Manglares
+        "https://www.youtube.com/watch?v=pSAtuC6V_mU", # High Alt. Snowy
+        "https://www.youtube.com/watch?v=W0S8R6K-Y_0", # Panama Canopy
+        "https://www.youtube.com/watch?v=S0yC0Bv_46E"  # Marine Life
     ]
 
-    # Fila 1 de Cámaras (4 columnas)
-    c1, c2, c3, c4 = st.columns(4)
-    with c1: st.caption(feeds[0]["n"]); st.video(feeds[0]["u"])
-    with c2: st.caption(feeds[1]["n"]); st.video(feeds[1]["u"])
-    with c3: st.caption(feeds[2]["n"]); st.video(feeds[2]["u"])
-    with c4: st.caption(feeds[3]["n"]); st.video(feeds[3]["u"])
+    # Mosaico de Cámaras (4x2)
+    row1 = st.columns(4)
+    row2 = st.columns(4)
 
-    # Fila 2 de Cámaras (4 columnas)
-    c5, c6, c7, c8 = st.columns(4)
-    with c5: st.caption(feeds[4]["n"]); st.video(feeds[4]["u"])
-    with c6: st.caption(feeds[5]["n"]); st.video(feeds[5]["u"])
-    with c7: st.caption(feeds[6]["n"]); st.video(feeds[6]["u"])
-    with c8: st.caption(feeds[7]["n"]); st.video(feeds[7]["u"])
+    for i in range(4):
+        with row1[i]:
+            st.markdown(f'<div class="cam-grid">REC 🔴 FARO 0{i+1}</div>', unsafe_allow_html=True)
+            st.video(cam_links[i])
+        
+    for i in range(4):
+        with row2[i]:
+            st.markdown(f'<div class="cam-grid">REC 🔴 FARO 0{i+5}</div>', unsafe_allow_html=True)
+            st.video(cam_links[i+4])
 
-    st.markdown("---")
-    
-    # --- PARTE C: ESTADO TÉCNICO ---
-    with st.expander("🛠️ Especificaciones Técnicas de la Red", expanded=False):
-        t1, t2, t3 = st.columns(3)
-        t1.write("**Conectividad:** Starlink Low Latency")
-        t2.write("**Energía:** Autonomía Solar 72h")
-        t3.write("**Sensores:** Bioacústica + Lidar")
+    st.info("💡 Nota: Si un video muestra 'No disponible', es una restricción regional de YouTube. Los enlaces seleccionados permiten la inserción en la mayoría de países.")
+
+
 # =========================================================
 # BLOQUE 3: DASHBOARD ESTADÍSTICO IA
 # =========================================================
