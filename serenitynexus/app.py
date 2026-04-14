@@ -551,7 +551,7 @@ if menu == "INICIO":
 # =========================================================
 # BLOQUE 2: RED DE FAROS SERENITY (MONITOREO GLOBAL)
 # =========================================================
-elif menu == "RED DE FAROS SERENITY":
+elif menu == "RED DE FAROS (7 NODOS)":
     # Título con estilo consistente al resto de la app
     st.markdown("<h1 style='text-align: center; color: #9BC63B;'>📡 Red de Faros: Vigilancia Biométrica</h1>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: center; font-size: 1.2rem;'>Monitoreo Multimodal en Tiempo Real desde el KBA San Antonio hacia el Mundo</p>", unsafe_allow_html=True)
@@ -620,13 +620,11 @@ elif menu == "RED DE FAROS SERENITY":
     st.markdown("---")
     
     # --- PARTE C: ESTADO TÉCNICO ---
-    # Usamos un expander para no saturar la vista principal
     with st.expander("🛠️ Especificaciones Técnicas de la Red", expanded=False):
         t1, t2, t3 = st.columns(3)
         t1.write("**Conectividad:** Starlink Low Latency")
         t2.write("**Energía:** Autonomía Solar 72h")
         t3.write("**Sensores:** Bioacústica + Lidar")
-
 # =========================================================
 # BLOQUE 3: DASHBOARD ESTADÍSTICO IA
 # =========================================================
