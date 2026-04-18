@@ -1044,7 +1044,7 @@ elif menu == "BILLETERA CRYPTO (WEB3)":
         
         # Botón de Descarga Funcional
         st.download_button(
-            label="📥 DESCARGAR GUÍA DE CONFIGURACIÓN",
+            label="📥 DESCARGA LA GUÍA DE CONFIGURACIÓN",
             data=obtener_guia_web3(),
             file_name="Guia_Nexus_Web3.txt",
             mime="text/plain",
