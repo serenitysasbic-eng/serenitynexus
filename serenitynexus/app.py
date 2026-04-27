@@ -470,6 +470,32 @@ menu = st.sidebar.radio(
     ],
 )
 
+import streamlit as st
+
+def footer():
+    st.markdown("---")
+    st.markdown(
+        """
+        <div style='text-align: center; color: grey; font-size: 0.8em;'>
+            <p>© 2026 <b>Serenity S.A.S. BIC</b> - Todos los derechos reservados.</p>
+            <p>Software registrado ante la <b>DNDA</b>. Propiedad Intelectual Protegida.</p>
+            <p>Dagua, Valle del Cauca, Colombia.</p>
+        </div>
+        """, 
+        unsafe_allow_html=True
+    )
+    
+    with st.expander("⚖️ Aviso Legal y Propiedad Intelectual"):
+        st.write("""
+        Todo el contenido, algoritmos y estructuras de datos de Serenity Nexus Global 
+        están protegidos por las leyes de derecho de autor. El uso no autorizado de 
+        la arquitectura 'Puntos Faro' o la marca Serenity S.A.S. BIC será objeto 
+        de acciones legales pertinentes.
+        """)
+
+# Llamar al footer al final de la app
+footer()
+
 
 # =========================================================
 # BLOQUE 1: INICIO
