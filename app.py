@@ -214,7 +214,7 @@ def generar_pdf_corporativo(empresa, impacto, hash_id, nit="", logo_bytes=None, 
             "SOLUCIONES INTEGRADAS SERENITY S.A.S BIC:", "",
             "1. CUMPLIMIENTO LEY 2173 DE 2021 (ÁREAS DE VIDA):",
             "   Garantizamos la siembra y mantenimiento por 3 años de 2 árboles por empleado.",
-            "   Nuestra labor: Geolocalización individual y custodia en la Hacienda Monte Guadua.", "",
+            "   Nuestra labor: Geolocalización individual y custodia en las areas de vida asignadas.", "",
             "2. CUMPLIMIENTO LEY 2169 DE 2021 (CARBONO NEUTRALIDAD):",
             "   Monitoreo mediante Faros Gemini para la certificación de captura de CO2 real.",
             "   Transformación de pasivos ambientales en activos biológicos verificables.", "",
@@ -572,7 +572,7 @@ if menu == "INICIO":
 
     # 6. Pie de página de inicio
     st.warning(
-        "📍 **Ubicación del Proyecto:** Dagua y Felidia, Valle del Cauca — Hacienda Monte Guadua & Finca Villa Michelle."
+        "📍 **Ubicación del Proyecto:**  Valle del Cauca — Colombia."
     )
 
 
@@ -1443,7 +1443,7 @@ elif menu == "NEXUS GUARDIAN COMMAND":
     st.write("Interactúa con otros protectores y vota por la siguiente zona de intervención.")
     
     with st.chat_message("user"):
-        st.write("¿Cuál será el próximo árbol a sembrar en Villa Michelle?")
+        st.write("¿Cuál será el próximo árbol a sembrar en Colombia?")
     
     opciones = ["Guayacán Amarillo", "Roble Andino", "Cedro Rosado"]
     voto = st.radio("Votación de Gobernanza $SNG:", opciones)
