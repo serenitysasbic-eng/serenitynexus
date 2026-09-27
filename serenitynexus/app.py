@@ -227,7 +227,7 @@ def generar_pdf_corporativo(empresa, impacto, hash_id, nit="", logo_bytes=None, 
     else:
         lineas = [
             "DETALLE DE COMPENSACIÓN:",
-            f"- Gestión de {impacto} individuos forestales en el corredor biológico de Dagua.",
+            f"- Gestión de {impacto} individuos forestales en los corredores biológicos del Valle del Cauca.",
             "- Registro biométrico activo en la Red de Faros Serenity.",
             "- Estado de mantenimiento: Vigente bajo protocolos de restauración activa.",
             "- Este certificado avala la responsabilidad social y ambiental corporativa.", "",
@@ -572,7 +572,7 @@ if menu == "INICIO":
 
     # 6. Pie de página de inicio
     st.warning(
-        "📍 **Ubicación del Proyecto:** Dagua y Felidia, Valle del Cauca — Hacienda Monte Guadua & Finca Villa Michelle."
+        "📍 **Ubicación del Proyecto:** Valle del Cauca — Finca Villa Michelle - Felidia."
     )
 
 
@@ -927,7 +927,7 @@ elif menu == "SUSCRIPCIONES":
                 <p style="text-align:left; font-size:0.9rem;">🏞️ <b>1 Plaza Protegida:</b> Soberanía total.</p>
                 <p style="text-align:left; font-size:0.9rem;">🛡️ <b>Cámaras:</b> Vigilancia perimetral.</p>
                 <p style="text-align:left; font-size:0.9rem;">💎 <b>600 Tokens:</b> Impacto Web3 máximo.</p>
-                <p style="text-align:left; font-size:0.9rem;">⛺ <b>Visita VIP:</b> Monte Guadua (2D/1N).</p>
+                <p style="text-align:left; font-size:0.9rem;">⛺ <b>Visita VIP:</b> Villa Michell (2D/1N).</p>
             </div>
             """,
             unsafe_allow_html=True,
@@ -978,7 +978,7 @@ elif menu == "SUSCRIPCIONES":
                 unsafe_allow_html=True,
             )
             st.info("💡 **Dato Nexus:** Al suscribirte, tus primeros tokens $SNG serán transferidos a tu cuenta en las próximas 24 horas.")
-            st.caption("🔒 Transacciones seguras mediante Nexus Gateway (Dagua-Colombia)")
+            st.caption("🔒 Transacciones seguras mediante Nexus Gateway (Cali-Colombia)")
 
 # =========================================================
 # BLOQUE 6: BILLETERA CRYPTO (WEB3)
